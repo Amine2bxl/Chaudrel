@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 /* ============================================================
-   DESIGN SYSTEM — Chaudrel V2
-   Noir / blanc cassé / pierre / beige. Serif éditoriale + Inter.
+   CHAUDREL — DESIGN SYSTEM
+   5 couleurs · 2 familles typographiques · 7 niveaux de texte
+   Pas d'ombre portée. Pas de dégradé. Des lignes et du vide.
    ============================================================ */
 
 @layer base {
@@ -14,38 +15,42 @@
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
   }
+
   body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: Inter, system-ui, sans-serif;
     background-color: #f7f5f2;
     color: #141311;
+    font-size: 16px;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
-    width: 100%;
   }
+
   *,
   *::before,
   *::after {
     box-sizing: border-box;
     min-width: 0;
   }
+
   img,
   video,
   svg {
     max-width: 100%;
     height: auto;
   }
+
   ::selection {
-    background: #8c764e;
-    color: #fff;
+    background: #141311;
+    color: #f7f5f2;
   }
-  /* Focus visible cohérent sur tout le site */
+
   :focus-visible {
     outline: 2px solid #8c764e;
     outline-offset: 3px;
-    border-radius: 2px;
   }
-  /* iOS : pas de zoom au focus d'un champ */
+
   @supports (-webkit-touch-callout: none) {
     input,
     textarea,
@@ -56,24 +61,96 @@
 }
 
 @layer components {
-  .eyebrow {
-    @apply text-[11px] tracking-[0.25em] uppercase text-brand-gold font-semibold;
+  /* ---------- Échelle typographique ---------- */
+
+  .t-display {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(2.75rem, 7.5vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
   }
-  .h-display {
-    @apply font-display font-light leading-[1.05] tracking-[-0.01em];
+
+  .t-h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
   }
-  .prose-brand p {
-    @apply text-[15px] leading-[1.85] font-light text-brand-ink/65;
+
+  .t-h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
   }
-  .link-underline {
-    @apply underline decoration-brand-gold/30 underline-offset-4 hover:decoration-brand-gold transition-colors;
+
+  .t-h3 {
+    font-weight: 500;
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    line-height: 1.35;
+    letter-spacing: -0.01em;
   }
-  .hairline {
-    @apply border-brand-ink/10;
+
+  .t-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  .t-small {
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .t-label {
+    font-size: 0.6875rem;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .t-num {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- Éléments ---------- */
+
+  .measure {
+    max-width: 62ch;
+  }
+
+  .rule {
+    border: 0;
+    border-top: 1px solid rgb(20 19 17 / 0.12);
+  }
+
+  .rule-light {
+    border: 0;
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  .link-line {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .link-line:hover,
+  .link-line:focus-visible {
+    background-size: 100% 1px;
   }
 }
 
-/* Scrollbar discrète */
+/* ---------- Scrollbar ---------- */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -82,11 +159,7 @@
   background: #f7f5f2;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(140, 118, 78, 0.3);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(140, 118, 78, 0.5);
+  background: rgb(20 19 17 / 0.2);
 }
 @media (max-width: 1023px) {
   ::-webkit-scrollbar {
@@ -98,103 +171,128 @@
   }
 }
 
-/* ---------- Animations (légères, premium) ---------- */
+/* ============================================================
+   ANIMATIONS — discrètes, courtes, jamais permanentes
+   ============================================================ */
 
+/* Apparition au scroll */
 .rv {
   opacity: 0;
   transition:
-    opacity 0.7s ease-out,
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.8s ease-out,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 .rv-up {
-  transform: translateY(24px);
+  transform: translateY(28px);
 }
 .rv-down {
-  transform: translateY(-24px);
+  transform: translateY(-20px);
 }
 .rv-left {
-  transform: translateX(-24px);
+  transform: translateX(-28px);
 }
 .rv-right {
-  transform: translateX(24px);
+  transform: translateX(28px);
 }
 .rv-fade {
   transform: none;
 }
 .rv.is-visible {
   opacity: 1;
-  transform: translate(0, 0);
+  transform: none;
 }
 
-@keyframes hero-kenburns {
+/* Lignes qui se dessinent */
+.rv-line {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rv-line.is-visible {
+  transform: scaleX(1);
+}
+.rv-line-y {
+  transform: scaleY(0);
+  transform-origin: center top;
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rv-line-y.is-visible {
+  transform: scaleY(1);
+}
+
+/* Image révélée par un volet.
+   Le clip porte sur l'enfant, jamais sur l'élément observé : un élément
+   entièrement rogné n'intersecte plus rien, et l'IntersectionObserver ne se
+   déclencherait jamais. */
+.rv-veil > * {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rv-veil.is-visible > * {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Hero */
+@keyframes fade-up {
   from {
-    transform: scale(1.07);
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-in {
+  opacity: 0;
+  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-d1 {
+  animation-delay: 0.1s;
+}
+.hero-d2 {
+  animation-delay: 0.22s;
+}
+.hero-d3 {
+  animation-delay: 0.34s;
+}
+.hero-d4 {
+  animation-delay: 0.46s;
+}
+.hero-d5 {
+  animation-delay: 0.6s;
+}
+
+@keyframes slow-zoom {
+  from {
+    transform: scale(1.06);
   }
   to {
     transform: scale(1);
   }
 }
-.hero-kenburns {
-  animation: hero-kenburns 2.4s ease-out both;
-}
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.hero-fade {
-  opacity: 0;
-  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-.hero-d1 {
-  animation-delay: 0.15s;
-}
-.hero-d2 {
-  animation-delay: 0.3s;
-}
-.hero-d3 {
-  animation-delay: 0.45s;
-}
-.hero-d4 {
-  animation-delay: 0.6s;
-}
-.hero-d5 {
-  animation-delay: 0.75s;
+.slow-zoom {
+  animation: slow-zoom 2.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-@keyframes mm-fade-in {
+/* Menu mobile */
+@keyframes panel-in {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
   }
 }
-.mm-overlay {
-  animation: mm-fade-in 0.22s ease-out both;
+.panel-in {
+  animation: panel-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-@keyframes mm-link-in {
-  from {
-    opacity: 0;
-    transform: translateX(-14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-.mm-link {
-  animation: mm-link-in 0.3s ease-out both;
-}
-@keyframes ba-fade-in {
+
+/* Transition d'image (avant/après) */
+@keyframes soft-in {
   from {
     opacity: 0;
   }
@@ -202,8 +300,8 @@
     opacity: 1;
   }
 }
-.ba-slide {
-  animation: ba-fade-in 0.35s ease-out both;
+.soft-in {
+  animation: soft-in 0.45s ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -211,15 +309,18 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .rv {
+  .rv,
+  .rv-line,
+  .rv-line-y,
+  .hero-in {
     opacity: 1 !important;
     transform: none !important;
   }
-  .hero-fade {
-    opacity: 1 !important;
-    animation: none !important;
+  .rv-veil > * {
+    clip-path: none !important;
   }
 }

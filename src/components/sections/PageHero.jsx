@@ -2,18 +2,16 @@ import { Link } from 'react-router-dom';
 import { Container } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
-/** En-tête de page interne — image optionnelle, fil d'Ariane, H1. */
-export default function PageHero({ eyebrow, title, intro, image, breadcrumb = [], className }) {
+/**
+ * En-tête de page interne : fil d'Ariane, label, H1, une phrase.
+ * Sans image par défaut — le vide fait le travail. L'image reste possible
+ * quand la page a un visuel qui mérite la pleine largeur.
+ */
+export default function PageHero({ label, title, intro, image, breadcrumb = [], aside }) {
   const hasImage = Boolean(image);
 
   return (
-    <section
-      className={cn(
-        'relative overflow-hidden',
-        hasImage ? 'bg-brand-dark' : 'border-b border-brand-ink/10 bg-brand-sand',
-        className
-      )}
-    >
+    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-night' : 'bg-cream')}>
       {hasImage && (
         <>
           <img
@@ -22,30 +20,27 @@ export default function PageHero({ eyebrow, title, intro, image, breadcrumb = []
             aria-hidden="true"
             fetchpriority="high"
             decoding="sync"
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-brand-ink/65" aria-hidden="true" />
+          <div className="absolute inset-0 -z-10 bg-night/70" aria-hidden="true" />
         </>
       )}
 
-      <Container className={cn('relative pb-14 pt-32 lg:pb-20 lg:pt-40', hasImage && 'pb-20 lg:pb-28')}>
+      <Container className={cn('pb-14 pt-28 lg:pb-20 lg:pt-40', hasImage && 'pb-20 lg:pb-28')}>
         {breadcrumb.length > 0 && (
-          <nav aria-label="Fil d'Ariane" className="mb-6">
-            <ol
-              className={cn(
-                'flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.14em]',
-                hasImage ? 'text-white/50' : 'text-brand-ink/40'
-              )}
-            >
+          <nav aria-label="Fil d'Ariane" className="mb-10">
+            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-cream/45' : 'text-ink/35')}>
               {breadcrumb.map((b, i) => (
                 <li key={b.to || b.label} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">/</span>}
                   {b.to ? (
-                    <Link to={b.to} className="transition-colors hover:text-brand-gold">
+                    <Link to={b.to} className="transition-colors hover:text-gold">
                       {b.label}
                     </Link>
                   ) : (
-                    <span aria-current="page">{b.label}</span>
+                    <span aria-current="page" className={hasImage ? 'text-cream/70' : 'text-ink/60'}>
+                      {b.label}
+                    </span>
                   )}
                 </li>
               ))}
@@ -53,26 +48,25 @@ export default function PageHero({ eyebrow, title, intro, image, breadcrumb = []
           </nav>
         )}
 
-        {eyebrow && <p className={cn('eyebrow', hasImage && 'text-brand-goldLight')}>{eyebrow}</p>}
-        <h1
-          className={cn(
-            'h-display max-w-3xl text-[2.4rem] sm:text-5xl lg:text-6xl',
-            hasImage ? 'text-white' : 'text-brand-ink'
-          )}
-        >
-          {title}
-        </h1>
-        {intro && (
-          <p
-            className={cn(
-              'mt-6 max-w-2xl text-[15px] font-light leading-[1.85] lg:text-base',
-              hasImage ? 'text-white/65' : 'text-brand-ink/60'
+        <div className="lg:grid lg:grid-cols-12 lg:gap-12">
+          <div className="lg:col-span-7">
+            {label && (
+              <div className="mb-6 flex items-center gap-4">
+                <span className="h-px w-8 bg-gold" aria-hidden="true" />
+                <span className={cn('t-label', hasImage ? 'text-cream/60' : 'text-ink/40')}>{label}</span>
+              </div>
             )}
-          >
-            {intro}
-          </p>
-        )}
+            <h1 className={cn('t-h1', hasImage ? 'text-cream' : 'text-ink')}>{title}</h1>
+          </div>
+
+          {(intro || aside) && (
+            <div className={cn('mt-8 lg:col-span-5 lg:mt-0 lg:self-end', hasImage ? 'text-cream/65' : 'text-ink/60')}>
+              {intro && <p className="t-body measure">{intro}</p>}
+              {aside}
+            </div>
+          )}
+        </div>
       </Container>
-    </section>
+    </header>
   );
 }

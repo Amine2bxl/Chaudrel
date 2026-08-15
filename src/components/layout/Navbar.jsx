@@ -1,18 +1,32 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, Phone } from 'lucide-react';
 import { BRAND, LOGO, NAV, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui';
+
+/** Deux lignes qui deviennent une croix — pas d'icône importée. */
+function MenuIcon({ open, dark }) {
+  const bar = cn('block h-px w-6 transition-all duration-300 ease-soft', dark ? 'bg-ink' : 'bg-cream');
+  return (
+    <span className="relative flex h-6 w-6 flex-col items-center justify-center gap-[6px]">
+      <span className={cn(bar, open && 'translate-y-[3.5px] rotate-45')} />
+      <span className={cn(bar, open && '-translate-y-[3.5px] -rotate-45')} />
+    </span>
+  );
+}
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
 
+  // Les pages avec un en-tête sombre plein écran laissent la barre transparente.
+  const overHero = pathname === '/' || pathname.startsWith('/realisations/') || pathname.startsWith('/services/');
+  const dark = scrolled || open || !overHero;
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 32);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -30,60 +44,54 @@ export default function Navbar() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-all duration-500',
-        scrolled || open ? 'bg-brand-cream/95 backdrop-blur-sm shadow-[0_1px_0_rgba(20,19,17,0.08)]' : 'bg-transparent'
+        'fixed inset-x-0 top-0 z-50 transition-colors duration-500',
+        scrolled || open ? 'bg-cream/95 backdrop-blur-sm' : 'bg-transparent'
       )}
     >
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-brand-ink focus:px-4 focus:py-2 focus:text-white"
+        className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:bg-ink focus:px-4 focus:py-3 focus:text-cream"
       >
         Aller au contenu
       </a>
 
-      <div className="mx-auto flex w-full max-w-[1360px] items-center justify-between px-5 py-4 lg:px-10 lg:py-5">
+      <div
+        className={cn(
+          'mx-auto flex w-full max-w-page items-center justify-between px-5 transition-all duration-500 sm:px-8 lg:px-12',
+          scrolled ? 'py-4' : 'py-6'
+        )}
+      >
         <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel — accueil">
-          <img src={LOGO} alt="" aria-hidden="true" width="36" height="36" className="h-9 w-9 rounded-full object-cover" />
+          <img src={LOGO} alt="" aria-hidden="true" width="34" height="34" className="h-[34px] w-[34px] object-contain" />
           <span
             className={cn(
-              'font-display text-lg tracking-[0.18em] uppercase transition-colors',
-              scrolled || open ? 'text-brand-ink' : 'text-white drop-shadow'
+              'font-display text-[17px] uppercase tracking-[0.22em] transition-colors duration-500',
+              dark ? 'text-ink' : 'text-cream'
             )}
           >
             {BRAND.name}
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Navigation principale">
+        <nav className="hidden items-center gap-9 lg:flex" aria-label="Navigation principale">
           {NAV.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
                 cn(
-                  'text-[13px] font-medium tracking-wide transition-colors',
-                  scrolled ? 'text-brand-ink/70 hover:text-brand-gold' : 'text-white/85 hover:text-white',
-                  isActive && (scrolled ? 'text-brand-gold' : 'text-white underline underline-offset-8')
+                  'link-line t-label pb-1 transition-colors duration-300',
+                  dark ? 'text-ink/70 hover:text-ink' : 'text-cream/80 hover:text-cream',
+                  isActive && (dark ? 'text-gold' : 'text-gold')
                 )
               }
             >
               {item.label}
             </NavLink>
           ))}
-          <a
-            href={`tel:${BRAND.phones[0].tel}`}
-            onClick={() => track(EVENTS.PHONE_CLICK, { source: 'navbar' })}
-            className={cn(
-              'flex items-center gap-2 text-[13px] font-medium',
-              scrolled ? 'text-brand-ink/70 hover:text-brand-gold' : 'text-white/85 hover:text-white'
-            )}
-          >
-            <Phone className="h-4 w-4" aria-hidden="true" />
-            {BRAND.phones[0].number}
-          </a>
           <Button
             to="/devis"
-            variant={scrolled ? 'primary' : 'gold'}
+            variant={dark ? 'solid' : 'solidLight'}
             size="sm"
             onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}
           >
@@ -96,35 +104,33 @@ export default function Navbar() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
-          className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-full lg:hidden',
-            scrolled || open ? 'text-brand-ink' : 'text-white'
-          )}
+          className="flex h-11 w-11 items-center justify-center lg:hidden"
         >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          <MenuIcon open={open} dark={dark} />
         </button>
       </div>
 
       {open && (
-        <div className="mm-overlay border-t border-brand-ink/10 bg-brand-cream lg:hidden">
-          <nav className="flex flex-col px-5 py-6" aria-label="Navigation mobile">
-            {[{ label: 'Accueil', to: '/' }, ...NAV].map((item, i) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                style={{ animationDelay: `${i * 40}ms` }}
-                className={({ isActive }) =>
-                  cn(
-                    'mm-link border-b border-brand-ink/8 py-4 font-display text-2xl font-light',
-                    isActive ? 'text-brand-gold' : 'text-brand-ink'
-                  )
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
-            <div className="mt-6 flex flex-col gap-3">
-              <Button to="/devis" variant="primary" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
+        <div className="panel-in border-t border-ink/10 bg-cream lg:hidden">
+          <nav className="px-5 pb-8 pt-2 sm:px-8" aria-label="Navigation mobile">
+            <ul>
+              {[{ label: 'Accueil', to: '/' }, ...NAV].map((item, i) => (
+                <li key={item.to} className="border-b border-ink/10">
+                  <NavLink
+                    to={item.to}
+                    style={{ animationDelay: `${i * 35}ms` }}
+                    className={({ isActive }) =>
+                      cn('panel-in block py-4 font-display text-[1.75rem]', isActive ? 'text-gold' : 'text-ink')
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-col gap-3">
+              <Button to="/devis" variant="solid" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
                 Demander un devis
               </Button>
               <Button
@@ -134,16 +140,17 @@ export default function Navbar() {
                 rel="noopener noreferrer"
                 onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'menu' })}
               >
-                Nous écrire sur WhatsApp
+                WhatsApp
               </Button>
-              <a
-                href={`tel:${BRAND.phones[0].tel}`}
-                onClick={() => track(EVENTS.PHONE_CLICK, { source: 'menu' })}
-                className="py-2 text-center text-[13px] text-brand-ink/60"
-              >
-                {BRAND.phones[0].number}
-              </a>
             </div>
+
+            <a
+              href={`tel:${BRAND.phones[0].tel}`}
+              onClick={() => track(EVENTS.PHONE_CLICK, { source: 'menu' })}
+              className="t-small mt-6 block text-ink/55"
+            >
+              {BRAND.phones[0].number}
+            </a>
           </nav>
         </div>
       )}

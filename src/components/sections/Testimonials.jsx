@@ -1,66 +1,66 @@
-import { Star } from 'lucide-react';
 import Reveal from '@/lib/reveal';
-import { Container, Section, SectionHeading } from '@/components/ui';
-import { TESTIMONIALS, GOOGLE_REVIEWS_URL } from '@/data/testimonials';
+import { Container, Label, Section, SectionHeading } from '@/components/ui';
+import { TESTIMONIALS, TESTIMONIALS_VALIDATED, GOOGLE_REVIEWS_URL } from '@/data/testimonials';
+import { cn } from '@/lib/utils';
 
-function Stars({ count = 5 }) {
-  return (
-    <div className="flex gap-0.5" aria-label={`Note ${count} sur 5`}>
-      {Array.from({ length: count }).map((_, i) => (
-        <Star key={i} className="h-3.5 w-3.5 fill-brand-gold text-brand-gold" aria-hidden="true" />
-      ))}
-    </div>
-  );
-}
-
-export default function Testimonials({ limit }) {
+/**
+ * Avis clients — présentation éditoriale, sans carte ni étoiles décoratives.
+ *
+ * ⚠️ PLACEHOLDER : les avis proviennent de la V1 et ne sont pas vérifiés
+ * (`TESTIMONIALS_VALIDATED = false` dans src/data/testimonials.js).
+ * La structure est en place ; le contenu doit être remplacé par de vrais avis
+ * — idéalement des avis Google — avant la mise en production.
+ */
+export default function Testimonials({ limit, tone = 'white' }) {
   const items = limit ? TESTIMONIALS.slice(0, limit) : TESTIMONIALS;
 
   return (
-    <Section tone="white" id="avis">
+    <Section tone={tone} id="avis">
       <Container>
-        <SectionHeading eyebrow="Avis clients" title="Ce que disent" accent="nos clients" />
+        <SectionHeading
+          label="Avis clients"
+          title={
+            <>
+              Ce qu’en disent
+              <br />
+              celles et ceux qui nous ont fait confiance.
+            </>
+          }
+        />
 
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid gap-x-10 gap-y-12 md:grid-cols-2 lg:mt-20 lg:grid-cols-3">
           {items.map((t, i) => (
-            <Reveal
-              as="article"
-              key={t.id}
-              delay={i * 70}
-              className="flex flex-col border border-brand-ink/8 bg-brand-cream p-6 transition-colors duration-300 hover:border-brand-gold/30 hover:bg-white"
-            >
-              <div className="flex items-center justify-between">
-                <Stars count={t.rating} />
-                <span className="text-[10px] uppercase tracking-[0.12em] text-brand-ink/30">{t.date}</span>
-              </div>
-              <blockquote className="mt-5 flex-1 text-[14px] font-light italic leading-[1.8] text-brand-ink/65">
-                « {t.quote} »
-              </blockquote>
-              <footer className="mt-6 flex items-center justify-between gap-3 border-t border-brand-ink/8 pt-4">
-                <div>
-                  <p className="font-display text-[15px] font-light text-brand-ink">{t.name}</p>
-                  <p className="mt-0.5 text-[11px] text-brand-gold">{t.location}</p>
-                </div>
-                <span className="rounded-full bg-brand-gold/10 px-3 py-1 text-[10px] font-medium text-brand-gold">
-                  {t.project}
-                </span>
-              </footer>
+            <Reveal as="figure" key={t.id} delay={i * 90} className="border-t border-ink/12 pt-6">
+              <blockquote className="t-body text-ink/75">« {t.quote} »</blockquote>
+              <figcaption className="mt-6 flex items-baseline justify-between gap-4">
+                <span className="t-h3">{t.name}</span>
+                <span className="t-label text-ink/35">{t.location}</span>
+              </figcaption>
+              <p className="t-small mt-1 text-ink/40">{t.project}</p>
             </Reveal>
           ))}
         </div>
 
-        {GOOGLE_REVIEWS_URL && (
-          <p className="mt-10 text-center text-[14px] font-light text-brand-ink/55">
+        <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
+          {GOOGLE_REVIEWS_URL && (
             <a
               href={GOOGLE_REVIEWS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="link-underline text-brand-gold"
+              className="link-line t-label text-ink"
             >
-              Voir tous les avis Google
+              Voir les avis Google
             </a>
-          </p>
-        )}
+          )}
+          {!TESTIMONIALS_VALIDATED && (
+            <p className={cn('t-small text-ink/40')}>
+              <Label>À valider</Label>{' '}
+              <span className="ml-2">
+                avis repris de l’ancien site, à confirmer ou à remplacer par des avis Google avant publication.
+              </span>
+            </p>
+          )}
+        </div>
       </Container>
     </Section>
   );

@@ -1,10 +1,9 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { Check } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
-import ProjectCard from '@/components/sections/ProjectCard';
-import MethodSteps from '@/components/sections/MethodSteps';
+import ProjectGrid from '@/components/sections/ProjectGrid';
+import ProcessTimeline from '@/components/sections/ProcessTimeline';
 import FaqAccordion from '@/components/sections/FaqAccordion';
-import CtaBand from '@/components/sections/CtaBand';
+import CTASection from '@/components/sections/CTASection';
 import { Button, Container, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { SERVICES, getService } from '@/data/services';
@@ -18,13 +17,13 @@ export default function Service() {
   if (!service) return <Navigate to="/services" replace />;
 
   const related = projectsForTags(service.projectTags || [], 3);
-  const others = SERVICES.filter((s) => s.slug !== service.slug).slice(0, 6);
+  const others = SERVICES.filter((s) => s.slug !== service.slug);
 
   return (
     <>
       <PageHero
-        eyebrow={service.subtitle}
-        title={`${service.title} à Bruxelles`}
+        label="Service"
+        title={service.title}
         intro={service.excerpt}
         image={service.image}
         breadcrumb={[
@@ -35,113 +34,82 @@ export default function Service() {
       />
 
       <Section tone="cream">
-        <Container className="grid gap-12 lg:grid-cols-3 lg:gap-16">
-          <div className="lg:col-span-2">
-            <div className="prose-brand">
-              <p>{service.intro}</p>
+        <Container>
+          <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
+            <div className="lg:col-span-7">
+              <p className="t-h3 measure text-ink">{service.intro}</p>
+
+              {service.works?.length > 0 && (
+                <div className="mt-14">
+                  <span className="t-label text-ink/35">Ce que comprend le poste</span>
+                  <ul className="mt-6 border-t border-ink/12">
+                    {service.works.map((w, i) => (
+                      <Reveal as="li" key={w} delay={i * 60} className="flex gap-6 border-b border-ink/12 py-4">
+                        <span className="t-num text-ink/25">{String(i + 1).padStart(2, '0')}</span>
+                        <span className="t-body text-ink/70">{w}</span>
+                      </Reveal>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
-            {service.benefits?.length > 0 && (
-              <div className="mt-10">
-                <h2 className="font-display text-2xl font-light text-brand-ink">Ce que cela vous apporte</h2>
-                <ul className="mt-5 grid gap-3 sm:grid-cols-2">
-                  {service.benefits.map((b) => (
-                    <li key={b} className="flex gap-3 border border-brand-ink/8 bg-white p-4 text-[14px] text-brand-ink/70">
-                      <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-gold" aria-hidden="true" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
+            <aside className="lg:col-span-4 lg:col-start-9">
+              <div className="border-t border-ink/12 pt-6">
+                <span className="t-label text-ink/35">Devis gratuit</span>
+                <p className="t-body mt-4 text-ink/65">
+                  Décrivez votre projet {service.title.toLowerCase()}. Nous organisons une visite et vous remettons une
+                  proposition détaillée, sans engagement.
+                </p>
+                <Button to="/devis" variant="solid" className="mt-7 w-full">
+                  Demander un devis
+                </Button>
+                <p className="t-small mt-5 text-ink/45">Zone d’intervention : {BRAND.zone}.</p>
               </div>
-            )}
 
-            {service.works?.length > 0 && (
-              <div className="mt-10">
-                <h2 className="font-display text-2xl font-light text-brand-ink">Types de travaux</h2>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {service.works.map((w) => (
-                    <li
-                      key={w}
-                      className="rounded-full border border-brand-ink/12 px-4 py-2 text-[13px] text-brand-ink/65"
-                    >
-                      {w}
+              <nav aria-label="Autres services" className="mt-12">
+                <span className="t-label text-ink/35">Autres services</span>
+                <ul className="mt-5 space-y-2.5">
+                  {others.map((s) => (
+                    <li key={s.slug}>
+                      <Link to={`/services/${s.slug}`} className="link-line t-small text-ink/60 hover:text-ink">
+                        {s.title}
+                      </Link>
                     </li>
                   ))}
                 </ul>
-              </div>
-            )}
+              </nav>
+            </aside>
           </div>
-
-          <aside>
-            <div className="border border-brand-ink/10 bg-white p-7">
-              <h2 className="font-display text-xl font-light text-brand-ink">Devis gratuit</h2>
-              <p className="mt-3 text-[14px] font-light leading-[1.8] text-brand-ink/60">
-                Décrivez votre projet {service.title.toLowerCase()} : nous organisons une visite et vous remettons une
-                proposition détaillée, sans engagement.
-              </p>
-              <Button to="/devis" variant="primary" className="mt-6 w-full">
-                Demander un devis
-              </Button>
-              <p className="mt-5 text-[13px] text-brand-ink/50">
-                Zone d'intervention : {BRAND.zone}.
-              </p>
-            </div>
-
-            <nav aria-label="Autres services" className="mt-8">
-              <h2 className="eyebrow">Autres services</h2>
-              <ul className="space-y-2 text-[14px]">
-                {others.map((s) => (
-                  <li key={s.slug}>
-                    <Link
-                      to={`/services/${s.slug}`}
-                      className="text-brand-ink/65 transition-colors hover:text-brand-gold"
-                    >
-                      {s.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </aside>
         </Container>
       </Section>
 
       {related.length > 0 && (
         <Section tone="white">
           <Container>
-            <SectionHeading eyebrow="Réalisations" title="Chantiers liés" />
-            <div className="mt-10 grid gap-4 md:grid-cols-3">
-              {related.map((p, i) => (
-                <Reveal key={p.slug} delay={i * 70}>
-                  <ProjectCard project={p} aspect="aspect-[4/5]" />
-                </Reveal>
-              ))}
-            </div>
+            <SectionHeading label="Réalisations" title="Des chantiers de ce type." />
+            <ProjectGrid projects={related} className="mt-14" />
           </Container>
         </Section>
       )}
 
-      <Section tone="dark">
+      <Section tone="night">
         <Container>
-          <SectionHeading eyebrow="Notre méthode" tone="dark" title="Le déroulement" accent="d'un chantier" />
-        </Container>
-        <Container className="mt-12">
-          <MethodSteps tone="dark" />
+          <SectionHeading tone="light" label="Notre méthode" title="Le déroulé, étape par étape." />
+          <ProcessTimeline tone="light" className="mt-16 lg:mt-24" />
         </Container>
       </Section>
 
       {service.faqs?.length > 0 && (
         <Section tone="cream">
-          <Container className="max-w-3xl">
-            <SectionHeading eyebrow="FAQ" title={`Questions sur ${service.title.toLowerCase()}`} align="center" />
-            <div className="mt-10">
-              <FaqAccordion items={service.faqs} />
-            </div>
+          <Container>
+            <SectionHeading label="FAQ" title={`Questions sur ${service.title.toLowerCase()}.`} />
+            <FaqAccordion items={service.faqs} className="mt-12" />
           </Container>
         </Section>
       )}
 
-      <CtaBand source={`service_${service.slug}`} />
+      <CTASection source={`service_${service.slug}`} />
     </>
   );
 }

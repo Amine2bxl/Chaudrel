@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, Loader2, MessageCircle, Phone } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
 import { Button, Container, Section } from '@/components/ui';
+import Reveal from '@/lib/reveal';
 import { METHOD } from '@/data/method';
 import { BRAND, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
@@ -18,23 +18,17 @@ const PROJECT_TYPES = [
 ];
 
 /**
- * Aucune fourchette de prix n'est affichée tant que Chaudrel ne les a pas
- * validées (voir VERIFICATION.md). Le visiteur indique seulement s'il a déjà
- * un budget en tête.
+ * Aucune fourchette de prix n'est proposée tant que Chaudrel ne les a pas
+ * validées (voir docs/VERIFICATION.md). Le visiteur indique seulement s'il a
+ * déjà un budget en tête.
  */
 const BUDGET_OPTIONS = [
-  { id: 'defined', label: "J'ai un budget en tête", hint: 'Vous pourrez le préciser ci-dessous' },
-  { id: 'range', label: "J'ai une idée approximative", hint: 'À affiner ensemble lors de la visite' },
-  { id: 'unknown', label: 'Je ne sais pas encore', hint: 'Nous vous orientons lors de la visite' },
+  { id: 'defined', label: 'J’ai un budget défini' },
+  { id: 'range', label: 'J’ai un ordre d’idée' },
+  { id: 'unknown', label: 'Je ne sais pas encore' },
 ];
 
-const STEPS = [
-  { id: 1, label: 'Projet' },
-  { id: 2, label: 'Description' },
-  { id: 3, label: 'Budget' },
-  { id: 4, label: 'Localisation' },
-  { id: 5, label: 'Coordonnées' },
-];
+const STEPS = ['Projet', 'Description', 'Budget', 'Lieu', 'Coordonnées'];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+0-9][0-9\s./-]{7,}$/;
@@ -50,14 +44,14 @@ const EMPTY = {
   phone: '',
   email: '',
   consent: false,
-  company: '', // honeypot
+  company: '',
 };
 
 export default function Quote() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState(EMPTY);
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [status, setStatus] = useState('idle');
   const [started, setStarted] = useState(false);
   const [serverError, setServerError] = useState('');
 
@@ -73,14 +67,13 @@ export default function Quote() {
   const validate = (s) => {
     const e = {};
     if (s === 1 && !data.projectType) e.projectType = 'Sélectionnez un type de projet.';
-    if (s === 2 && data.description.trim().length < 10)
-      e.description = 'Décrivez votre projet en quelques mots (10 caractères minimum).';
+    if (s === 2 && data.description.trim().length < 10) e.description = 'Quelques mots suffisent, mais il en faut quelques-uns.';
     if (s === 3 && !data.budget) e.budget = 'Sélectionnez une option.';
     if (s === 4 && !data.city.trim()) e.city = 'Indiquez la commune du chantier.';
     if (s === 5) {
       if (data.name.trim().length < 2) e.name = 'Indiquez votre nom.';
-      if (!PHONE_RE.test(data.phone.trim())) e.phone = 'Indiquez un numéro de téléphone valide.';
-      if (!EMAIL_RE.test(data.email.trim())) e.email = 'Indiquez une adresse e-mail valide.';
+      if (!PHONE_RE.test(data.phone.trim())) e.phone = 'Numéro de téléphone invalide.';
+      if (!EMAIL_RE.test(data.email.trim())) e.email = 'Adresse e-mail invalide.';
       if (!data.consent) e.consent = 'Votre accord est nécessaire pour vous recontacter.';
     }
     setErrors(e);
@@ -90,7 +83,7 @@ export default function Quote() {
   const next = () => {
     if (!validate(step)) return;
     track(EVENTS.QUOTE_STEP, { step });
-    setStep((s) => Math.min(5, s + 1));
+    setStep((s) => Math.min(STEPS.length, s + 1));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -101,7 +94,7 @@ export default function Quote() {
 
   const submit = async (e) => {
     e.preventDefault();
-    if (!validate(5)) return;
+    if (!validate(STEPS.length)) return;
 
     setStatus('loading');
     setServerError('');
@@ -113,12 +106,10 @@ export default function Quote() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, sentAt: new Date().toISOString() }),
       });
-
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error || 'Envoi impossible');
       }
-
       setStatus('success');
       track(EVENTS.QUOTE_SUCCESS, { projectType: data.projectType });
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -129,45 +120,52 @@ export default function Quote() {
     }
   };
 
-  const progress = useMemo(() => Math.round(((step - 1) / (STEPS.length - 1)) * 100), [step]);
+  const progress = useMemo(() => step / STEPS.length, [step]);
 
   if (status === 'success') {
     return (
       <>
         <PageHero
-          eyebrow="Demande envoyée"
-          title="Merci, votre demande est bien arrivée"
-          intro="Nous revenons vers vous pour convenir d'une visite et préparer votre devis."
+          label="Demande envoyée"
+          title="C’est noté. Merci."
+          intro="Nous revenons vers vous pour convenir d’une visite et préparer votre devis."
           breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
         />
-        <Section tone="cream">
-          <Container className="max-w-2xl">
-            <ol className="divide-y divide-brand-ink/10 border-y border-brand-ink/10">
-              {METHOD.slice(1, 4).map((s) => (
-                <li key={s.n} className="flex gap-6 py-6">
-                  <span className="font-display text-2xl font-light text-brand-gold">{s.n}</span>
-                  <div>
-                    <h2 className="font-display text-lg font-light text-brand-ink">{s.title}</h2>
-                    <p className="mt-1 text-[14px] font-light text-brand-ink/60">{s.text}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+        <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+          <Container>
+            <div className="grid gap-12 lg:grid-cols-12">
+              <ol className="lg:col-span-7">
+                <span className="t-label text-ink/35">La suite</span>
+                {METHOD.slice(2, 5).map((s) => (
+                  <li key={s.n} className="flex gap-8 border-b border-ink/12 py-6 first:border-t first:mt-5">
+                    <span className="t-num text-2xl text-ink/25">{s.n}</span>
+                    <div>
+                      <h2 className="t-h3">{s.title}</h2>
+                      <p className="t-small mt-1.5 text-ink/55">{s.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
 
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-              <Button to="/realisations" variant="primary">
-                Voir nos réalisations
-              </Button>
-              <Button
-                href={whatsappUrl('Bonjour Chaudrel, je viens de vous envoyer une demande de devis.')}
-                variant="outline"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_success' })}
-              >
-                <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                WhatsApp
-              </Button>
+              <div className="lg:col-span-4 lg:col-start-9">
+                <p className="t-body text-ink/65">
+                  En attendant, vous pouvez parcourir nos chantiers récents — ou nous écrire directement.
+                </p>
+                <div className="mt-7 flex flex-col gap-3">
+                  <Button to="/realisations" variant="solid">
+                    Voir les réalisations
+                  </Button>
+                  <Button
+                    href={whatsappUrl('Bonjour Chaudrel, je viens de vous envoyer une demande de devis.')}
+                    variant="outline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_success' })}
+                  >
+                    WhatsApp
+                  </Button>
+                </div>
+              </div>
             </div>
           </Container>
         </Section>
@@ -178,25 +176,27 @@ export default function Quote() {
   return (
     <>
       <PageHero
-        eyebrow="Demander un devis"
-        title="Parlez-nous de votre projet"
-        intro="Cinq questions, deux minutes. Votre demande est gratuite et sans engagement."
+        label="Demander un devis"
+        title="Cinq questions, deux minutes."
+        intro="Gratuit et sans engagement. Plus votre description est précise, plus notre réponse le sera."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
       />
 
-      <Section tone="cream">
-        <Container className="grid gap-12 lg:grid-cols-3 lg:gap-16">
-          <div className="lg:col-span-2">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+        <Container className="grid gap-16 lg:grid-cols-12 lg:gap-20">
+          <div className="lg:col-span-7">
             {/* Progression */}
-            <div className="mb-10">
-              <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.16em] text-brand-ink/40">
-                <span>
-                  Étape {step} sur {STEPS.length} — {STEPS[step - 1].label}
+            <div>
+              <div className="flex items-baseline justify-between">
+                <span className="t-label text-ink/40">
+                  {String(step).padStart(2, '0')} — {STEPS[step - 1]}
                 </span>
-                <span>{progress}%</span>
+                <span className="t-label text-ink/25">
+                  {step} / {STEPS.length}
+                </span>
               </div>
               <div
-                className="mt-3 h-px w-full bg-brand-ink/10"
+                className="mt-4 h-px w-full bg-ink/12"
                 role="progressbar"
                 aria-valuenow={step}
                 aria-valuemin={1}
@@ -204,30 +204,27 @@ export default function Quote() {
                 aria-label="Progression du formulaire"
               >
                 <div
-                  className="h-px bg-brand-gold transition-all duration-500"
-                  style={{ width: `${Math.max(progress, 4)}%` }}
+                  className="h-px origin-left bg-gold transition-transform duration-700 ease-soft"
+                  style={{ transform: `scaleX(${progress})` }}
                 />
               </div>
             </div>
 
-            <form onSubmit={submit} noValidate>
-              {/* Honeypot anti-spam — invisible pour les humains */}
+            <form onSubmit={submit} noValidate className="mt-12">
               <div className="absolute left-[-9999px]" aria-hidden="true">
                 <label htmlFor="company">Ne pas remplir</label>
                 <input
                   id="company"
-                  name="company"
-                  type="text"
                   tabIndex={-1}
                   autoComplete="off"
                   value={data.company}
-                  onChange={(e) => setData((d) => ({ ...d, company: e.target.value }))}
+                  onChange={(e) => set('company')(e.target.value)}
                 />
               </div>
 
               {step === 1 && (
                 <Fieldset legend="Quel type de projet ?" error={errors.projectType}>
-                  <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="border-t border-ink/12">
                     {PROJECT_TYPES.map((t) => (
                       <Choice
                         key={t}
@@ -242,9 +239,9 @@ export default function Quote() {
               )}
 
               {step === 2 && (
-                <Fieldset legend="Parlez-nous de votre projet" error={errors.description}>
-                  <label htmlFor="description" className="text-[14px] text-brand-ink/60">
-                    Surface, pièces concernées, état actuel, délais souhaités — tout ce qui nous aide à comprendre.
+                <Fieldset legend="Racontez-nous." error={errors.description}>
+                  <label htmlFor="description" className="t-small block text-ink/55">
+                    Surface, pièces concernées, état actuel, échéance souhaitée.
                   </label>
                   <textarea
                     id="description"
@@ -252,160 +249,96 @@ export default function Quote() {
                     value={data.description}
                     onChange={(e) => set('description')(e.target.value)}
                     aria-invalid={Boolean(errors.description)}
-                    className="mt-3 w-full border border-brand-ink/15 bg-white p-4 text-[15px] text-brand-ink outline-none transition-colors focus:border-brand-gold"
-                    placeholder="Ex. : rénovation complète d'un appartement de 90 m² à Ixelles, cuisine et salle de bain comprises."
+                    placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
+                    className="mt-4 w-full border-0 border-b border-ink/20 bg-transparent px-0 py-3 text-[16px] outline-none transition-colors placeholder:text-ink/25 focus:border-gold"
                   />
                 </Fieldset>
               )}
 
               {step === 3 && (
-                <Fieldset legend="Budget approximatif" error={errors.budget}>
-                  <div className="grid gap-3">
+                <Fieldset legend="Avez-vous un budget en tête ?" error={errors.budget}>
+                  <div className="border-t border-ink/12">
                     {BUDGET_OPTIONS.map((b) => (
                       <Choice
                         key={b.id}
                         name="budget"
                         label={b.label}
-                        hint={b.hint}
                         checked={data.budget === b.id}
                         onChange={() => set('budget')(b.id)}
                       />
                     ))}
                   </div>
                   {(data.budget === 'defined' || data.budget === 'range') && (
-                    <div className="mt-5">
-                      <label htmlFor="budgetDetail" className="text-[14px] text-brand-ink/60">
-                        Budget envisagé (facultatif)
-                      </label>
-                      <input
-                        id="budgetDetail"
-                        type="text"
-                        value={data.budgetDetail}
-                        onChange={(e) => set('budgetDetail')(e.target.value)}
-                        className="mt-2 w-full border border-brand-ink/15 bg-white p-4 text-[15px] outline-none transition-colors focus:border-brand-gold"
-                        placeholder="Ex. : environ 25 000 €"
-                      />
-                    </div>
+                    <Field
+                      id="budgetDetail"
+                      label="Montant envisagé (facultatif)"
+                      value={data.budgetDetail}
+                      onChange={set('budgetDetail')}
+                      className="mt-8"
+                    />
                   )}
                 </Fieldset>
               )}
 
               {step === 4 && (
                 <Fieldset legend="Où se situe le chantier ?" error={errors.city}>
-                  <div className="grid gap-4 sm:grid-cols-[1fr_auto]">
-                    <Field
-                      id="city"
-                      label="Commune"
-                      value={data.city}
-                      onChange={set('city')}
-                      error={errors.city}
-                      autoComplete="address-level2"
-                      placeholder="Ex. : Ixelles"
-                    />
+                  <div className="grid gap-8 sm:grid-cols-[2fr_1fr]">
+                    <Field id="city" label="Commune" value={data.city} onChange={set('city')} error={errors.city} autoComplete="address-level2" />
                     <Field
                       id="postalCode"
-                      label="Code postal (facultatif)"
+                      label="Code postal"
                       value={data.postalCode}
                       onChange={set('postalCode')}
                       autoComplete="postal-code"
                       inputMode="numeric"
-                      placeholder="1050"
                     />
                   </div>
-                  <p className="mt-4 text-[13px] font-light text-brand-ink/50">
-                    Nous intervenons à {BRAND.zone}. Hors zone, nous vous le disons dès la réponse.
-                  </p>
+                  <p className="t-small mt-6 text-ink/45">Nous intervenons partout en Belgique.</p>
                 </Fieldset>
               )}
 
               {step === 5 && (
-                <Fieldset legend="Vos coordonnées">
-                  <div className="grid gap-4">
-                    <Field
-                      id="name"
-                      label="Nom"
-                      value={data.name}
-                      onChange={set('name')}
-                      error={errors.name}
-                      autoComplete="name"
-                      required
-                    />
-                    <Field
-                      id="phone"
-                      label="Téléphone"
-                      type="tel"
-                      value={data.phone}
-                      onChange={set('phone')}
-                      error={errors.phone}
-                      autoComplete="tel"
-                      inputMode="tel"
-                      required
-                    />
-                    <Field
-                      id="email"
-                      label="E-mail"
-                      type="email"
-                      value={data.email}
-                      onChange={set('email')}
-                      error={errors.email}
-                      autoComplete="email"
-                      inputMode="email"
-                      required
-                    />
+                <Fieldset legend="Comment vous joindre ?">
+                  <div className="space-y-8">
+                    <Field id="name" label="Nom" value={data.name} onChange={set('name')} error={errors.name} autoComplete="name" />
+                    <Field id="phone" label="Téléphone" type="tel" value={data.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" />
+                    <Field id="email" label="E-mail" type="email" value={data.email} onChange={set('email')} error={errors.email} autoComplete="email" />
                   </div>
 
-                  <label className="mt-6 flex cursor-pointer items-start gap-3 text-[13px] font-light leading-[1.7] text-brand-ink/60">
+                  <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-ink/60">
                     <input
                       type="checkbox"
                       checked={data.consent}
                       onChange={(e) => set('consent')(e.target.checked)}
                       aria-invalid={Boolean(errors.consent)}
-                      className="mt-0.5 h-4 w-4 flex-shrink-0 accent-[#8C764E]"
+                      className="mt-1 h-4 w-4 flex-shrink-0 accent-[#8C764E]"
                     />
                     <span>
-                      J'accepte que Chaudrel utilise ces informations pour me recontacter au sujet de ma demande de devis.{' '}
-                      <a href="/legal/politique-mentions" className="link-underline text-brand-gold">
+                      J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
+                      <a href="/legal/politique-mentions" className="link-line text-ink">
                         Politique de confidentialité
                       </a>
-                      .
                     </span>
                   </label>
                   {errors.consent && <FieldError>{errors.consent}</FieldError>}
                 </Fieldset>
               )}
 
-              {/* Navigation */}
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="mt-12 flex flex-wrap items-center gap-4">
                 {step > 1 && (
                   <Button variant="outline" onClick={back} disabled={status === 'loading'}>
-                    <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                     Retour
                   </Button>
                 )}
 
-                {step < 5 ? (
-                  <Button variant="primary" onClick={next}>
+                {step < STEPS.length ? (
+                  <Button variant="solid" onClick={next}>
                     Continuer
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 ) : (
-                  <button
-                    type="submit"
-                    disabled={status === 'loading'}
-                    className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-gold px-8 py-4 text-[13px] font-semibold uppercase tracking-[0.1em] text-white transition-colors duration-300 hover:bg-brand-ink disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {status === 'loading' ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
-                        Envoi en cours…
-                      </>
-                    ) : (
-                      <>
-                        <Check className="h-4 w-4" aria-hidden="true" />
-                        Recevoir ma demande de devis
-                      </>
-                    )}
-                  </button>
+                  <Button type="submit" variant="solid" size="lg" disabled={status === 'loading'}>
+                    {status === 'loading' ? 'Envoi…' : 'Envoyer ma demande'}
+                  </Button>
                 )}
               </div>
 
@@ -414,16 +347,16 @@ export default function Quote() {
               </p>
 
               {status === 'error' && (
-                <div role="alert" className="mt-6 border border-red-200 bg-red-50 p-5 text-[14px] text-red-800">
-                  <p className="font-medium">Votre demande n'a pas pu être envoyée.</p>
-                  {serverError && <p className="mt-1 text-red-700/80">{serverError}</p>}
-                  <p className="mt-3">
-                    Réessayez, ou contactez-nous directement au{' '}
-                    <a href={`tel:${BRAND.phones[0].tel}`} className="underline">
+                <div role="alert" className="mt-8 border-l-2 border-[#9B2C2C] pl-5">
+                  <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
+                  {serverError && <p className="t-small mt-1 text-ink/55">{serverError}</p>}
+                  <p className="t-small mt-3 text-ink/65">
+                    Appelez-nous au{' '}
+                    <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
                       {BRAND.phones[0].number}
                     </a>{' '}
-                    ou sur{' '}
-                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="underline">
+                    ou écrivez sur{' '}
+                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-ink">
                       WhatsApp
                     </a>
                     .
@@ -433,45 +366,46 @@ export default function Quote() {
             </form>
           </div>
 
-          {/* Colonne latérale — réassurance + canaux alternatifs */}
-          <aside className="lg:col-span-1">
-            <div className="border border-brand-ink/10 bg-white p-7">
-              <h2 className="font-display text-xl font-light text-brand-ink">Vous préférez parler ?</h2>
-              <p className="mt-3 text-[14px] font-light leading-[1.8] text-brand-ink/60">
-                Le formulaire nous permet de préparer la visite. Mais vous pouvez aussi nous joindre directement.
-              </p>
+          {/* Réassurance */}
+          <aside className="lg:col-span-4 lg:col-start-9">
+            <span className="t-label text-ink/35">Pourquoi ces questions</span>
+            <ul className="mt-6 space-y-5 border-t border-ink/12 pt-6">
+              {[
+                'Elles nous évitent trois allers-retours avant la visite.',
+                'Le devis est gratuit et sans engagement.',
+                'Vos données servent uniquement à répondre à votre demande.',
+              ].map((t) => (
+                <li key={t} className="t-small text-ink/60">
+                  {t}
+                </li>
+              ))}
+            </ul>
 
-              <div className="mt-6 space-y-3">
+            <div className="mt-10 border-t border-ink/12 pt-6">
+              <p className="t-small text-ink/50">Vous préférez parler ?</p>
+              <ul className="mt-3 space-y-2">
                 {BRAND.phones.map((p) => (
-                  <a
-                    key={p.tel}
-                    href={`tel:${p.tel}`}
-                    onClick={() => track(EVENTS.PHONE_CLICK, { source: 'quote_sidebar' })}
-                    className="flex items-center gap-3 border border-brand-ink/10 p-4 text-[14px] text-brand-ink/75 transition-colors hover:border-brand-gold hover:text-brand-ink"
-                  >
-                    <Phone className="h-4 w-4 text-brand-gold" aria-hidden="true" />
-                    <span>
+                  <li key={p.tel}>
+                    <a
+                      href={`tel:${p.tel}`}
+                      onClick={() => track(EVENTS.PHONE_CLICK, { source: 'quote_sidebar' })}
+                      className="link-line t-body text-ink"
+                    >
                       {p.number}
-                      <span className="ml-2 text-brand-ink/40">{p.name}</span>
-                    </span>
-                  </a>
+                    </a>
+                  </li>
                 ))}
-                <a
-                  href={whatsappUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_sidebar' })}
-                  className="flex items-center gap-3 border border-brand-ink/10 p-4 text-[14px] text-brand-ink/75 transition-colors hover:border-brand-gold hover:text-brand-ink"
-                >
-                  <MessageCircle className="h-4 w-4 text-brand-gold" aria-hidden="true" />
-                  Demander un devis sur WhatsApp
-                </a>
-              </div>
-
-              <ul className="mt-7 space-y-2 border-t border-brand-ink/10 pt-6 text-[13px] font-light text-brand-ink/55">
-                <li>Devis gratuit et sans engagement</li>
-                <li>Visite sur place avant toute proposition</li>
-                <li>Vos données ne sont utilisées que pour votre demande</li>
+                <li>
+                  <a
+                    href={whatsappUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_sidebar' })}
+                    className="link-line t-body text-ink"
+                  >
+                    WhatsApp
+                  </a>
+                </li>
               </ul>
             </div>
           </aside>
@@ -481,67 +415,71 @@ export default function Quote() {
   );
 }
 
-/* ---------------- Sous-composants de formulaire ---------------- */
+/* ---------- Champs ---------- */
 
 function Fieldset({ legend, error, children }) {
   return (
-    <fieldset className="border-0 p-0">
-      <legend className="h-display mb-6 text-[1.6rem] text-brand-ink sm:text-3xl">{legend}</legend>
+    <Reveal as="fieldset" from="fade" className="border-0 p-0">
+      <legend className="t-h2 mb-8">{legend}</legend>
       {children}
       {error && <FieldError>{error}</FieldError>}
-    </fieldset>
+    </Reveal>
   );
 }
 
 function FieldError({ children }) {
   return (
-    <p role="alert" className="mt-3 text-[13px] text-red-700">
+    <p role="alert" className="t-small mt-4 text-[#9B2C2C]">
       {children}
     </p>
   );
 }
 
-function Choice({ name, label, hint, checked, onChange }) {
+function Choice({ name, label, checked, onChange }) {
   return (
     <label
       className={cn(
-        'flex cursor-pointer items-start gap-3 border p-4 transition-colors',
-        checked ? 'border-brand-gold bg-white' : 'border-brand-ink/15 bg-white/60 hover:border-brand-ink/35'
+        'flex cursor-pointer items-center gap-4 border-b border-ink/12 py-4 transition-colors duration-300',
+        checked ? 'text-ink' : 'text-ink/60 hover:text-ink'
       )}
     >
-      <input type="radio" name={name} checked={checked} onChange={onChange} className="mt-1 h-4 w-4 accent-[#8C764E]" />
-      <span>
-        <span className="block text-[15px] text-brand-ink">{label}</span>
-        {hint && <span className="mt-0.5 block text-[13px] font-light text-brand-ink/45">{hint}</span>}
+      <input type="radio" name={name} checked={checked} onChange={onChange} className="sr-only" />
+      <span
+        aria-hidden="true"
+        className={cn(
+          'flex h-4 w-4 flex-shrink-0 items-center justify-center border transition-colors duration-300',
+          checked ? 'border-gold bg-gold' : 'border-ink/25'
+        )}
+      >
+        {checked && <span className="block h-1.5 w-1.5 bg-cream" />}
       </span>
+      <span className="t-body">{label}</span>
     </label>
   );
 }
 
-function Field({ id, label, value, onChange, error, type = 'text', required, ...rest }) {
+function Field({ id, label, value, onChange, error, type = 'text', className, ...rest }) {
   return (
-    <div>
-      <label htmlFor={id} className="block text-[13px] font-medium text-brand-ink/70">
+    <div className={className}>
+      <label htmlFor={id} className="t-label text-ink/45">
         {label}
-        {required && <span className="text-brand-gold"> *</span>}
       </label>
       <input
         id={id}
         name={id}
         type={type}
         value={value}
-        required={required}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          'mt-2 w-full border bg-white p-4 text-[15px] text-brand-ink outline-none transition-colors focus:border-brand-gold',
-          error ? 'border-red-400' : 'border-brand-ink/15'
+          'mt-2 w-full border-0 border-b bg-transparent px-0 py-3 text-[16px] text-ink outline-none transition-colors focus:border-gold',
+          error ? 'border-[#9B2C2C]' : 'border-ink/20'
         )}
         {...rest}
       />
       {error && (
-        <p id={`${id}-error`} role="alert" className="mt-2 text-[13px] text-red-700">
+        <p id={`${id}-error`} role="alert" className="t-small mt-2 text-[#9B2C2C]">
           {error}
         </p>
       )}

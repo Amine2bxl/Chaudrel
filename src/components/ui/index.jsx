@@ -2,150 +2,168 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import Reveal from '@/lib/reveal';
 
-/* ---------------- Layout ---------------- */
+/* ============================================================
+   Primitives — tout le site est composé de ces briques.
+   ============================================================ */
 
 export function Container({ className, children, as: Tag = 'div' }) {
-  return <Tag className={cn('mx-auto w-full max-w-[1360px] px-5 lg:px-10', className)}>{children}</Tag>;
+  return <Tag className={cn('mx-auto w-full max-w-page px-5 sm:px-8 lg:px-12', className)}>{children}</Tag>;
 }
 
-export function Section({ id, className, tone = 'cream', children, ...rest }) {
-  const tones = {
-    cream: 'bg-brand-cream text-brand-ink',
-    white: 'bg-white text-brand-ink',
-    sand: 'bg-brand-sand text-brand-ink',
-    dark: 'bg-brand-dark text-white',
-  };
+const TONES = {
+  cream: 'bg-cream text-ink',
+  white: 'bg-white text-ink',
+  sand: 'bg-sand text-ink',
+  night: 'bg-night text-cream',
+};
+
+export function Section({ id, tone = 'cream', className, children, ...rest }) {
   return (
-    <section id={id} className={cn('py-16 md:py-24 lg:py-32', tones[tone], className)} {...rest}>
+    <section id={id} className={cn('py-20 md:py-28 lg:py-36', TONES[tone], className)} {...rest}>
       {children}
     </section>
   );
 }
 
-/* ---------------- Typographie ---------------- */
-
-export function Eyebrow({ children, className }) {
-  return <p className={cn('eyebrow mb-4', className)}>{children}</p>;
-}
-
-export function SectionHeading({ eyebrow, title, accent, intro, align = 'left', tone = 'light', className }) {
-  const dark = tone === 'dark';
+/** Filet horizontal qui se dessine à l'apparition. */
+export function Rule({ tone = 'dark', className, delay = 0 }) {
   return (
     <Reveal
-      className={cn(
-        'max-w-2xl',
-        align === 'center' && 'mx-auto text-center',
-        className
-      )}
-    >
-      {eyebrow && <Eyebrow className={dark ? 'text-brand-goldLight' : undefined}>{eyebrow}</Eyebrow>}
-      <h2
-        className={cn(
-          'h-display text-[2rem] sm:text-4xl lg:text-5xl',
-          dark ? 'text-white' : 'text-brand-ink'
-        )}
-      >
-        {title}
-        {accent && (
-          <>
-            <br />
-            <span className={cn('italic', dark ? 'text-brand-goldLight' : 'text-brand-gold')}>{accent}</span>
-          </>
-        )}
-      </h2>
-      {intro && (
-        <p
-          className={cn(
-            'mt-5 text-[15px] font-light leading-[1.85]',
-            dark ? 'text-white/55' : 'text-brand-ink/60'
-          )}
-        >
-          {intro}
-        </p>
-      )}
-    </Reveal>
+      from="line"
+      delay={delay}
+      className={cn('h-px w-full', tone === 'light' ? 'bg-cream/20' : 'bg-ink/15', className)}
+    />
   );
 }
 
-/* ---------------- Boutons ---------------- */
+export function Label({ children, tone = 'dark', className }) {
+  return (
+    <span className={cn('t-label', tone === 'light' ? 'text-cream/45' : 'text-ink/40', className)}>{children}</span>
+  );
+}
 
-const BUTTON_VARIANTS = {
-  primary: 'bg-brand-ink text-white hover:bg-brand-gold',
-  gold: 'bg-brand-gold text-white hover:bg-brand-ink',
-  outline: 'border border-brand-ink/20 text-brand-ink hover:border-brand-ink hover:bg-brand-ink hover:text-white',
-  ghostLight: 'border border-white/30 text-white hover:bg-white hover:text-brand-ink',
+/**
+ * En-tête de section éditorial : un label, un titre, et — au besoin — un texte
+ * court placé en regard. Le titre reste court : le texte long va à droite.
+ */
+export function SectionHeading({ label, title, text, tone = 'dark', align = 'split', className, children }) {
+  const light = tone === 'light';
+
+  return (
+    <div className={cn(align === 'split' && 'lg:grid lg:grid-cols-12 lg:gap-10', className)}>
+      <Reveal className={cn(align === 'split' ? 'lg:col-span-7' : 'max-w-3xl')}>
+        {label && (
+          <div className="mb-6 flex items-center gap-4">
+            <span className={cn('h-px w-8', light ? 'bg-gold' : 'bg-gold')} aria-hidden="true" />
+            <Label tone={tone}>{label}</Label>
+          </div>
+        )}
+        <h2 className={cn('t-h2', light ? 'text-cream' : 'text-ink')}>{title}</h2>
+      </Reveal>
+
+      {(text || children) && (
+        <Reveal
+          delay={120}
+          className={cn(
+            'mt-6 lg:mt-0',
+            align === 'split' && 'lg:col-span-5 lg:self-end',
+            light ? 'text-cream/60' : 'text-ink/60'
+          )}
+        >
+          {text && <p className="t-body measure">{text}</p>}
+          {children}
+        </Reveal>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Boutons : deux variantes, rien de plus ---------- */
+
+const VARIANTS = {
+  solid: 'bg-ink text-cream hover:bg-gold',
+  solidLight: 'bg-cream text-ink hover:bg-gold hover:text-cream',
+  outline: 'border border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-cream',
+  outlineLight: 'border border-cream/30 text-cream hover:bg-cream hover:text-ink',
 };
 
-const BUTTON_SIZES = {
-  sm: 'px-5 py-2.5 text-[12px]',
-  md: 'px-7 py-3.5 text-[13px]',
-  lg: 'px-8 py-4 text-[13px]',
+const SIZES = {
+  sm: 'px-5 py-2.5 text-[11px]',
+  md: 'px-7 py-3.5 text-[11px]',
+  lg: 'px-9 py-4 text-[12px]',
 };
 
-export function Button({
-  to,
-  href,
-  variant = 'primary',
-  size = 'md',
-  className,
-  children,
-  ...rest
-}) {
-  const cls = cn(
-    'inline-flex items-center justify-center gap-2 rounded-full font-semibold uppercase tracking-[0.1em] transition-all duration-300',
-    BUTTON_VARIANTS[variant],
-    BUTTON_SIZES[size],
+export function Button({ to, href, variant = 'solid', size = 'md', className, children, ...rest }) {
+  const classes = cn(
+    'inline-flex items-center justify-center gap-2.5 font-semibold uppercase tracking-[0.16em] transition-colors duration-300',
+    VARIANTS[variant],
+    SIZES[size],
     className
   );
 
   if (to) {
     return (
-      <Link to={to} className={cls} {...rest}>
+      <Link to={to} className={classes} {...rest}>
         {children}
       </Link>
     );
   }
   if (href) {
     return (
-      <a href={href} className={cls} {...rest}>
+      <a href={href} className={classes} {...rest}>
         {children}
       </a>
     );
   }
   return (
-    <button type="button" className={cls} {...rest}>
+    <button type="button" className={classes} {...rest}>
       {children}
     </button>
   );
 }
 
-/* ---------------- Divers ---------------- */
+/** Lien texte avec soulignement qui se déploie au survol. */
+export function TextLink({ to, href, className, children, tone = 'dark', ...rest }) {
+  const classes = cn(
+    'link-line t-label inline-block pb-1',
+    tone === 'light' ? 'text-cream' : 'text-ink',
+    className
+  );
 
-export function Pill({ children, className }) {
+  if (to) {
+    return (
+      <Link to={to} className={classes} {...rest}>
+        {children}
+      </Link>
+    );
+  }
   return (
-    <span
-      className={cn(
-        'inline-flex items-center rounded-full border border-brand-ink/10 bg-white/80 px-3 py-1 text-[11px] font-medium tracking-wide text-brand-ink/70',
-        className
-      )}
-    >
+    <a href={href} className={classes} {...rest}>
       {children}
-    </span>
+    </a>
   );
 }
 
-export function Figure({ src, alt, className, imgClassName, aspect = 'aspect-[4/5]', priority = false, sizes }) {
+/** Image au ratio contrôlé, révélée par un volet au scroll. */
+export function Media({ src, alt, ratio = 'aspect-[4/5]', className, imgClassName, priority = false, reveal = true }) {
+  const img = (
+    <img
+      src={src}
+      alt={alt}
+      loading={priority ? 'eager' : 'lazy'}
+      decoding={priority ? 'sync' : 'async'}
+      fetchpriority={priority ? 'high' : undefined}
+      className={cn('h-full w-full object-cover', imgClassName)}
+    />
+  );
+
+  if (!reveal) {
+    return <div className={cn('overflow-hidden bg-sand', ratio, className)}>{img}</div>;
+  }
+
   return (
-    <div className={cn('overflow-hidden bg-brand-sand', aspect, className)}>
-      <img
-        src={src}
-        alt={alt}
-        sizes={sizes}
-        loading={priority ? 'eager' : 'lazy'}
-        decoding={priority ? 'sync' : 'async'}
-        fetchpriority={priority ? 'high' : undefined}
-        className={cn('h-full w-full object-cover', imgClassName)}
-      />
-    </div>
+    <Reveal from="veil" className={cn('overflow-hidden bg-sand', ratio, className)}>
+      {img}
+    </Reveal>
   );
 }

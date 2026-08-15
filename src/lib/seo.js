@@ -21,7 +21,7 @@ export const localBusinessLd = () => ({
   name: BRAND.legalName,
   alternateName: BRAND.name,
   description:
-    "Entreprise de rénovation à Bruxelles et en périphérie. Rénovation complète, cuisine, salle de bain, peinture, électricité, plomberie, sols, menuiserie et aménagement intérieur.",
+    "Entreprise de rénovation basée à Bruxelles, active dans toute la Belgique. Rénovation complète, cuisine, salle de bain, peinture, électricité, plomberie, sols, menuiserie et aménagement intérieur.",
   url: `${SITE_URL}/`,
   logo: `${SITE_URL}/chaudrel-logo.jpg`,
   image: DEFAULT_OG,
@@ -42,7 +42,10 @@ export const localBusinessLd = () => ({
     latitude: BRAND.address.geo.lat,
     longitude: BRAND.address.geo.lng,
   },
-  areaServed: BRAND.areaServed.map((name) => ({ '@type': 'City', name })),
+  areaServed: [
+    { '@type': 'Country', name: 'Belgique' },
+    ...BRAND.areaServed.map((name) => ({ '@type': 'City', name })),
+  ],
   sameAs: Object.values(BRAND.socials),
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
@@ -80,9 +83,9 @@ const faqLd = (faqs) => ({
 
 const STATIC = {
   '/': {
-    title: 'Chaudrel — Rénovation à Bruxelles | Devis gratuit',
+    title: 'Chaudrel — Entreprise de rénovation en Belgique | Devis gratuit',
     description:
-      "Chaudrel transforme vos espaces à Bruxelles et en périphérie : rénovation complète, cuisine, salle de bain, aménagement intérieur. Devis gratuit et sans engagement.",
+      "Rénovation complète, cuisine, salle de bain et aménagement intérieur. Un seul interlocuteur du devis à la livraison, partout en Belgique. Devis gratuit et sans engagement.",
     ld: () => [
       localBusinessLd(),
       {
@@ -95,9 +98,9 @@ const STATIC = {
     ],
   },
   '/realisations': {
-    title: 'Réalisations — Rénovations à Bruxelles | Chaudrel',
+    title: 'Réalisations — Nos chantiers de rénovation | Chaudrel',
     description:
-      "Découvrez les réalisations de Chaudrel à Bruxelles et en périphérie : rénovations complètes, cuisines, salles de bain, extérieurs. Photos avant/après.",
+      "Rénovations complètes, cuisines, salles de bain et extérieurs livrés par Chaudrel. Photos de chantiers et comparaisons avant / après.",
     ld: () => [
       breadcrumbLd([
         { name: 'Accueil', path: '/' },
@@ -116,9 +119,9 @@ const STATIC = {
     ],
   },
   '/services': {
-    title: 'Services de rénovation à Bruxelles | Chaudrel',
+    title: 'Services de rénovation en Belgique | Chaudrel',
     description:
-      "Rénovation complète, cuisine, salle de bain, peinture, électricité, plomberie, sols, menuiserie et aménagement intérieur à Bruxelles. Devis gratuit.",
+      "Rénovation complète, cuisine, salle de bain, peinture, électricité, plomberie, sols, menuiserie et aménagement intérieur. Un interlocuteur unique, devis gratuit.",
     ld: () => [
       breadcrumbLd([
         { name: 'Accueil', path: '/' },
@@ -127,9 +130,9 @@ const STATIC = {
     ],
   },
   '/methode': {
-    title: 'Notre méthode — 5 étapes claires | Chaudrel',
+    title: 'Notre méthode — 7 étapes, zéro surprise | Chaudrel',
     description:
-      "De votre premier contact à la livraison du chantier : découvrez les 5 étapes d'un projet de rénovation avec Chaudrel à Bruxelles.",
+      "Du premier contact à la livraison : les sept étapes d'un chantier Chaudrel, et ce qui se passe à chacune d'elles.",
     ld: () => [
       breadcrumbLd([
         { name: 'Accueil', path: '/' },
@@ -138,9 +141,9 @@ const STATIC = {
     ],
   },
   '/a-propos': {
-    title: 'À propos de Chaudrel — Entreprise de rénovation à Bruxelles',
+    title: 'À propos — Chaudrel, entreprise de rénovation belge',
     description:
-      "Chaudrel, entreprise de rénovation fondée en 2009 à Bruxelles par Alberto et Matteo. Notre équipe, nos valeurs, notre manière de travailler.",
+      "Fondée en 2009 à Bruxelles par Alberto et Matteo, Chaudrel rénove appartements, maisons et commerces partout en Belgique.",
     ld: () => [
       localBusinessLd(),
       breadcrumbLd([
@@ -150,9 +153,9 @@ const STATIC = {
     ],
   },
   '/faq': {
-    title: 'FAQ — Questions fréquentes sur la rénovation | Chaudrel',
+    title: 'FAQ — Vos questions sur la rénovation | Chaudrel',
     description:
-      "Budget, délais, zone d'intervention, devis gratuit, matériaux : les réponses aux questions les plus fréquentes sur une rénovation avec Chaudrel.",
+      "Budget, délais, zone d'intervention, matériaux, déroulement du chantier : les réponses aux questions qu'on nous pose le plus souvent.",
     ld: () => [
       faqLd(FAQS.filter((f) => !f.pending)),
       breadcrumbLd([
@@ -164,12 +167,24 @@ const STATIC = {
   '/devis': {
     title: 'Demander un devis gratuit | Chaudrel Rénovation',
     description:
-      "Décrivez votre projet de rénovation en 5 étapes et recevez un devis gratuit et sans engagement. Bruxelles et périphérie.",
+      "Décrivez votre projet en cinq questions. Visite sur place puis devis détaillé, gratuit et sans engagement, partout en Belgique.",
     robots: 'index, follow',
     ld: () => [
       breadcrumbLd([
         { name: 'Accueil', path: '/' },
         { name: 'Demander un devis', path: '/devis' },
+      ]),
+    ],
+  },
+  '/contact': {
+    title: 'Contact — Chaudrel Rénovation',
+    description:
+      "Téléphone, WhatsApp, e-mail ou formulaire : joignez Chaudrel pour votre projet de rénovation, partout en Belgique.",
+    ld: () => [
+      localBusinessLd(),
+      breadcrumbLd([
+        { name: 'Accueil', path: '/' },
+        { name: 'Contact', path: '/contact' },
       ]),
     ],
   },
@@ -224,8 +239,8 @@ export function metaFor(pathname = '/') {
     if (s) {
       return build({
         path,
-        title: `${s.title} à Bruxelles — ${BRAND.name} Rénovation`,
-        description: s.excerpt,
+        title: `${s.title} — ${BRAND.name} Rénovation en Belgique`,
+        description: `${s.excerpt} ${s.intro.slice(0, 110)}…`,
         image: abs(s.image),
         ld: [
           breadcrumbLd([
@@ -240,7 +255,10 @@ export function metaFor(pathname = '/') {
             serviceType: s.title,
             description: s.intro,
             provider: { '@id': `${SITE_URL}/#business` },
-            areaServed: BRAND.areaServed.map((name) => ({ '@type': 'City', name })),
+            areaServed: [
+              { '@type': 'Country', name: 'Belgique' },
+              ...BRAND.areaServed.map((name) => ({ '@type': 'City', name })),
+            ],
             url: abs(path),
           },
           ...(s.faqs?.length ? [faqLd(s.faqs)] : []),

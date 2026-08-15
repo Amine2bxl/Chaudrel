@@ -15,6 +15,7 @@ n'a pas pu être vérifié depuis le repository a été retiré du site ou marqu
 | Délais « cuisine 3–6 semaines », « rénovation 2–4 mois » | Retirés | Confirmer des délais moyens réels |
 | « Garantie décennale » affirmée | Retirée du site | Confirmer les couvertures exactes (l'assurance RC AXA police 010.330.000.014 est conservée dans les mentions légales) |
 | Services toiture / piscine / jardin / nettoyage | Retirés de la liste principale | **Décision à prendre** : les remettre si Chaudrel les réalise vraiment (voir §3) |
+| Durées de chantier dans les titres de section | Aucune n'est affichée | Communiquer des durées moyennes réelles si vous voulez les afficher |
 | Photos Unsplash | Retirées | Toutes les images du site sont désormais les photos du dossier `/public/photos` |
 
 ## 2. Avis clients — bloquant
@@ -65,7 +66,7 @@ Manquent pour être crédible : au moins 1 projet **salle de bain**, 1 **apparte
 | E-mail | Info@chaudrel.be | à confirmer |
 | Assurance RC | AXA Belgium, police 010.330.000.014 | à confirmer + demander l'attestation |
 | **Numéro WhatsApp Business** | +32 477 27 31 18 (par défaut) | **à confirmer** — `BRAND.whatsapp` dans `src/data/site.js` |
-| Zone d'intervention | Bruxelles + périphérie (liste dans `site.js`) | à confirmer (la V1 disait « toute la Belgique ») |
+| Zone d'intervention | **Toute la Belgique** | confirmé par le client (août 2026) — le site l'affiche désormais partout, avec une carte des provinces sur l'accueil et la page méthode |
 
 ## 6. Technique — à configurer avant mise en ligne
 
@@ -83,3 +84,14 @@ Autres éléments à créer/fournir :
 - Compte **Resend** (ou équivalent) + vérification du domaine d'envoi
 - Photo réelle de l'équipe (la page À propos utilise une photo de chantier en attendant)
 - Décision analytics : GA4 / Plausible ? (le code envoie déjà les événements, il ne manque que le script — voir `src/lib/analytics.js`)
+
+## 7. Carte de la Belgique (ajoutée en refonte)
+
+Les contours proviennent des données publiques Eurostat NUTS 2021 (niveau 2 =
+provinces belges). C'est une illustration : aucune donnée dynamique, aucun service
+de cartographie, aucune page par province. Le message affiché est
+« Nous intervenons partout en Belgique », conformément à la zone commerciale
+confirmée par le client.
+
+À confirmer : y a-t-il des provinces où Chaudrel **ne** se déplace pas ? Si oui,
+les retirer de `src/data/belgium.js` (la liste et la carte se mettent à jour seules).

@@ -13,6 +13,7 @@ import Method from '@/pages/Method';
 import About from '@/pages/About';
 import Faq from '@/pages/Faq';
 import Quote from '@/pages/Quote';
+import Contact from '@/pages/Contact';
 import Legal from '@/pages/Legal';
 import NotFound from '@/pages/NotFound';
 
@@ -26,7 +27,7 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-brand-cream">
+    <div className="min-h-screen bg-cream">
       <Seo />
       <ScrollToTop />
       <Navbar />
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/methode" element={<Method />} />
           <Route path="/a-propos" element={<About />} />
           <Route path="/faq" element={<Faq />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/devis" element={<Quote />} />
           <Route path="/legal/politique-mentions" element={<Legal />} />
           <Route path="*" element={<NotFound />} />

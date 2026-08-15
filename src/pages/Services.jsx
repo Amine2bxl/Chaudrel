@@ -1,48 +1,38 @@
 import PageHero from '@/components/sections/PageHero';
-import ServiceCard from '@/components/sections/ServiceCard';
-import MethodSteps from '@/components/sections/MethodSteps';
-import CtaBand from '@/components/sections/CtaBand';
+import ServiceList from '@/components/sections/ServiceList';
+import ProcessTimeline from '@/components/sections/ProcessTimeline';
+import CTASection from '@/components/sections/CTASection';
 import { Container, Section, SectionHeading } from '@/components/ui';
-import Reveal from '@/lib/reveal';
-import { SERVICES } from '@/data/services';
 
 export default function Services() {
   return (
     <>
       <PageHero
-        eyebrow="Services"
-        title="Nos domaines d'intervention"
-        intro="Rénovation complète ou chantier ciblé : nous coordonnons l'ensemble des travaux, avec un seul interlocuteur du devis à la livraison."
+        label="Services"
+        title="Un chantier, un interlocuteur."
+        intro="Nous prenons en charge la rénovation complète comme le poste isolé. Dans les deux cas, la coordination est de notre côté."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Services' }]}
       />
 
-      <Section tone="cream">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map((s, i) => (
-              <Reveal key={s.slug} delay={i * 50}>
-                <ServiceCard service={s} className="h-full" />
-              </Reveal>
-            ))}
-          </div>
+          <ServiceList />
         </Container>
       </Section>
 
-      <Section tone="dark">
+      <Section tone="night">
         <Container>
           <SectionHeading
-            eyebrow="Notre méthode"
-            tone="dark"
-            title="Comment se déroule"
-            accent="un chantier"
+            tone="light"
+            label="Notre méthode"
+            title="Comment se déroule un chantier."
+            text="Le même déroulé pour une salle de bain que pour une maison entière. Seule la durée change."
           />
-        </Container>
-        <Container className="mt-12">
-          <MethodSteps tone="dark" />
+          <ProcessTimeline tone="light" className="mt-16 lg:mt-24" />
         </Container>
       </Section>
 
-      <CtaBand source="services" />
+      <CTASection source="services" />
     </>
   );
 }

@@ -21,6 +21,7 @@ Pour tester le formulaire de devis de bout en bout : `vercel dev`.
 src/
 ├── data/           contenu du site — c'est ici qu'on édite
 │   ├── site.js         identité, contacts, navigation, WhatsApp
+│   ├── belgium.js      contours des provinces (illustration de la zone)
 │   ├── projects.js     réalisations + catégories
 │   ├── services.js     services + FAQ par service
 │   ├── testimonials.js avis (⚠️ à valider — voir docs/VERIFICATION.md)
@@ -29,8 +30,9 @@ src/
 ├── pages/          une page par route
 ├── components/
 │   ├── layout/     Navbar, Footer, MobileBar
-│   ├── sections/   Hero, PageHero, ProjectCard, ServiceCard, BeforeAfter,
-│   │               MethodSteps, Testimonials, FaqAccordion, CtaBand, TrustBar
+│   ├── sections/   Hero, PageHero, ProjectGrid, ServiceList, ProcessTimeline,
+│   │               BelgiumCoverage, BeforeAfter, Testimonials, FaqAccordion,
+│   │               CTASection
 │   └── ui/         Container, Section, Button, SectionHeading, Figure…
 ├── lib/
 │   ├── seo.js      métadonnées + JSON-LD par route (source unique)
@@ -48,9 +50,10 @@ docs/               audit, SEO, réseaux sociaux, stratégie, roadmap, meeting
 ## Routes
 
 `/` · `/realisations` · `/realisations/:slug` · `/services` · `/services/:slug` ·
-`/methode` · `/a-propos` · `/faq` · `/devis` · `/legal/politique-mentions` · 404
+`/methode` · `/a-propos` · `/faq` · `/contact` · `/devis` ·
+`/legal/politique-mentions` · 404
 
-Chaque route est rendue en HTML statique au build (22 pages) : les bots voient le
+Chaque route est rendue en HTML statique au build (23 pages) : les bots voient le
 contenu sans exécuter de JavaScript, et chaque page a ses propres title, description,
 canonical, Open Graph et JSON-LD.
 
@@ -85,9 +88,22 @@ les filtres se génèrent automatiquement au prochain build.
 
 Les images vont dans `public/photos/` (WebP, largeur ≥ 1600 px pour les visuels pleine largeur).
 
+## Design system
+
+Cinq couleurs (`ink`, `night`, `cream`, `sand`, `gold`), deux familles
+typographiques (Inter pour tout, Playfair Display réservé aux titres) et sept
+niveaux de texte (`.t-display`, `.t-h1`, `.t-h2`, `.t-h3`, `.t-body`, `.t-small`,
+`.t-label`) définis dans `src/index.css`. Pas d'ombre portée, pas de dégradé :
+la mise en page repose sur des filets, du vide et la typographie.
+
+Animations : `<Reveal>` (`up`, `fade`, `line`, `lineY`, `veil`) applique une classe
+au scroll via IntersectionObserver, tout le reste est en CSS. `prefers-reduced-motion`
+neutralise l'ensemble.
+
 ## Formulaire de devis
 
-`/devis` → `POST /api/lead`. Validation client et serveur, honeypot, limitation de
+`/devis` → `POST /api/lead`. La page `/contact` envoie au même endpoint avec un
+formulaire court (nom, téléphone, e-mail, message). Validation client et serveur, honeypot, limitation de
 débit, consentement RGPD obligatoire.
 
 Variables d'environnement Vercel à configurer :

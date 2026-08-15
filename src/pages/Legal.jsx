@@ -4,9 +4,9 @@ import { BRAND } from '@/data/site';
 
 function Block({ title, children }) {
   return (
-    <section className="border-t border-brand-ink/10 py-10 first:border-t-0 first:pt-0">
-      <h2 className="font-display text-2xl font-light text-brand-ink">{title}</h2>
-      <div className="mt-4 space-y-4 text-[15px] font-light leading-[1.85] text-brand-ink/70">{children}</div>
+    <section className="border-t border-ink/10 py-10 first:border-t-0 first:pt-0">
+      <h2 className="font-display text-2xl font-light text-ink">{title}</h2>
+      <div className="mt-4 space-y-4 text-[15px] font-light leading-[1.85] text-ink/70">{children}</div>
     </section>
   );
 }
@@ -16,7 +16,7 @@ function List({ items }) {
     <ul className="space-y-2">
       {items.map((it, i) => (
         <li key={i} className="flex gap-3">
-          <span className="text-brand-gold" aria-hidden="true">
+          <span className="text-gold" aria-hidden="true">
             —
           </span>
           <span>{it}</span>
@@ -35,7 +35,7 @@ export default function Legal() {
   return (
     <>
       <PageHero
-        eyebrow="Informations légales"
+        label="Informations légales"
         title="Mentions légales & confidentialité"
         intro="Identité de l'éditeur, hébergement, propriété intellectuelle et traitement des données personnelles."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Mentions légales' }]}
@@ -64,7 +64,7 @@ export default function Legal() {
                 </>,
                 <>
                   <strong>E-mail :</strong>{' '}
-                  <a href={`mailto:${BRAND.email}`} className="link-underline text-brand-gold">
+                  <a href={`mailto:${BRAND.email}`} className="link-line text-gold">
                     {BRAND.email}
                   </a>
                 </>,
@@ -81,7 +81,7 @@ export default function Legal() {
           <Block title="2. Hébergeur">
             <p>
               Le site est hébergé par <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA 91789, USA —{' '}
-              <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="link-underline text-brand-gold">
+              <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="link-line text-gold">
                 vercel.com
               </a>
               .
@@ -95,7 +95,7 @@ export default function Legal() {
                   <strong>Activité :</strong> entreprise générale de rénovation et construction
                 </>,
                 <>
-                  <strong>Zone d'intervention :</strong> Bruxelles et périphérie
+                  <strong>Zone d&apos;intervention :</strong> toute la Belgique
                 </>,
                 <>
                   <strong>Assureur responsabilité civile professionnelle :</strong> AXA Belgium — police
@@ -134,7 +134,7 @@ export default function Legal() {
           <Block title="7. Responsable du traitement des données">
             <p>
               Chaudrel Rénovation SRL, {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city} —{' '}
-              <a href={`mailto:${BRAND.email}`} className="link-underline text-brand-gold">
+              <a href={`mailto:${BRAND.email}`} className="link-line text-gold">
                 {BRAND.email}
               </a>
               .
@@ -186,7 +186,7 @@ export default function Legal() {
             <p>
               Vous disposez d'un droit d'accès, de rectification, d'effacement, de portabilité, de limitation et
               d'opposition au traitement de vos données. Pour les exercer, écrivez-nous à{' '}
-              <a href={`mailto:${BRAND.email}`} className="link-underline text-brand-gold">
+              <a href={`mailto:${BRAND.email}`} className="link-line text-gold">
                 {BRAND.email}
               </a>{' '}
               — nous répondons dans un délai d'un mois.
@@ -198,7 +198,7 @@ export default function Legal() {
                 href="https://www.autoriteprotectiondonnees.be"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="link-underline text-brand-gold"
+                className="link-line text-gold"
               >
                 autoriteprotectiondonnees.be
               </a>

@@ -1,54 +1,64 @@
 import PageHero from '@/components/sections/PageHero';
-import MethodSteps from '@/components/sections/MethodSteps';
-import CtaBand from '@/components/sections/CtaBand';
+import ProcessTimeline from '@/components/sections/ProcessTimeline';
+import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
+import CTASection from '@/components/sections/CTASection';
 import { Container, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import { METHOD } from '@/data/method';
 
-const DETAILS = [
-  "Un premier échange par téléphone, WhatsApp ou via le formulaire suffit pour cadrer votre demande.",
-  "La visite est gratuite et sans engagement : nous mesurons, nous regardons l'existant et nous écoutons vos attentes.",
-  "Le devis détaille les postes de travaux. Vous savez ce qui est inclus, et ce qui ne l'est pas.",
-  "Pendant le chantier, un interlocuteur unique suit l'avancement et vous tient informé.",
-  "À la livraison, nous passons le chantier en revue avec vous avant de le considérer terminé.",
+const PRINCIPES = [
+  {
+    title: 'Ce qui est prévu est écrit',
+    text: 'Le devis détaille les postes. S’il faut sortir du cadre, on vous le dit avant, pas à la facture.',
+  },
+  {
+    title: 'Un seul interlocuteur',
+    text: 'Vous ne coordonnez pas cinq corps de métier. C’est notre travail, pas le vôtre.',
+  },
+  {
+    title: 'Le chantier se déroule chez vous',
+    text: 'Protection des surfaces, propreté quotidienne, remise en état. Cela fait partie du travail.',
+  },
+  {
+    title: 'Terminé veut dire terminé',
+    text: 'La livraison se fait ensemble. Tant qu’il reste une reprise, le chantier n’est pas fini.',
+  },
 ];
 
 export default function Method() {
   return (
     <>
       <PageHero
-        eyebrow="Notre méthode"
-        title="Cinq étapes, aucune surprise"
-        intro="Une rénovation réussie tient autant à l'organisation qu'au travail sur le chantier. Voici exactement comment nous procédons."
+        label="Notre méthode"
+        title="Sept étapes, zéro surprise."
+        intro="Une rénovation réussie tient autant à l’organisation qu’au travail sur le chantier. Voici exactement comment nous procédons."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Notre méthode' }]}
       />
 
-      <Section tone="cream">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
-          <MethodSteps />
+          <ProcessTimeline />
         </Container>
       </Section>
 
       <Section tone="white">
-        <Container className="max-w-3xl">
-          <SectionHeading eyebrow="En détail" title="Ce qui se passe" accent="à chaque étape" />
-          <ol className="mt-12 divide-y divide-brand-ink/10 border-y border-brand-ink/10">
-            {METHOD.map((s, i) => (
-              <Reveal as="li" key={s.n} delay={i * 60} className="flex gap-6 py-7">
-                <span className="font-display text-2xl font-light text-brand-gold">{s.n}</span>
-                <div>
-                  <h3 className="font-display text-xl font-light text-brand-ink">{s.title}</h3>
-                  <p className="mt-2 text-[15px] font-light leading-[1.85] text-brand-ink/60">{DETAILS[i]}</p>
-                </div>
+        <Container>
+          <SectionHeading label="Nos principes" title="Quatre règles qui ne bougent pas." />
+          <div className="mt-14 grid gap-x-16 gap-y-12 lg:mt-20 lg:grid-cols-2">
+            {PRINCIPES.map((p, i) => (
+              <Reveal key={p.title} delay={i * 90} className="border-t border-ink/12 pt-6">
+                <h3 className="t-h2 text-[1.5rem] lg:text-[1.75rem]">{p.title}</h3>
+                <p className="t-body measure mt-4 text-ink/60">{p.text}</p>
               </Reveal>
             ))}
-          </ol>
+          </div>
         </Container>
       </Section>
 
-      <CtaBand
-        title="Commençons par la première étape"
-        text="Décrivez votre projet en quelques minutes. Nous vous recontactons pour organiser la visite."
+      <BelgiumCoverage tone="night" />
+
+      <CTASection
+        title="Commençons par la première étape."
+        text="Un message, un appel, deux photos. C’est tout ce qu’il faut pour démarrer."
         source="method"
       />
     </>

@@ -1,83 +1,69 @@
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import Hero from '@/components/sections/Hero';
-import TrustBar from '@/components/sections/TrustBar';
-import ProjectCard from '@/components/sections/ProjectCard';
-import ServiceCard from '@/components/sections/ServiceCard';
-import MethodSteps from '@/components/sections/MethodSteps';
+import Hero, { ProofBand } from '@/components/sections/Hero';
+import ProjectGrid from '@/components/sections/ProjectGrid';
+import ServiceList from '@/components/sections/ServiceList';
+import ProcessTimeline from '@/components/sections/ProcessTimeline';
+import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import BeforeAfter from '@/components/sections/BeforeAfter';
 import Testimonials from '@/components/sections/Testimonials';
 import FaqAccordion from '@/components/sections/FaqAccordion';
-import CtaBand from '@/components/sections/CtaBand';
-import { Button, Container, Section, SectionHeading } from '@/components/ui';
+import CTASection from '@/components/sections/CTASection';
+import { Button, Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { PROJECTS } from '@/data/projects';
-import { SERVICES } from '@/data/services';
 import { FAQS } from '@/data/faqs';
 import { BRAND } from '@/data/site';
 
 const featured = PROJECTS.filter((p) => p.featured).slice(0, 4);
-const beforeAfterProjects = PROJECTS.filter((p) => p.beforeAfter).slice(0, 3);
+const withBeforeAfter = PROJECTS.filter((p) => p.beforeAfter).slice(0, 3);
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <TrustBar />
+      <ProofBand />
 
-      {/* Réalisations — cœur visuel du site */}
-      <Section tone="cream" id="realisations">
+      {/* Réalisations — la preuve avant le discours */}
+      <Section tone="cream">
         <Container>
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <SectionHeading
-              eyebrow="Réalisations"
-              title="Ce que nous"
-              accent="créons pour vous"
-              intro="Chaque chantier est un lieu livré, habité, utilisé. Voici quelques-unes de nos réalisations à Bruxelles et en périphérie."
-            />
-            <Reveal from="fade">
-              <Link
-                to="/realisations"
-                className="inline-flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-ink transition-all duration-300 hover:gap-4 hover:text-brand-gold"
-              >
-                Toutes les réalisations
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-            </Reveal>
+          <SectionHeading
+            label="Réalisations"
+            title={
+              <>
+                Ce que nous
+                <br />
+                livrons.
+              </>
+            }
+            text="Des chantiers finis, habités, utilisés. Chaque projet est mené du premier coup de marteau au nettoyage final."
+          />
+
+          <div className="mt-16 lg:mt-24">
+            <ProjectGrid projects={featured} variant="editorial" />
           </div>
 
-          <div className="mt-12 grid gap-4 lg:grid-cols-3">
-            {featured.map((p, i) => (
-              <Reveal key={p.slug} delay={i * 80} className={p.span}>
-                <ProjectCard project={p} priority={i === 0} />
-              </Reveal>
-            ))}
+          <div className="mt-16">
+            <TextLink to="/realisations">Toutes les réalisations</TextLink>
           </div>
         </Container>
       </Section>
 
       {/* Avant / après */}
-      {beforeAfterProjects.length > 0 && (
+      {withBeforeAfter.length > 0 && (
         <Section tone="white">
           <Container>
             <SectionHeading
-              eyebrow="Avant / après"
-              title="La différence"
-              accent="se voit"
-              intro="Les mêmes espaces, avant et après notre intervention."
+              label="Avant / après"
+              title="La différence se regarde."
+              text="Les mêmes pièces, avant notre intervention et le jour de la livraison."
             />
-            <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {beforeAfterProjects.map((p, i) => (
-                <Reveal key={p.slug} delay={i * 80}>
+            <div className="mt-14 grid gap-8 md:grid-cols-3 lg:mt-20">
+              {withBeforeAfter.map((p, i) => (
+                <Reveal key={p.slug} from="fade" delay={i * 100}>
                   <BeforeAfter
                     before={p.beforeAfter.before}
                     after={p.beforeAfter.after}
                     label={`${p.title} — ${p.location}`}
                   />
-                  <div className="mt-4">
-                    <h3 className="font-display text-lg font-light text-brand-ink">{p.title}</h3>
-                    <p className="mt-1 text-[12px] uppercase tracking-[0.14em] text-brand-ink/40">{p.location}</p>
-                  </div>
                 </Reveal>
               ))}
             </div>
@@ -86,107 +72,86 @@ export default function Home() {
       )}
 
       {/* Services */}
-      <Section tone="sand" id="services">
+      <Section tone="cream">
         <Container>
           <SectionHeading
-            eyebrow="Services"
-            title="Un savoir-faire"
-            accent="complet"
-            intro="De la rénovation complète aux finitions, nous prenons en charge l'ensemble du chantier avec un seul interlocuteur."
+            label="Services"
+            title="Ce que nous faisons."
+            text="Une rénovation complète ou un seul poste. Dans les deux cas, c’est nous qui coordonnons."
           />
-          <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.slice(0, 6).map((s, i) => (
-              <Reveal key={s.slug} delay={i * 60}>
-                <ServiceCard service={s} className="h-full" />
-              </Reveal>
-            ))}
-          </div>
-          <div className="mt-10">
+          <ServiceList className="mt-14 lg:mt-20" />
+          <div className="mt-12">
             <Button to="/services" variant="outline">
-              Tous nos services
+              Voir tous les services
             </Button>
           </div>
         </Container>
       </Section>
 
       {/* Méthode */}
-      <Section tone="dark">
+      <Section tone="night">
         <Container>
           <SectionHeading
-            eyebrow="Notre méthode"
-            tone="dark"
-            title="Cinq étapes,"
-            accent="aucune surprise"
-            intro="De votre premier appel à la livraison du chantier, vous savez toujours où en est votre projet."
+            tone="light"
+            label="Notre méthode"
+            title="Sept étapes, zéro surprise."
+            text="Vous savez à tout moment où en est votre chantier, ce qui a été fait et ce qui vient ensuite."
           />
-        </Container>
-        <Container className="mt-12">
-          <MethodSteps tone="dark" />
+          <ProcessTimeline tone="light" className="mt-16 lg:mt-24" />
         </Container>
       </Section>
 
-      <Testimonials limit={3} />
+      {/* Couverture nationale */}
+      <BelgiumCoverage tone="cream" />
 
       {/* À propos, court */}
-      <Section tone="cream">
-        <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          <Reveal from="left">
-            <div className="aspect-[4/5] overflow-hidden bg-brand-sand">
-              <img
-                src="/story-before-after.webp"
-                alt="Chantier de rénovation Chaudrel à Bruxelles"
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover"
-              />
+      <Section tone="white">
+        <Container className="grid items-center gap-12 lg:grid-cols-12 lg:gap-20">
+          <Media
+            src="/story-before-after.webp"
+            alt="Intérieur rénové par Chaudrel"
+            ratio="aspect-[4/5]"
+            className="lg:col-span-5"
+          />
+
+          <Reveal from="right" className="lg:col-span-7">
+            <div className="mb-6 flex items-center gap-4">
+              <span className="h-px w-8 bg-gold" aria-hidden="true" />
+              <span className="t-label text-ink/40">À propos</span>
             </div>
-          </Reveal>
-          <Reveal from="right">
-            <p className="eyebrow">À propos</p>
-            <h2 className="h-display text-[2rem] text-brand-ink sm:text-4xl lg:text-5xl">
-              Une entreprise,
+            <h2 className="t-h2">
+              Deux artisans, une même
               <br />
-              <span className="italic text-brand-gold">un interlocuteur</span>
+              exigence depuis {BRAND.founded}.
             </h2>
-            <div className="prose-brand mt-6 space-y-5">
-              <p>
-                Chaudrel a été fondée en {BRAND.founded} à Bruxelles par {BRAND.founders.map((f) => f.name).join(' et ')}.
-                Depuis, notre travail suit la même logique : comprendre l'usage d'un espace avant d'y toucher, et le livrer
-                fini, propre et prêt à vivre.
-              </p>
-              <p>
-                Nous intervenons à Bruxelles et dans sa périphérie, sur des rénovations complètes comme sur des chantiers
-                ciblés. Un seul interlocuteur suit votre projet du premier contact à la livraison.
-              </p>
-            </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button to="/a-propos" variant="outline">
-                Découvrir Chaudrel
-              </Button>
-              <Button to="/methode" variant="outline">
-                Notre méthode
-              </Button>
+            <p className="t-body measure mt-8 text-ink/65">
+              {BRAND.founders[0].name} suit les chantiers et la technique. {BRAND.founders[1].name} s’occupe du design et
+              de la relation client. Cette répartition n’a pas bougé depuis le premier jour — c’est aussi pour cela que
+              vous n’avez jamais qu’un seul interlocuteur.
+            </p>
+            <div className="mt-10">
+              <TextLink to="/a-propos">Découvrir Chaudrel</TextLink>
             </div>
           </Reveal>
         </Container>
       </Section>
+
+      <Testimonials limit={3} tone="cream" />
 
       {/* FAQ */}
       <Section tone="white">
-        <Container className="max-w-3xl">
-          <SectionHeading eyebrow="Questions fréquentes" title="Tout ce que vous" accent="devez savoir" align="center" />
-          <div className="mt-12">
+        <Container>
+          <SectionHeading label="Questions fréquentes" title="Ce que l’on nous demande le plus." />
+          <div className="mt-12 lg:mt-16">
             <FaqAccordion items={FAQS.slice(0, 5)} />
           </div>
-          <p className="mt-8 text-center text-[14px] font-light text-brand-ink/55">
-            <Link to="/faq" className="link-underline text-brand-gold">
-              Voir toutes les questions
-            </Link>
-          </p>
+          <div className="mt-10">
+            <TextLink to="/faq">Toutes les questions</TextLink>
+          </div>
         </Container>
       </Section>
 
-      <CtaBand source="home_footer" />
+      <CTASection source="home" />
     </>
   );
 }

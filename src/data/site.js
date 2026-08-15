@@ -1,7 +1,7 @@
 /**
- * Données d'identité de l'entreprise.
+ * Identité de l'entreprise.
  * ⚠️ Toute valeur marquée TODO_VALIDATION doit être confirmée par Chaudrel
- *    avant mise en production (voir VERIFICATION.md).
+ *    avant mise en production (voir docs/VERIFICATION.md).
  */
 
 export const SITE_URL = 'https://chaudrel.be';
@@ -14,7 +14,7 @@ export const BRAND = {
   email: 'Info@chaudrel.be',
   vat: 'BE0812283245',
   address: {
-    street: 'Rue Henri Stacquet 49-51',
+    street: 'Rue Henri Stacquet 49\u201151',
     postalCode: '1030',
     city: 'Schaerbeek',
     region: 'Bruxelles-Capitale',
@@ -27,19 +27,23 @@ export const BRAND = {
   ],
   // TODO_VALIDATION : confirmer le numéro utilisé pour WhatsApp Business.
   whatsapp: '32477273118',
-  zone: 'Bruxelles & périphérie',
+  zone: 'Toute la Belgique',
+  zoneShort: 'Belgique',
+  // Villes citées dans le SEO local. Le siège est à Bruxelles, l'intervention
+  // couvre le pays — confirmé par Chaudrel comme zone commerciale.
   areaServed: [
     'Bruxelles',
-    'Schaerbeek',
-    'Uccle',
-    'Ixelles',
-    'Woluwe-Saint-Pierre',
-    'Woluwe-Saint-Lambert',
-    'Etterbeek',
-    'Waterloo',
-    'Tervuren',
-    'La Hulpe',
-    'Rixensart',
+    'Anvers',
+    'Gand',
+    'Bruges',
+    'Louvain',
+    'Hasselt',
+    'Liège',
+    'Namur',
+    'Charleroi',
+    'Mons',
+    'Wavre',
+    'Arlon',
   ],
   socials: {
     instagram: 'https://www.instagram.com/chaudrel_renovation/',
@@ -55,15 +59,16 @@ export const BRAND = {
 
 export const LOGO = '/chaudrel-logo.webp';
 
-export const whatsappUrl = (message = 'Bonjour Chaudrel, je souhaite un devis pour mon projet de rénovation.') =>
-  `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(message)}`;
+export const whatsappUrl = (
+  message = 'Bonjour Chaudrel, je souhaite un devis pour mon projet de rénovation.'
+) => `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(message)}`;
 
 export const NAV = [
-  { label: 'Réalisations', to: '/realisations' },
   { label: 'Services', to: '/services' },
+  { label: 'Réalisations', to: '/realisations' },
   { label: 'Notre méthode', to: '/methode' },
   { label: 'À propos', to: '/a-propos' },
-  { label: 'FAQ', to: '/faq' },
+  { label: 'Contact', to: '/contact' },
 ];
 
 export const MOBILE_NAV = [
@@ -73,13 +78,12 @@ export const MOBILE_NAV = [
 ];
 
 /**
- * Éléments de confiance affichés sous le Hero.
- * Uniquement des faits vérifiables (année de fondation, TVA, zone).
- * Aucun compteur de projets/clients tant que Chaudrel ne l'a pas confirmé.
+ * Trois preuves, uniquement des faits vérifiables.
+ * Aucun compteur de chantiers ou de clients tant que Chaudrel n'a pas
+ * communiqué de chiffre réel.
  */
-export const TRUST = [
-  { value: `Depuis ${BRAND.founded}`, label: "Années d'expérience" },
-  { value: 'Bruxelles', label: 'Et sa périphérie' },
-  { value: 'Devis gratuit', label: 'Et sans engagement' },
-  { value: BRAND.vat, label: "Entreprise enregistrée" },
+export const PROOF = [
+  { value: `Depuis ${BRAND.founded}`, label: "Entreprise fondée à Bruxelles" },
+  { value: 'Toute la Belgique', label: 'Zone d’intervention' },
+  { value: 'Un interlocuteur', label: 'Du devis à la livraison' },
 ];
