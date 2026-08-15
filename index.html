@@ -3,14 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#8C764E" />
+    <meta name="theme-color" content="#141311" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-    <title>Chaudrel — Rénovation haut de gamme à Bruxelles &amp; Belgique</title>
-    <meta name="description" content="Chaudrel - renovation haut de gamme a Bruxelles et en Belgique. Cuisine, salle de bain, toiture, jardin, piscine. Devis gratuit." />
-    <meta name="keywords" content="rénovation Bruxelles, rénovation haut de gamme, cuisine sur mesure Bruxelles, salle de bain haut de gamme, toiture Belgique, façade Bruxelles, piscine gros oeuvre, entrepreneur rénovation Schaerbeek" />
+    <!-- Les balises ci-dessous sont remplacées par route au build (scripts/prerender.js) -->
+    <title>Chaudrel — Rénovation à Bruxelles | Devis gratuit</title>
+    <meta
+      name="description"
+      content="Chaudrel transforme vos espaces à Bruxelles et en périphérie : rénovation complète, cuisine, salle de bain, aménagement intérieur. Devis gratuit et sans engagement."
+    />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="author" content="Chaudrel Rénovation" />
     <link rel="canonical" href="https://chaudrel.be/" />
@@ -20,33 +22,28 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fr_BE" />
     <meta property="og:site_name" content="Chaudrel Rénovation" />
-    <meta property="og:title" content="Chaudrel — Rénovation haut de gamme à Bruxelles &amp; Belgique" />
-    <meta property="og:description" content="La passion de rénover, le plaisir d'habiter. 150+ projets haut de gamme à Bruxelles et en Belgique. Devis gratuit sous 48h." />
+    <meta property="og:title" content="Chaudrel — Rénovation à Bruxelles" />
+    <meta property="og:description" content="Rénovation complète, cuisine, salle de bain, aménagement intérieur à Bruxelles. Devis gratuit." />
     <meta property="og:url" content="https://chaudrel.be/" />
     <meta property="og:image" content="https://chaudrel.be/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Chaudrel Rénovation — Rénovation haut de gamme en Belgique" />
+    <meta property="og:image:alt" content="Chaudrel Rénovation — Bruxelles" />
 
-    <!-- Twitter -->
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Chaudrel — Rénovation haut de gamme à Bruxelles" />
-    <meta name="twitter:description" content="Cuisine, salle de bain, toiture, jardin, piscine. 150+ projets réalisés. Devis gratuit." />
+    <meta name="twitter:title" content="Chaudrel — Rénovation à Bruxelles" />
+    <meta name="twitter:description" content="Rénovation complète, cuisine, salle de bain, aménagement intérieur. Devis gratuit." />
     <meta name="twitter:image" content="https://chaudrel.be/og-image.jpg" />
 
-    <!-- Favicon (logo officiel Chaudrel) -->
+    <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="shortcut icon" href="/favicon.ico" />
 
-    <!-- Preload LCP image (Hero) -->
-    <link
-      rel="preload"
-      as="image"
-      href="/photos/hero.webp"
-      fetchpriority="high"
-    />
+    <!-- Preload de l'image LCP (retiré des autres routes au prerender) -->
+    <link rel="preload" as="image" href="/photos/hero.webp" fetchpriority="high" />
 
     <!-- PWA -->
     <link rel="manifest" href="/manifest.webmanifest" />
@@ -55,155 +52,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
-
-    <!-- JSON-LD LocalBusiness — données complètes pour SEO local -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": ["GeneralContractor", "HomeAndConstructionBusiness"],
-      "@id": "https://chaudrel.be/#business",
-      "name": "Chaudrel Rénovation",
-      "alternateName": "Chaudrel",
-      "description": "Entreprise de rénovation haut de gamme à Bruxelles et en Belgique. Cuisine sur mesure, salle de bain, toiture, jardin, piscine, façade. 150+ projets réalisés depuis 2009.",
-      "url": "https://chaudrel.be/",
-      "logo": "https://chaudrel.be/chaudrel-logo.jpg",
-      "image": "https://chaudrel.be/og-image.jpg",
-      "telephone": ["+32477273118", "+32493972517"],
-      "email": "Info@chaudrel.be",
-      "vatID": "BE0812283245",
-      "priceRange": "€€€€",
-      "foundingDate": "2009",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Rue Henri Stacquet 49-51",
-        "postalCode": "1030",
-        "addressLocality": "Schaerbeek",
-        "addressRegion": "Bruxelles-Capitale",
-        "addressCountry": "BE"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 50.8680,
-        "longitude": 4.3806
-      },
-      "areaServed": [
-        { "@type": "City", "name": "Bruxelles" },
-        { "@type": "City", "name": "Schaerbeek" },
-        { "@type": "City", "name": "Uccle" },
-        { "@type": "City", "name": "Ixelles" },
-        { "@type": "City", "name": "Woluwe-Saint-Pierre" },
-        { "@type": "City", "name": "Waterloo" },
-        { "@type": "City", "name": "Tervuren" },
-        { "@type": "Country", "name": "Belgique" }
-      ],
-      "openingHoursSpecification": [
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-          "opens": "08:00",
-          "closes": "18:00"
-        },
-        {
-          "@type": "OpeningHoursSpecification",
-          "dayOfWeek": ["Saturday"],
-          "opens": "09:00",
-          "closes": "17:00",
-          "description": "Sur rendez-vous"
-        }
-      ],
-      "sameAs": [
-        "https://www.instagram.com/chaudrel_renovation/",
-        "https://www.facebook.com/profile.php?id=61574019493337",
-        "https://www.youtube.com/@chaudrelrenovations",
-        "https://www.tiktok.com/@chaudrelrenovations"
-      ],
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Services de rénovation haut de gamme",
-        "itemListElement": [
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Cuisine sur mesure" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Salle de bain haut de gamme" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Jardin et aménagement extérieur" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Toiture et couverture" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Piscine et gros œuvre" } },
-          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Rénovation complète clé en main" } }
-        ]
-      },
-      "founder": [
-        { "@type": "Person", "name": "Alberto", "jobTitle": "Maître d'œuvre" },
-        { "@type": "Person", "name": "Matteo", "jobTitle": "Design & relation client" }
-      ]
-    }
-    </script>
-
-    <!-- JSON-LD FAQ — rich snippets Google -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Quels types de rénovations réalisez-vous ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Nous intervenons sur tous types de rénovations intérieures et extérieures à Bruxelles et en Belgique : cuisines, salles de bain, toitures, jardins, terrasses, piscines, façades et rénovations complètes clé en main."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Proposez-vous des devis gratuits ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Oui, consultation gratuite et sans engagement. Nous nous déplaçons chez vous, évaluons votre projet et vous fournissons un devis détaillé et personnalisé sous 48h."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Quel budget prévoir pour une rénovation haut de gamme ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Nos projets s'échelonnent de 5 000 € pour des finitions intérieures à plus de 150 000 € pour des rénovations complètes. La majorité de nos chantiers se situent entre 15 000 € et 60 000 €."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Quelle est votre zone d'intervention en Belgique ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Nous intervenons partout en Belgique : les 19 communes de Bruxelles (Schaerbeek, Uccle, Ixelles, Woluwe-Saint-Pierre, Woluwe-Saint-Lambert, Etterbeek...), le Brabant wallon (Waterloo, Wavre, Nivelles, La Hulpe, Rixensart), le Brabant flamand (Tervuren, Overijse) et le reste du pays."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Quels matériaux utilisez-vous ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Exclusivement des matériaux haut de gamme — marbre, pierre naturelle, ardoise, bois massif, cuivre, laiton. La qualité et la durabilité sont nos priorités absolues."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Combien de temps dure une rénovation ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Une cuisine prend 3 à 6 semaines, une salle de bain 2 à 4 semaines, une rénovation complète 2 à 4 mois. Nous établissons un planning précis dès le départ et respectons nos délais."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Êtes-vous enregistrés et assurés en Belgique ?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Oui, Chaudrel Rénovation est enregistrée sous le numéro TVA BE0812283245. Nous disposons de toutes les assurances professionnelles requises (RC professionnelle, garantie décennale)."
-          }
-        }
-      ]
-    }
-    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -2,76 +2,85 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   DESIGN SYSTEM — Chaudrel V2
+   Noir / blanc cassé / pierre / beige. Serif éditoriale + Inter.
+   ============================================================ */
+
 @layer base {
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
   }
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background-color: #F7F5F2;
-    color: #1A1A1A;
+    background-color: #f7f5f2;
+    color: #141311;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
     width: 100%;
-    max-width: 100vw;
-    touch-action: pan-x pan-y;
-    overscroll-behavior-x: none;
   }
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
     min-width: 0;
   }
-  img, video, svg {
+  img,
+  video,
+  svg {
     max-width: 100%;
     height: auto;
   }
-}
-
-/* Anti-zoom mobile : bloque pinch + double-tap + scroll latéral */
-html, body {
-  touch-action: pan-x pan-y;
-  overscroll-behavior-x: none;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  user-select: none;
-}
-html {
-  -ms-touch-action: pan-x pan-y;
-}
-
-/* Permet la sélection de texte dans les inputs */
-input, textarea, [contenteditable] {
-  -webkit-user-select: text;
-  user-select: text;
-}
-
-/* Bloque le zoom iOS sur les inputs (font-size >= 16px) */
-@supports (-webkit-touch-callout: none) {
-  input, textarea, select, button {
-    font-size: 16px;
+  ::selection {
+    background: #8c764e;
+    color: #fff;
+  }
+  /* Focus visible cohérent sur tout le site */
+  :focus-visible {
+    outline: 2px solid #8c764e;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  /* iOS : pas de zoom au focus d'un champ */
+  @supports (-webkit-touch-callout: none) {
+    input,
+    textarea,
+    select {
+      font-size: 16px;
+    }
   }
 }
 
-/* Désactive le tap-highlight bleu sur iOS */
-* {
-  -webkit-tap-highlight-color: transparent;
+@layer components {
+  .eyebrow {
+    @apply text-[11px] tracking-[0.25em] uppercase text-brand-gold font-semibold;
+  }
+  .h-display {
+    @apply font-display font-light leading-[1.05] tracking-[-0.01em];
+  }
+  .prose-brand p {
+    @apply text-[15px] leading-[1.85] font-light text-brand-ink/65;
+  }
+  .link-underline {
+    @apply underline decoration-brand-gold/30 underline-offset-4 hover:decoration-brand-gold transition-colors;
+  }
+  .hairline {
+    @apply border-brand-ink/10;
+  }
 }
-
-/* Empêche le pull-to-refresh et le swipe-back latéral */
-html {
-  overscroll-behavior: none;
-}
-
-/* Cache la scrollbar horizontale si elle existe */
-html { overflow-x: hidden; }
-body { overflow-x: hidden; }
 
 /* Scrollbar discrète */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: #F7F5F2; }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f7f5f2;
+}
 ::-webkit-scrollbar-thumb {
   background: rgba(140, 118, 78, 0.3);
   border-radius: 3px;
@@ -79,85 +88,138 @@ body { overflow-x: hidden; }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(140, 118, 78, 0.5);
 }
-
-/* Masquer scrollbar sur mobile, garder sur desktop */
 @media (max-width: 1023px) {
-  ::-webkit-scrollbar { display: none; }
-  html, body { scrollbar-width: none; }
-}
-
-/* Respecte la préférence utilisateur : moins d'animations */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  html,
+  body {
+    scrollbar-width: none;
   }
 }
 
-/* Menu mobile — animation CSS pure (remplace framer-motion) */
-@keyframes mm-fade-in {
-  from { opacity: 0; transform: translateY(-12px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.mm-overlay {
-  animation: mm-fade-in 0.22s ease-out both;
-}
-@keyframes mm-link-in {
-  from { opacity: 0; transform: translateX(-16px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-.mm-link {
-  animation: mm-link-in 0.32s ease-out both;
-}
+/* ---------- Animations (légères, premium) ---------- */
 
-/* BeforeAfter — transition de slide CSS */
-@keyframes ba-fade-in {
-  from { opacity: 0; transform: scale(0.99); }
-  to   { opacity: 1; transform: scale(1); }
-}
-.ba-slide {
-  animation: ba-fade-in 0.35s ease-out both;
-}
-
-/* Reveal — animations au scroll (remplace framer-motion whileInView) */
 .rv {
   opacity: 0;
-  transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
-.rv-up    { transform: translateY(24px); }
-.rv-down  { transform: translateY(-24px); }
-.rv-left  { transform: translateX(-24px); }
-.rv-right { transform: translateX(24px); }
-.rv-fade  { transform: none; }
+.rv-up {
+  transform: translateY(24px);
+}
+.rv-down {
+  transform: translateY(-24px);
+}
+.rv-left {
+  transform: translateX(-24px);
+}
+.rv-right {
+  transform: translateX(24px);
+}
+.rv-fade {
+  transform: none;
+}
 .rv.is-visible {
   opacity: 1;
   transform: translate(0, 0);
 }
 
-/* Hero — kenburns + fade-in échelonnés (remplace framer-motion animate) */
 @keyframes hero-kenburns {
-  from { transform: scale(1.08); }
-  to   { transform: scale(1); }
+  from {
+    transform: scale(1.07);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 .hero-kenburns {
-  animation: hero-kenburns 2s ease-out both;
+  animation: hero-kenburns 2.4s ease-out both;
 }
-@keyframes hero-fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .hero-fade {
   opacity: 0;
-  animation: hero-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
-.hero-d1 { animation-delay: 0.4s; }
-.hero-d2 { animation-delay: 0.6s; }
-.hero-d3 { animation-delay: 0.9s; }
-.hero-d4 { animation-delay: 1.2s; }
-.hero-d5 { animation-delay: 1.6s; }
+.hero-d1 {
+  animation-delay: 0.15s;
+}
+.hero-d2 {
+  animation-delay: 0.3s;
+}
+.hero-d3 {
+  animation-delay: 0.45s;
+}
+.hero-d4 {
+  animation-delay: 0.6s;
+}
+.hero-d5 {
+  animation-delay: 0.75s;
+}
 
-/* Accessibilité : reveal doit s'afficher immédiatement si l'utilisateur préfère moins d'animations */
+@keyframes mm-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mm-overlay {
+  animation: mm-fade-in 0.22s ease-out both;
+}
+@keyframes mm-link-in {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.mm-link {
+  animation: mm-link-in 0.3s ease-out both;
+}
+@keyframes ba-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.ba-slide {
+  animation: ba-fade-in 0.35s ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .rv { opacity: 1 !important; transform: none !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rv {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-fade {
+    opacity: 1 !important;
+    animation: none !important;
+  }
 }
