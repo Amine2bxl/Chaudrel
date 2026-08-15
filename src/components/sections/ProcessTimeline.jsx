@@ -29,8 +29,8 @@ export default function ProcessTimeline({ tone = 'dark', steps = METHOD, classNa
         {steps.map((s, i) => (
           <li key={s.n} className="relative pr-6">
             <Reveal from="fade" delay={200 + i * 110}>
-              <span className={cn('block h-[15px] w-[15px] -translate-x-px rounded-full border', light ? 'border-cream/40' : 'border-ink/25')}>
-                <span className={cn('mt-[3px] ml-[3px] block h-[7px] w-[7px] rounded-full', dot)} />
+              <span className={cn('block h-[13px] w-[13px] border', light ? 'border-cream/35' : 'border-ink/25')}>
+                <span className={cn('mt-[3px] ml-[3px] block h-[5px] w-[5px]', dot)} />
               </span>
             </Reveal>
 
@@ -47,7 +47,7 @@ export default function ProcessTimeline({ tone = 'dark', steps = METHOD, classNa
       <ol className="relative lg:hidden">
         <Reveal
           from="lineY"
-          className={cn('absolute bottom-6 left-[7px] top-2 w-px', line)}
+          className={cn('absolute bottom-6 left-[6px] top-2 w-px', line)}
           aria-hidden="true"
         />
 
@@ -57,11 +57,11 @@ export default function ProcessTimeline({ tone = 'dark', steps = METHOD, classNa
               from="fade"
               delay={i * 90}
               className={cn(
-                'absolute left-0 top-1 h-[15px] w-[15px] rounded-full border',
-                light ? 'border-cream/40 bg-night' : 'border-ink/25 bg-cream'
+                'absolute left-0 top-1 h-[13px] w-[13px] border',
+                light ? 'border-cream/35 bg-night' : 'border-ink/25 bg-cream'
               )}
             >
-              <span className={cn('mt-[3px] ml-[3px] block h-[7px] w-[7px] rounded-full', dot)} />
+              <span className={cn('mt-[3px] ml-[3px] block h-[5px] w-[5px]', dot)} />
             </Reveal>
 
             <Reveal from="up" delay={i * 90}>

@@ -45,7 +45,7 @@ export default function Navbar() {
     <header
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-colors duration-500',
-        scrolled || open ? 'bg-cream/95 backdrop-blur-sm' : 'bg-transparent'
+        scrolled || open ? 'bg-cream' : 'bg-transparent'
       )}
     >
       <a

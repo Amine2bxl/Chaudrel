@@ -56,16 +56,31 @@ export default function Home() {
               title="La différence se regarde."
               text="Les mêmes pièces, avant notre intervention et le jour de la livraison."
             />
-            <div className="mt-14 grid gap-8 md:grid-cols-3 lg:mt-20">
-              {withBeforeAfter.map((p, i) => (
-                <Reveal key={p.slug} from="fade" delay={i * 100}>
+            {/* Un cas en grand, les autres en appui : la comparaison mérite
+                d'être vue, pas alignée en trois vignettes égales. */}
+            <div className="mt-14 lg:mt-20 lg:grid lg:grid-cols-12 lg:gap-8">
+              {withBeforeAfter[0] && (
+                <Reveal from="fade" className="lg:col-span-7">
                   <BeforeAfter
-                    before={p.beforeAfter.before}
-                    after={p.beforeAfter.after}
-                    label={`${p.title} — ${p.location}`}
+                    before={withBeforeAfter[0].beforeAfter.before}
+                    after={withBeforeAfter[0].beforeAfter.after}
+                    label={`${withBeforeAfter[0].title} — ${withBeforeAfter[0].location}`}
+                    ratio="aspect-[4/3]"
                   />
                 </Reveal>
-              ))}
+              )}
+              <div className="mt-8 space-y-8 lg:col-span-5 lg:mt-0">
+                {withBeforeAfter.slice(1).map((p, i) => (
+                  <Reveal key={p.slug} from="fade" delay={120 + i * 100}>
+                    <BeforeAfter
+                      before={p.beforeAfter.before}
+                      after={p.beforeAfter.after}
+                      label={`${p.title} — ${p.location}`}
+                      ratio="aspect-[16/10]"
+                    />
+                  </Reveal>
+                ))}
+              </div>
             </div>
           </Container>
         </Section>

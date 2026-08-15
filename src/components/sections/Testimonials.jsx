@@ -28,17 +28,32 @@ export default function Testimonials({ limit, tone = 'white' }) {
           }
         />
 
-        <div className="mt-14 grid gap-x-10 gap-y-12 md:grid-cols-2 lg:mt-20 lg:grid-cols-3">
-          {items.map((t, i) => (
-            <Reveal as="figure" key={t.id} delay={i * 90} className="border-t border-ink/12 pt-6">
-              <blockquote className="t-body text-ink/75">« {t.quote} »</blockquote>
-              <figcaption className="mt-6 flex items-baseline justify-between gap-4">
-                <span className="t-h3">{t.name}</span>
-                <span className="t-label text-ink/35">{t.location}</span>
+        {/* Le premier avis est traité comme une citation d'ouverture, les
+            suivants comme des notes en marge. Pas de colonnes identiques. */}
+        <div className="mt-14 lg:mt-20 lg:grid lg:grid-cols-12 lg:gap-16">
+          {items[0] && (
+            <Reveal as="figure" className="lg:col-span-7">
+              <blockquote className="t-h2 text-[1.375rem] leading-[1.45] text-ink sm:text-[1.625rem]">
+                « {items[0].quote} »
+              </blockquote>
+              <figcaption className="mt-8 flex items-baseline gap-4 border-t border-ink/12 pt-4">
+                <span className="t-h3">{items[0].name}</span>
+                <span className="t-label text-ink/35">{items[0].location}</span>
+                <span className="t-small ml-auto text-ink/40">{items[0].project}</span>
               </figcaption>
-              <p className="t-small mt-1 text-ink/40">{t.project}</p>
             </Reveal>
-          ))}
+          )}
+
+          <div className="mt-14 space-y-10 lg:col-span-4 lg:col-start-9 lg:mt-0">
+            {items.slice(1).map((t, i) => (
+              <Reveal as="figure" key={t.id} delay={120 + i * 90} className="border-t border-ink/12 pt-5">
+                <blockquote className="t-small text-ink/70">« {t.quote} »</blockquote>
+                <figcaption className="t-label mt-4 text-ink/40">
+                  {t.name} — {t.location}
+                </figcaption>
+              </Reveal>
+            ))}
+          </div>
         </div>
 
         <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
