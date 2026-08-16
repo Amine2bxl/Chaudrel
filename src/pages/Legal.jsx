@@ -5,7 +5,7 @@ import { BRAND } from '@/data/site';
 function Block({ title, children }) {
   return (
     <section className="border-t border-ink/10 py-10 first:border-t-0 first:pt-0">
-      <h2 className="font-display text-2xl font-light text-ink">{title}</h2>
+      <h2 className="font-display text-2xl text-ink">{title}</h2>
       <div className="mt-4 space-y-4 text-[15px] font-light leading-[1.85] text-ink/70">{children}</div>
     </section>
   );

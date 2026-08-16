@@ -37,7 +37,7 @@ export default function ServiceList({ services = SERVICES, tone = 'dark', classN
           >
             <h3
               className={cn(
-                'font-display text-[1.5rem] font-medium leading-[1.1] tracking-[-0.03em] transition-colors duration-300',
+                'font-display text-[1.5rem] leading-[1.05] tracking-[-0.01em] transition-colors duration-300',
                 'sm:text-[1.75rem] lg:text-[2rem]',
                 light ? 'text-cream group-hover:text-umber-light' : 'text-ink group-hover:text-umber'
               )}

@@ -21,28 +21,38 @@ export default function Projects() {
 
       <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
+          {/* Bascules éditoriales, pas des pastilles : même langage d'état actif
+              que la navigation — le texte s'assombrit, un point brun l'ancre. */}
           <div
-            className="flex flex-wrap items-center gap-2 border-b border-ink/[0.09] pb-6"
+            className="flex flex-wrap items-center gap-x-7 gap-y-3 border-b border-ink/[0.09] pb-6"
             role="group"
             aria-label="Filtrer les réalisations"
           >
-            {[{ id: 'all', label: 'Tout' }, ...categories].map((c) => (
-              <button
-                key={c.id}
-                type="button"
-                aria-pressed={filter === c.id}
-                onClick={() => setFilter(c.id)}
-                className={cn(
-                  't-label rounded-full border px-4 py-2.5 transition-all duration-300 ease-soft active:translate-y-px',
-                  filter === c.id
-                    ? 'border-umber bg-umber text-cream shadow-soft'
-                    : 'border-ink/[0.14] text-ink/65 hover:border-ink/30 hover:bg-shell hover:text-ink'
-                )}
-              >
-                {c.label}
-              </button>
-            ))}
-            <span className="t-label ml-auto tabular-nums text-ink/65">
+            {[{ id: 'all', label: 'Tout' }, ...categories].map((c) => {
+              const on = filter === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setFilter(c.id)}
+                  className={cn(
+                    'relative t-label pb-1 transition-colors duration-fast',
+                    on ? 'text-ink' : 'text-ink/50 hover:text-ink'
+                  )}
+                >
+                  {c.label}
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-umber transition-opacity duration-fast',
+                      on ? 'opacity-100' : 'opacity-0'
+                    )}
+                  />
+                </button>
+              );
+            })}
+            <span className="t-label ml-auto tabular-nums text-ink/50">
               {String(items.length).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
             </span>
           </div>

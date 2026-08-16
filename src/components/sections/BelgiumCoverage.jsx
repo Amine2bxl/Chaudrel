@@ -76,7 +76,10 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
           Notre siège est à Bruxelles. Nos chantiers, eux, ne s’arrêtent pas au ring : les dix provinces et la capitale.
         </p>
 
-        <ul className="mt-8 flex flex-wrap gap-2">
+        {/* Une liste, pas un mur de pastilles : deux colonnes réglées, chaque
+            nom sur un filet, un marqueur brun qui glisse sur la ligne survolée
+            et allume sa province sur la carte. */}
+        <ul className="mt-8 grid grid-cols-1 gap-x-10 sm:grid-cols-2">
           {PROVINCES.map((p) => (
             <li key={p.id}>
               <button
@@ -87,17 +90,35 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                 onBlur={() => setActive(null)}
                 aria-pressed={active === p.id}
                 className={cn(
-                  't-label rounded-full border px-4 py-2.5 transition-all duration-fast ease-soft',
-                  light
-                    ? active === p.id
-                      ? 'border-umber-light bg-umber-light text-bark'
-                      : 'border-cream/20 text-cream/70 hover:border-cream/50 hover:text-cream'
-                    : active === p.id
-                      ? 'border-umber bg-umber text-cream'
-                      : 'border-ink/[0.14] text-ink/65 hover:border-ink/30 hover:bg-shell hover:text-ink'
+                  'group flex w-full items-center gap-3 border-b py-3 text-left transition-colors duration-fast',
+                  light ? 'border-cream/12' : 'border-ink/[0.09]'
                 )}
               >
-                {p.name}
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'h-1.5 w-1.5 flex-none rounded-full transition-all duration-fast ease-soft',
+                    active === p.id
+                      ? light
+                        ? 'scale-100 bg-umber-light'
+                        : 'scale-100 bg-umber'
+                      : 'scale-0'
+                  )}
+                />
+                <span
+                  className={cn(
+                    't-small transition-colors duration-fast',
+                    active === p.id
+                      ? light
+                        ? 'text-cream'
+                        : 'text-ink'
+                      : light
+                        ? 'text-cream/60 group-hover:text-cream'
+                        : 'text-ink/60 group-hover:text-ink'
+                  )}
+                >
+                  {p.name}
+                </span>
               </button>
             </li>
           ))}

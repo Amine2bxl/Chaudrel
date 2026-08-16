@@ -115,7 +115,7 @@ const SIZES = {
 
 export function Button({ to, href, variant = 'solid', size = 'md', className, children, ...rest }) {
   const classes = cn(
-    'inline-flex items-center justify-center gap-2.5 rounded-full font-semibold uppercase tracking-[0.14em]',
+    'inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full font-semibold uppercase tracking-[0.14em]',
     'transition-[background-color,box-shadow,transform,border-color] duration-300 ease-soft',
     'active:translate-y-px',
     VARIANTS[variant],

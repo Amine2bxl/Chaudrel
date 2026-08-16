@@ -70,7 +70,7 @@ export default function Navbar() {
       <div className="mx-auto my-2.5 flex w-[calc(100%-1.25rem)] max-w-[1240px] items-center justify-between rounded-full bg-cream/95 px-4 py-2.5 shadow-soft backdrop-blur-md sm:my-3 sm:px-5 lg:px-6">
         <Wordmark />
 
-        <nav className="hidden items-center gap-9 lg:flex" aria-label="Navigation principale">
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Navigation principale">
           {NAV.map((item) => (
             <NavLink key={item.to} to={item.to} className={linkClass}>
               {({ isActive }) => (
@@ -94,7 +94,7 @@ export default function Navbar() {
           <a
             href={`tel:${BRAND.phones[0].tel}`}
             onClick={() => track(EVENTS.PHONE_CLICK, { source: 'navbar' })}
-            className="t-small ml-1 tabular-nums text-ink/65 transition-colors duration-fast hover:text-ink"
+            className="hidden t-small tabular-nums text-ink/65 transition-colors duration-fast hover:text-ink xl:ml-1 xl:inline"
           >
             {BRAND.phones[0].number}
           </a>
@@ -127,7 +127,7 @@ export default function Navbar() {
                     style={{ animationDelay: `${i * 35}ms` }}
                     className={({ isActive }) =>
                       cn(
-                        'panel-in flex items-center justify-between gap-4 py-4 font-display text-[1.625rem] tracking-[-0.03em]',
+                        'panel-in flex items-center justify-between gap-4 py-4 font-display text-[1.75rem] tracking-[-0.01em]',
                         isActive ? 'text-ink' : 'text-ink/60'
                       )
                     }

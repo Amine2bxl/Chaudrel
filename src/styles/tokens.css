@@ -58,7 +58,12 @@
   --dur-slow: 500ms;
 
   /* ---------- Typographie ----------
-     Une famille pour l'interface, une seule pour le logotype. */
+     Deux voix, une seule origine. Marcellus — la serif inscriptionnelle du
+     logotype — porte les grands titres : c'est elle qui donne au site son
+     accent architectural et éditorial, et elle relie chaque page au mot-symbole.
+     Schibsted Grotesk porte tout le reste : sous-titres, interface, texte,
+     repères. Le contraste serif/grotesque EST la hiérarchie. */
   --font-ui: 'Schibsted Grotesk', system-ui, sans-serif;
+  --font-display: 'Marcellus', 'Schibsted Grotesk', Georgia, serif;
   --font-wordmark: 'Marcellus', 'Schibsted Grotesk', serif;
 }
