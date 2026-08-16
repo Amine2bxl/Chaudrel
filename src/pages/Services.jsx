@@ -8,23 +8,21 @@ export default function Services() {
   return (
     <>
       <PageHero
-        label="Services"
         title="Un chantier, un interlocuteur."
         intro="Nous prenons en charge la rénovation complète comme le poste isolé. Dans les deux cas, la coordination est de notre côté."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Services' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
           <ServiceList />
         </Container>
       </Section>
 
-      <Section tone="night">
+      <Section tone="carbon">
         <Container>
           <SectionHeading
             tone="light"
-            label="Notre méthode"
             title="Comment se déroule un chantier."
             text="Le même déroulé pour une salle de bain que pour une maison entière. Seule la durée change."
           />

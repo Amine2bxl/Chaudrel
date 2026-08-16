@@ -28,7 +28,7 @@ export default function Project() {
         ]}
       />
 
-      <Section tone="cream">
+      <Section tone="paper">
         <Container>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-7">
@@ -37,22 +37,22 @@ export default function Project() {
 
             <dl className="lg:col-span-4 lg:col-start-9">
               <div className="border-t border-ink/12 py-4">
-                <dt className="t-label text-ink/35">Lieu</dt>
+                <dt className="t-label text-ink/65">Lieu</dt>
                 <dd className="t-body mt-1.5">{project.location}</dd>
               </div>
               <div className="border-t border-ink/12 py-4">
-                <dt className="t-label text-ink/35">Type de chantier</dt>
+                <dt className="t-label text-ink/65">Type de chantier</dt>
                 <dd className="t-body mt-1.5">{project.type}</dd>
               </div>
               {project.materials?.length > 0 && (
                 <div className="border-t border-ink/12 py-4">
-                  <dt className="t-label text-ink/35">Matériaux</dt>
+                  <dt className="t-label text-ink/65">Matériaux</dt>
                   <dd className="t-body mt-1.5">{project.materials.join(' · ')}</dd>
                 </div>
               )}
               {project.works?.length > 0 && (
                 <div className="border-y border-ink/12 py-4">
-                  <dt className="t-label text-ink/35">Travaux réalisés</dt>
+                  <dt className="t-label text-ink/65">Travaux réalisés</dt>
                   <dd className="mt-2">
                     <ul className="t-small space-y-1.5 text-ink/65">
                       {project.works.map((w) => (
@@ -84,7 +84,7 @@ export default function Project() {
 
           {project.beforeAfter && (
             <div className="mt-16 lg:mt-24">
-              <SectionHeading label="Avant / après" title="Le même espace, avant et après." />
+              <SectionHeading title="Le même espace, avant et après." />
               <div className="mt-10 max-w-3xl">
                 <BeforeAfter
                   before={project.beforeAfter.before}
@@ -101,7 +101,7 @@ export default function Project() {
       {others.length > 0 && (
         <Section tone="white">
           <Container>
-            <SectionHeading label="Suite" title="D’autres chantiers." />
+            <SectionHeading title="D’autres chantiers." />
             <ProjectGrid projects={others} className="mt-14" />
             <div className="mt-12">
               <TextLink to="/realisations">Toutes les réalisations</TextLink>

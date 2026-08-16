@@ -63,7 +63,7 @@ export const SERVICES = [
     image: '/photos/svc-salle-de-bain.webp',
     excerpt: "L'étanchéité d'abord, l'esthétique ensuite.",
     intro:
-      "Douche à l'italienne, baignoire, carrelage grand format, meubles et robinetterie. Ce qui ne se voit pas — étanchéité, évacuations, ventilation — décide de la durée de vie de la pièce.",
+      "Douche à l'italienne, baignoire, carrelage grand format, meubles et robinetterie. Ce qui ne se voit pas (étanchéité, évacuations, ventilation) décide de la durée de vie de la pièce.",
     works: [
       'Démolition et évacuation',
       'Plomberie et électricité',

@@ -9,9 +9,13 @@ import { cn } from '@/lib/utils';
  */
 export default function PageHero({ label, title, intro, image, breadcrumb = [], aside }) {
   const hasImage = Boolean(image);
+  // Le fil d'Ariane se termine déjà par le nom de la page : répéter ce nom
+  // dans un sur-titre juste en dessous ne dit rien de plus. Le label ne sert
+  // donc que sur les pages sans fil d'Ariane.
+  const showLabel = Boolean(label) && breadcrumb.length === 0;
 
   return (
-    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-night' : 'bg-cream')}>
+    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-carbon' : 'bg-paper')}>
       {hasImage && (
         <>
           <img
@@ -22,23 +26,23 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
             decoding="sync"
             className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 -z-10 bg-night/70" aria-hidden="true" />
+          <div className="absolute inset-0 -z-10 bg-carbon/70" aria-hidden="true" />
         </>
       )}
 
       <Container className={cn('pb-14 pt-28 lg:pb-20 lg:pt-40', hasImage && 'pb-20 lg:pb-28')}>
         {breadcrumb.length > 0 && (
           <nav aria-label="Fil d'Ariane" className="mb-10">
-            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-cream/45' : 'text-ink/35')}>
+            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-paper/65' : 'text-ink/65')}>
               {breadcrumb.map((b, i) => (
                 <li key={b.to || b.label} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">/</span>}
                   {b.to ? (
-                    <Link to={b.to} className="transition-colors hover:text-gold">
+                    <Link to={b.to} className="transition-colors hover:text-signal">
                       {b.label}
                     </Link>
                   ) : (
-                    <span aria-current="page" className={hasImage ? 'text-cream/70' : 'text-ink/60'}>
+                    <span aria-current="page" className={hasImage ? 'text-paper/70' : 'text-ink/65'}>
                       {b.label}
                     </span>
                   )}
@@ -48,19 +52,27 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
           </nav>
         )}
 
-        <div className="lg:grid lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-7">
-            {label && (
-              <div className="mb-6 flex items-center gap-4">
-                <span className="h-px w-8 bg-gold" aria-hidden="true" />
-                <span className={cn('t-label', hasImage ? 'text-cream/60' : 'text-ink/40')}>{label}</span>
-              </div>
+        {/* La colonne de droite n'existe que si elle porte autre chose qu'un
+            paragraphe : sinon le texte se lit sous le titre, à la bonne
+            largeur de lecture. */}
+        <div className={cn(aside && 'lg:grid lg:grid-cols-12 lg:gap-12')}>
+          <div className={cn(aside && 'lg:col-span-7')}>
+            {showLabel && (
+              <p className={cn('t-label mb-5', hasImage ? 'text-paper/60' : 'text-ink/65')}>{label}</p>
             )}
-            <h1 className={cn('t-h1', hasImage ? 'text-cream' : 'text-ink')}>{title}</h1>
+            {/* `ch` se calcule sur la police de l'élément : la largeur se pose
+                donc sur le titre, jamais sur le conteneur. */}
+            <h1 className={cn('t-h1 max-w-[16ch] text-balance', hasImage ? 'text-paper' : 'text-ink')}>{title}</h1>
           </div>
 
           {(intro || aside) && (
-            <div className={cn('mt-8 lg:col-span-5 lg:mt-0 lg:self-end', hasImage ? 'text-cream/65' : 'text-ink/60')}>
+            <div
+              className={cn(
+                'mt-6',
+                aside && 'lg:col-span-5 lg:mt-0 lg:self-end',
+                hasImage ? 'text-paper/65' : 'text-ink/65'
+              )}
+            >
               {intro && <p className="t-body measure">{intro}</p>}
               {aside}
             </div>

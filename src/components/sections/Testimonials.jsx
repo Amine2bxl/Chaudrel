@@ -18,7 +18,6 @@ export default function Testimonials({ limit, tone = 'white' }) {
     <Section tone={tone} id="avis">
       <Container>
         <SectionHeading
-          label="Avis clients"
           title={
             <>
               Ce qu’en disent
@@ -38,8 +37,8 @@ export default function Testimonials({ limit, tone = 'white' }) {
               </blockquote>
               <figcaption className="mt-8 flex items-baseline gap-4 border-t border-ink/12 pt-4">
                 <span className="t-h3">{items[0].name}</span>
-                <span className="t-label text-ink/35">{items[0].location}</span>
-                <span className="t-small ml-auto text-ink/40">{items[0].project}</span>
+                <span className="t-label text-ink/65">{items[0].location}</span>
+                <span className="t-small ml-auto text-ink/65">{items[0].project}</span>
               </figcaption>
             </Reveal>
           )}
@@ -48,7 +47,7 @@ export default function Testimonials({ limit, tone = 'white' }) {
             {items.slice(1).map((t, i) => (
               <Reveal as="figure" key={t.id} delay={120 + i * 90} className="border-t border-ink/12 pt-5">
                 <blockquote className="t-small text-ink/70">« {t.quote} »</blockquote>
-                <figcaption className="t-label mt-4 text-ink/40">
+                <figcaption className="t-label mt-4 text-ink/65">
                   {t.name} — {t.location}
                 </figcaption>
               </Reveal>
@@ -68,7 +67,7 @@ export default function Testimonials({ limit, tone = 'white' }) {
             </a>
           )}
           {!TESTIMONIALS_VALIDATED && (
-            <p className={cn('t-small text-ink/40')}>
+            <p className={cn('t-small text-ink/65')}>
               <Label>À valider</Label>{' '}
               <span className="ml-2">
                 avis repris de l’ancien site, à confirmer ou à remplacer par des avis Google avant publication.

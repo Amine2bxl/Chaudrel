@@ -10,14 +10,14 @@ import { cn } from '@/lib/utils';
  * ou au focus. Aucune donnée dynamique, aucun service de cartographie, aucune
  * navigation : c'est une illustration, pas un outil.
  */
-export default function BelgiumCoverage({ tone = 'night' }) {
+export default function BelgiumCoverage({ tone = 'carbon' }) {
   const [active, setActive] = useState(null);
-  const light = tone === 'night';
+  const light = tone === 'carbon';
 
   const activeName = PROVINCES.find((p) => p.id === active)?.name;
 
   return (
-    <section className={cn('py-20 md:py-28 lg:py-36', light ? 'bg-night text-cream' : 'bg-cream text-ink')}>
+    <section className={cn('py-20 md:py-28 lg:py-36', light ? 'bg-carbon text-paper' : 'bg-paper text-ink')}>
       <Container>
         <SectionHeading
           tone={light ? 'light' : 'dark'}
@@ -29,7 +29,7 @@ export default function BelgiumCoverage({ tone = 'night' }) {
               partout en Belgique.
             </>
           }
-          text="Notre siège est à Bruxelles. Nos chantiers, eux, ne s’arrêtent pas au ring : Flandre, Wallonie, Bruxelles — les dix provinces et la capitale."
+          text="Notre siège est à Bruxelles. Nos chantiers, eux, ne s’arrêtent pas au ring : les dix provinces et la capitale."
         />
 
         <div className="mt-16 grid gap-12 lg:mt-20 lg:grid-cols-12 lg:gap-16">
@@ -61,12 +61,12 @@ export default function BelgiumCoverage({ tone = 'night' }) {
                         'cursor-pointer outline-none transition-[fill,stroke] duration-500',
                         light
                           ? isActive
-                            ? 'fill-gold stroke-cream/40'
-                            : 'fill-cream/[0.07] stroke-cream/25 hover:fill-cream/15'
+                            ? 'fill-signal stroke-paper/40'
+                            : 'fill-paper/[0.07] stroke-paper/25 hover:fill-paper/15'
                           : isActive
-                            ? 'fill-gold stroke-ink/30'
+                            ? 'fill-signal stroke-ink/30'
                             : 'fill-ink/[0.05] stroke-ink/25 hover:fill-ink/10',
-                        'focus-visible:fill-gold'
+                        'focus-visible:fill-signal'
                       )}
                       strokeWidth="1.4"
                       vectorEffect="non-scaling-stroke"
@@ -80,19 +80,19 @@ export default function BelgiumCoverage({ tone = 'night' }) {
                   if (!bxl) return null;
                   return (
                     <g aria-hidden="true">
-                      <circle cx={bxl.cx} cy={bxl.cy} r="7" className="fill-gold" />
+                      <circle cx={bxl.cx} cy={bxl.cy} r="7" className="fill-signal" />
                       <circle
                         cx={bxl.cx}
                         cy={bxl.cy}
                         r="15"
-                        className={light ? 'fill-none stroke-gold/50' : 'fill-none stroke-gold/60'}
+                        className={light ? 'fill-none stroke-signal/50' : 'fill-none stroke-signal/60'}
                         strokeWidth="1.4"
                         vectorEffect="non-scaling-stroke"
                       />
                       <text
                         x={bxl.cx + 26}
                         y={bxl.cy + 5}
-                        className={cn('t-label', light ? 'fill-cream/70' : 'fill-ink/60')}
+                        className={cn('t-label', light ? 'fill-paper/70' : 'fill-ink/60')}
                         style={{ fontSize: 22, letterSpacing: '0.18em' }}
                       >
                         BRUXELLES
@@ -108,7 +108,7 @@ export default function BelgiumCoverage({ tone = 'night' }) {
                 className={cn(
                   'mt-4 h-6 text-center transition-opacity duration-300 lg:text-left',
                   activeName ? 'opacity-100' : 'opacity-0',
-                  light ? 'text-cream/70' : 'text-ink/60'
+                  light ? 'text-paper/70' : 'text-ink/65'
                 )}
               >
                 <span className="t-label">{activeName || '—'}</span>
@@ -129,16 +129,16 @@ export default function BelgiumCoverage({ tone = 'night' }) {
                   onMouseLeave={() => setActive(null)}
                   className={cn(
                     'flex items-center gap-3 border-b py-3 transition-colors duration-300',
-                    light ? 'border-cream/10' : 'border-ink/10',
-                    active === p.id && (light ? 'text-cream' : 'text-ink'),
-                    active !== p.id && (light ? 'text-cream/60' : 'text-ink/60')
+                    light ? 'border-paper/10' : 'border-ink/10',
+                    active === p.id && (light ? 'text-paper' : 'text-ink'),
+                    active !== p.id && (light ? 'text-paper/60' : 'text-ink/65')
                   )}
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" className="flex-shrink-0">
                     <path
                       d="M1 6.5 4.2 9.5 11 2.5"
                       fill="none"
-                      stroke="#8C764E"
+                      stroke="#CC3A14"
                       strokeWidth="1.6"
                       strokeLinecap="square"
                     />

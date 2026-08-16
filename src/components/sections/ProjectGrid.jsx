@@ -18,7 +18,7 @@ export function ProjectItem({ project, ratio = 'aspect-[4/5]', priority = false,
         onClick={() => track(EVENTS.PROJECT_VIEW, { project: project.slug })}
         className="group block"
       >
-        <div className={cn('overflow-hidden bg-sand', ratio)}>
+        <div className={cn('overflow-hidden bg-stone', ratio)}>
           <img
             src={project.cover}
             alt={`${project.type} — ${project.title}, ${project.location}`}
@@ -31,10 +31,10 @@ export function ProjectItem({ project, ratio = 'aspect-[4/5]', priority = false,
 
         <div className="mt-5 flex items-baseline justify-between gap-6 border-t border-ink/10 pt-4">
           <div>
-            <h3 className="t-h3 transition-colors duration-300 group-hover:text-gold">{project.title}</h3>
-            <p className="t-small mt-1 text-ink/45">{project.location}</p>
+            <h3 className="t-h3 transition-colors duration-300 group-hover:text-signal">{project.title}</h3>
+            <p className="t-small mt-1 text-ink/65">{project.location}</p>
           </div>
-          <span className="t-label whitespace-nowrap text-ink/35">{project.type}</span>
+          <span className="t-label whitespace-nowrap text-ink/65">{project.type}</span>
         </div>
       </Link>
     </Reveal>

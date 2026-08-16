@@ -4,8 +4,9 @@
 
 /* ============================================================
    CHAUDREL — DESIGN SYSTEM
-   5 couleurs · 2 familles typographiques · 7 niveaux de texte
-   Pas d'ombre portée. Pas de dégradé. Des lignes et du vide.
+   Papier gris · graphite · un accent. Deux grotesques.
+   Pas d'ombre portée, pas de dégradé, pas d'angle arrondi.
+   Des filets, du vide, et des photos de chantier en grand.
    ============================================================ */
 
 @layer base {
@@ -17,9 +18,9 @@
   }
 
   body {
-    font-family: Inter, system-ui, sans-serif;
-    background-color: #f7f5f2;
-    color: #141311;
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    background-color: #ededea;
+    color: #15161a;
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -42,12 +43,12 @@
   }
 
   ::selection {
-    background: #141311;
-    color: #f7f5f2;
+    background: #15161a;
+    color: #ededea;
   }
 
   :focus-visible {
-    outline: 2px solid #8c764e;
+    outline: 2px solid #cc3a14;
     outline-offset: 3px;
   }
 
@@ -64,39 +65,39 @@
   /* ---------- Échelle typographique ---------- */
 
   .t-display {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 400;
-    font-size: clamp(2.5rem, 6.5vw, 5rem);
-    line-height: 0.98;
-    letter-spacing: -0.02em;
+    font-family: Archivo, 'Inter Tight', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(2.75rem, 7vw, 5.25rem);
+    line-height: 0.94;
+    letter-spacing: -0.035em;
   }
 
   .t-h1 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 400;
-    font-size: clamp(2.25rem, 5vw, 3.75rem);
-    line-height: 1.04;
-    letter-spacing: -0.02em;
+    font-family: Archivo, 'Inter Tight', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(2.125rem, 4.8vw, 3.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
   }
 
   .t-h2 {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 400;
-    font-size: clamp(1.75rem, 3.6vw, 2.75rem);
-    line-height: 1.1;
-    letter-spacing: -0.015em;
+    font-family: Archivo, 'Inter Tight', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: clamp(1.625rem, 3.2vw, 2.375rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
   }
 
   .t-h3 {
-    font-weight: 500;
-    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    font-weight: 600;
+    font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
     line-height: 1.35;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.012em;
   }
 
   .t-body {
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: 1.0625rem;
+    line-height: 1.65;
     font-weight: 400;
   }
 
@@ -105,18 +106,21 @@
     line-height: 1.6;
   }
 
+  /* Réservé aux repères de navigation (fil d'Ariane, boutons, méta).
+     Ce n'est pas un sur-titre décoratif à poser au-dessus de chaque section. */
   .t-label {
     font-size: 0.6875rem;
     line-height: 1;
     font-weight: 600;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
   }
 
   .t-num {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 400;
+    font-family: Archivo, 'Inter Tight', system-ui, sans-serif;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
   }
 
   /* ---------- Éléments ---------- */
@@ -127,7 +131,7 @@
 
   .rule {
     border: 0;
-    border-top: 1px solid rgb(20 19 17 / 0.12);
+    border-top: 1px solid rgb(21 22 26 / 0.14);
   }
 
   .rule-light {
@@ -156,10 +160,10 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f7f5f2;
+  background: #ededea;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(20 19 17 / 0.2);
+  background: rgb(21 22 26 / 0.22);
 }
 @media (max-width: 1023px) {
   ::-webkit-scrollbar {

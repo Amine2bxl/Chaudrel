@@ -13,13 +13,13 @@ export default function MobileBar() {
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-ink/10 bg-cream lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-ink/10 bg-paper lg:hidden"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       <Link
         to="/devis"
         onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
-        className={cn('t-label flex min-h-[58px] items-center justify-center bg-ink text-cream')}
+        className={cn('t-label flex min-h-[58px] items-center justify-center bg-ink text-paper')}
       >
         Demander un devis
       </Link>

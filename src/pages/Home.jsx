@@ -6,7 +6,7 @@ import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import BeforeAfter from '@/components/sections/BeforeAfter';
 import Testimonials from '@/components/sections/Testimonials';
 import FaqAccordion from '@/components/sections/FaqAccordion';
-import CTASection from '@/components/sections/CTASection';
+import QuickQuote from '@/components/sections/QuickQuote';
 import { Button, Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { PROJECTS } from '@/data/projects';
@@ -23,18 +23,11 @@ export default function Home() {
       <ProofBand />
 
       {/* Réalisations — la preuve avant le discours */}
-      <Section tone="cream">
+      <Section tone="paper">
         <Container>
           <SectionHeading
-            label="Réalisations"
-            title={
-              <>
-                Ce que nous
-                <br />
-                livrons.
-              </>
-            }
-            text="Des chantiers finis, habités, utilisés. Chaque projet est mené du premier coup de marteau au nettoyage final."
+            title="Des chantiers finis, habités, utilisés."
+            text="Chaque projet est mené du premier coup de marteau au nettoyage final."
           />
 
           <div className="mt-16 lg:mt-24">
@@ -53,8 +46,8 @@ export default function Home() {
           <Container>
             <SectionHeading
               label="Avant / après"
-              title="La différence se regarde."
-              text="Les mêmes pièces, avant notre intervention et le jour de la livraison."
+              title="Les mêmes pièces, deux fois."
+              text="L’état dans lequel nous avons trouvé la pièce, et le jour de la livraison. Basculez avec les deux boutons."
             />
             {/* Un cas en grand, les autres en appui : la comparaison mérite
                 d'être vue, pas alignée en trois vignettes égales. */}
@@ -87,12 +80,11 @@ export default function Home() {
       )}
 
       {/* Services */}
-      <Section tone="cream">
+      <Section tone="paper">
         <Container>
           <SectionHeading
-            label="Services"
-            title="Ce que nous faisons."
-            text="Une rénovation complète ou un seul poste. Dans les deux cas, c’est nous qui coordonnons."
+            title="Une rénovation complète, ou un seul poste."
+            text="Dans les deux cas, c’est nous qui coordonnons les corps de métier."
           />
           <ServiceList className="mt-14 lg:mt-20" />
           <div className="mt-12">
@@ -104,11 +96,10 @@ export default function Home() {
       </Section>
 
       {/* Méthode */}
-      <Section tone="night">
+      <Section tone="carbon">
         <Container>
           <SectionHeading
             tone="light"
-            label="Notre méthode"
             title="Sept étapes, zéro surprise."
             text="Vous savez à tout moment où en est votre chantier, ce qui a été fait et ce qui vient ensuite."
           />
@@ -117,7 +108,7 @@ export default function Home() {
       </Section>
 
       {/* Couverture nationale */}
-      <BelgiumCoverage tone="cream" />
+      <BelgiumCoverage tone="paper" />
 
       {/* À propos, court */}
       <Section tone="white">
@@ -130,18 +121,10 @@ export default function Home() {
           />
 
           <Reveal from="right" className="lg:col-span-7">
-            <div className="mb-6 flex items-center gap-4">
-              <span className="h-px w-8 bg-gold" aria-hidden="true" />
-              <span className="t-label text-ink/40">À propos</span>
-            </div>
-            <h2 className="t-h2">
-              Deux artisans, une même
-              <br />
-              exigence depuis {BRAND.founded}.
-            </h2>
-            <p className="t-body measure mt-8 text-ink/65">
+            <h2 className="t-h2 text-balance">Deux artisans, une même exigence depuis {BRAND.founded}.</h2>
+            <p className="t-body measure mt-7 text-ink/65">
               {BRAND.founders[0].name} suit les chantiers et la technique. {BRAND.founders[1].name} s’occupe du design et
-              de la relation client. Cette répartition n’a pas bougé depuis le premier jour — c’est aussi pour cela que
+              de la relation client. Cette répartition n’a pas bougé depuis le premier jour, et c’est aussi pour cela que
               vous n’avez jamais qu’un seul interlocuteur.
             </p>
             <div className="mt-10">
@@ -151,12 +134,12 @@ export default function Home() {
         </Container>
       </Section>
 
-      <Testimonials limit={3} tone="cream" />
+      <Testimonials limit={3} tone="paper" />
 
       {/* FAQ */}
       <Section tone="white">
         <Container>
-          <SectionHeading label="Questions fréquentes" title="Ce que l’on nous demande le plus." />
+          <SectionHeading title="Ce que l’on nous demande le plus." />
           <div className="mt-12 lg:mt-16">
             <FaqAccordion items={FAQS.slice(0, 5)} />
           </div>
@@ -166,7 +149,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      <CTASection source="home" />
+      <QuickQuote source="home" />
     </>
   );
 }

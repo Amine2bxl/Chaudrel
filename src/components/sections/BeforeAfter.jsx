@@ -12,7 +12,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
 
   return (
     <figure className={cn('group', className)}>
-      <div className={cn('relative overflow-hidden bg-sand', ratio)}>
+      <div className={cn('relative overflow-hidden bg-stone', ratio)}>
         <img
           key={src}
           src={src}
@@ -38,7 +38,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
               onClick={() => setShowBefore(b.key === 'before')}
               className={cn(
                 't-label px-5 py-3 transition-colors duration-300',
-                b.active ? 'bg-cream text-ink' : 'bg-night/70 text-cream/70 hover:text-cream'
+                b.active ? 'bg-paper text-ink' : 'bg-carbon/70 text-paper/70 hover:text-paper'
               )}
             >
               {b.text}
@@ -47,7 +47,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
         </div>
       </div>
 
-      <figcaption className={cn('t-small mt-4 border-t pt-3', light ? 'border-cream/15 text-cream/55' : 'border-ink/10 text-ink/50')}>
+      <figcaption className={cn('t-small mt-4 border-t pt-3', light ? 'border-paper/15 text-paper/65' : 'border-ink/10 text-ink/65')}>
         {label}
       </figcaption>
     </figure>

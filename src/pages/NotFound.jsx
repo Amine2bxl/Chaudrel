@@ -9,7 +9,7 @@ export default function NotFound() {
         title="Cette page n'existe pas"
         intro="Le lien est peut-être ancien ou mal recopié. Voici par où continuer."
       />
-      <Section tone="cream">
+      <Section tone="paper">
         <Container className="flex flex-wrap gap-3">
           <Button to="/" variant="solid">
             Retour à l'accueil

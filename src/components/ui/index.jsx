@@ -11,13 +11,13 @@ export function Container({ className, children, as: Tag = 'div' }) {
 }
 
 const TONES = {
-  cream: 'bg-cream text-ink',
+  paper: 'bg-paper text-ink',
   white: 'bg-white text-ink',
-  sand: 'bg-sand text-ink',
-  night: 'bg-night text-cream',
+  stone: 'bg-stone text-ink',
+  carbon: 'bg-carbon text-paper',
 };
 
-export function Section({ id, tone = 'cream', className, children, ...rest }) {
+export function Section({ id, tone = 'paper', className, children, ...rest }) {
   return (
     <section id={id} className={cn('py-20 md:py-28 lg:py-36', TONES[tone], className)} {...rest}>
       {children}
@@ -31,43 +31,54 @@ export function Rule({ tone = 'dark', className, delay = 0 }) {
     <Reveal
       from="line"
       delay={delay}
-      className={cn('h-px w-full', tone === 'light' ? 'bg-cream/20' : 'bg-ink/15', className)}
+      className={cn('h-px w-full', tone === 'light' ? 'bg-paper/20' : 'bg-ink/15', className)}
     />
   );
 }
 
 export function Label({ children, tone = 'dark', className }) {
   return (
-    <span className={cn('t-label', tone === 'light' ? 'text-cream/45' : 'text-ink/40', className)}>{children}</span>
+    <span className={cn('t-label', tone === 'light' ? 'text-paper/65' : 'text-ink/65', className)}>{children}</span>
   );
 }
 
 /**
- * En-tête de section éditorial : un label, un titre, et — au besoin — un texte
- * court placé en regard. Le titre reste court : le texte long va à droite.
+ * En-tête de section : un titre, et au besoin une phrase dessous.
+ *
+ * Deux règles tenues sur tout le site :
+ * — pas de sur-titre par défaut. Un `label` se justifie une fois toutes les
+ *   trois sections au maximum ; la place de la section dans la page suffit
+ *   presque toujours à dire de quoi elle parle.
+ * — le texte se met SOUS le titre, pas dans une colonne à droite. Le couple
+ *   « gros titre à gauche / petit paragraphe à droite » est le tic de mise en
+ *   page qui fait ressembler toutes les pages entre elles. `align="split"`
+ *   reste disponible quand la colonne de droite porte autre chose qu'un
+ *   paragraphe de remplissage.
  */
-export function SectionHeading({ label, title, text, tone = 'dark', align = 'split', className, children }) {
+export function SectionHeading({ label, title, text, tone = 'dark', align = 'stack', className, children }) {
   const light = tone === 'light';
+  const split = align === 'split';
 
   return (
-    <div className={cn(align === 'split' && 'lg:grid lg:grid-cols-12 lg:gap-10', className)}>
-      <Reveal className={cn(align === 'split' ? 'lg:col-span-7' : 'max-w-3xl')}>
+    <div className={cn(split && 'lg:grid lg:grid-cols-12 lg:gap-10', className)}>
+      <Reveal className={cn(split && 'lg:col-span-7')}>
         {label && (
-          <div className="mb-6 flex items-center gap-4">
-            <span className={cn('h-px w-8', light ? 'bg-gold' : 'bg-gold')} aria-hidden="true" />
+          <div className="mb-5">
             <Label tone={tone}>{label}</Label>
           </div>
         )}
-        <h2 className={cn('t-h2', light ? 'text-cream' : 'text-ink')}>{title}</h2>
+        {/* La largeur se pose sur le titre : `ch` se calcule sur la police de
+            l'élément, pas sur celle du conteneur. */}
+        <h2 className={cn('t-h2 max-w-[18ch] text-balance', light ? 'text-paper' : 'text-ink')}>{title}</h2>
       </Reveal>
 
       {(text || children) && (
         <Reveal
           delay={120}
           className={cn(
-            'mt-6 lg:mt-0',
-            align === 'split' && 'lg:col-span-5 lg:self-end',
-            light ? 'text-cream/60' : 'text-ink/60'
+            'mt-5',
+            split && 'lg:col-span-5 lg:mt-0 lg:self-end',
+            light ? 'text-paper/60' : 'text-ink/65'
           )}
         >
           {text && <p className="t-body measure">{text}</p>}
@@ -81,10 +92,10 @@ export function SectionHeading({ label, title, text, tone = 'dark', align = 'spl
 /* ---------- Boutons : deux variantes, rien de plus ---------- */
 
 const VARIANTS = {
-  solid: 'bg-ink text-cream hover:bg-gold',
-  solidLight: 'bg-cream text-ink hover:bg-gold hover:text-cream',
-  outline: 'border border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-cream',
-  outlineLight: 'border border-cream/30 text-cream hover:bg-cream hover:text-ink',
+  solid: 'bg-ink text-paper hover:bg-signal',
+  solidLight: 'bg-paper text-ink hover:bg-signal hover:text-paper',
+  outline: 'border border-ink/25 text-ink hover:border-ink hover:bg-ink hover:text-paper',
+  outlineLight: 'border border-paper/30 text-paper hover:bg-paper hover:text-ink',
 };
 
 const SIZES = {
@@ -126,7 +137,7 @@ export function Button({ to, href, variant = 'solid', size = 'md', className, ch
 export function TextLink({ to, href, className, children, tone = 'dark', ...rest }) {
   const classes = cn(
     'link-line t-label inline-block pb-1',
-    tone === 'light' ? 'text-cream' : 'text-ink',
+    tone === 'light' ? 'text-paper' : 'text-ink',
     className
   );
 
@@ -158,11 +169,11 @@ export function Media({ src, alt, ratio = 'aspect-[4/5]', className, imgClassNam
   );
 
   if (!reveal) {
-    return <div className={cn('overflow-hidden bg-sand', ratio, className)}>{img}</div>;
+    return <div className={cn('overflow-hidden bg-stone', ratio, className)}>{img}</div>;
   }
 
   return (
-    <Reveal from="veil" className={cn('overflow-hidden bg-sand', ratio, className)}>
+    <Reveal from="veil" className={cn('overflow-hidden bg-stone', ratio, className)}>
       {img}
     </Reveal>
   );

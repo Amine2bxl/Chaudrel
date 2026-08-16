@@ -9,7 +9,6 @@ export default function About() {
   return (
     <>
       <PageHero
-        label="À propos"
         title={
           <>
             Une entreprise de rénovation
@@ -21,7 +20,7 @@ export default function About() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'À propos' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
         <Container className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           {/* TODO_VALIDATION : remplacer par une vraie photo de l'équipe Chaudrel. */}
           <Media
@@ -59,7 +58,7 @@ export default function About() {
               {BRAND.founders.map((f) => (
                 <div key={f.name} className="border-t border-ink/12 pt-5">
                   <p className="t-h3">{f.name}</p>
-                  <p className="t-small mt-1 text-ink/45">{f.role}</p>
+                  <p className="t-small mt-1 text-ink/65">{f.role}</p>
                 </div>
               ))}
             </Reveal>
@@ -70,14 +69,13 @@ export default function About() {
       <Section tone="white">
         <Container>
           <SectionHeading
-            label="Ce qui compte pour nous"
             title="Le travail se juge aux finitions."
             text="Ce qui reste une fois le chantier terminé, ce sont les angles, les joints, les raccords. C’est là que se voit le sérieux d’une entreprise."
           />
         </Container>
       </Section>
 
-      <Testimonials limit={3} tone="cream" />
+      <Testimonials limit={3} tone="paper" />
 
       <CTASection source="about" />
     </>

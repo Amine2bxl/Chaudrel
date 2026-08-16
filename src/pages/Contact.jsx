@@ -61,17 +61,16 @@ export default function Contact() {
   return (
     <>
       <PageHero
-        label="Contact"
         title="Parlons de votre projet."
         intro="Un message, un appel ou WhatsApp. Nous répondons à chaque demande, même celles qui ne débouchent pas sur un chantier."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Contact' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
         <Container className="grid gap-16 lg:grid-cols-12 lg:gap-20">
           {/* Canaux directs */}
           <div className="lg:col-span-5">
-            <span className="t-label text-ink/35">Directement</span>
+            <span className="t-label text-ink/65">Directement</span>
 
             <ul className="mt-6 border-t border-ink/12">
               {BRAND.phones.map((p) => (
@@ -81,8 +80,8 @@ export default function Contact() {
                     onClick={() => track(EVENTS.PHONE_CLICK, { source: 'contact' })}
                     className="group flex items-baseline justify-between gap-4 py-5"
                   >
-                    <span className="t-h3 transition-colors group-hover:text-gold">{p.number}</span>
-                    <span className="t-label text-ink/35">{p.name}</span>
+                    <span className="t-h3 transition-colors group-hover:text-signal">{p.number}</span>
+                    <span className="t-label text-ink/65">{p.name}</span>
                   </a>
                 </li>
               ))}
@@ -94,8 +93,8 @@ export default function Contact() {
                   onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'contact' })}
                   className="group flex items-baseline justify-between gap-4 py-5"
                 >
-                  <span className="t-h3 transition-colors group-hover:text-gold">WhatsApp</span>
-                  <span className="t-label text-ink/35">Réponse rapide</span>
+                  <span className="t-h3 transition-colors group-hover:text-signal">WhatsApp</span>
+                  <span className="t-label text-ink/65">Réponse rapide</span>
                 </a>
               </li>
               <li className="border-b border-ink/12">
@@ -104,19 +103,19 @@ export default function Contact() {
                   onClick={() => track(EVENTS.EMAIL_CLICK, { source: 'contact' })}
                   className="group flex items-baseline justify-between gap-4 py-5"
                 >
-                  <span className="t-h3 break-all transition-colors group-hover:text-gold">{BRAND.email}</span>
+                  <span className="t-h3 break-all transition-colors group-hover:text-signal">{BRAND.email}</span>
                 </a>
               </li>
             </ul>
 
             <div className="mt-10">
-              <span className="t-label text-ink/35">Adresse</span>
+              <span className="t-label text-ink/65">Adresse</span>
               <address className="t-body mt-3 not-italic text-ink/65">
                 {BRAND.address.street}
                 <br />
                 {BRAND.address.postalCode} {BRAND.address.city}
               </address>
-              <p className="t-small mt-4 text-ink/45">Chantiers partout en Belgique.</p>
+              <p className="t-small mt-4 text-ink/65">Chantiers partout en Belgique.</p>
             </div>
 
             <div className="mt-10 border-t border-ink/12 pt-6">
@@ -144,7 +143,7 @@ export default function Contact() {
               </Reveal>
             ) : (
               <form onSubmit={submit} noValidate>
-                <span className="t-label text-ink/35">Écrivez-nous</span>
+                <span className="t-label text-ink/65">Écrivez-nous</span>
 
                 <div className="absolute left-[-9999px]" aria-hidden="true">
                   <label htmlFor="company">Ne pas remplir</label>
@@ -189,12 +188,12 @@ export default function Contact() {
                   />
                 </div>
 
-                <label className="t-small mt-7 flex cursor-pointer items-start gap-3 text-ink/60">
+                <label className="t-small mt-7 flex cursor-pointer items-start gap-3 text-ink/65">
                   <input
                     type="checkbox"
                     checked={data.consent}
                     onChange={(e) => set('consent')(e.target.checked)}
-                    className="mt-1 h-4 w-4 flex-shrink-0 accent-[#8C764E]"
+                    className="mt-1 h-4 w-4 flex-shrink-0 accent-[#CC3A14]"
                   />
                   <span>
                     J’accepte d’être recontacté au sujet de ma demande.{' '}
@@ -243,13 +242,13 @@ export default function Contact() {
 
 function Field({ id, label, value, onChange, error, type = 'text', textarea = false, ...rest }) {
   const base = cn(
-    'mt-2 w-full border-0 border-b bg-transparent px-0 py-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ink/25 focus:border-gold',
+    'mt-2 w-full border-0 border-b bg-transparent px-0 py-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ink/55 focus:border-signal',
     error ? 'border-[#9B2C2C]' : 'border-ink/20'
   );
 
   return (
     <div>
-      <label htmlFor={id} className="t-label text-ink/45">
+      <label htmlFor={id} className="t-label text-ink/65">
         {label}
       </label>
       {textarea ? (

@@ -28,13 +28,12 @@ export default function Method() {
   return (
     <>
       <PageHero
-        label="Notre méthode"
         title="Sept étapes, zéro surprise."
         intro="Une rénovation réussie tient autant à l’organisation qu’au travail sur le chantier. Voici exactement comment nous procédons."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Notre méthode' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
           <ProcessTimeline />
         </Container>
@@ -42,19 +41,19 @@ export default function Method() {
 
       <Section tone="white">
         <Container>
-          <SectionHeading label="Nos principes" title="Quatre règles qui ne bougent pas." />
+          <SectionHeading title="Quatre règles qui ne bougent pas." />
           <div className="mt-14 grid gap-x-16 gap-y-12 lg:mt-20 lg:grid-cols-2">
             {PRINCIPES.map((p, i) => (
               <Reveal key={p.title} delay={i * 90} className="border-t border-ink/12 pt-6">
                 <h3 className="t-h2 text-[1.5rem] lg:text-[1.75rem]">{p.title}</h3>
-                <p className="t-body measure mt-4 text-ink/60">{p.text}</p>
+                <p className="t-body measure mt-4 text-ink/65">{p.text}</p>
               </Reveal>
             ))}
           </div>
         </Container>
       </Section>
 
-      <BelgiumCoverage tone="night" />
+      <BelgiumCoverage tone="carbon" />
 
       <CTASection
         title="Commençons par la première étape."

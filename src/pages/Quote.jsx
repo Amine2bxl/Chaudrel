@@ -126,22 +126,21 @@ export default function Quote() {
     return (
       <>
         <PageHero
-          label="Demande envoyée"
           title="C’est noté. Merci."
           intro="Nous revenons vers vous pour convenir d’une visite et préparer votre devis."
           breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
         />
-        <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+        <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
           <Container>
             <div className="grid gap-12 lg:grid-cols-12">
               <ol className="lg:col-span-7">
-                <span className="t-label text-ink/35">La suite</span>
+                <span className="t-label text-ink/65">La suite</span>
                 {METHOD.slice(2, 5).map((s) => (
                   <li key={s.n} className="flex gap-8 border-b border-ink/12 py-6 first:border-t first:mt-5">
-                    <span className="t-num text-2xl text-ink/25">{s.n}</span>
+                    <span className="t-num text-2xl text-ink/40">{s.n}</span>
                     <div>
                       <h2 className="t-h3">{s.title}</h2>
-                      <p className="t-small mt-1.5 text-ink/55">{s.text}</p>
+                      <p className="t-small mt-1.5 text-ink/65">{s.text}</p>
                     </div>
                   </li>
                 ))}
@@ -149,7 +148,7 @@ export default function Quote() {
 
               <div className="lg:col-span-4 lg:col-start-9">
                 <p className="t-body text-ink/65">
-                  En attendant, vous pouvez parcourir nos chantiers récents — ou nous écrire directement.
+                  En attendant, vous pouvez parcourir nos chantiers récents, ou nous écrire directement.
                 </p>
                 <div className="mt-7 flex flex-col gap-3">
                   <Button to="/realisations" variant="solid">
@@ -176,22 +175,21 @@ export default function Quote() {
   return (
     <>
       <PageHero
-        label="Demander un devis"
         title="Cinq questions, deux minutes."
         intro="Gratuit et sans engagement. Plus votre description est précise, plus notre réponse le sera."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
         <Container className="grid gap-16 lg:grid-cols-12 lg:gap-20">
           <div className="lg:col-span-7">
             {/* Progression */}
             <div>
               <div className="flex items-baseline justify-between">
-                <span className="t-label text-ink/40">
+                <span className="t-label text-ink/65">
                   {String(step).padStart(2, '0')} — {STEPS[step - 1]}
                 </span>
-                <span className="t-label text-ink/25">
+                <span className="t-label text-ink/65">
                   {step} / {STEPS.length}
                 </span>
               </div>
@@ -204,7 +202,7 @@ export default function Quote() {
                 aria-label="Progression du formulaire"
               >
                 <div
-                  className="h-px origin-left bg-gold transition-transform duration-700 ease-soft"
+                  className="h-px origin-left bg-signal transition-transform duration-700 ease-soft"
                   style={{ transform: `scaleX(${progress})` }}
                 />
               </div>
@@ -240,7 +238,7 @@ export default function Quote() {
 
               {step === 2 && (
                 <Fieldset legend="Racontez-nous." error={errors.description}>
-                  <label htmlFor="description" className="t-small block text-ink/55">
+                  <label htmlFor="description" className="t-small block text-ink/65">
                     Surface, pièces concernées, état actuel, échéance souhaitée.
                   </label>
                   <textarea
@@ -250,7 +248,7 @@ export default function Quote() {
                     onChange={(e) => set('description')(e.target.value)}
                     aria-invalid={Boolean(errors.description)}
                     placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
-                    className="mt-4 w-full border-0 border-b border-ink/20 bg-transparent px-0 py-3 text-[16px] outline-none transition-colors placeholder:text-ink/25 focus:border-gold"
+                    className="mt-4 w-full border-0 border-b border-ink/20 bg-transparent px-0 py-3 text-[16px] outline-none transition-colors placeholder:text-ink/55 focus:border-signal"
                   />
                 </Fieldset>
               )}
@@ -293,7 +291,7 @@ export default function Quote() {
                       inputMode="numeric"
                     />
                   </div>
-                  <p className="t-small mt-6 text-ink/45">Nous intervenons partout en Belgique.</p>
+                  <p className="t-small mt-6 text-ink/65">Nous intervenons partout en Belgique.</p>
                 </Fieldset>
               )}
 
@@ -305,13 +303,13 @@ export default function Quote() {
                     <Field id="email" label="E-mail" type="email" value={data.email} onChange={set('email')} error={errors.email} autoComplete="email" />
                   </div>
 
-                  <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-ink/60">
+                  <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-ink/65">
                     <input
                       type="checkbox"
                       checked={data.consent}
                       onChange={(e) => set('consent')(e.target.checked)}
                       aria-invalid={Boolean(errors.consent)}
-                      className="mt-1 h-4 w-4 flex-shrink-0 accent-[#8C764E]"
+                      className="mt-1 h-4 w-4 flex-shrink-0 accent-[#CC3A14]"
                     />
                     <span>
                       J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
@@ -349,7 +347,7 @@ export default function Quote() {
               {status === 'error' && (
                 <div role="alert" className="mt-8 border-l-2 border-[#9B2C2C] pl-5">
                   <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
-                  {serverError && <p className="t-small mt-1 text-ink/55">{serverError}</p>}
+                  {serverError && <p className="t-small mt-1 text-ink/65">{serverError}</p>}
                   <p className="t-small mt-3 text-ink/65">
                     Appelez-nous au{' '}
                     <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
@@ -368,21 +366,21 @@ export default function Quote() {
 
           {/* Réassurance */}
           <aside className="lg:col-span-4 lg:col-start-9">
-            <span className="t-label text-ink/35">Pourquoi ces questions</span>
+            <span className="t-label text-ink/65">Pourquoi ces questions</span>
             <ul className="mt-6 space-y-5 border-t border-ink/12 pt-6">
               {[
                 'Elles nous évitent trois allers-retours avant la visite.',
                 'Le devis est gratuit et sans engagement.',
                 'Vos données servent uniquement à répondre à votre demande.',
               ].map((t) => (
-                <li key={t} className="t-small text-ink/60">
+                <li key={t} className="t-small text-ink/65">
                   {t}
                 </li>
               ))}
             </ul>
 
             <div className="mt-10 border-t border-ink/12 pt-6">
-              <p className="t-small text-ink/50">Vous préférez parler ?</p>
+              <p className="t-small text-ink/65">Vous préférez parler ?</p>
               <ul className="mt-3 space-y-2">
                 {BRAND.phones.map((p) => (
                   <li key={p.tel}>
@@ -440,7 +438,7 @@ function Choice({ name, label, checked, onChange }) {
     <label
       className={cn(
         'flex cursor-pointer items-center gap-4 border-b border-ink/12 py-4 transition-colors duration-300',
-        checked ? 'text-ink' : 'text-ink/60 hover:text-ink'
+        checked ? 'text-ink' : 'text-ink/65 hover:text-ink'
       )}
     >
       <input type="radio" name={name} checked={checked} onChange={onChange} className="sr-only" />
@@ -448,10 +446,10 @@ function Choice({ name, label, checked, onChange }) {
         aria-hidden="true"
         className={cn(
           'flex h-4 w-4 flex-shrink-0 items-center justify-center border transition-colors duration-300',
-          checked ? 'border-gold bg-gold' : 'border-ink/25'
+          checked ? 'border-signal bg-signal' : 'border-ink/25'
         )}
       >
-        {checked && <span className="block h-1.5 w-1.5 bg-cream" />}
+        {checked && <span className="block h-1.5 w-1.5 bg-paper" />}
       </span>
       <span className="t-body">{label}</span>
     </label>
@@ -461,7 +459,7 @@ function Choice({ name, label, checked, onChange }) {
 function Field({ id, label, value, onChange, error, type = 'text', className, ...rest }) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="t-label text-ink/45">
+      <label htmlFor={id} className="t-label text-ink/65">
         {label}
       </label>
       <input
@@ -473,7 +471,7 @@ function Field({ id, label, value, onChange, error, type = 'text', className, ..
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          'mt-2 w-full border-0 border-b bg-transparent px-0 py-3 text-[16px] text-ink outline-none transition-colors focus:border-gold',
+          'mt-2 w-full border-0 border-b bg-transparent px-0 py-3 text-[16px] text-ink outline-none transition-colors focus:border-signal',
           error ? 'border-[#9B2C2C]' : 'border-ink/20'
         )}
         {...rest}

@@ -31,19 +31,19 @@ export default function ProjectIndex({ projects, className }) {
               className="group block py-7 lg:py-9"
             >
               <div className="flex items-baseline gap-5 sm:gap-8">
-                <span className="t-num text-ink/25">{String(i + 1).padStart(2, '0')}</span>
+                <span className="t-num text-ink/65">{String(i + 1).padStart(2, '0')}</span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="t-h2 text-[1.5rem] transition-colors duration-300 group-hover:text-gold sm:text-[1.875rem]">
+                  <h3 className="t-h2 text-[1.5rem] transition-colors duration-300 group-hover:text-signal sm:text-[1.875rem]">
                     {p.title}
                   </h3>
-                  <p className="t-small mt-2 text-ink/45">
+                  <p className="t-small mt-2 text-ink/65">
                     {p.type} — {p.location}
                   </p>
                 </div>
               </div>
 
               {/* L'image accompagne la ligne sur mobile, où le survol n'existe pas */}
-              <div className="mt-5 aspect-[16/10] overflow-hidden bg-sand lg:hidden">
+              <div className="mt-5 aspect-[16/10] overflow-hidden bg-stone lg:hidden">
                 <img
                   src={p.cover}
                   alt={`${p.type} — ${p.title}, ${p.location}`}
@@ -60,7 +60,7 @@ export default function ProjectIndex({ projects, className }) {
       {/* Aperçu au survol — desktop uniquement */}
       <div className="hidden lg:col-span-5 lg:block">
         <div className="sticky top-32">
-          <div className="relative aspect-[4/5] overflow-hidden bg-sand">
+          <div className="relative aspect-[4/5] overflow-hidden bg-stone">
             {projects.map((p) => (
               <img
                 key={p.slug}
@@ -77,9 +77,9 @@ export default function ProjectIndex({ projects, className }) {
             ))}
           </div>
 
-          <p className="t-small mt-4 flex h-5 items-baseline justify-between text-ink/50">
+          <p className="t-small mt-4 flex h-5 items-baseline justify-between text-ink/65">
             <span>{current ? `${current.type} — ${current.location}` : ''}</span>
-            <span className="t-label text-ink/25">
+            <span className="t-label text-ink/65">
               {current ? String(projects.indexOf(current) + 1).padStart(2, '0') : ''}
             </span>
           </p>

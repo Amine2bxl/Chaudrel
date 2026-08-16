@@ -16,7 +16,7 @@ function List({ items }) {
     <ul className="space-y-2">
       {items.map((it, i) => (
         <li key={i} className="flex gap-3">
-          <span className="text-gold" aria-hidden="true">
+          <span className="text-signal" aria-hidden="true">
             —
           </span>
           <span>{it}</span>
@@ -35,13 +35,12 @@ export default function Legal() {
   return (
     <>
       <PageHero
-        label="Informations légales"
         title="Mentions légales & confidentialité"
         intro="Identité de l'éditeur, hébergement, propriété intellectuelle et traitement des données personnelles."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Mentions légales' }]}
       />
 
-      <Section tone="cream">
+      <Section tone="paper">
         <Container className="max-w-3xl">
           <Block title="1. Éditeur du site">
             <List
@@ -64,7 +63,7 @@ export default function Legal() {
                 </>,
                 <>
                   <strong>E-mail :</strong>{' '}
-                  <a href={`mailto:${BRAND.email}`} className="link-line text-gold">
+                  <a href={`mailto:${BRAND.email}`} className="link-line text-signal">
                     {BRAND.email}
                   </a>
                 </>,
@@ -81,7 +80,7 @@ export default function Legal() {
           <Block title="2. Hébergeur">
             <p>
               Le site est hébergé par <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA 91789, USA —{' '}
-              <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="link-line text-gold">
+              <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="link-line text-signal">
                 vercel.com
               </a>
               .
@@ -134,7 +133,7 @@ export default function Legal() {
           <Block title="7. Responsable du traitement des données">
             <p>
               Chaudrel Rénovation SRL, {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city} —{' '}
-              <a href={`mailto:${BRAND.email}`} className="link-line text-gold">
+              <a href={`mailto:${BRAND.email}`} className="link-line text-signal">
                 {BRAND.email}
               </a>
               .
@@ -186,7 +185,7 @@ export default function Legal() {
             <p>
               Vous disposez d'un droit d'accès, de rectification, d'effacement, de portabilité, de limitation et
               d'opposition au traitement de vos données. Pour les exercer, écrivez-nous à{' '}
-              <a href={`mailto:${BRAND.email}`} className="link-line text-gold">
+              <a href={`mailto:${BRAND.email}`} className="link-line text-signal">
                 {BRAND.email}
               </a>{' '}
               — nous répondons dans un délai d'un mois.
@@ -198,7 +197,7 @@ export default function Legal() {
                 href="https://www.autoriteprotectiondonnees.be"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="link-line text-gold"
+                className="link-line text-signal"
               >
                 autoriteprotectiondonnees.be
               </a>
@@ -224,7 +223,7 @@ export default function Legal() {
           <Block title="14. Crédits">
             <List
               items={[
-                'Typographies : Playfair Display · Inter (Google Fonts)',
+                'Typographies : Archivo · Inter Tight (Google Fonts)',
                 'Photographies : Chaudrel Rénovation',
                 'Icônes : Lucide',
               ]}
