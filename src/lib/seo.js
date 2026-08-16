@@ -212,7 +212,7 @@ export function metaFor(pathname = '/') {
         path,
         title: `${p.title} — ${p.type} à ${p.location} | Chaudrel`,
         description: p.summary,
-        image: abs(p.cover),
+        image: abs(p.cover.src),
         ld: [
           breadcrumbLd([
             { name: 'Accueil', path: '/' },
@@ -224,8 +224,10 @@ export function metaFor(pathname = '/') {
             '@type': 'CreativeWork',
             name: p.title,
             description: p.description,
-            image: p.images.map(abs),
+            image: p.images.map((im) => abs(im.src)),
+            about: p.type,
             locationCreated: { '@type': 'Place', name: p.location },
+            ...(p.year ? { dateCreated: String(p.year) } : {}),
             creator: { '@id': `${SITE_URL}/#business` },
           },
         ],

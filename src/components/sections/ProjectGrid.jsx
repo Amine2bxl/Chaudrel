@@ -20,8 +20,10 @@ export function ProjectItem({ project, ratio = 'aspect-[4/5]', priority = false,
       >
         <div className={cn('overflow-hidden rounded-lg bg-sand', ratio)}>
           <img
-            src={project.cover}
-            alt={`${project.type} — ${project.title}, ${project.location}`}
+            src={project.cover.src}
+            alt={project.cover.alt}
+            width={project.cover.w}
+            height={project.cover.h}
             loading={priority ? 'eager' : 'lazy'}
             decoding={priority ? 'sync' : 'async'}
             fetchpriority={priority ? 'high' : undefined}
@@ -30,7 +32,9 @@ export function ProjectItem({ project, ratio = 'aspect-[4/5]', priority = false,
         </div>
 
         <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-1">
-          <h3 className="t-h3 transition-colors duration-300 group-hover:text-umber">{project.title}</h3>
+          <h3 className="font-display text-[1.375rem] leading-tight tracking-[-0.01em] transition-colors duration-300 group-hover:text-umber">
+            {project.title}
+          </h3>
           <span className="t-small text-ink/65">{project.type}</span>
           <p className="t-small w-full text-ink/65">{project.location}</p>
         </div>

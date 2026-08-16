@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
-import ProjectIndex from '@/components/sections/ProjectIndex';
-import CTASection from '@/components/sections/CTASection';
+import ProjectShowcase from '@/components/sections/ProjectShowcase';
+import QuickQuote from '@/components/sections/QuickQuote';
 import { Container, Section } from '@/components/ui';
 import { PROJECTS, activeCategories, projectsByCategory } from '@/data/projects';
 import { cn } from '@/lib/utils';
@@ -58,18 +58,16 @@ export default function Projects() {
           </div>
 
           {items.length > 0 ? (
-            <ProjectIndex projects={items} className="mt-12 lg:mt-16" />
+            <ProjectShowcase projects={items} className="mt-16 lg:mt-24" />
           ) : (
-            <p className="t-body mt-14 text-ink/65">Aucune réalisation publiée dans cette catégorie pour le moment.</p>
+            <p className="t-lead mt-16 text-ink/60">
+              Aucune réalisation publiée dans cette catégorie pour le moment.
+            </p>
           )}
         </Container>
       </Section>
 
-      <CTASection
-        title="Votre projet ressemble à l’un des nôtres ?"
-        text="Envoyez-nous quelques lignes et deux photos. Nous vous répondons avec une visite ou une première estimation."
-        source="projects"
-      />
+      <QuickQuote source="projects" />
     </>
   );
 }

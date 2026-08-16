@@ -72,7 +72,11 @@ function Field({ id, label, type = 'text', value, onChange, error, ...rest }) {
   );
 }
 
-export default function QuickQuote({ source = 'home' }) {
+export default function QuickQuote({
+  source = 'home',
+  title = 'Dites-nous ce que vous voulez rénover.',
+  lead = 'Cinq champs suffisent pour lancer la discussion. Nous revenons vers vous, puis nous convenons d’une visite.',
+}) {
   const [data, setData] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
@@ -131,10 +135,8 @@ export default function QuickQuote({ source = 'home' }) {
     <section id="devis-rapide" className="bg-bark py-section text-cream">
       <Container className="lg:grid lg:grid-cols-12 lg:gap-16">
         <Reveal className="lg:col-span-5">
-          <h2 className="t-h2 max-w-[16ch] text-balance">Dites-nous ce que vous voulez rénover.</h2>
-          <p className="t-body measure mt-5 text-cream/65">
-            Cinq champs suffisent pour lancer la discussion. Nous revenons vers vous, puis nous convenons d’une visite.
-          </p>
+          <h2 className="t-h2 max-w-[16ch] text-balance">{title}</h2>
+          <p className="t-body measure mt-5 text-cream/65">{lead}</p>
 
           <ul className="mt-10 space-y-3 border-t border-cream/15 pt-8">
             {PROMISES.map((p) => (
