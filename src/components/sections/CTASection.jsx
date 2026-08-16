@@ -10,12 +10,12 @@ export default function CTASection({
   source = 'cta',
 }) {
   return (
-    <section className="border-t border-paper/10 bg-carbon py-20 text-paper md:py-28">
+    <section className="border-t border-cream/10 bg-bark py-20 text-cream md:py-28">
       <Container>
         <div className="lg:grid lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-7">
             <h2 className="t-h1">{title}</h2>
-            <p className="t-body measure mt-6 text-paper/60">{text}</p>
+            <p className="t-body measure mt-6 text-cream/60">{text}</p>
           </Reveal>
 
           <Reveal delay={120} className="mt-10 lg:col-span-5 lg:mt-0 lg:self-end">
@@ -40,13 +40,13 @@ export default function CTASection({
               </Button>
             </div>
 
-            <ul className="mt-8 space-y-2 border-t border-paper/15 pt-6">
+            <ul className="mt-8 space-y-2 border-t border-cream/15 pt-6">
               {BRAND.phones.map((p) => (
                 <li key={p.tel}>
                   <a
                     href={`tel:${p.tel}`}
                     onClick={() => track(EVENTS.PHONE_CLICK, { source })}
-                    className="link-line t-small text-paper/60 transition-colors hover:text-paper"
+                    className="link-line t-small text-cream/60 transition-colors hover:text-cream"
                   >
                     {p.number} — {p.name}
                   </a>

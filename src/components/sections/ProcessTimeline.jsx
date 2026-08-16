@@ -10,12 +10,12 @@ import { cn } from '@/lib/utils';
  */
 export default function ProcessTimeline({ tone = 'dark', steps = METHOD, className }) {
   const light = tone === 'light';
-  const line = light ? 'bg-paper/25' : 'bg-ink/15';
-  const dot = light ? 'bg-paper' : 'bg-ink';
+  const line = light ? 'bg-cream/25' : 'bg-ink/15';
+  const dot = light ? 'bg-cream' : 'bg-ink';
   // Chiffres d'étape : gros corps, donc lisibles plus clairs (seuil « large text »).
-  const num = light ? 'text-paper/45' : 'text-ink/40';
-  const title = light ? 'text-paper' : 'text-ink';
-  const text = light ? 'text-paper/65' : 'text-ink/65';
+  const num = light ? 'text-cream/45' : 'text-ink/40';
+  const title = light ? 'text-cream' : 'text-ink';
+  const text = light ? 'text-cream/65' : 'text-ink/65';
 
   return (
     <div className={className}>
@@ -30,7 +30,7 @@ export default function ProcessTimeline({ tone = 'dark', steps = METHOD, classNa
         {steps.map((s, i) => (
           <li key={s.n} className="relative pr-6">
             <Reveal from="fade" delay={200 + i * 110}>
-              <span className={cn('block h-[13px] w-[13px] border', light ? 'border-paper/35' : 'border-ink/25')}>
+              <span className={cn('block h-[13px] w-[13px] border', light ? 'border-cream/35' : 'border-ink/25')}>
                 <span className={cn('mt-[3px] ml-[3px] block h-[5px] w-[5px]', dot)} />
               </span>
             </Reveal>
@@ -59,7 +59,7 @@ export default function ProcessTimeline({ tone = 'dark', steps = METHOD, classNa
               delay={i * 90}
               className={cn(
                 'absolute left-0 top-1 h-[13px] w-[13px] border',
-                light ? 'border-paper/35 bg-carbon' : 'border-ink/25 bg-paper'
+                light ? 'border-cream/35 bg-bark' : 'border-ink/25 bg-cream'
               )}
             >
               <span className={cn('mt-[3px] ml-[3px] block h-[5px] w-[5px]', dot)} />

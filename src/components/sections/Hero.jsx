@@ -4,7 +4,7 @@ import { EVENTS, track } from '@/lib/analytics';
 
 export default function Hero() {
   return (
-    <section className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-carbon">
+    <section className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-bark">
       <img
         src="/photos/hero.webp"
         alt="Maison rénovée par Chaudrel, façade et intérieur éclairé à la tombée du jour"
@@ -15,19 +15,19 @@ export default function Hero() {
         className="slow-zoom absolute inset-0 -z-10 h-full w-full object-cover"
       />
       <div
-        className="absolute inset-0 -z-10 bg-gradient-to-t from-carbon via-carbon/55 to-carbon/25"
+        className="absolute inset-0 -z-10 bg-gradient-to-t from-bark via-bark/55 to-bark/25"
         aria-hidden="true"
       />
 
       {/* pb mobile = hauteur de la barre d'action fixe + respiration */}
-      <Container className="pb-[calc(58px+2.5rem)] pt-28 lg:pb-20">
-        <p className="hero-in hero-d1 t-label text-paper/60">Entreprise de rénovation · Belgique</p>
+      <Container className="pb-[calc(66px+2.75rem)] pt-28 lg:pb-20">
+        <p className="hero-in hero-d1 t-label text-cream/60">Entreprise de rénovation · Belgique</p>
 
-        <h1 className="hero-in hero-d2 t-display mt-7 max-w-[16ch] text-paper">
+        <h1 className="hero-in hero-d2 t-display mt-7 max-w-[16ch] text-cream">
           Du premier plan à la dernière clé.
         </h1>
 
-        <p className="hero-in hero-d3 t-body mt-8 max-w-[46ch] text-paper/70">
+        <p className="hero-in hero-d3 t-body mt-8 max-w-[46ch] text-cream/70">
           Cuisines, salles de bain et rénovations complètes. Un seul interlocuteur, du devis à la remise des clés,
           partout en Belgique.
         </p>
@@ -52,7 +52,7 @@ export default function Hero() {
 /** Bandeau de preuves qui ouvre la page, sous le hero. */
 export function ProofBand() {
   return (
-    <section className="border-b border-ink/10 bg-paper py-10 lg:py-12">
+    <section className="border-b border-ink/10 bg-cream py-10 lg:py-12">
       <Container>
         <dl className="grid gap-6 sm:grid-cols-3 sm:gap-10">
           {PROOF.map((p) => (

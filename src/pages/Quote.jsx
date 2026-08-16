@@ -130,7 +130,7 @@ export default function Quote() {
           intro="Nous revenons vers vous pour convenir d’une visite et préparer votre devis."
           breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
         />
-        <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
+        <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
           <Container>
             <div className="grid gap-12 lg:grid-cols-12">
               <ol className="lg:col-span-7">
@@ -180,7 +180,7 @@ export default function Quote() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
       />
 
-      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container className="grid gap-16 lg:grid-cols-12 lg:gap-20">
           <div className="lg:col-span-7">
             {/* Progression */}
@@ -194,7 +194,7 @@ export default function Quote() {
                 </span>
               </div>
               <div
-                className="mt-4 h-px w-full bg-ink/12"
+                className="mt-4 h-1 w-full overflow-hidden rounded-full bg-ink/[0.09]"
                 role="progressbar"
                 aria-valuenow={step}
                 aria-valuemin={1}
@@ -202,7 +202,7 @@ export default function Quote() {
                 aria-label="Progression du formulaire"
               >
                 <div
-                  className="h-px origin-left bg-signal transition-transform duration-700 ease-soft"
+                  className="h-full origin-left rounded-full bg-umber transition-transform duration-700 ease-soft"
                   style={{ transform: `scaleX(${progress})` }}
                 />
               </div>
@@ -222,7 +222,7 @@ export default function Quote() {
 
               {step === 1 && (
                 <Fieldset legend="Quel type de projet ?" error={errors.projectType}>
-                  <div className="border-t border-ink/12">
+                  <div className="grid gap-2.5 sm:grid-cols-2">
                     {PROJECT_TYPES.map((t) => (
                       <Choice
                         key={t}
@@ -248,14 +248,14 @@ export default function Quote() {
                     onChange={(e) => set('description')(e.target.value)}
                     aria-invalid={Boolean(errors.description)}
                     placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
-                    className="mt-4 w-full border-0 border-b border-ink/20 bg-transparent px-0 py-3 text-[16px] outline-none transition-colors placeholder:text-ink/55 focus:border-signal"
+                    className="field mt-4"
                   />
                 </Fieldset>
               )}
 
               {step === 3 && (
                 <Fieldset legend="Avez-vous un budget en tête ?" error={errors.budget}>
-                  <div className="border-t border-ink/12">
+                  <div className="grid gap-2.5 sm:grid-cols-2">
                     {BUDGET_OPTIONS.map((b) => (
                       <Choice
                         key={b.id}
@@ -309,7 +309,7 @@ export default function Quote() {
                       checked={data.consent}
                       onChange={(e) => set('consent')(e.target.checked)}
                       aria-invalid={Boolean(errors.consent)}
-                      className="mt-1 h-4 w-4 flex-shrink-0 accent-[#CC3A14]"
+                      className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-umber"
                     />
                     <span>
                       J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
@@ -345,7 +345,7 @@ export default function Quote() {
               </p>
 
               {status === 'error' && (
-                <div role="alert" className="mt-8 border-l-2 border-[#9B2C2C] pl-5">
+                <div role="alert" className="mt-8 rounded-md bg-[#9A3B23]/[0.07] px-5 py-4">
                   <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
                   {serverError && <p className="t-small mt-1 text-ink/65">{serverError}</p>}
                   <p className="t-small mt-3 text-ink/65">
@@ -427,7 +427,7 @@ function Fieldset({ legend, error, children }) {
 
 function FieldError({ children }) {
   return (
-    <p role="alert" className="t-small mt-4 text-[#9B2C2C]">
+    <p role="alert" className="t-small mt-4 text-[#9A3B23]">
       {children}
     </p>
   );
@@ -437,19 +437,21 @@ function Choice({ name, label, checked, onChange }) {
   return (
     <label
       className={cn(
-        'flex cursor-pointer items-center gap-4 border-b border-ink/12 py-4 transition-colors duration-300',
-        checked ? 'text-ink' : 'text-ink/65 hover:text-ink'
+        'flex cursor-pointer items-center gap-4 rounded-md border px-5 py-4 transition-all duration-300 ease-soft',
+        checked
+          ? 'border-umber bg-umber/[0.06] text-ink shadow-soft'
+          : 'border-ink/[0.12] bg-shell text-ink/70 hover:border-ink/25 hover:text-ink'
       )}
     >
       <input type="radio" name={name} checked={checked} onChange={onChange} className="sr-only" />
       <span
         aria-hidden="true"
         className={cn(
-          'flex h-4 w-4 flex-shrink-0 items-center justify-center border transition-colors duration-300',
-          checked ? 'border-signal bg-signal' : 'border-ink/25'
+          'grid h-[18px] w-[18px] flex-shrink-0 place-items-center rounded-full border transition-colors duration-300',
+          checked ? 'border-umber bg-umber' : 'border-ink/25 bg-shell'
         )}
       >
-        {checked && <span className="block h-1.5 w-1.5 bg-paper" />}
+        {checked && <span className="block h-1.5 w-1.5 rounded-full bg-cream" />}
       </span>
       <span className="t-body">{label}</span>
     </label>
@@ -471,13 +473,13 @@ function Field({ id, label, value, onChange, error, type = 'text', className, ..
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          'mt-2 w-full border-0 border-b bg-transparent px-0 py-3 text-[16px] text-ink outline-none transition-colors focus:border-signal',
-          error ? 'border-[#9B2C2C]' : 'border-ink/20'
+          'field mt-2',
+          error && 'field-error'
         )}
         {...rest}
       />
       {error && (
-        <p id={`${id}-error`} role="alert" className="t-small mt-2 text-[#9B2C2C]">
+        <p id={`${id}-error`} role="alert" className="t-small mt-2 text-[#9A3B23]">
           {error}
         </p>
       )}

@@ -47,7 +47,7 @@ const EMPTY = {
 function Field({ id, label, type = 'text', value, onChange, error, ...rest }) {
   return (
     <div>
-      <label htmlFor={id} className="t-label block text-paper/65">
+      <label htmlFor={id} className="t-label block text-cream/65">
         {label}
       </label>
       <input
@@ -58,14 +58,13 @@ function Field({ id, label, type = 'text', value, onChange, error, ...rest }) {
         aria-invalid={error ? 'true' : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
         className={cn(
-          'mt-2 w-full border-0 border-b bg-transparent px-0 py-3 text-[16px] text-paper outline-none transition-colors',
-          'placeholder:text-paper/40 focus:border-signal-light',
-          error ? 'border-signal-light' : 'border-paper/25'
+          'field field-dark mt-2',
+          error && 'field-error'
         )}
         {...rest}
       />
       {error && (
-        <p id={`${id}-error`} className="t-small mt-2 text-signal-light">
+        <p id={`${id}-error`} className="t-small mt-2 text-umber-light">
           {error}
         </p>
       )}
@@ -129,29 +128,29 @@ export default function QuickQuote({ source = 'home' }) {
   };
 
   return (
-    <section id="devis-rapide" className="bg-carbon py-20 text-paper md:py-28 lg:py-32">
+    <section id="devis-rapide" className="bg-bark py-20 text-cream md:py-28 lg:py-32">
       <Container className="lg:grid lg:grid-cols-12 lg:gap-16">
         <Reveal className="lg:col-span-5">
           <h2 className="t-h2 max-w-[16ch] text-balance">Dites-nous ce que vous voulez rénover.</h2>
-          <p className="t-body measure mt-5 text-paper/65">
+          <p className="t-body measure mt-5 text-cream/65">
             Cinq champs suffisent pour lancer la discussion. Nous revenons vers vous, puis nous convenons d’une visite.
           </p>
 
-          <ul className="mt-10 space-y-3 border-t border-paper/15 pt-8">
+          <ul className="mt-10 space-y-3 border-t border-cream/15 pt-8">
             {PROMISES.map((p) => (
-              <li key={p} className="t-small flex gap-3 text-paper/70">
-                <span className="mt-[9px] h-px w-4 flex-none bg-signal-light" aria-hidden="true" />
+              <li key={p} className="t-small flex gap-3 text-cream/70">
+                <span className="mt-[9px] h-px w-4 flex-none bg-umber-light" aria-hidden="true" />
                 {p}
               </li>
             ))}
           </ul>
 
-          <p className="t-small mt-8 text-paper/65">
+          <p className="t-small mt-8 text-cream/65">
             Vous préférez parler ?{' '}
             <a
               href={`tel:${BRAND.phones[0].tel}`}
               onClick={() => track(EVENTS.PHONE_CLICK, { source: 'quick_quote' })}
-              className="link-line text-paper"
+              className="link-line text-cream"
             >
               {BRAND.phones[0].number}
             </a>{' '}
@@ -161,7 +160,7 @@ export default function QuickQuote({ source = 'home' }) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quick_quote' })}
-              className="link-line text-paper"
+              className="link-line text-cream"
             >
               WhatsApp
             </a>
@@ -171,9 +170,9 @@ export default function QuickQuote({ source = 'home' }) {
 
         <Reveal delay={120} className="mt-12 lg:col-span-7 lg:mt-0">
           {status === 'success' ? (
-            <div className="border border-paper/20 p-8 lg:p-10">
+            <div className="rounded-lg border border-cream/15 bg-cream/[0.04] p-8 lg:p-10">
               <h3 className="t-h3">Demande reçue.</h3>
-              <p className="t-body measure mt-4 text-paper/70">
+              <p className="t-body measure mt-4 text-cream/70">
                 Nous revenons vers vous pour convenir d’une visite. Si votre projet est urgent, appelez-nous
                 directement au {BRAND.phones[0].number}.
               </p>
@@ -181,7 +180,7 @@ export default function QuickQuote({ source = 'home' }) {
           ) : (
             <form onSubmit={submit} noValidate className="space-y-8">
               <fieldset>
-                <legend className="t-label text-paper/65">Type de projet</legend>
+                <legend className="t-label text-cream/65">Type de projet</legend>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {TYPES.map((t) => {
                     const active = data.projectType === t;
@@ -192,10 +191,10 @@ export default function QuickQuote({ source = 'home' }) {
                         aria-pressed={active}
                         onClick={() => set('projectType')(t)}
                         className={cn(
-                          't-label border px-4 py-3 transition-colors duration-200',
+                          't-label rounded-full border px-4 py-3 transition-all duration-200 ease-soft active:translate-y-px',
                           active
-                            ? 'border-paper bg-paper text-ink'
-                            : 'border-paper/25 text-paper/70 hover:border-paper hover:text-paper'
+                            ? 'border-cream bg-cream text-ink shadow-soft'
+                            : 'border-cream/25 text-cream/70 hover:border-cream/60 hover:bg-cream/10 hover:text-cream'
                         )}
                       >
                         {t}
@@ -204,12 +203,12 @@ export default function QuickQuote({ source = 'home' }) {
                   })}
                 </div>
                 {errors.projectType && (
-                  <p className="t-small mt-3 text-signal-light">{errors.projectType}</p>
+                  <p className="t-small mt-3 text-umber-light">{errors.projectType}</p>
                 )}
               </fieldset>
 
               <div>
-                <label htmlFor="qq-description" className="t-label block text-paper/65">
+                <label htmlFor="qq-description" className="t-label block text-cream/65">
                   Votre projet
                 </label>
                 <textarea
@@ -220,12 +219,11 @@ export default function QuickQuote({ source = 'home' }) {
                   aria-invalid={errors.description ? 'true' : undefined}
                   placeholder="Ex. : refaire la salle de bain d’un appartement des années 60."
                   className={cn(
-                    'mt-2 w-full resize-y border-0 border-b bg-transparent px-0 py-3 text-[16px] text-paper outline-none transition-colors',
-                    'placeholder:text-paper/40 focus:border-signal-light',
-                    errors.description ? 'border-signal-light' : 'border-paper/25'
+                    'field field-dark mt-2 resize-y',
+                    errors.description && 'field-error'
                   )}
                 />
-                {errors.description && <p className="t-small mt-2 text-signal-light">{errors.description}</p>}
+                {errors.description && <p className="t-small mt-2 text-umber-light">{errors.description}</p>}
               </div>
 
               <div className="grid gap-8 sm:grid-cols-2">
@@ -264,26 +262,26 @@ export default function QuickQuote({ source = 'home' }) {
               </div>
 
               <div>
-                <label htmlFor="qq-consent" className="t-small flex gap-3 text-paper/70">
+                <label htmlFor="qq-consent" className="t-small flex gap-3 text-cream/70">
                   <input
                     id="qq-consent"
                     type="checkbox"
                     checked={data.consent}
                     onChange={(e) => set('consent')(e.target.checked)}
-                    className="mt-1 h-4 w-4 flex-shrink-0 accent-[#CC3A14]"
+                    className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-umber"
                   />
                   <span>
                     J’accepte d’être recontacté au sujet de ma demande.{' '}
-                    <Link to="/legal/politique-mentions" className="link-line text-paper">
+                    <Link to="/legal/politique-mentions" className="link-line text-cream">
                       Confidentialité
                     </Link>
                   </span>
                 </label>
-                {errors.consent && <p className="t-small mt-2 text-signal-light">{errors.consent}</p>}
+                {errors.consent && <p className="t-small mt-2 text-umber-light">{errors.consent}</p>}
               </div>
 
               {status === 'error' && (
-                <p className="t-small border border-signal-light/40 p-4 text-signal-light" role="alert">
+                <p className="t-small rounded-md bg-[#E8917A]/[0.12] px-4 py-3 text-[#E8917A]" role="alert">
                   {serverError} Appelez-nous au {BRAND.phones[0].number} ou écrivez sur WhatsApp.
                 </p>
               )}
@@ -292,11 +290,11 @@ export default function QuickQuote({ source = 'home' }) {
                 <button
                   type="submit"
                   disabled={status === 'loading'}
-                  className="t-label inline-flex items-center justify-center bg-paper px-9 py-4 font-semibold text-ink transition-colors duration-300 hover:bg-signal hover:text-paper disabled:opacity-60"
+                  className="t-label inline-flex items-center justify-center rounded-full bg-cream px-9 py-[1.15rem] font-semibold text-ink shadow-soft transition-all duration-300 ease-soft hover:bg-shell hover:shadow-lift active:translate-y-px disabled:opacity-60"
                 >
                   {status === 'loading' ? 'Envoi…' : 'Envoyer la demande'}
                 </button>
-                <Link to="/devis" className="link-line t-small text-paper/70">
+                <Link to="/devis" className="link-line t-small text-cream/70">
                   Formulaire détaillé
                 </Link>
               </div>

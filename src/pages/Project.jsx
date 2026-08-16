@@ -28,7 +28,7 @@ export default function Project() {
         ]}
       />
 
-      <Section tone="paper">
+      <Section tone="cream">
         <Container>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-7">

@@ -4,9 +4,10 @@
 
 /* ============================================================
    CHAUDREL — DESIGN SYSTEM
-   Papier gris · graphite · un accent. Deux grotesques.
-   Pas d'ombre portée, pas de dégradé, pas d'angle arrondi.
-   Des filets, du vide, et des photos de chantier en grand.
+   Crème, sable, brun : une seule famille chromatique.
+   Schibsted Grotesk : une seule famille typographique.
+   Une seule échelle d'arrondis : rien n'est laissé à angle vif.
+   Les ombres sont teintées dans le brun du fond, jamais noires.
    ============================================================ */
 
 @layer base {
@@ -18,11 +19,12 @@
   }
 
   body {
-    font-family: 'Inter Tight', system-ui, sans-serif;
-    background-color: #ededea;
-    color: #15161a;
+    font-family: 'Schibsted Grotesk', system-ui, sans-serif;
+    background-color: #f4f0e8;
+    color: #241d18;
     font-size: 16px;
     line-height: 1.6;
+    font-feature-settings: 'ss01', 'cv05';
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
@@ -42,14 +44,22 @@
     height: auto;
   }
 
+  /* Les surfaces que le navigateur dessine à notre place appartiennent
+     quand même à la charte : sélection, curseur, anneau de focus. */
   ::selection {
-    background: #15161a;
-    color: #ededea;
+    background: #6b4a35;
+    color: #f4f0e8;
+  }
+
+  html {
+    caret-color: #6b4a35;
+    accent-color: #6b4a35;
   }
 
   :focus-visible {
-    outline: 2px solid #cc3a14;
+    outline: 2px solid #6b4a35;
     outline-offset: 3px;
+    border-radius: 0.625rem;
   }
 
   @supports (-webkit-touch-callout: none) {
@@ -65,39 +75,49 @@
   /* ---------- Échelle typographique ---------- */
 
   .t-display {
-    font-family: Archivo, 'Inter Tight', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: clamp(2.75rem, 7vw, 5.25rem);
-    line-height: 0.94;
-    letter-spacing: -0.035em;
+    font-family: 'Schibsted Grotesk', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: clamp(2.5rem, 7.4vw, 5.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
   }
 
   .t-h1 {
-    font-family: Archivo, 'Inter Tight', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: clamp(2.125rem, 4.8vw, 3.5rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
+    font-family: 'Schibsted Grotesk', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    line-height: 1;
+    letter-spacing: -0.035em;
   }
 
   .t-h2 {
-    font-family: Archivo, 'Inter Tight', system-ui, sans-serif;
-    font-weight: 600;
-    font-size: clamp(1.625rem, 3.2vw, 2.375rem);
-    line-height: 1.08;
-    letter-spacing: -0.025em;
+    font-family: 'Schibsted Grotesk', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.625rem, 3.4vw, 2.625rem);
+    line-height: 1.06;
+    letter-spacing: -0.03em;
   }
 
   .t-h3 {
+    font-family: 'Schibsted Grotesk', system-ui, sans-serif;
     font-weight: 600;
-    font-size: clamp(1.0625rem, 1.5vw, 1.1875rem);
-    line-height: 1.35;
-    letter-spacing: -0.012em;
+    font-size: clamp(1.125rem, 1.6vw, 1.3125rem);
+    line-height: 1.3;
+    letter-spacing: -0.018em;
+  }
+
+  /* Phrase d'introduction : plus grande que le texte courant, plus légère
+     qu'un titre. C'est le palier qui manquait entre les deux. */
+  .t-lead {
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    line-height: 1.55;
+    font-weight: 400;
+    letter-spacing: -0.011em;
   }
 
   .t-body {
     font-size: 1.0625rem;
-    line-height: 1.65;
+    line-height: 1.7;
     font-weight: 400;
   }
 
@@ -112,12 +132,12 @@
     font-size: 0.6875rem;
     line-height: 1;
     font-weight: 600;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
   .t-num {
-    font-family: Archivo, 'Inter Tight', system-ui, sans-serif;
+    font-family: 'Schibsted Grotesk', system-ui, sans-serif;
     font-weight: 500;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
@@ -126,17 +146,87 @@
   /* ---------- Éléments ---------- */
 
   .measure {
-    max-width: 62ch;
+    max-width: 68ch;
   }
 
   .rule {
     border: 0;
-    border-top: 1px solid rgb(21 22 26 / 0.14);
+    border-top: 1px solid rgb(36 29 24 / 0.14);
   }
 
   .rule-light {
     border: 0;
     border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  /* ---------- Champs de saisie ----------
+     Un champ est une surface, pas une ligne : même arrondi que le reste du
+     site, fond coquille, et un anneau brun au focus plutôt qu'un contour
+     système. `.field-dark` est la même pièce sur fond sombre. */
+
+  .field {
+    width: 100%;
+    border-radius: 1.125rem;
+    border: 1px solid rgb(36 29 24 / 0.12);
+    background-color: #fbf9f4;
+    padding: 0.875rem 1.125rem;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #241d18;
+    transition:
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .field::placeholder {
+    color: rgb(36 29 24 / 0.45);
+  }
+
+  .field:hover {
+    border-color: rgb(36 29 24 / 0.2);
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: #6b4a35;
+    box-shadow: 0 0 0 3px rgb(107 74 53 / 0.14);
+  }
+
+  .field-error {
+    border-color: #9a3b23;
+  }
+
+  .field-error:focus {
+    border-color: #9a3b23;
+    box-shadow: 0 0 0 3px rgb(154 59 35 / 0.16);
+  }
+
+  .field-dark {
+    background-color: rgb(244 240 232 / 0.06);
+    border-color: rgb(244 240 232 / 0.18);
+    color: #f4f0e8;
+  }
+
+  .field-dark::placeholder {
+    color: rgb(244 240 232 / 0.45);
+  }
+
+  .field-dark:hover {
+    border-color: rgb(244 240 232 / 0.3);
+  }
+
+  .field-dark:focus {
+    border-color: #c8a385;
+    box-shadow: 0 0 0 3px rgb(200 163 133 / 0.18);
+  }
+
+  .field-dark.field-error {
+    border-color: #e8917a;
+  }
+
+  .field-dark.field-error:focus {
+    box-shadow: 0 0 0 3px rgb(232 145 122 / 0.2);
   }
 
   .link-line {
@@ -160,10 +250,11 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #ededea;
+  background: #f4f0e8;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(21 22 26 / 0.22);
+  background: rgb(107 74 53 / 0.35);
+  border-radius: 999px;
 }
 @media (max-width: 1023px) {
   ::-webkit-scrollbar {

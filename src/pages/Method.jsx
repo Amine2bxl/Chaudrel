@@ -33,7 +33,7 @@ export default function Method() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Notre méthode' }]}
       />
 
-      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
           <ProcessTimeline />
         </Container>
@@ -53,7 +53,7 @@ export default function Method() {
         </Container>
       </Section>
 
-      <BelgiumCoverage tone="carbon" />
+      <BelgiumCoverage tone="bark" />
 
       <CTASection
         title="Commençons par la première étape."

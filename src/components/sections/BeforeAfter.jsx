@@ -12,7 +12,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
 
   return (
     <figure className={cn('group', className)}>
-      <div className={cn('relative overflow-hidden bg-stone', ratio)}>
+      <div className={cn('relative overflow-hidden rounded-lg bg-sand', ratio)}>
         <img
           key={src}
           src={src}
@@ -23,7 +23,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
         />
 
         <div
-          className="absolute bottom-0 left-0 flex"
+          className="absolute bottom-3 left-3 flex gap-1 rounded-full bg-bark/45 p-1 backdrop-blur-md sm:bottom-4 sm:left-4"
           role="group"
           aria-label={`Comparer avant et après — ${label}`}
         >
@@ -37,8 +37,8 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
               aria-pressed={b.active}
               onClick={() => setShowBefore(b.key === 'before')}
               className={cn(
-                't-label px-5 py-3 transition-colors duration-300',
-                b.active ? 'bg-paper text-ink' : 'bg-carbon/70 text-paper/70 hover:text-paper'
+                't-label rounded-full px-4 py-2.5 transition-colors duration-300',
+                b.active ? 'bg-cream text-ink shadow-soft' : 'text-cream/75 hover:text-cream'
               )}
             >
               {b.text}
@@ -47,7 +47,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
         </div>
       </div>
 
-      <figcaption className={cn('t-small mt-4 border-t pt-3', light ? 'border-paper/15 text-paper/65' : 'border-ink/10 text-ink/65')}>
+      <figcaption className={cn('t-small mt-4 border-t pt-3', light ? 'border-cream/15 text-cream/65' : 'border-ink/10 text-ink/65')}>
         {label}
       </figcaption>
     </figure>

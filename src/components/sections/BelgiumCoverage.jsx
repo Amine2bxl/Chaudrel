@@ -10,14 +10,14 @@ import { cn } from '@/lib/utils';
  * ou au focus. Aucune donnée dynamique, aucun service de cartographie, aucune
  * navigation : c'est une illustration, pas un outil.
  */
-export default function BelgiumCoverage({ tone = 'carbon' }) {
+export default function BelgiumCoverage({ tone = 'bark' }) {
   const [active, setActive] = useState(null);
-  const light = tone === 'carbon';
+  const light = tone === 'bark';
 
   const activeName = PROVINCES.find((p) => p.id === active)?.name;
 
   return (
-    <section className={cn('py-20 md:py-28 lg:py-36', light ? 'bg-carbon text-paper' : 'bg-paper text-ink')}>
+    <section className={cn('py-20 md:py-28 lg:py-36', light ? 'bg-bark text-cream' : 'bg-cream text-ink')}>
       <Container>
         <SectionHeading
           tone={light ? 'light' : 'dark'}
@@ -61,12 +61,12 @@ export default function BelgiumCoverage({ tone = 'carbon' }) {
                         'cursor-pointer outline-none transition-[fill,stroke] duration-500',
                         light
                           ? isActive
-                            ? 'fill-signal stroke-paper/40'
-                            : 'fill-paper/[0.07] stroke-paper/25 hover:fill-paper/15'
+                            ? 'fill-umber stroke-cream/40'
+                            : 'fill-cream/[0.07] stroke-cream/25 hover:fill-cream/15'
                           : isActive
-                            ? 'fill-signal stroke-ink/30'
+                            ? 'fill-umber stroke-ink/30'
                             : 'fill-ink/[0.05] stroke-ink/25 hover:fill-ink/10',
-                        'focus-visible:fill-signal'
+                        'focus-visible:fill-umber'
                       )}
                       strokeWidth="1.4"
                       vectorEffect="non-scaling-stroke"
@@ -80,19 +80,19 @@ export default function BelgiumCoverage({ tone = 'carbon' }) {
                   if (!bxl) return null;
                   return (
                     <g aria-hidden="true">
-                      <circle cx={bxl.cx} cy={bxl.cy} r="7" className="fill-signal" />
+                      <circle cx={bxl.cx} cy={bxl.cy} r="7" className="fill-umber" />
                       <circle
                         cx={bxl.cx}
                         cy={bxl.cy}
                         r="15"
-                        className={light ? 'fill-none stroke-signal/50' : 'fill-none stroke-signal/60'}
+                        className={light ? 'fill-none stroke-umber/50' : 'fill-none stroke-umber/60'}
                         strokeWidth="1.4"
                         vectorEffect="non-scaling-stroke"
                       />
                       <text
                         x={bxl.cx + 26}
                         y={bxl.cy + 5}
-                        className={cn('t-label', light ? 'fill-paper/70' : 'fill-ink/60')}
+                        className={cn('t-label', light ? 'fill-cream/70' : 'fill-ink/60')}
                         style={{ fontSize: 22, letterSpacing: '0.18em' }}
                       >
                         BRUXELLES
@@ -108,7 +108,7 @@ export default function BelgiumCoverage({ tone = 'carbon' }) {
                 className={cn(
                   'mt-4 h-6 text-center transition-opacity duration-300 lg:text-left',
                   activeName ? 'opacity-100' : 'opacity-0',
-                  light ? 'text-paper/70' : 'text-ink/65'
+                  light ? 'text-cream/70' : 'text-ink/65'
                 )}
               >
                 <span className="t-label">{activeName || '—'}</span>
@@ -129,16 +129,16 @@ export default function BelgiumCoverage({ tone = 'carbon' }) {
                   onMouseLeave={() => setActive(null)}
                   className={cn(
                     'flex items-center gap-3 border-b py-3 transition-colors duration-300',
-                    light ? 'border-paper/10' : 'border-ink/10',
-                    active === p.id && (light ? 'text-paper' : 'text-ink'),
-                    active !== p.id && (light ? 'text-paper/60' : 'text-ink/65')
+                    light ? 'border-cream/10' : 'border-ink/10',
+                    active === p.id && (light ? 'text-cream' : 'text-ink'),
+                    active !== p.id && (light ? 'text-cream/60' : 'text-ink/65')
                   )}
                 >
                   <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" className="flex-shrink-0">
                     <path
                       d="M1 6.5 4.2 9.5 11 2.5"
                       fill="none"
-                      stroke="#CC3A14"
+                      stroke="#6B4A35"
                       strokeWidth="1.6"
                       strokeLinecap="square"
                     />

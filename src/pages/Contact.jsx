@@ -66,7 +66,7 @@ export default function Contact() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Contact' }]}
       />
 
-      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container className="grid gap-16 lg:grid-cols-12 lg:gap-20">
           {/* Canaux directs */}
           <div className="lg:col-span-5">
@@ -80,7 +80,7 @@ export default function Contact() {
                     onClick={() => track(EVENTS.PHONE_CLICK, { source: 'contact' })}
                     className="group flex items-baseline justify-between gap-4 py-5"
                   >
-                    <span className="t-h3 transition-colors group-hover:text-signal">{p.number}</span>
+                    <span className="t-h3 transition-colors group-hover:text-umber">{p.number}</span>
                     <span className="t-label text-ink/65">{p.name}</span>
                   </a>
                 </li>
@@ -93,7 +93,7 @@ export default function Contact() {
                   onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'contact' })}
                   className="group flex items-baseline justify-between gap-4 py-5"
                 >
-                  <span className="t-h3 transition-colors group-hover:text-signal">WhatsApp</span>
+                  <span className="t-h3 transition-colors group-hover:text-umber">WhatsApp</span>
                   <span className="t-label text-ink/65">Réponse rapide</span>
                 </a>
               </li>
@@ -103,7 +103,7 @@ export default function Contact() {
                   onClick={() => track(EVENTS.EMAIL_CLICK, { source: 'contact' })}
                   className="group flex items-baseline justify-between gap-4 py-5"
                 >
-                  <span className="t-h3 break-all transition-colors group-hover:text-signal">{BRAND.email}</span>
+                  <span className="t-h3 break-all transition-colors group-hover:text-umber">{BRAND.email}</span>
                 </a>
               </li>
             </ul>
@@ -142,7 +142,7 @@ export default function Contact() {
                 </p>
               </Reveal>
             ) : (
-              <form onSubmit={submit} noValidate>
+              <form onSubmit={submit} noValidate className="rounded-xl border border-ink/[0.07] bg-shell/60 p-6 shadow-soft sm:p-8 lg:p-10">
                 <span className="t-label text-ink/65">Écrivez-nous</span>
 
                 <div className="absolute left-[-9999px]" aria-hidden="true">
@@ -193,7 +193,7 @@ export default function Contact() {
                     type="checkbox"
                     checked={data.consent}
                     onChange={(e) => set('consent')(e.target.checked)}
-                    className="mt-1 h-4 w-4 flex-shrink-0 accent-[#CC3A14]"
+                    className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-umber"
                   />
                   <span>
                     J’accepte d’être recontacté au sujet de ma demande.{' '}
@@ -203,7 +203,7 @@ export default function Contact() {
                   </span>
                 </label>
                 {errors.consent && (
-                  <p role="alert" className="t-small mt-2 text-[#9B2C2C]">
+                  <p role="alert" className="t-small mt-2 text-[#9A3B23]">
                     {errors.consent}
                   </p>
                 )}
@@ -219,7 +219,7 @@ export default function Contact() {
                 </Button>
 
                 {status === 'error' && (
-                  <p role="alert" className="t-small mt-6 border-l-2 border-[#9B2C2C] pl-4 text-ink/70">
+                  <p role="alert" className="t-small mt-6 rounded-md bg-[#9A3B23]/[0.07] px-4 py-3 text-ink/70">
                     L’envoi a échoué. Appelez-nous au{' '}
                     <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
                       {BRAND.phones[0].number}
@@ -242,8 +242,8 @@ export default function Contact() {
 
 function Field({ id, label, value, onChange, error, type = 'text', textarea = false, ...rest }) {
   const base = cn(
-    'mt-2 w-full border-0 border-b bg-transparent px-0 py-3 text-[16px] text-ink outline-none transition-colors placeholder:text-ink/55 focus:border-signal',
-    error ? 'border-[#9B2C2C]' : 'border-ink/20'
+    'field mt-2',
+    error && 'field-error'
   );
 
   return (
@@ -273,7 +273,7 @@ function Field({ id, label, value, onChange, error, type = 'text', textarea = fa
         />
       )}
       {error && (
-        <p role="alert" className="t-small mt-2 text-[#9B2C2C]">
+        <p role="alert" className="t-small mt-2 text-[#9A3B23]">
           {error}
         </p>
       )}

@@ -16,7 +16,7 @@ export default function Faq() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'FAQ' }]}
       />
 
-      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
           <FaqAccordion items={FAQS} />
 

@@ -33,7 +33,7 @@ export default function ProjectIndex({ projects, className }) {
               <div className="flex items-baseline gap-5 sm:gap-8">
                 <span className="t-num text-ink/65">{String(i + 1).padStart(2, '0')}</span>
                 <div className="min-w-0 flex-1">
-                  <h3 className="t-h2 text-[1.5rem] transition-colors duration-300 group-hover:text-signal sm:text-[1.875rem]">
+                  <h3 className="t-h2 text-[1.5rem] transition-colors duration-300 group-hover:text-umber sm:text-[1.875rem]">
                     {p.title}
                   </h3>
                   <p className="t-small mt-2 text-ink/65">
@@ -43,7 +43,7 @@ export default function ProjectIndex({ projects, className }) {
               </div>
 
               {/* L'image accompagne la ligne sur mobile, où le survol n'existe pas */}
-              <div className="mt-5 aspect-[16/10] overflow-hidden bg-stone lg:hidden">
+              <div className="mt-5 aspect-[16/10] overflow-hidden rounded-lg bg-sand lg:hidden">
                 <img
                   src={p.cover}
                   alt={`${p.type} — ${p.title}, ${p.location}`}
@@ -60,7 +60,7 @@ export default function ProjectIndex({ projects, className }) {
       {/* Aperçu au survol — desktop uniquement */}
       <div className="hidden lg:col-span-5 lg:block">
         <div className="sticky top-32">
-          <div className="relative aspect-[4/5] overflow-hidden bg-stone">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-sand">
             {projects.map((p) => (
               <img
                 key={p.slug}

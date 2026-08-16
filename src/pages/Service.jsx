@@ -32,7 +32,7 @@ export default function Service() {
         ]}
       />
 
-      <Section tone="paper">
+      <Section tone="cream">
         <Container>
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-7">
@@ -92,7 +92,7 @@ export default function Service() {
         </Section>
       )}
 
-      <Section tone="carbon">
+      <Section tone="bark">
         <Container>
           <SectionHeading tone="light" title="Le déroulé, étape par étape." />
           <ProcessTimeline tone="light" className="mt-16 lg:mt-24" />
@@ -100,7 +100,7 @@ export default function Service() {
       </Section>
 
       {service.faqs?.length > 0 && (
-        <Section tone="paper">
+        <Section tone="cream">
           <Container>
             <SectionHeading title={`Questions sur ${service.title.toLowerCase()}.`} />
             <FaqAccordion items={service.faqs} className="mt-12" />

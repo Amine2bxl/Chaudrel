@@ -27,7 +27,7 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-cream">
       <Seo />
       <ScrollToTop />
       <Navbar />

@@ -23,7 +23,7 @@ export default function Home() {
       <ProofBand />
 
       {/* Réalisations — la preuve avant le discours */}
-      <Section tone="paper">
+      <Section tone="cream">
         <Container>
           <SectionHeading
             title="Des chantiers finis, habités, utilisés."
@@ -80,7 +80,7 @@ export default function Home() {
       )}
 
       {/* Services */}
-      <Section tone="paper">
+      <Section tone="cream">
         <Container>
           <SectionHeading
             title="Une rénovation complète, ou un seul poste."
@@ -96,7 +96,7 @@ export default function Home() {
       </Section>
 
       {/* Méthode */}
-      <Section tone="carbon">
+      <Section tone="bark">
         <Container>
           <SectionHeading
             tone="light"
@@ -108,7 +108,7 @@ export default function Home() {
       </Section>
 
       {/* Couverture nationale */}
-      <BelgiumCoverage tone="paper" />
+      <BelgiumCoverage tone="cream" />
 
       {/* À propos, court */}
       <Section tone="white">
@@ -134,7 +134,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      <Testimonials limit={3} tone="paper" />
+      <Testimonials limit={3} tone="cream" />
 
       {/* FAQ */}
       <Section tone="white">

@@ -19,10 +19,10 @@ export default function Projects() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Réalisations' }]}
       />
 
-      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
           <div
-            className="flex flex-wrap items-baseline gap-x-8 gap-y-3 border-y border-ink/12 py-5"
+            className="flex flex-wrap items-center gap-2 border-b border-ink/[0.09] pb-6"
             role="group"
             aria-label="Filtrer les réalisations"
           >
@@ -33,14 +33,16 @@ export default function Projects() {
                 aria-pressed={filter === c.id}
                 onClick={() => setFilter(c.id)}
                 className={cn(
-                  't-label transition-colors duration-300',
-                  filter === c.id ? 'text-signal' : 'text-ink/65 hover:text-ink'
+                  't-label rounded-full border px-4 py-2.5 transition-all duration-300 ease-soft active:translate-y-px',
+                  filter === c.id
+                    ? 'border-umber bg-umber text-cream shadow-soft'
+                    : 'border-ink/[0.14] text-ink/65 hover:border-ink/30 hover:bg-shell hover:text-ink'
                 )}
               >
                 {c.label}
               </button>
             ))}
-            <span className="t-label ml-auto text-ink/65">
+            <span className="t-label ml-auto tabular-nums text-ink/65">
               {String(items.length).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
             </span>
           </div>

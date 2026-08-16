@@ -13,13 +13,13 @@ export default function MobileBar() {
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-ink/10 bg-paper lg:hidden"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed inset-x-0 bottom-0 z-40 flex gap-2 px-3 lg:hidden"
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
     >
       <Link
         to="/devis"
         onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
-        className={cn('t-label flex min-h-[58px] items-center justify-center bg-ink text-paper')}
+        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full bg-umber text-cream shadow-lift active:translate-y-px"
       >
         Demander un devis
       </Link>
@@ -28,7 +28,7 @@ export default function MobileBar() {
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'mobile_bar' })}
-        className="t-label flex min-h-[58px] items-center justify-center text-ink"
+        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-ink/12 bg-shell text-ink shadow-soft active:translate-y-px"
       >
         WhatsApp
       </a>

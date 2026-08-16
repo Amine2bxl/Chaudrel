@@ -13,13 +13,13 @@ export default function Services() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Services' }]}
       />
 
-      <Section tone="paper" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
           <ServiceList />
         </Container>
       </Section>
 
-      <Section tone="carbon">
+      <Section tone="bark">
         <Container>
           <SectionHeading
             tone="light"

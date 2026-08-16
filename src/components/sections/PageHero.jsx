@@ -15,7 +15,7 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
   const showLabel = Boolean(label) && breadcrumb.length === 0;
 
   return (
-    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-carbon' : 'bg-paper')}>
+    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-bark' : 'bg-cream')}>
       {hasImage && (
         <>
           <img
@@ -26,23 +26,23 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
             decoding="sync"
             className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 -z-10 bg-carbon/70" aria-hidden="true" />
+          <div className="absolute inset-0 -z-10 bg-bark/70" aria-hidden="true" />
         </>
       )}
 
       <Container className={cn('pb-14 pt-28 lg:pb-20 lg:pt-40', hasImage && 'pb-20 lg:pb-28')}>
         {breadcrumb.length > 0 && (
           <nav aria-label="Fil d'Ariane" className="mb-10">
-            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-paper/65' : 'text-ink/65')}>
+            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-cream/65' : 'text-ink/65')}>
               {breadcrumb.map((b, i) => (
                 <li key={b.to || b.label} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">/</span>}
                   {b.to ? (
-                    <Link to={b.to} className="transition-colors hover:text-signal">
+                    <Link to={b.to} className="transition-colors hover:text-umber">
                       {b.label}
                     </Link>
                   ) : (
-                    <span aria-current="page" className={hasImage ? 'text-paper/70' : 'text-ink/65'}>
+                    <span aria-current="page" className={hasImage ? 'text-cream/70' : 'text-ink/65'}>
                       {b.label}
                     </span>
                   )}
@@ -58,11 +58,11 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
         <div className={cn(aside && 'lg:grid lg:grid-cols-12 lg:gap-12')}>
           <div className={cn(aside && 'lg:col-span-7')}>
             {showLabel && (
-              <p className={cn('t-label mb-5', hasImage ? 'text-paper/60' : 'text-ink/65')}>{label}</p>
+              <p className={cn('t-label mb-5', hasImage ? 'text-cream/60' : 'text-ink/65')}>{label}</p>
             )}
             {/* `ch` se calcule sur la police de l'élément : la largeur se pose
                 donc sur le titre, jamais sur le conteneur. */}
-            <h1 className={cn('t-h1 max-w-[16ch] text-balance', hasImage ? 'text-paper' : 'text-ink')}>{title}</h1>
+            <h1 className={cn('t-h1 max-w-[16ch] text-balance', hasImage ? 'text-cream' : 'text-ink')}>{title}</h1>
           </div>
 
           {(intro || aside) && (
@@ -70,10 +70,10 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
               className={cn(
                 'mt-6',
                 aside && 'lg:col-span-5 lg:mt-0 lg:self-end',
-                hasImage ? 'text-paper/65' : 'text-ink/65'
+                hasImage ? 'text-cream/65' : 'text-ink/65'
               )}
             >
-              {intro && <p className="t-body measure">{intro}</p>}
+              {intro && <p className="t-lead measure">{intro}</p>}
               {aside}
             </div>
           )}

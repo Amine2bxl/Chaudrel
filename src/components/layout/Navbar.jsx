@@ -7,7 +7,7 @@ import { Button } from '@/components/ui';
 
 /** Deux lignes qui deviennent une croix — pas d'icône importée. */
 function MenuIcon({ open, dark }) {
-  const bar = cn('block h-px w-6 transition-all duration-300 ease-soft', dark ? 'bg-ink' : 'bg-paper');
+  const bar = cn('block h-px w-6 transition-all duration-300 ease-soft', dark ? 'bg-ink' : 'bg-cream');
   return (
     <span className="relative flex h-6 w-6 flex-col items-center justify-center gap-[6px]">
       <span className={cn(bar, open && 'translate-y-[3.5px] rotate-45')} />
@@ -42,31 +42,46 @@ export default function Navbar() {
   }, [open]);
 
   return (
-    <header
-      className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-colors duration-500',
-        scrolled || open ? 'bg-paper' : 'bg-transparent'
-      )}
-    >
+    <header className="fixed inset-x-0 top-0 z-50">
       <a
         href="#main"
-        className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:bg-ink focus:px-4 focus:py-3 focus:text-paper"
+        className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:rounded-full focus:bg-umber focus:px-5 focus:py-3 focus:text-cream"
       >
         Aller au contenu
       </a>
 
+      {/* Au repos la barre flotte sur la photo, sans fond. Dès le premier
+          défilement elle se pose : une capsule crème, arrondie comme le reste
+          du site, portée par une ombre teintée plutôt que par un filet. */}
       <div
         className={cn(
-          'mx-auto flex w-full max-w-page items-center justify-between px-5 transition-all duration-500 sm:px-8 lg:px-12',
-          scrolled ? 'py-3.5' : 'py-5'
+          'mx-auto flex w-full items-center justify-between transition-all duration-500 ease-soft',
+          scrolled || open
+            ? 'my-2.5 w-[calc(100%-1.25rem)] max-w-[1240px] rounded-full bg-cream/95 px-4 py-2.5 shadow-soft backdrop-blur-md sm:my-3 sm:px-5 lg:px-6'
+            : 'my-0 max-w-page bg-transparent px-5 py-5 sm:px-8 lg:px-12'
         )}
       >
-        <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel — accueil">
-          <img src={LOGO} alt="" aria-hidden="true" width="34" height="34" className="h-[34px] w-[34px] object-contain" />
+        <Link to="/" className="group flex items-center gap-3" aria-label="Chaudrel — accueil">
+          {/* Pastille ronde : aucune arête, aucun cadre carré. */}
           <span
             className={cn(
-              'font-display text-[17px] uppercase tracking-[0.22em] transition-colors duration-500',
-              dark ? 'text-ink' : 'text-paper'
+              'grid h-10 w-10 place-items-center overflow-hidden rounded-full transition-all duration-500 ease-soft',
+              dark ? 'bg-shell shadow-soft' : 'bg-cream/15 backdrop-blur-sm'
+            )}
+          >
+            <img
+              src={LOGO}
+              alt=""
+              aria-hidden="true"
+              width="40"
+              height="40"
+              className="h-full w-full scale-[1.02] rounded-full object-cover"
+            />
+          </span>
+          <span
+            className={cn(
+              'font-display text-[15px] font-semibold uppercase tracking-[0.26em] transition-colors duration-500 sm:text-[16px]',
+              dark ? 'text-ink' : 'text-cream'
             )}
           >
             {BRAND.name}
@@ -81,8 +96,8 @@ export default function Navbar() {
               className={({ isActive }) =>
                 cn(
                   'link-line t-label pb-1 transition-colors duration-300',
-                  dark ? 'text-ink/70 hover:text-ink' : 'text-paper/80 hover:text-paper',
-                  isActive && (dark ? 'text-signal' : 'text-signal-light')
+                  dark ? 'text-ink/70 hover:text-ink' : 'text-cream/80 hover:text-cream',
+                  isActive && (dark ? 'text-umber' : 'text-umber-light')
                 )
               }
             >
@@ -97,7 +112,7 @@ export default function Navbar() {
             onClick={() => track(EVENTS.PHONE_CLICK, { source: 'navbar' })}
             className={cn(
               't-small ml-2 tabular-nums transition-colors duration-300',
-              dark ? 'text-ink/65 hover:text-ink' : 'text-paper/80 hover:text-paper'
+              dark ? 'text-ink/65 hover:text-ink' : 'text-cream/80 hover:text-cream'
             )}
           >
             {BRAND.phones[0].number}
@@ -118,23 +133,32 @@ export default function Navbar() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
-          className="flex h-11 w-11 items-center justify-center lg:hidden"
+          className={cn(
+            'grid h-11 w-11 place-items-center rounded-full transition-colors duration-300 lg:hidden',
+            dark ? 'hover:bg-ink/5' : 'bg-cream/10 backdrop-blur-sm'
+          )}
         >
           <MenuIcon open={open} dark={dark} />
         </button>
       </div>
 
       {open && (
-        <div className="panel-in border-t border-ink/10 bg-paper lg:hidden">
-          <nav className="px-5 pb-8 pt-2 sm:px-8" aria-label="Navigation mobile">
-            <ul>
+        <div className="mx-auto w-full max-w-[1280px] px-2.5 lg:hidden">
+          <nav
+            className="panel-in overflow-hidden rounded-xl bg-cream p-5 shadow-lift sm:p-6"
+            aria-label="Navigation mobile"
+          >
+            <ul className="divide-y divide-ink/10">
               {[{ label: 'Accueil', to: '/' }, ...NAV].map((item, i) => (
-                <li key={item.to} className="border-b border-ink/10">
+                <li key={item.to}>
                   <NavLink
                     to={item.to}
                     style={{ animationDelay: `${i * 35}ms` }}
                     className={({ isActive }) =>
-                      cn('panel-in block py-4 font-display text-[1.75rem]', isActive ? 'text-signal' : 'text-ink')
+                      cn(
+                        'panel-in block py-4 font-display text-[1.625rem] tracking-[-0.03em] transition-colors',
+                        isActive ? 'text-umber' : 'text-ink'
+                      )
                     }
                   >
                     {item.label}
@@ -143,7 +167,7 @@ export default function Navbar() {
               ))}
             </ul>
 
-            <div className="mt-8 flex flex-col gap-3">
+            <div className="mt-7 flex flex-col gap-3">
               <Button to="/devis" variant="solid" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
                 Demander un devis
               </Button>
@@ -161,7 +185,7 @@ export default function Navbar() {
             <a
               href={`tel:${BRAND.phones[0].tel}`}
               onClick={() => track(EVENTS.PHONE_CLICK, { source: 'menu' })}
-              className="t-small mt-6 block text-ink/65"
+              className="t-small mt-6 block tabular-nums text-ink/65"
             >
               {BRAND.phones[0].number}
             </a>
