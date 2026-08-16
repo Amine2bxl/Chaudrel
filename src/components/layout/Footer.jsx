@@ -50,10 +50,10 @@ export default function Footer() {
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-4">
             <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel — accueil">
-              <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-full bg-cream/10">
-                <img src={LOGO} alt="" aria-hidden="true" width="40" height="40" className="h-full w-full rounded-full object-cover" />
+              <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-logo bg-cream/10">
+                <img src={LOGO} alt="" aria-hidden="true" width="40" height="40" className="h-full w-full object-cover" />
               </span>
-              <span className="font-display text-[15px] font-semibold uppercase tracking-[0.26em]">{BRAND.name}</span>
+              <span className="font-wordmark text-[19px] uppercase leading-none tracking-[0.2em]">{BRAND.name}</span>
             </Link>
             <p className="t-small measure mt-6 text-cream/65">
               Entreprise de rénovation fondée en {BRAND.founded} à Bruxelles. Nous intervenons partout en Belgique.

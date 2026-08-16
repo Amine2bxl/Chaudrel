@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
-import { Button, Container, Section } from '@/components/ui';
+import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
+import { Button, Container, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { BRAND, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
@@ -203,7 +204,7 @@ export default function Contact() {
                   </span>
                 </label>
                 {errors.consent && (
-                  <p role="alert" className="t-small mt-2 text-[#9A3B23]">
+                  <p role="alert" className="t-small mt-2 text-error">
                     {errors.consent}
                   </p>
                 )}
@@ -219,7 +220,7 @@ export default function Contact() {
                 </Button>
 
                 {status === 'error' && (
-                  <p role="alert" className="t-small mt-6 rounded-md bg-[#9A3B23]/[0.07] px-4 py-3 text-ink/70">
+                  <p role="alert" className="t-small mt-6 rounded-md bg-error/[0.07] px-4 py-3 text-ink/70">
                     L’envoi a échoué. Appelez-nous au{' '}
                     <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
                       {BRAND.phones[0].number}
@@ -234,6 +235,14 @@ export default function Contact() {
               </form>
             )}
           </div>
+        </Container>
+      </Section>
+
+      {/* « Venez-vous chez moi ? » se pose ici, pas sur la page d'accueil. */}
+      <Section tone="shell">
+        <Container>
+          <SectionHeading title="Où nous intervenons." />
+          <BelgiumCoverage className="mt-block" />
         </Container>
       </Section>
     </>
@@ -273,7 +282,7 @@ function Field({ id, label, value, onChange, error, type = 'text', textarea = fa
         />
       )}
       {error && (
-        <p role="alert" className="t-small mt-2 text-[#9A3B23]">
+        <p role="alert" className="t-small mt-2 text-error">
           {error}
         </p>
       )}

@@ -128,7 +128,7 @@ export default function QuickQuote({ source = 'home' }) {
   };
 
   return (
-    <section id="devis-rapide" className="bg-bark py-20 text-cream md:py-28 lg:py-32">
+    <section id="devis-rapide" className="bg-bark py-section text-cream">
       <Container className="lg:grid lg:grid-cols-12 lg:gap-16">
         <Reveal className="lg:col-span-5">
           <h2 className="t-h2 max-w-[16ch] text-balance">Dites-nous ce que vous voulez rénover.</h2>
@@ -281,7 +281,7 @@ export default function QuickQuote({ source = 'home' }) {
               </div>
 
               {status === 'error' && (
-                <p className="t-small rounded-md bg-[#E8917A]/[0.12] px-4 py-3 text-[#E8917A]" role="alert">
+                <p className="t-small rounded-md bg-error-light/[0.12] px-4 py-3 text-error-light" role="alert">
                   {serverError} Appelez-nous au {BRAND.phones[0].number} ou écrivez sur WhatsApp.
                 </p>
               )}

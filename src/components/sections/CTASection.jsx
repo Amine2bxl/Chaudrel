@@ -10,7 +10,7 @@ export default function CTASection({
   source = 'cta',
 }) {
   return (
-    <section className="border-t border-cream/10 bg-bark py-20 text-cream md:py-28">
+    <section className="border-t border-cream/10 bg-bark py-section text-cream">
       <Container>
         <div className="lg:grid lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-7">

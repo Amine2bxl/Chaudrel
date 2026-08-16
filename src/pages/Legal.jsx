@@ -223,7 +223,7 @@ export default function Legal() {
           <Block title="14. Crédits">
             <List
               items={[
-                'Typographie : Schibsted Grotesk (Google Fonts)',
+                'Typographies : Schibsted Grotesk · Marcellus (Google Fonts)',
                 'Photographies : Chaudrel Rénovation',
                 'Icônes : Lucide',
               ]}

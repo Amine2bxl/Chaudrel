@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import ProjectGrid from '@/components/sections/ProjectGrid';
-import ProcessTimeline from '@/components/sections/ProcessTimeline';
+import ProcessCurve from '@/components/sections/ProcessCurve';
 import FaqAccordion from '@/components/sections/FaqAccordion';
 import CTASection from '@/components/sections/CTASection';
 import { Button, Container, Section, SectionHeading } from '@/components/ui';
@@ -95,7 +95,7 @@ export default function Service() {
       <Section tone="bark">
         <Container>
           <SectionHeading tone="light" title="Le déroulé, étape par étape." />
-          <ProcessTimeline tone="light" className="mt-16 lg:mt-24" />
+          <ProcessCurve tone="light" className="mt-16 lg:mt-24" />
         </Container>
       </Section>
 

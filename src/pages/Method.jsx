@@ -1,5 +1,5 @@
 import PageHero from '@/components/sections/PageHero';
-import ProcessTimeline from '@/components/sections/ProcessTimeline';
+import ProcessCurve from '@/components/sections/ProcessCurve';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section, SectionHeading } from '@/components/ui';
@@ -35,7 +35,7 @@ export default function Method() {
 
       <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
-          <ProcessTimeline />
+          <ProcessCurve />
         </Container>
       </Section>
 
@@ -53,7 +53,12 @@ export default function Method() {
         </Container>
       </Section>
 
-      <BelgiumCoverage tone="bark" />
+      <Section tone="bark">
+        <Container>
+          <SectionHeading tone="light" title="Où nous intervenons." />
+          <BelgiumCoverage tone="bark" className="mt-block" />
+        </Container>
+      </Section>
 
       <CTASection
         title="Commençons par la première étape."

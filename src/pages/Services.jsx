@@ -1,6 +1,6 @@
 import PageHero from '@/components/sections/PageHero';
 import ServiceList from '@/components/sections/ServiceList';
-import ProcessTimeline from '@/components/sections/ProcessTimeline';
+import ProcessCurve from '@/components/sections/ProcessCurve';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section, SectionHeading } from '@/components/ui';
 
@@ -26,7 +26,7 @@ export default function Services() {
             title="Comment se déroule un chantier."
             text="Le même déroulé pour une salle de bain que pour une maison entière. Seule la durée change."
           />
-          <ProcessTimeline tone="light" className="mt-16 lg:mt-24" />
+          <ProcessCurve tone="light" className="mt-16 lg:mt-24" />
         </Container>
       </Section>
 

@@ -20,7 +20,7 @@ const TONES = {
 
 export function Section({ id, tone = 'cream', className, children, ...rest }) {
   return (
-    <section id={id} className={cn('py-20 md:py-28 lg:py-36', TONES[tone], className)} {...rest}>
+    <section id={id} className={cn('py-section', TONES[tone], className)} {...rest}>
       {children}
     </section>
   );
@@ -95,10 +95,13 @@ export function SectionHeading({ label, title, text, tone = 'dark', align = 'sta
      · commandes (boutons, chips, pastilles) → pilule
      · médias et panneaux                    → 24 px
      · champs de saisie                      → 18 px
-   Le brun est la couleur d'action. Il n'apparaît nulle part en décoration. */
+
+   Le crème est la couleur du site ; le graphite est celle des actions. Le brun
+   ne sert qu'à signaler : page active, focus, repères. Une action primaire en
+   brun ferait du brun la couleur dominante, ce qu'il n'est pas. */
 
 const VARIANTS = {
-  solid: 'bg-umber text-cream shadow-soft hover:bg-umber-deep hover:shadow-lift',
+  solid: 'bg-ink text-cream shadow-soft hover:bg-bark hover:shadow-lift',
   solidLight: 'bg-cream text-ink shadow-soft hover:bg-shell hover:shadow-lift',
   outline: 'border border-ink/15 bg-shell/70 text-ink hover:border-ink/30 hover:bg-shell hover:shadow-soft',
   outlineLight: 'border border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/10',

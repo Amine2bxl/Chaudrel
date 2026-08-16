@@ -19,7 +19,7 @@ export default function MobileBar() {
       <Link
         to="/devis"
         onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
-        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full bg-umber text-cream shadow-lift active:translate-y-px"
+        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full bg-ink text-cream shadow-lift active:translate-y-px"
       >
         Demander un devis
       </Link>

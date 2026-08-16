@@ -345,7 +345,7 @@ export default function Quote() {
               </p>
 
               {status === 'error' && (
-                <div role="alert" className="mt-8 rounded-md bg-[#9A3B23]/[0.07] px-5 py-4">
+                <div role="alert" className="mt-8 rounded-md bg-error/[0.07] px-5 py-4">
                   <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
                   {serverError && <p className="t-small mt-1 text-ink/65">{serverError}</p>}
                   <p className="t-small mt-3 text-ink/65">
@@ -427,7 +427,7 @@ function Fieldset({ legend, error, children }) {
 
 function FieldError({ children }) {
   return (
-    <p role="alert" className="t-small mt-4 text-[#9A3B23]">
+    <p role="alert" className="t-small mt-4 text-error">
       {children}
     </p>
   );
@@ -479,7 +479,7 @@ function Field({ id, label, value, onChange, error, type = 'text', className, ..
         {...rest}
       />
       {error && (
-        <p id={`${id}-error`} role="alert" className="t-small mt-2 text-[#9A3B23]">
+        <p id={`${id}-error`} role="alert" className="t-small mt-2 text-error">
           {error}
         </p>
       )}

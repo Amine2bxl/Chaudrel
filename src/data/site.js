@@ -63,11 +63,17 @@ export const whatsappUrl = (
   message = 'Bonjour Chaudrel, je souhaite un devis pour mon projet de rénovation.'
 ) => `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(message)}`;
 
+/**
+ * Quatre entrées, pas une de plus.
+ * Un visiteur vient voir le travail, comprendre ce que Chaudrel prend en
+ * charge, savoir comment ça se passe, puis appeler. « À propos » et « FAQ »
+ * restent accessibles depuis l'accueil et le pied de page : ce sont des pages
+ * qu'on consulte, pas des étapes du parcours.
+ */
 export const NAV = [
-  { label: 'Services', to: '/services' },
   { label: 'Réalisations', to: '/realisations' },
-  { label: 'Notre méthode', to: '/methode' },
-  { label: 'À propos', to: '/a-propos' },
+  { label: 'Services', to: '/services' },
+  { label: 'Méthode', to: '/methode' },
   { label: 'Contact', to: '/contact' },
 ];
 
