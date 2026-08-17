@@ -23,10 +23,10 @@ export default {
         sand: rgb('sand'),
         ink: rgb('ink'),
         bark: rgb('bark'),
-        umber: {
-          DEFAULT: rgb('umber'),
-          deep: rgb('umber-deep'),
-          light: rgb('umber-light'),
+        gold: {
+          DEFAULT: rgb('gold'),
+          deep: rgb('gold-deep'),
+          light: rgb('gold-light'),
         },
         error: {
           DEFAULT: rgb('error'),

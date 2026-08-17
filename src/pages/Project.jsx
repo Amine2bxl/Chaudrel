@@ -31,7 +31,7 @@ function ProjectNav({ prev, next }) {
         className={cn('group flex flex-col gap-2', forward && 'items-end text-right')}
       >
         <span className="t-label text-ink/50">{forward ? 'Chantier suivant' : 'Chantier précédent'}</span>
-        <span className="font-display text-[1.5rem] leading-tight tracking-[-0.01em] text-ink transition-colors duration-fast group-hover:text-umber sm:text-[1.75rem]">
+        <span className="font-display text-[1.5rem] leading-tight tracking-[-0.01em] text-ink transition-colors duration-fast group-hover:text-gold sm:text-[1.75rem]">
           {project.title}
         </span>
         <span className="t-small text-ink/55">
@@ -90,7 +90,7 @@ export default function Project() {
                     <ul className="space-y-1.5">
                       {project.works.map((w) => (
                         <li key={w} className="t-small flex gap-2.5 text-ink/70">
-                          <span aria-hidden="true" className="mt-[7px] h-1 w-1 flex-none rounded-full bg-umber" />
+                          <span aria-hidden="true" className="mt-[7px] h-1 w-1 flex-none rounded-full bg-gold" />
                           {w}
                         </li>
                       ))}

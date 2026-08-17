@@ -9,25 +9,30 @@
   /* ---------- Couleur ----------
      Le crème est la couleur principale de Chaudrel : c'est le fond du site,
      la barre de navigation, les surfaces. Le graphite porte le texte et les
-     actions. Le brun n'est plus qu'un accent : page active, focus, détails.
+     actions. L'or de laiton n'est qu'un accent : page active, focus, repères.
+
+     ⚠️ #8C764E donne 4,0:1 sur le crème et 3,9:1 sur le sombre : sous le seuil
+     AA pour du texte courant. Il ne sert donc jamais à écrire un paragraphe —
+     seulement des repères, des grands corps et des bordures. Sur fond sombre,
+     c'est `gold-light` (8:1) qui prend le relais.
      Les triplets RVB existent pour que Tailwind puisse appliquer une opacité
      (`text-ink/65`) sans dupliquer la couleur. */
-  --c-cream-rgb: 244 240 232; /* fond de page, barre de navigation */
-  --c-shell-rgb: 251 249 244; /* surfaces surélevées : champs, panneaux */
-  --c-sand-rgb: 231 223 210; /* aplats discrets, fond d'image en attente */
-  --c-ink-rgb: 36 29 24; /* texte et actions primaires */
-  --c-bark-rgb: 27 21 18; /* sections sombres */
-  --c-umber-rgb: 107 74 53; /* accent : page active, focus, repères */
-  --c-umber-deep-rgb: 84 57 42;
-  --c-umber-light-rgb: 200 163 133; /* le même accent sur fond sombre */
+  --c-cream-rgb: 247 245 242; /* fond de page — crème de Chaudrel */
+  --c-shell-rgb: 255 255 255; /* surfaces surélevées : cartes, champs, panneaux */
+  --c-sand-rgb: 234 229 222; /* aplats discrets, fond d'image en attente */
+  --c-ink-rgb: 26 26 26; /* texte et actions primaires */
+  --c-bark-rgb: 28 28 28; /* sections sombres */
+  --c-gold-rgb: 140 118 78; /* accent : page active, focus, repères */
+  --c-gold-deep-rgb: 111 93 61;
+  --c-gold-light-rgb: 201 174 131; /* le même accent sur fond sombre */
   --c-error-rgb: 154 59 35;
   --c-error-light-rgb: 232 145 122;
 
   --c-cream: rgb(var(--c-cream-rgb));
   --c-shell: rgb(var(--c-shell-rgb));
   --c-ink: rgb(var(--c-ink-rgb));
-  --c-umber: rgb(var(--c-umber-rgb));
-  --c-umber-light: rgb(var(--c-umber-light-rgb));
+  --c-gold: rgb(var(--c-gold-rgb));
+  --c-gold-light: rgb(var(--c-gold-light-rgb));
   --c-error: rgb(var(--c-error-rgb));
   --c-error-light: rgb(var(--c-error-light-rgb));
 

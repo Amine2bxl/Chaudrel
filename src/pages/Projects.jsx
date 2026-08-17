@@ -45,7 +45,7 @@ export default function Projects() {
                   <span
                     aria-hidden="true"
                     className={cn(
-                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-umber transition-opacity duration-fast',
+                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-gold transition-opacity duration-fast',
                       on ? 'opacity-100' : 'opacity-0'
                     )}
                   />

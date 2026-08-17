@@ -98,6 +98,7 @@ export const whatsappUrl = (
  * qu'on consulte, pas des étapes du parcours.
  */
 export const NAV = [
+  { label: 'Accueil', to: '/' },
   { label: 'Services', to: '/services' },
   { label: 'Réalisations', to: '/realisations' },
   { label: 'À propos', to: '/a-propos' },

@@ -5,6 +5,7 @@ import Reveal from '@/lib/reveal';
 import { METHOD } from '@/data/method';
 import { BRAND, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
+import { useContactDialog } from '@/lib/contactDialog';
 import { cn } from '@/lib/utils';
 
 const PROJECT_TYPES = [
@@ -42,6 +43,7 @@ const EMPTY = {
 };
 
 export default function Quote() {
+  const { openDialog } = useContactDialog();
   const [step, setStep] = useState(1);
   const [data, setData] = useState(EMPTY);
   const [errors, setErrors] = useState({});
@@ -125,7 +127,7 @@ export default function Quote() {
         <PageHero
           title="C’est noté. Merci."
           intro="Nous revenons vers vous pour convenir d’une visite et préparer votre devis."
-          breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
+          breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
         />
         <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
           <Container>
@@ -174,7 +176,7 @@ export default function Quote() {
       <PageHero
         title="Quatre questions, deux minutes."
         intro="Gratuit et sans engagement. Plus votre description est précise, plus notre réponse le sera."
-        breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
+        breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
       />
 
       <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
@@ -199,7 +201,7 @@ export default function Quote() {
                 aria-label="Progression du formulaire"
               >
                 <div
-                  className="h-full origin-left rounded-full bg-umber transition-transform duration-700 ease-soft"
+                  className="h-full origin-left rounded-full bg-gold transition-transform duration-700 ease-soft"
                   style={{ transform: `scaleX(${progress})` }}
                 />
               </div>
@@ -318,7 +320,7 @@ export default function Quote() {
                       checked={data.consent}
                       onChange={(e) => set('consent')(e.target.checked)}
                       aria-invalid={Boolean(errors.consent)}
-                      className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-umber"
+                      className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-gold"
                     />
                     <span>
                       J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
@@ -388,32 +390,32 @@ export default function Quote() {
               ))}
             </ul>
 
+            {/* Deux issues, pas une liste de liens : écrire tout de suite sur
+                WhatsApp, ou ouvrir la fiche complète (téléphones, e-mail,
+                horaires, adresse). */}
             <div className="mt-10 border-t border-ink/12 pt-6">
               <p className="t-small text-ink/65">Vous préférez parler ?</p>
-              <ul className="mt-3 space-y-2">
-                {BRAND.phones.map((p) => (
-                  <li key={p.tel}>
-                    <a
-                      href={`tel:${p.tel}`}
-                      onClick={() => track(EVENTS.PHONE_CLICK, { source: 'quote_sidebar' })}
-                      className="link-line t-body text-ink"
-                    >
-                      {p.number}
-                    </a>
-                  </li>
-                ))}
-                <li>
-                  <a
-                    href={whatsappUrl()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_sidebar' })}
-                    className="link-line t-body text-ink"
-                  >
-                    WhatsApp
-                  </a>
-                </li>
-              </ul>
+              <div className="mt-4 flex flex-col gap-2.5">
+                <a
+                  href={whatsappUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_sidebar' })}
+                  className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-ink/15 bg-shell px-5 py-4 text-ink transition-all duration-fast ease-soft hover:border-ink/30 hover:shadow-soft active:translate-y-px"
+                >
+                  <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+                    <path d="M8 0a8 8 0 0 0-6.9 12L0 16l4.1-1.1A8 8 0 1 0 8 0Zm0 14.6a6.6 6.6 0 0 1-3.4-.9l-.2-.2-2.5.7.7-2.4-.2-.3A6.6 6.6 0 1 1 8 14.6Zm3.6-4.9c-.2-.1-1.2-.6-1.3-.6-.2-.1-.3-.1-.4.1l-.6.7c-.1.1-.2.1-.4 0a5.4 5.4 0 0 1-2.6-2.3c-.2-.3.2-.3.5-1 0-.1 0-.2 0-.3l-.6-1.3c-.1-.4-.3-.3-.4-.3h-.4a.7.7 0 0 0-.5.3c-.2.2-.7.7-.7 1.7s.7 2 .8 2.1a7.6 7.6 0 0 0 3 2.6c1.1.4 1.5.5 2 .4.4 0 1.2-.5 1.3-.9.2-.5.2-.9.1-1 0-.1-.1-.1-.3-.2Z" />
+                  </svg>
+                  WhatsApp
+                </a>
+                <button
+                  type="button"
+                  onClick={() => openDialog('quote_sidebar')}
+                  className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-ink/15 bg-shell px-5 py-4 text-ink transition-all duration-fast ease-soft hover:border-ink/30 hover:shadow-soft active:translate-y-px"
+                >
+                  Toutes nos coordonnées
+                </button>
+              </div>
             </div>
           </aside>
         </Container>
@@ -448,7 +450,7 @@ function Choice({ name, label, checked, onChange }) {
       className={cn(
         'flex cursor-pointer items-center gap-4 rounded-md border px-5 py-4 transition-all duration-300 ease-soft',
         checked
-          ? 'border-umber bg-umber/[0.06] text-ink shadow-soft'
+          ? 'border-gold bg-gold/[0.06] text-ink shadow-soft'
           : 'border-ink/[0.12] bg-shell text-ink/70 hover:border-ink/25 hover:text-ink'
       )}
     >
@@ -457,7 +459,7 @@ function Choice({ name, label, checked, onChange }) {
         aria-hidden="true"
         className={cn(
           'grid h-[18px] w-[18px] flex-shrink-0 place-items-center rounded-full border transition-colors duration-300',
-          checked ? 'border-umber bg-umber' : 'border-ink/25 bg-shell'
+          checked ? 'border-gold bg-gold' : 'border-ink/25 bg-shell'
         )}
       >
         {checked && <span className="block h-1.5 w-1.5 rounded-full bg-cream" />}

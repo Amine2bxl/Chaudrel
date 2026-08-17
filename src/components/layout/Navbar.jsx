@@ -74,7 +74,7 @@ export default function Navbar() {
 
         <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Navigation principale">
           {NAV.map((item) => (
-            <NavLink key={item.to} to={item.to} className={linkClass}>
+            <NavLink key={item.to} to={item.to} end={item.to === '/'} className={linkClass}>
               {({ isActive }) => (
                 <>
                   {item.label}
@@ -84,7 +84,7 @@ export default function Navbar() {
                   <span
                     aria-hidden="true"
                     className={cn(
-                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-umber transition-opacity duration-fast',
+                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-gold transition-opacity duration-fast',
                       isActive ? 'opacity-100' : 'opacity-0'
                     )}
                   />
@@ -112,7 +112,7 @@ export default function Navbar() {
           </a>
 
           <Button to="/devis" size="sm" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
-            Demander un devis
+            Devis gratuit
           </Button>
         </nav>
 
@@ -131,7 +131,7 @@ export default function Navbar() {
         <div className="mx-auto w-full max-w-[1240px] px-2.5 lg:hidden">
           <nav className="panel-in overflow-hidden rounded-xl bg-cream p-5 shadow-lift sm:p-6" aria-label="Navigation mobile">
             <ul className="divide-y divide-ink/10">
-              {[{ label: 'Accueil', to: '/' }, ...NAV].map((item, i) => (
+              {NAV.map((item, i) => (
                 <li key={item.to}>
                   <NavLink
                     to={item.to}
@@ -147,7 +147,7 @@ export default function Navbar() {
                     {({ isActive }) => (
                       <>
                         {item.label}
-                        {isActive && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-umber" />}
+                        {isActive && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />}
                       </>
                     )}
                   </NavLink>
@@ -157,7 +157,7 @@ export default function Navbar() {
 
             <div className="mt-7 flex flex-col gap-3">
               <Button to="/devis" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
-                Demander un devis
+                Devis gratuit
               </Button>
               <Button variant="outline" onClick={() => openDialog('menu')}>
                 Nous joindre

@@ -39,7 +39,7 @@ export default function ServiceList({ services = SERVICES, tone = 'dark', classN
               className={cn(
                 'font-display text-[1.5rem] leading-[1.05] tracking-[-0.01em] transition-colors duration-300',
                 'sm:text-[1.75rem] lg:text-[2rem]',
-                light ? 'text-cream group-hover:text-umber-light' : 'text-ink group-hover:text-umber'
+                light ? 'text-cream group-hover:text-gold-light' : 'text-ink group-hover:text-gold'
               )}
             >
               {s.title}
@@ -61,8 +61,8 @@ export default function ServiceList({ services = SERVICES, tone = 'dark', classN
                 'col-start-2 row-start-1 grid h-11 w-11 flex-none place-items-center rounded-full border',
                 'transition-all duration-300 ease-soft lg:col-start-3',
                 light
-                  ? 'border-cream/30 text-cream/70 group-hover:border-umber-light group-hover:bg-umber-light group-hover:text-bark'
-                  : 'border-ink/[0.18] text-ink/65 group-hover:border-umber group-hover:bg-umber group-hover:text-cream'
+                  ? 'border-cream/30 text-cream/70 group-hover:border-gold-light group-hover:bg-gold-light group-hover:text-bark'
+                  : 'border-ink/[0.18] text-ink/65 group-hover:border-gold group-hover:bg-gold group-hover:text-cream'
               )}
               aria-hidden="true"
             >

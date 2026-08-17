@@ -175,7 +175,7 @@ const STATIC = {
     ld: () => [
       breadcrumbLd([
         { name: 'Accueil', path: '/' },
-        { name: 'Demander un devis', path: '/devis' },
+        { name: 'Devis gratuit', path: '/devis' },
       ]),
     ],
   },

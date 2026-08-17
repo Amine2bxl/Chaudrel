@@ -49,17 +49,17 @@
   /* Les surfaces que le navigateur dessine à notre place appartiennent
      quand même à la charte : sélection, curseur, anneau de focus. */
   ::selection {
-    background: var(--c-umber);
+    background: var(--c-gold);
     color: var(--c-cream);
   }
 
   html {
-    caret-color: var(--c-umber);
-    accent-color: var(--c-umber);
+    caret-color: var(--c-gold);
+    accent-color: var(--c-gold);
   }
 
   :focus-visible {
-    outline: 2px solid var(--c-umber);
+    outline: 2px solid var(--c-gold);
     outline-offset: 3px;
     border-radius: var(--r-xs);
   }
@@ -226,8 +226,8 @@
 
   .field:focus {
     outline: none;
-    border-color: var(--c-umber);
-    box-shadow: 0 0 0 3px rgb(var(--c-umber-rgb) / 0.14);
+    border-color: var(--c-gold);
+    box-shadow: 0 0 0 3px rgb(var(--c-gold-rgb) / 0.14);
   }
 
   .field-error {
@@ -254,8 +254,8 @@
   }
 
   .field-dark:focus {
-    border-color: var(--c-umber-light);
-    box-shadow: 0 0 0 3px rgb(var(--c-umber-light-rgb) / 0.18);
+    border-color: var(--c-gold-light);
+    box-shadow: 0 0 0 3px rgb(var(--c-gold-light-rgb) / 0.18);
   }
 
   .field-dark.field-error {
@@ -290,7 +290,7 @@
   background: var(--c-cream);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(var(--c-umber-rgb) / 0.35);
+  background: rgb(var(--c-gold-rgb) / 0.35);
   border-radius: 999px;
 }
 @media (max-width: 1023px) {

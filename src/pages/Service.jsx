@@ -74,7 +74,7 @@ export default function Service() {
                       <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-2.5">
                         {g.items.map((item) => (
                           <li key={item} className="t-body flex items-baseline gap-2.5 text-ink/75">
-                            <span aria-hidden="true" className="h-1 w-1 flex-none rounded-full bg-umber" />
+                            <span aria-hidden="true" className="h-1 w-1 flex-none rounded-full bg-gold" />
                             {item}
                           </li>
                         ))}
@@ -93,7 +93,7 @@ export default function Service() {
                   proposition détaillée, sans engagement.
                 </p>
                 <Button to="/devis" variant="solid" className="mt-7 w-full">
-                  Demander un devis
+                  Devis gratuit
                 </Button>
                 <p className="t-small mt-5 text-ink/65">{BRAND.zoneLong}.</p>
               </div>

@@ -74,8 +74,8 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
     return () => io.disconnect();
   }, []);
 
-  const stroke = light ? 'stroke-umber-light' : 'stroke-umber';
-  const dot = light ? 'fill-umber-light' : 'fill-umber';
+  const stroke = light ? 'stroke-gold-light' : 'stroke-gold';
+  const dot = light ? 'fill-gold-light' : 'fill-gold';
 
   return (
     <div ref={ref} className={className}>
@@ -101,7 +101,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
             fill="url(#chaudrel-curve-fill)"
             className={cn(
               'transition-opacity duration-[900ms] ease-soft',
-              light ? 'text-umber-light' : 'text-umber',
+              light ? 'text-gold-light' : 'text-gold',
               drawn ? 'opacity-100' : 'opacity-0'
             )}
             style={{ transitionDelay: '700ms' }}
@@ -173,7 +173,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
               )}
               style={{ transitionDelay: `${900 + i * 90}ms` }}
             >
-              <span className={cn('t-label block', light ? 'text-umber-light' : 'text-umber')}>{s.n}</span>
+              <span className={cn('t-label block', light ? 'text-gold-light' : 'text-gold')}>{s.n}</span>
               {/* Pas `t-h3` ici : dans sept colonnes de 150 px, ce corps casse
                   les titres en deux lignes et désaligne la rangée. C'est un
                   repère de graphique, pas un titre de section. */}
@@ -211,7 +211,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
           aria-hidden="true"
           className={cn(
             'absolute bottom-8 left-[7px] top-2 w-px origin-top transition-transform duration-[1200ms] ease-soft',
-            light ? 'bg-umber-light/40' : 'bg-umber/30',
+            light ? 'bg-gold-light/40' : 'bg-gold/30',
             drawn ? 'scale-y-100' : 'scale-y-0'
           )}
         />
@@ -221,12 +221,12 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
               aria-hidden="true"
               className={cn(
                 'absolute left-0 top-[7px] h-[15px] w-[15px] rounded-full border-[3px] transition-opacity duration-slow',
-                light ? 'border-umber-light bg-bark' : 'border-umber bg-cream',
+                light ? 'border-gold-light bg-bark' : 'border-gold bg-cream',
                 drawn ? 'opacity-100' : 'opacity-0'
               )}
               style={{ transitionDelay: `${i * 110}ms` }}
             />
-            <span className={cn('t-label block', light ? 'text-umber-light' : 'text-umber')}>{s.n}</span>
+            <span className={cn('t-label block', light ? 'text-gold-light' : 'text-gold')}>{s.n}</span>
             <h3 className={cn('t-h3 mt-1.5', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
             <p className={cn('t-small mt-1.5', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
           </li>

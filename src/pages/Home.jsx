@@ -2,6 +2,7 @@ import Hero, { ProofBand } from '@/components/sections/Hero';
 import ProjectGrid from '@/components/sections/ProjectGrid';
 import ServiceList from '@/components/sections/ServiceList';
 import ProcessCurve from '@/components/sections/ProcessCurve';
+import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import CTASection from '@/components/sections/CTASection';
 import { Button, Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
 import Reveal from '@/lib/reveal';
@@ -71,6 +72,15 @@ export default function Home() {
             text="Vous savez à tout moment où en est votre chantier, ce qui a été fait et ce qui vient ensuite."
           />
           <ProcessCurve tone="light" className="mt-block" />
+        </Container>
+      </Section>
+
+      {/* « Venez-vous chez moi ? » est la question qui suit immédiatement
+          « comment ça se passe ? ». */}
+      <Section tone="cream">
+        <Container>
+          <SectionHeading title="Où nous intervenons." />
+          <BelgiumCoverage className="mt-block" />
         </Container>
       </Section>
 

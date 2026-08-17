@@ -42,7 +42,7 @@ function ShowcaseItem({ project, index, ratio, priority = false, className, dela
           <span className="t-num text-ink/40">{String(index + 1).padStart(2, '0')}</span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-              <h3 className="font-display text-[1.5rem] leading-tight tracking-[-0.01em] transition-colors duration-300 group-hover:text-umber sm:text-[1.75rem]">
+              <h3 className="font-display text-[1.5rem] leading-tight tracking-[-0.01em] transition-colors duration-300 group-hover:text-gold sm:text-[1.75rem]">
                 {project.title}
               </h3>
               <span className="t-small text-ink/60">{project.type}</span>

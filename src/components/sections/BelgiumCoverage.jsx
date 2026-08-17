@@ -40,10 +40,10 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                   'transition-[fill] duration-slow ease-soft',
                   light
                     ? on
-                      ? 'fill-umber-light stroke-bark'
+                      ? 'fill-gold-light stroke-bark'
                       : 'fill-cream/[0.08] stroke-cream/25'
                     : on
-                      ? 'fill-umber stroke-cream'
+                      ? 'fill-gold stroke-cream'
                       : 'fill-ink/[0.06] stroke-ink/20'
                 )}
               />
@@ -56,7 +56,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
             if (!bxl) return null;
             return (
               <g>
-                <circle cx={bxl.cx} cy={bxl.cy} r="8" className={light ? 'fill-umber-light' : 'fill-umber'} />
+                <circle cx={bxl.cx} cy={bxl.cy} r="8" className={light ? 'fill-gold-light' : 'fill-gold'} />
                 <circle
                   cx={bxl.cx}
                   cy={bxl.cy}
@@ -64,7 +64,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                   fill="none"
                   strokeWidth="1.2"
                   vectorEffect="non-scaling-stroke"
-                  className={light ? 'stroke-umber-light/50' : 'stroke-umber/50'}
+                  className={light ? 'stroke-gold-light/50' : 'stroke-gold/50'}
                 />
               </g>
             );
@@ -101,8 +101,8 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                     'h-1.5 w-1.5 flex-none rounded-full transition-all duration-fast ease-soft',
                     active === p.id
                       ? light
-                        ? 'scale-100 bg-umber-light'
-                        : 'scale-100 bg-umber'
+                        ? 'scale-100 bg-gold-light'
+                        : 'scale-100 bg-gold'
                       : 'scale-0'
                   )}
                 />

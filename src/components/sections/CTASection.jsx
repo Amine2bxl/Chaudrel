@@ -30,7 +30,7 @@ export default function CTASection({
                 arrow
                 onClick={() => track(EVENTS.QUOTE_CTA, { source })}
               >
-                Demander un devis
+                Devis gratuit
               </Button>
               {/* Un seul appel secondaire : la fenêtre porte tous les canaux
                   plutôt que d'en imposer un. */}

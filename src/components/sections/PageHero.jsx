@@ -38,7 +38,7 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
                 <li key={b.to || b.label} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">/</span>}
                   {b.to ? (
-                    <Link to={b.to} className="transition-colors hover:text-umber">
+                    <Link to={b.to} className="transition-colors hover:text-gold">
                       {b.label}
                     </Link>
                   ) : (

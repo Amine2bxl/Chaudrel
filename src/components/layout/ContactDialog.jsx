@@ -115,8 +115,38 @@ export default function ContactDialog() {
           </button>
         </div>
 
+        {/* Deux actions d'abord, le détail ensuite : la plupart des visiteurs
+            veulent appeler ou écrire, pas lire une fiche. */}
+        <div className="mt-6 grid gap-2.5 sm:grid-cols-2">
+          <a
+            href={`tel:${BRAND.phones[0].tel}`}
+            onClick={() => track(EVENTS.PHONE_CLICK, { source: `dialog:${source}` })}
+            className="t-label inline-flex items-center justify-center gap-2.5 rounded-full bg-ink px-5 py-4 text-cream shadow-soft transition-all duration-fast ease-soft hover:bg-bark hover:shadow-lift active:translate-y-px"
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <path
+                d="M5.2 2.5 6.6 5.4 5.1 6.9a8 8 0 0 0 4 4l1.5-1.5 2.9 1.4v2.3c0 .6-.5 1-1.1.9A12.6 12.6 0 0 1 2 3.6c-.1-.6.3-1.1.9-1.1h2.3Z"
+                strokeLinejoin="round"
+              />
+            </svg>
+            Appeler
+          </a>
+          <a
+            href={whatsappUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: `dialog:${source}` })}
+            className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-ink/15 bg-shell px-5 py-4 text-ink transition-all duration-fast ease-soft hover:border-ink/30 hover:shadow-soft active:translate-y-px"
+          >
+            <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+              <path d="M8 0a8 8 0 0 0-6.9 12L0 16l4.1-1.1A8 8 0 1 0 8 0Zm0 14.6a6.6 6.6 0 0 1-3.4-.9l-.2-.2-2.5.7.7-2.4-.2-.3A6.6 6.6 0 1 1 8 14.6Zm3.6-4.9c-.2-.1-1.2-.6-1.3-.6-.2-.1-.3-.1-.4.1l-.6.7c-.1.1-.2.1-.4 0a5.4 5.4 0 0 1-2.6-2.3c-.2-.3.2-.3.5-1 0-.1 0-.2 0-.3l-.6-1.3c-.1-.4-.3-.3-.4-.3h-.4a.7.7 0 0 0-.5.3c-.2.2-.7.7-.7 1.7s.7 2 .8 2.1a7.6 7.6 0 0 0 3 2.6c1.1.4 1.5.5 2 .4.4 0 1.2-.5 1.3-.9.2-.5.2-.9.1-1 0-.1-.1-.1-.3-.2Z" />
+            </svg>
+            WhatsApp
+          </a>
+        </div>
+
         <div className="mt-7">
-          <Row label="Par téléphone">
+          <Row label="Téléphones">
             <ul className="space-y-2.5">
               {BRAND.phones.map((p) => (
                 <li key={p.tel} className="flex items-baseline justify-between gap-4">
@@ -131,18 +161,6 @@ export default function ContactDialog() {
                 </li>
               ))}
             </ul>
-          </Row>
-
-          <Row label="WhatsApp">
-            <a
-              href={whatsappUrl()}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: `dialog:${source}` })}
-              className={linkClass}
-            >
-              Écrire sur WhatsApp
-            </a>
           </Row>
 
           <Row label="Par e-mail">

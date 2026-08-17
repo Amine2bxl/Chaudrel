@@ -32,7 +32,7 @@ export function ProjectItem({ project, ratio = 'aspect-[4/5]', priority = false,
         </div>
 
         <div className="mt-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 px-1">
-          <h3 className="font-display text-[1.375rem] leading-tight tracking-[-0.01em] transition-colors duration-300 group-hover:text-umber">
+          <h3 className="font-display text-[1.375rem] leading-tight tracking-[-0.01em] transition-colors duration-300 group-hover:text-gold">
             {project.title}
           </h3>
           <span className="t-small text-ink/65">{project.type}</span>

@@ -23,7 +23,7 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
           <summary
             className={cn(
               't-h3 flex cursor-pointer list-none items-start justify-between gap-8 px-6 py-5 transition-colors duration-300 sm:px-7 sm:py-6',
-              light ? 'hover:text-umber-light' : 'hover:text-umber',
+              light ? 'hover:text-gold-light' : 'hover:text-gold',
               light ? 'text-cream' : 'text-ink'
             )}
           >
@@ -31,7 +31,7 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
             <Plus
               aria-hidden="true"
               strokeWidth={1.75}
-              className="mt-1 h-5 w-5 flex-shrink-0 text-umber transition-transform duration-300 ease-soft group-open:rotate-45"
+              className="mt-1 h-5 w-5 flex-shrink-0 text-gold transition-transform duration-300 ease-soft group-open:rotate-45"
             />
           </summary>
           <p className={cn('t-body measure px-6 pb-6 pr-10 sm:px-7 sm:pb-7', light ? 'text-cream/65' : 'text-ink/65')}>

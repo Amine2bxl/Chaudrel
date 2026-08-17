@@ -18,7 +18,7 @@ export default function NotFound() {
             Voir les réalisations
           </Button>
           <Button to="/devis" variant="outline">
-            Demander un devis
+            Devis gratuit
           </Button>
         </Container>
       </Section>

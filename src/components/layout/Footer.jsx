@@ -54,7 +54,7 @@ export default function Footer() {
             onClick={() => track(EVENTS.QUOTE_CTA, { source: 'footer' })}
             className="link-line t-small text-cream"
           >
-            Demander un devis
+            Devis gratuit
           </Link>
         </nav>
 

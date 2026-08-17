@@ -1,6 +1,5 @@
 import PageHero from '@/components/sections/PageHero';
 import ProcessCurve from '@/components/sections/ProcessCurve';
-import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
@@ -50,13 +49,6 @@ export default function Method() {
               </Reveal>
             ))}
           </div>
-        </Container>
-      </Section>
-
-      <Section tone="bark">
-        <Container>
-          <SectionHeading tone="light" title="Où nous intervenons." />
-          <BelgiumCoverage tone="bark" className="mt-block" />
         </Container>
       </Section>
 
