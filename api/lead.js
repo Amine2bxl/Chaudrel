@@ -11,7 +11,7 @@
  * WhatsApp en repli. Aucun lead n'est perdu silencieusement.
  */
 
-const MAX_LEN = { description: 4000, name: 120, email: 200, phone: 40, city: 120, budgetDetail: 200 };
+const MAX_LEN = { description: 4000, name: 120, email: 200, phone: 40, city: 120 };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 // Limitation de débit best-effort (mémoire de l'instance).
@@ -46,14 +46,20 @@ export default async function handler(req, res) {
   // Honeypot : rempli = bot. On renvoie 200 sans rien envoyer.
   if (clean(body.company)) return res.status(200).json({ ok: true });
 
+  const firstName = clean(body.firstName, MAX_LEN.name);
+  const lastName = clean(body.lastName, MAX_LEN.name);
+
   const lead = {
     projectType: clean(body.projectType, 80),
+    propertyType: clean(body.propertyType, 40),
     description: clean(body.description, MAX_LEN.description),
-    budget: clean(body.budget, 40),
-    budgetDetail: clean(body.budgetDetail, MAX_LEN.budgetDetail),
     city: clean(body.city, MAX_LEN.city),
     postalCode: clean(body.postalCode, 12),
-    name: clean(body.name, MAX_LEN.name),
+    // `name` reste accepté pour ne pas casser une demande envoyée depuis une
+    // page encore en cache pendant le déploiement.
+    name: [firstName, lastName].filter(Boolean).join(' ') || clean(body.name, MAX_LEN.name),
+    firstName,
+    lastName,
     phone: clean(body.phone, MAX_LEN.phone),
     email: clean(body.email, MAX_LEN.email),
     consent: Boolean(body.consent),
@@ -98,8 +104,8 @@ export default async function handler(req, res) {
         subject: `Demande de devis — ${lead.projectType} — ${lead.city}`,
         text: [
           `Type de projet : ${lead.projectType}`,
+          `Type de bien : ${lead.propertyType || 'non précisé'}`,
           `Commune : ${lead.city} ${lead.postalCode}`,
-          `Budget : ${lead.budget}${lead.budgetDetail ? ` (${lead.budgetDetail})` : ''}`,
           '',
           'Description :',
           lead.description,

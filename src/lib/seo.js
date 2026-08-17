@@ -170,7 +170,7 @@ const STATIC = {
   '/devis': {
     title: 'Demander un devis gratuit | Chaudrel Rénovation',
     description:
-      "Décrivez votre projet en cinq questions. Visite sur place puis devis détaillé, gratuit et sans engagement, partout en Belgique.",
+      "Décrivez votre projet en quatre questions. Visite sur place puis devis détaillé, gratuit et sans engagement, partout en Belgique.",
     robots: 'index, follow',
     ld: () => [
       breadcrumbLd([

@@ -37,7 +37,24 @@ export const BRAND = {
     { days: 'Samedi', time: 'Sur rendez-vous' },
     { days: 'Dimanche', time: 'Fermé' },
   ],
+  /**
+   * Engagements confirmés par Chaudrel — les seuls affichables.
+   * Écartés faute de confirmation : « 150+ projets », « 98 % de satisfaction »,
+   * « 5 étoiles Google », « garantie 10 ans toiture ». Ils figurent sur la V1
+   * mais nulle part sur chaudrelrenovation.be.
+   */
+  promises: {
+    responseTime: 'Réponse sous 48 h',
+    quote: 'Devis gratuit et sans engagement',
+  },
   zone: 'Toute la Belgique',
+  // Formulation d'usage : le siège ancre, la portée nationale étend. Le site
+  // historique listait Bruxelles et le Brabant wallon ; l'entreprise couvre
+  // aujourd'hui tout le pays, ce qui reste plus crédible énoncé depuis son
+  // point d'attache que proclamé à plat.
+  zoneLong: 'De Schaerbeek à toute la Belgique',
+  zoneSentence:
+    'Notre siège est à Schaerbeek. Nos chantiers, eux, ne s’arrêtent pas au ring : Bruxelles, le Brabant wallon, et les dix provinces.',
   zoneShort: 'Belgique',
   // Villes citées dans le SEO local. Le siège est à Bruxelles, l'intervention
   // couvre le pays — confirmé par Chaudrel comme zone commerciale.
@@ -81,9 +98,10 @@ export const whatsappUrl = (
  * qu'on consulte, pas des étapes du parcours.
  */
 export const NAV = [
-  { label: 'Réalisations', to: '/realisations' },
   { label: 'Services', to: '/services' },
-  { label: 'Méthode', to: '/methode' },
+  { label: 'Réalisations', to: '/realisations' },
+  { label: 'À propos', to: '/a-propos' },
+  { label: 'FAQ', to: '/faq' },
 ];
 
 export const MOBILE_NAV = [

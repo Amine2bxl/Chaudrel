@@ -96,7 +96,7 @@ export default function ContactDialog() {
               Nous joindre
             </h2>
             <p className="t-small mt-2 text-ink/60">
-              Pour un chiffrage, passez plutôt par{' '}
+              {BRAND.promises.responseTime}. Pour un chiffrage, passez plutôt par{' '}
               <a href="/devis" className="link-line text-ink">
                 la demande de devis
               </a>
@@ -173,7 +173,7 @@ export default function ContactDialog() {
               <br />
               {BRAND.address.postalCode} {BRAND.address.city}
             </address>
-            <p className="t-small mt-2 text-ink/50">Chantiers partout en Belgique.</p>
+            <p className="t-small mt-2 text-ink/50">{BRAND.zoneLong}.</p>
           </Row>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Reveal from '@/lib/reveal';
 import { BELGIUM_VIEWBOX, PROVINCES } from '@/data/belgium';
+import { BRAND } from '@/data/site';
 import { cn } from '@/lib/utils';
 
 /**
@@ -73,7 +74,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
 
       <div className="mt-10 lg:col-span-7 lg:mt-0">
         <p className={cn('t-lead measure', light ? 'text-cream/70' : 'text-ink/70')}>
-          Notre siège est à Bruxelles. Nos chantiers, eux, ne s’arrêtent pas au ring : les dix provinces et la capitale.
+{BRAND.zoneSentence}
         </p>
 
         {/* Une liste, pas un mur de pastilles : deux colonnes réglées, chaque

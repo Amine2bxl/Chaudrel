@@ -9,38 +9,32 @@ import { cn } from '@/lib/utils';
 
 const PROJECT_TYPES = [
   'Rénovation complète',
-  'Cuisine',
-  'Salle de bain',
-  'Appartement',
-  'Maison',
-  'Commerce',
+  'Finitions intérieures',
+  'Aménagement extérieur',
+  'Toiture',
+  'Façade',
+  'Piscine',
   'Autre',
 ];
 
-/**
- * Aucune fourchette de prix n'est proposée tant que Chaudrel ne les a pas
- * validées (voir docs/VERIFICATION.md). Le visiteur indique seulement s'il a
- * déjà un budget en tête.
- */
-const BUDGET_OPTIONS = [
-  { id: 'defined', label: 'J’ai un budget défini' },
-  { id: 'range', label: 'J’ai un ordre d’idée' },
-  { id: 'unknown', label: 'Je ne sais pas encore' },
-];
+/* Le type de bien conditionne l'organisation du chantier bien plus que le
+   budget : il remplace l'étape budget, qui allongeait le parcours sans
+   qualifier la demande. */
+const PROPERTY_TYPES = ['Maison', 'Appartement', 'Commerce', 'Autre'];
 
-const STEPS = ['Projet', 'Description', 'Budget', 'Lieu', 'Coordonnées'];
+const STEPS = ['Projet', 'Description', 'Lieu', 'Coordonnées'];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+0-9][0-9\s./-]{7,}$/;
 
 const EMPTY = {
   projectType: '',
+  propertyType: '',
   description: '',
-  budget: '',
-  budgetDetail: '',
   city: '',
   postalCode: '',
-  name: '',
+  firstName: '',
+  lastName: '',
   phone: '',
   email: '',
   consent: false,
@@ -66,12 +60,15 @@ export default function Quote() {
 
   const validate = (s) => {
     const e = {};
-    if (s === 1 && !data.projectType) e.projectType = 'Sélectionnez un type de projet.';
+    if (s === 1) {
+      if (!data.projectType) e.projectType = 'Sélectionnez un type de projet.';
+      if (!data.propertyType) e.propertyType = 'Indiquez de quel type de bien il s’agit.';
+    }
     if (s === 2 && data.description.trim().length < 10) e.description = 'Décrivez le projet en quelques mots : pièces concernées et état actuel.';
-    if (s === 3 && !data.budget) e.budget = 'Indiquez si vous avez déjà un budget en tête.';
-    if (s === 4 && !data.city.trim()) e.city = 'Indiquez la commune du chantier.';
-    if (s === 5) {
-      if (data.name.trim().length < 2) e.name = 'Indiquez votre nom.';
+    if (s === 3 && !data.city.trim()) e.city = 'Indiquez la commune du chantier.';
+    if (s === 4) {
+      if (data.firstName.trim().length < 2) e.firstName = 'Indiquez votre prénom.';
+      if (data.lastName.trim().length < 2) e.lastName = 'Indiquez votre nom.';
       if (!PHONE_RE.test(data.phone.trim())) e.phone = 'Numéro incomplet. Exemple : 0477 27 31 18.';
       if (!EMAIL_RE.test(data.email.trim())) e.email = 'Adresse e-mail incomplète. Exemple : prenom@exemple.be';
       if (!data.consent) e.consent = 'Votre accord est nécessaire pour vous recontacter.';
@@ -175,7 +172,7 @@ export default function Quote() {
   return (
     <>
       <PageHero
-        title="Cinq questions, deux minutes."
+        title="Quatre questions, deux minutes."
         intro="Gratuit et sans engagement. Plus votre description est précise, plus notre réponse le sera."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Demander un devis' }]}
       />
@@ -233,6 +230,26 @@ export default function Quote() {
                       />
                     ))}
                   </div>
+
+                  <div className="mt-10">
+                    <span className="t-label text-ink/55">Type de bien</span>
+                    <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                      {PROPERTY_TYPES.map((t) => (
+                        <Choice
+                          key={t}
+                          name="propertyType"
+                          label={t}
+                          checked={data.propertyType === t}
+                          onChange={() => set('propertyType')(t)}
+                        />
+                      ))}
+                    </div>
+                    {errors.propertyType && (
+                      <p role="alert" className="t-small mt-4 text-error">
+                        {errors.propertyType}
+                      </p>
+                    )}
+                  </div>
                 </Fieldset>
               )}
 
@@ -254,31 +271,6 @@ export default function Quote() {
               )}
 
               {step === 3 && (
-                <Fieldset legend="Avez-vous un budget en tête ?" error={errors.budget}>
-                  <div className="grid gap-2.5 sm:grid-cols-2">
-                    {BUDGET_OPTIONS.map((b) => (
-                      <Choice
-                        key={b.id}
-                        name="budget"
-                        label={b.label}
-                        checked={data.budget === b.id}
-                        onChange={() => set('budget')(b.id)}
-                      />
-                    ))}
-                  </div>
-                  {(data.budget === 'defined' || data.budget === 'range') && (
-                    <Field
-                      id="budgetDetail"
-                      label="Montant envisagé (facultatif)"
-                      value={data.budgetDetail}
-                      onChange={set('budgetDetail')}
-                      className="mt-8"
-                    />
-                  )}
-                </Fieldset>
-              )}
-
-              {step === 4 && (
                 <Fieldset legend="Où se situe le chantier ?" error={errors.city}>
                   <div className="grid gap-8 sm:grid-cols-[2fr_1fr]">
                     <Field id="city" label="Commune" value={data.city} onChange={set('city')} error={errors.city} autoComplete="address-level2" />
@@ -291,14 +283,31 @@ export default function Quote() {
                       inputMode="numeric"
                     />
                   </div>
-                  <p className="t-small mt-6 text-ink/65">Nous intervenons partout en Belgique.</p>
+                  <p className="t-small mt-6 text-ink/65">{BRAND.zoneLong}.</p>
                 </Fieldset>
               )}
 
-              {step === 5 && (
+              {step === 4 && (
                 <Fieldset legend="Comment vous joindre ?">
                   <div className="space-y-8">
-                    <Field id="name" label="Nom" value={data.name} onChange={set('name')} error={errors.name} autoComplete="name" />
+                    <div className="grid gap-8 sm:grid-cols-2">
+                      <Field
+                        id="firstName"
+                        label="Prénom"
+                        value={data.firstName}
+                        onChange={set('firstName')}
+                        error={errors.firstName}
+                        autoComplete="given-name"
+                      />
+                      <Field
+                        id="lastName"
+                        label="Nom"
+                        value={data.lastName}
+                        onChange={set('lastName')}
+                        error={errors.lastName}
+                        autoComplete="family-name"
+                      />
+                    </div>
                     <Field id="phone" label="Téléphone" type="tel" value={data.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" />
                     <Field id="email" label="E-mail" type="email" value={data.email} onChange={set('email')} error={errors.email} autoComplete="email" />
                   </div>

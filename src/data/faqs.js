@@ -1,42 +1,54 @@
 /**
  * FAQ générale.
- * ⚠️ Aucun prix, délai ou garantie n'est affirmé ici tant que Chaudrel ne les
- *    a pas validés. Les réponses restent factuelles et renvoient vers le devis.
- *    Les entrées marquées `pending: true` contiennent un placeholder à compléter
- *    et sont exclues du JSON-LD FAQPage.
+ *
+ * Les réponses ne s'appuient que sur des informations vérifiées : les métiers
+ * annoncés par chaudrelrenovation.be, la zone d'intervention confirmée par
+ * Chaudrel, et les deux engagements confirmés (devis gratuit sans engagement,
+ * réponse sous 48 h).
+ *
+ * ⚠️ Aucun prix ni durée de chantier n'est affirmé. La V1 annonçait « 3 à 6
+ *    semaines pour une cuisine » et « 2 à 4 mois pour une rénovation
+ *    complète » : ces durées n'ont pas été confirmées, elles ne sont donc pas
+ *    reprises. Les entrées `pending: true` sont exclues du JSON-LD FAQPage.
  */
+
+import { BRAND } from '@/data/site';
 
 export const FAQS = [
   {
-    q: 'Combien coûte une rénovation ?',
-    a: "Chaque chantier est différent : surface, état du bâtiment, techniques et matériaux font varier le budget. Nous établissons un devis détaillé après une visite sur place, gratuitement et sans engagement.",
+    q: 'Quels travaux réalisez-vous ?',
+    a: "Six métiers : la rénovation complète, les finitions intérieures (chape, carrelage, parquet, cloisons, plafonnage, peinture), l'aménagement extérieur (terrassement, pavage, terrasses, annexes), la toiture (charpente, couverture, étanchéité, zinguerie), la façade (ravalement, isolation, parement, rejointoiement) et le gros œuvre de piscine.",
   },
   {
-    q: 'Combien de temps prend une rénovation ?',
-    a: "La durée dépend de l'ampleur des travaux. Nous vous remettons un planning précis avec le devis, et nous vous tenons informé à chaque étape du chantier.",
+    q: 'Où intervenez-vous ?',
+    a: `${BRAND.zoneSentence} Notre ancrage historique reste Bruxelles et sa périphérie, mais nous nous déplaçons dans les dix provinces.`,
   },
   {
-    q: 'Travaillez-vous à Bruxelles ?',
-    a: "Oui. Chaudrel intervient à Bruxelles et dans sa périphérie : Schaerbeek, Uccle, Ixelles, Woluwe, Etterbeek, ainsi que Waterloo, Tervuren, La Hulpe et Rixensart.",
+    q: 'Le devis est-il gratuit ?',
+    a: "Oui, gratuit et sans engagement. Vous décrivez votre projet, nous venons voir le lieu, puis nous remettons un devis détaillé poste par poste. Nous répondons à votre demande sous 48 heures.",
   },
   {
-    q: 'Faites-vous des rénovations complètes ?',
-    a: "Oui. Nous prenons en charge des rénovations complètes d'appartements, de maisons et de commerces, avec la coordination de tous les corps de métier.",
+    q: 'Comment se déroule un projet ?',
+    a: "En sept étapes : premier contact, analyse du projet, visite sur place, devis détaillé, planification, travaux, livraison. Un seul interlocuteur suit le chantier du début à la fin.",
   },
   {
-    q: 'Peut-on demander un devis gratuitement ?',
-    a: "Oui. La demande de devis et la visite sont gratuites et sans engagement. Vous pouvez utiliser le formulaire en ligne, nous appeler ou nous écrire sur WhatsApp.",
+    q: 'Prenez-vous en charge une rénovation complète ?',
+    a: "Oui, du gros œuvre aux finitions, pour un appartement, une maison ou un commerce. Nous coordonnons tous les corps de métier : vous n'avez qu'un seul contact.",
   },
   {
-    q: 'Est-ce que vous vous occupez des matériaux ?',
-    a: "Nous vous accompagnons dans le choix des matériaux et nous nous chargeons de leur approvisionnement lorsque cela fait partie du devis. Vous restez décisionnaire sur les finitions.",
+    q: 'Quels matériaux utilisez-vous ?',
+    a: "Cela dépend du poste : tuiles ou ardoises en toiture inclinée, EPDM® ou Derbigum® en toiture plate, Gyproc® et ossature Metal Stud® en cloisons, briques de parement, crépi ou cimentage en façade. Nous pouvons fournir les matériaux ou poser les vôtres ; le devis distingue toujours la fourniture de la pose.",
+  },
+  {
+    q: 'Combien de temps durent les travaux ?',
+    a: "La durée dépend de l'ampleur du chantier et de l'état du bâtiment. Nous vous remettons un planning précis avec le devis, et le calendrier est fixé avant le premier jour de travaux.",
+  },
+  {
+    q: 'Qui suit le chantier ?',
+    a: "Un interlocuteur unique, présent sur le chantier. C'est une entreprise familiale : le patron passe sur les chantiers, et vous savez à tout moment où en sont les travaux.",
   },
   {
     q: 'Travaillez-vous avec des architectes ?',
-    a: "Nous collaborons volontiers avec l'architecte de votre choix. Si votre projet nécessite un architecte, nous vous le disons dès la visite.",
-  },
-  {
-    q: 'Comment démarre un projet ?',
-    a: "Vous nous contactez, nous convenons d'une visite, nous vous remettons un devis détaillé. Une fois le devis accepté, nous planifions le chantier avec vous.",
+    a: "Nous collaborons volontiers avec l'architecte de votre choix. Si votre projet en nécessite un, nous vous le disons dès la visite.",
   },
 ];

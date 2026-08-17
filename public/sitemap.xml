@@ -85,49 +85,31 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/services/cuisine</loc>
+    <loc>https://chaudrel.be/services/finitions-interieures</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/services/salle-de-bain</loc>
+    <loc>https://chaudrel.be/services/amenagement-exterieur</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/services/peinture</loc>
+    <loc>https://chaudrel.be/services/toiture</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/services/electricite</loc>
+    <loc>https://chaudrel.be/services/facade</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/services/plomberie</loc>
-    <lastmod>2026-08-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://chaudrel.be/services/sols-et-revetements</loc>
-    <lastmod>2026-08-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://chaudrel.be/services/menuiserie</loc>
-    <lastmod>2026-08-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://chaudrel.be/services/amenagement-interieur</loc>
+    <loc>https://chaudrel.be/services/piscine</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

@@ -7,7 +7,7 @@ import { EVENTS, track } from '@/lib/analytics';
 /** Bloc de conversion en fin de page. Une phrase, deux actions, les numéros. */
 export default function CTASection({
   title = 'Un projet en tête ?',
-  text = 'Répondez à cinq questions. Nous organisons une visite et vous remettons un devis détaillé, gratuitement.',
+  text = 'Quatre questions, deux minutes. Nous organisons une visite et vous remettons un devis détaillé, gratuitement.',
   source = 'cta',
 }) {
   const { openDialog } = useContactDialog();

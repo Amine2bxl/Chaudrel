@@ -1,10 +1,27 @@
 /**
- * Services Chaudrel.
- * ⚠️ La liste doit être validée par Chaudrel : ne pas ajouter de prestation
- *    que l'entreprise ne réalise pas réellement (voir docs/VERIFICATION.md).
+ * Métiers Chaudrel — source unique.
  *
- * Ajouter un service = ajouter un objet ici. Aucun composant à modifier.
- * Règle d'écriture : `excerpt` = une phrase, `intro` = trois lignes maximum.
+ * Cette liste vient du site historique chaudrelrenovation.be, page par page :
+ * finitions intérieures, aménagement extérieur, toiture, façade, gros œuvre de
+ * piscine. Ce sont les métiers que l'entreprise annonce elle-même, avec ses
+ * termes et ses marques (Metal Stud®, Gyproc®, EPDM®, Derbigum®, Velux®).
+ *
+ * La version précédente affichait des services repris de la V1 — électricité,
+ * plomberie, menuiserie, cuisine, salle de bain en têtes de chapitre — que le
+ * site historique ne présente nulle part comme des métiers. Ces travaux
+ * existent bien, mais comme postes à l'intérieur d'un chantier : ils sont
+ * revenus dans les `works` là où ils apparaissent réellement.
+ *
+ * Structure d'un métier :
+ *   slug, title, image, excerpt (une phrase), intro (trois lignes maximum)
+ *   groups  postes réels, groupés — c'est ce qui permet d'afficher la
+ *           catégorie d'abord et le détail ensuite, plutôt qu'une liste de
+ *           trente lignes d'entrée de jeu
+ *   faqs    questions propres au métier
+ *   projectTags  catégories de réalisations à rapprocher
+ *
+ * ⚠️ Ne jamais ajouter une prestation que l'entreprise ne réalise pas
+ *    (voir docs/VERIFICATION.md).
  */
 
 export const SERVICES = [
@@ -12,16 +29,23 @@ export const SERVICES = [
     slug: 'renovation-complete',
     title: 'Rénovation complète',
     image: '/photos/pf-1.webp',
-    excerpt: "Tout le chantier, un seul interlocuteur.",
+    excerpt: 'Tout le chantier, un seul interlocuteur.',
     intro:
-      "Nous prenons en charge la rénovation entière d'un appartement, d'une maison ou d'un commerce : démolition, techniques, finitions, livraison. Vous parlez à une seule personne, du premier rendez-vous aux clés en main.",
-    works: [
-      'Démolition et préparation',
-      'Cloisons et maçonnerie',
-      'Électricité et plomberie',
-      'Sols, murs et plafonds',
-      'Menuiserie et aménagement',
-      'Finitions et nettoyage de fin de chantier',
+      "Nous prenons en charge la rénovation entière d'un appartement, d'une maison ou d'un commerce : gros œuvre, techniques, finitions, livraison. Vous parlez à une seule personne, du premier rendez-vous aux clés en main.",
+    groups: [
+      {
+        title: 'Le chantier',
+        items: [
+          'Démolition et préparation',
+          'Cloisons et maçonnerie',
+          'Électricité et plomberie',
+          'Sols, murs et plafonds',
+        ],
+      },
+      {
+        title: 'La livraison',
+        items: ['Menuiserie et aménagement', 'Finitions', 'Nettoyage de fin de chantier'],
+      },
     ],
     faqs: [
       {
@@ -36,117 +60,169 @@ export const SERVICES = [
     projectTags: ['renovation-complete'],
   },
   {
-    slug: 'cuisine',
-    title: 'Cuisine',
+    slug: 'finitions-interieures',
+    title: 'Finitions intérieures',
     image: '/photos/svc-cuisine.webp',
-    excerpt: 'Une pièce repensée, pas seulement des meubles posés.',
+    excerpt: 'Le parachèvement, du sol au plafond.',
     intro:
-      "Nous revoyons l'implantation, reprenons l'électricité et la plomberie, posons les sols, les meubles et le plan de travail. Vous choisissez les matériaux, nous nous occupons du reste.",
-    works: [
-      "Dépose de l'ancienne cuisine",
-      'Électricité, eau, évacuation',
-      'Sol et revêtements muraux',
-      'Meubles et plan de travail',
-      'Crédence, éclairage, finitions',
+      "C'est le métier d'origine de Chaudrel : tout ce qui vient après le gros œuvre et qui décide de l'allure finale d'une pièce. Sols, cloisons, plafonnage, peinture.",
+    groups: [
+      {
+        title: 'Sols',
+        items: ['Pose de chape', 'Carrelage', 'Parquet', 'Joints', 'Plinthes'],
+      },
+      {
+        title: 'Murs et plafonds',
+        items: [
+          'Ossature bois ou Metal Stud®',
+          'Isolation',
+          'Pose de cloisons',
+          'Pose de Gyproc®',
+          'Plafonnage',
+          'Enduisage',
+        ],
+      },
+      {
+        title: 'Peinture',
+        items: ['Préparation des surfaces', 'Mise en peinture'],
+      },
     ],
     faqs: [
       {
-        q: 'Fournissez-vous les meubles ?',
-        a: "Nous vous accompagnons dans le choix des matériaux et des fournisseurs. Le détail figure dans le devis.",
+        q: 'Intervenez-vous seulement sur les finitions ?',
+        a: "Oui, c'est possible. Nous reprenons un chantier au stade du parachèvement comme nous menons une rénovation complète.",
+      },
+      {
+        q: 'Fournissez-vous les matériaux ?',
+        a: "Nous pouvons les fournir ou poser les vôtres. Le devis distingue toujours la fourniture de la pose.",
       },
     ],
-    projectTags: ['cuisine'],
+    projectTags: ['renovation-complete', 'appartement', 'maison'],
   },
   {
-    slug: 'salle-de-bain',
-    title: 'Salle de bain',
-    image: '/photos/svc-salle-de-bain.webp',
-    excerpt: "L'étanchéité d'abord, l'esthétique ensuite.",
+    slug: 'amenagement-exterieur',
+    title: 'Aménagement extérieur',
+    image: '/photos/svc-jardin.webp',
+    excerpt: 'Du terrassement à la terrasse finie.',
     intro:
-      "Douche à l'italienne, baignoire, carrelage grand format, meubles et robinetterie. Ce qui ne se voit pas (étanchéité, évacuations, ventilation) décide de la durée de vie de la pièce.",
-    works: [
-      'Démolition et évacuation',
-      'Plomberie et électricité',
-      'Étanchéité et chape',
-      'Carrelage sol et murs',
-      'Sanitaires et mobilier',
+      "Nous préparons le terrain, posons les revêtements et montons les structures : allées, terrasses, annexes. Le support est repris avant la pose, c'est ce qui fait tenir un extérieur dans le temps.",
+    groups: [
+      {
+        title: 'Terrain',
+        items: ['Terrassement', 'Nivellement', 'Préparation de terrain'],
+      },
+      {
+        title: 'Revêtements',
+        items: [
+          'Pavage',
+          'Dallage',
+          'Pose de bordures',
+          'Céramiques extérieures',
+          'Allées et entrées de garage',
+          'Terrasses béton ou bois',
+        ],
+      },
+      {
+        title: 'Structures',
+        items: ['Annexes', 'Vérandas', 'Pergolas', 'Carports', 'Abris de jardin'],
+      },
     ],
     faqs: [
       {
-        q: 'Combien de temps dure le chantier ?',
-        a: "Cela dépend de la surface et des travaux techniques. Le planning précis est remis avec le devis.",
+        q: 'Reprenez-vous une allée existante ?',
+        a: "Oui. Selon son état, nous la démolissons et reprenons le support avant de poser le nouveau revêtement.",
       },
     ],
-    projectTags: ['salle-de-bain'],
+    projectTags: ['maison'],
   },
   {
-    slug: 'peinture',
-    title: 'Peinture',
+    slug: 'toiture',
+    title: 'Toiture',
+    image: '/photos/svc-toiture.webp',
+    excerpt: 'Charpente, couverture, étanchéité, zinguerie.',
+    intro:
+      "Toitures inclinées et plates, en rénovation comme en construction. Nous reprenons la charpente, la couverture, l'isolation et l'évacuation des eaux.",
+    groups: [
+      {
+        title: 'Charpente',
+        items: ['Charpente traditionnelle', 'Charpente préfabriquée', 'Cheminée'],
+      },
+      {
+        title: 'Couverture',
+        items: [
+          'Toiture inclinée en tuiles ou ardoises',
+          'Toiture plate en EPDM® ou Derbigum®',
+          'Pose de Velux® et fenêtres de toit',
+          'Étanchéité',
+          'Isolation',
+        ],
+      },
+      {
+        title: 'Zinguerie',
+        items: ['Gouttières', 'Corniches', 'Chéneaux', "Descentes d'eau de pluie"],
+      },
+    ],
+    faqs: [
+      {
+        q: 'Faites-vous les réparations ponctuelles ?',
+        a: "Oui, comme les réfections complètes. Nous passons voir la toiture avant de chiffrer quoi que ce soit.",
+      },
+    ],
+    projectTags: ['maison'],
+  },
+  {
+    slug: 'facade',
+    title: 'Façade',
     image: '/photos/pf-2.webp',
-    excerpt: 'La qualité d’une peinture se joue avant le premier coup de rouleau.',
+    excerpt: 'Création, ravalement, isolation par l’extérieur.',
     intro:
-      "Rebouchage, enduit, ponçage, sous-couche, finition. Le chantier est protégé, les angles et les plinthes sont nets, la pièce est rendue propre.",
-    works: ['Rebouchage et enduit', 'Ponçage', 'Sous-couche', 'Murs et plafonds', 'Boiseries'],
-    faqs: [],
-    projectTags: ['renovation-complete', 'appartement'],
+      "La façade protège le bâtiment autant qu'elle le montre. Nous la créons, la ravalons, l'isolons et reprenons les joints.",
+    groups: [
+      {
+        title: 'Traitement',
+        items: ['Création de façade', 'Ravalement', 'Isolation'],
+      },
+      {
+        title: 'Parements et finitions',
+        items: ['Briques de parement', 'Crépi', 'Cimentage', 'Étanchéité', 'Joints et rejointoiement'],
+      },
+    ],
+    faqs: [
+      {
+        q: "L'isolation de façade change-t-elle l'aspect du bâtiment ?",
+        a: "Oui, elle modifie l'épaisseur des murs et le parement. Nous en parlons avant, avec les options possibles.",
+      },
+    ],
+    projectTags: ['maison'],
   },
   {
-    slug: 'electricite',
-    title: 'Électricité',
-    image: '/photos/svc-nettoyage.webp',
-    excerpt: 'Une installation pensée pour votre usage réel.',
+    slug: 'piscine',
+    title: 'Piscine',
+    image: '/photos/svc-piscine.webp',
+    excerpt: 'Le gros œuvre, du terrassement aux finitions.',
     intro:
-      "Tableau, circuits, points lumineux, prises. Les travaux sont coordonnés avec le reste du chantier pour éviter de rouvrir ce qui vient d'être refermé.",
-    // TODO_VALIDATION : préciser si Chaudrel prend en charge la mise en conformité
-    // et le contrôle par un organisme agréé.
-    works: ['Tableau électrique', 'Points lumineux', 'Prises et interrupteurs', 'Circuits dédiés'],
-    faqs: [],
-    projectTags: ['renovation-complete'],
-  },
-  {
-    slug: 'plomberie',
-    title: 'Plomberie',
-    image: '/photos/svc-salle-de-bain.webp',
-    excerpt: 'Les réseaux suivent le nouvel aménagement, pas l’inverse.',
-    intro:
-      "Alimentation, évacuations, déplacement de points d'eau et pose des sanitaires, en coordination avec le carrelage et les finitions.",
-    works: ['Alimentation eau chaude / froide', 'Évacuations', "Déplacement de points d'eau", 'Pose de sanitaires'],
-    faqs: [],
-    projectTags: ['salle-de-bain'],
-  },
-  {
-    slug: 'sols-et-revetements',
-    title: 'Sols & revêtements',
-    image: '/photos/pf-3.webp',
-    excerpt: 'Un calepinage étudié avant la première découpe.',
-    intro:
-      "Carrelage, pierre naturelle, parquet. Le support est mis à niveau, la pose est calepinée à l'avance, les raccords et les plinthes sont soignés.",
-    works: ['Chape et ragréage', 'Carrelage', 'Pierre naturelle', 'Parquet', 'Plinthes et finitions'],
-    faqs: [],
-    projectTags: ['renovation-complete', 'maison'],
-  },
-  {
-    slug: 'menuiserie',
-    title: 'Menuiserie',
-    image: '/photos/pf-4.webp',
-    excerpt: 'Du sur-mesure là où le standard ne tombe jamais juste.',
-    intro:
-      "Rangements intégrés, habillages, portes intérieures, éléments bois dessinés pour votre espace et ajustés sur place.",
-    works: ['Rangements intégrés', 'Habillages', 'Portes intérieures', 'Éléments sur mesure'],
-    faqs: [],
-    projectTags: ['cuisine', 'appartement'],
-  },
-  {
-    slug: 'amenagement-interieur',
-    title: 'Aménagement intérieur',
-    image: '/photos/pf-2.webp',
-    excerpt: 'Parfois, il ne manque pas de place : il manque une cloison en moins.',
-    intro:
-      "Ouvrir, cloisonner, redistribuer. Nous étudions la circulation et la lumière avant de toucher au bâti, pour que l'espace serve vraiment votre quotidien.",
-    works: ['Cloisons', 'Ouvertures', 'Faux plafonds', 'Éclairage intégré'],
-    faqs: [],
-    projectTags: ['appartement', 'maison'],
+      "Nous réalisons la partie construction d'une piscine : creuser, maçonner, étanchéifier, finir les contours. Une piscine tient d'abord à son gros œuvre.",
+    groups: [
+      {
+        title: 'Gros œuvre',
+        items: ['Terrassement', 'Maçonnerie', 'Pose ou construction du bassin'],
+      },
+      {
+        title: 'Finitions',
+        items: ['Étanchéité', 'Contours', 'Raccords et finitions'],
+      },
+    ],
+    faqs: [
+      {
+        q: 'Vous occupez-vous aussi de la technique ?',
+        a: "Nous prenons en charge le gros œuvre et les finitions. Pour la filtration et le traitement de l'eau, nous travaillons avec un spécialiste.",
+      },
+    ],
+    projectTags: ['maison'],
   },
 ];
 
 export const getService = (slug) => SERVICES.find((s) => s.slug === slug);
+
+/** Tous les postes d'un métier, à plat — pour les listes courtes et le SEO. */
+export const serviceItems = (service) => (service.groups ?? []).flatMap((g) => g.items);

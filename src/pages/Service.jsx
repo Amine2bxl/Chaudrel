@@ -10,11 +10,36 @@ import { SERVICES, getService } from '@/data/services';
 import { projectsForTags } from '@/data/projects';
 import { BRAND } from '@/data/site';
 
+/**
+ * Anciens métiers de la V1 vers les métiers réels.
+ *
+ * La V1 découpait l'offre par pièce et par corps de métier (cuisine, salle de
+ * bain, électricité…) ; le site historique la découpe par métier de chantier.
+ * Ces URL ont pu être indexées ou partagées : elles pointent vers le métier qui
+ * couvre réellement ces travaux, plutôt que de renvoyer tout le monde sur
+ * l'index.
+ */
+const LEGACY_SLUGS = {
+  cuisine: 'finitions-interieures',
+  'salle-de-bain': 'finitions-interieures',
+  peinture: 'finitions-interieures',
+  'sols-et-revetements': 'finitions-interieures',
+  menuiserie: 'finitions-interieures',
+  'amenagement-interieur': 'finitions-interieures',
+  electricite: 'renovation-complete',
+  plomberie: 'renovation-complete',
+  jardin: 'amenagement-exterieur',
+  nettoyage: 'renovation-complete',
+};
+
 export default function Service() {
   const { slug } = useParams();
   const service = getService(slug);
 
-  if (!service) return <Navigate to="/services" replace />;
+  if (!service) {
+    const moved = LEGACY_SLUGS[slug];
+    return <Navigate to={moved ? `/services/${moved}` : '/services'} replace />;
+  }
 
   const related = projectsForTags(service.projectTags || [], 3);
   const others = SERVICES.filter((s) => s.slug !== service.slug);
@@ -38,17 +63,24 @@ export default function Service() {
             <div className="lg:col-span-7">
               <p className="t-h3 measure text-ink">{service.intro}</p>
 
-              {service.works?.length > 0 && (
-                <div className="mt-14">
-                  <span className="t-label text-ink/65">Ce que comprend le poste</span>
-                  <ul className="mt-6 border-t border-ink/12">
-                    {service.works.map((w, i) => (
-                      <Reveal as="li" key={w} delay={i * 60} className="flex gap-6 border-b border-ink/12 py-4">
-                        <span className="t-num text-ink/65">{String(i + 1).padStart(2, '0')}</span>
-                        <span className="t-body text-ink/70">{w}</span>
-                      </Reveal>
-                    ))}
-                  </ul>
+              {/* Les postes sont groupés par nature plutôt qu'alignés en une
+                  liste numérotée : trente lignes d'affilée ne se lisent pas, et
+                  la numérotation laissait croire à un ordre d'exécution. */}
+              {service.groups?.length > 0 && (
+                <div className="mt-14 space-y-10">
+                  {service.groups.map((g, gi) => (
+                    <Reveal key={g.title} delay={gi * 90}>
+                      <h2 className="t-label text-ink/55">{g.title}</h2>
+                      <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-2.5">
+                        {g.items.map((item) => (
+                          <li key={item} className="t-body flex items-baseline gap-2.5 text-ink/75">
+                            <span aria-hidden="true" className="h-1 w-1 flex-none rounded-full bg-umber" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </Reveal>
+                  ))}
                 </div>
               )}
             </div>
