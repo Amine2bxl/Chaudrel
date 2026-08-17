@@ -42,7 +42,7 @@ export default function Method() {
       <Section tone="white">
         <Container>
           <SectionHeading title="Quatre règles qui ne bougent pas." />
-          <div className="mt-14 grid gap-x-16 gap-y-12 lg:mt-20 lg:grid-cols-2">
+          <div className="mt-block grid gap-x-16 gap-y-12 lg:grid-cols-2">
             {PRINCIPES.map((p, i) => (
               <Reveal key={p.title} delay={i * 90} className="border-t border-ink/12 pt-6">
                 <h3 className="t-h2 text-[1.5rem] lg:text-[1.75rem]">{p.title}</h3>

@@ -58,11 +58,11 @@ export default function Projects() {
           </div>
 
           {items.length > 0 ? (
-            <ProjectShowcase projects={items} className="mt-16 lg:mt-24" />
+            <ProjectShowcase projects={items} className="mt-block" />
           ) : (
             /* Un état vide dit ce qui se passe et propose la sortie : ici,
                revenir à la sélection complète plutôt que rester bloqué. */
-            <div className="mt-16">
+            <div className="mt-block">
               <p className="t-lead text-ink/60">
                 Aucun chantier publié dans cette catégorie pour le moment.
               </p>

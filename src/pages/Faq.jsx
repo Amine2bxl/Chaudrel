@@ -21,7 +21,7 @@ export default function Faq() {
           <FaqAccordion items={FAQS} />
 
           {serviceFaqs.length > 0 && (
-            <div className="mt-20">
+            <div className="mt-block">
               <SectionHeading title="Questions plus précises." />
               <FaqAccordion
                 className="mt-12"

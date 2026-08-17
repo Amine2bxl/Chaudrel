@@ -104,7 +104,7 @@ export default function Project() {
           {/* Avant / après, quand la comparaison existe : elle prime sur la
               galerie car c'est la preuve la plus forte. */}
           {project.beforeAfter && (
-            <div className="mt-20 lg:mt-28">
+            <div className="mt-block">
               <SectionHeading title="Le même espace, avant et après." />
               <div className="mt-10 max-w-4xl">
                 <BeforeAfter
@@ -119,7 +119,7 @@ export default function Project() {
 
           {/* Galerie : première image en grand, les suivantes en appui. */}
           {gallery.length > 0 && (
-            <div className="mt-20 grid gap-8 lg:mt-28 lg:grid-cols-12">
+            <div className="mt-block grid gap-8 lg:grid-cols-12">
               {gallery.map((im, i) => (
                 <Media
                   key={im.src}
@@ -133,7 +133,7 @@ export default function Project() {
             </div>
           )}
 
-          <div className="mt-20 lg:mt-28">
+          <div className="mt-block">
             <ProjectNav prev={prev} next={next} />
           </div>
         </Container>

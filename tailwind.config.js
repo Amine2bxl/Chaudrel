@@ -49,6 +49,7 @@ export default {
       spacing: {
         section: 'var(--space-section)',
         block: 'var(--space-block)',
+        group: 'var(--space-group)',
       },
       maxWidth: {
         page: '1320px',

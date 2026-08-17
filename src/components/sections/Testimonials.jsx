@@ -29,7 +29,7 @@ export default function Testimonials({ limit, tone = 'white' }) {
 
         {/* Le premier avis est traité comme une citation d'ouverture, les
             suivants comme des notes en marge. Pas de colonnes identiques. */}
-        <div className="mt-14 lg:mt-20 lg:grid lg:grid-cols-12 lg:gap-16">
+        <div className="mt-block lg:grid lg:grid-cols-12 lg:gap-16">
           {items[0] && (
             <Reveal as="figure" className="lg:col-span-7">
               <blockquote className="t-h2 text-[1.375rem] leading-[1.45] text-ink sm:text-[1.625rem]">
@@ -43,7 +43,7 @@ export default function Testimonials({ limit, tone = 'white' }) {
             </Reveal>
           )}
 
-          <div className="mt-14 space-y-10 lg:col-span-4 lg:col-start-9 lg:mt-0">
+          <div className="mt-block space-y-10 lg:col-span-4 lg:col-start-9 lg:mt-0">
             {items.slice(1).map((t, i) => (
               <Reveal as="figure" key={t.id} delay={120 + i * 90} className="border-t border-ink/12 pt-5">
                 <blockquote className="t-small text-ink/70">« {t.quote} »</blockquote>

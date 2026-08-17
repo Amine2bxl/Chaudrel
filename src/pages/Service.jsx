@@ -67,7 +67,7 @@ export default function Service() {
                   liste numérotée : trente lignes d'affilée ne se lisent pas, et
                   la numérotation laissait croire à un ordre d'exécution. */}
               {service.groups?.length > 0 && (
-                <div className="mt-14 space-y-10">
+                <div className="mt-block space-y-10">
                   {service.groups.map((g, gi) => (
                     <Reveal key={g.title} delay={gi * 90}>
                       <h2 className="t-label text-ink/55">{g.title}</h2>
@@ -95,7 +95,7 @@ export default function Service() {
                 <Button to="/devis" variant="solid" className="mt-7 w-full">
                   Demander un devis
                 </Button>
-                <p className="t-small mt-5 text-ink/65">Zone d’intervention : {BRAND.zone}.</p>
+                <p className="t-small mt-5 text-ink/65">{BRAND.zoneLong}.</p>
               </div>
 
               <nav aria-label="Autres services" className="mt-12">
@@ -119,7 +119,7 @@ export default function Service() {
         <Section tone="white">
           <Container>
             <SectionHeading title="Des chantiers de ce type." />
-            <ProjectGrid projects={related} className="mt-14" />
+            <ProjectGrid projects={related} className="mt-block" />
           </Container>
         </Section>
       )}
@@ -127,7 +127,7 @@ export default function Service() {
       <Section tone="bark">
         <Container>
           <SectionHeading tone="light" title="Le déroulé, étape par étape." />
-          <ProcessCurve tone="light" className="mt-16 lg:mt-24" />
+          <ProcessCurve tone="light" className="mt-block" />
         </Container>
       </Section>
 

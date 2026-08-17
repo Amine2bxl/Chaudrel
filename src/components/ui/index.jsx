@@ -15,7 +15,8 @@ const TONES = {
   white: 'bg-shell text-ink', // « white » historique : coquille, jamais blanc pur
   shell: 'bg-shell text-ink',
   sand: 'bg-sand text-ink',
-  bark: 'bg-bark text-cream',
+  // `on-dark` déclenche la compensation typographique du texte clair.
+  bark: 'bg-bark text-cream on-dark',
 };
 
 export function Section({ id, tone = 'cream', className, children, ...rest }) {

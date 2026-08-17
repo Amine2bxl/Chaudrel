@@ -26,7 +26,7 @@ export default function Services() {
             title="Comment se déroule un chantier."
             text="Le même déroulé pour une salle de bain que pour une maison entière. Seule la durée change."
           />
-          <ProcessCurve tone="light" className="mt-16 lg:mt-24" />
+          <ProcessCurve tone="light" className="mt-block" />
         </Container>
       </Section>
 

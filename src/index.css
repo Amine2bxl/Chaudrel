@@ -103,13 +103,15 @@
   }
 
   /* H3 reste en grotesque : sous les grands titres serif, il structure sans
-     rivaliser. Le contraste des deux familles porte la hiérarchie. */
+     rivaliser — le contraste des deux familles porte la hiérarchie. Un cran
+     plus haut que le texte courant, et pas seulement par la graisse : à 18 px
+     semi-gras contre 17 px normal, les deux rôles se confondaient. */
   .t-h3 {
     font-family: var(--font-ui);
     font-weight: 600;
-    font-size: clamp(1.125rem, 1.6vw, 1.3125rem);
-    line-height: 1.3;
-    letter-spacing: -0.012em;
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    line-height: 1.28;
+    letter-spacing: -0.015em;
   }
 
   /* Phrase d'introduction : plus grande que le texte courant, plus légère
@@ -163,6 +165,35 @@
   .rule-light {
     border: 0;
     border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  /* ---------- Texte clair sur fond sombre ----------
+     Un même réglage ne rend pas pareil dans les deux sens. Sur fond sombre,
+     les contreformes se referment et les fûts paraissent plus fins : il faut
+     un peu plus d'interligne, un peu plus d'interlettrage, et de la couleur
+     plutôt que du gris. `.on-dark` est posé par <Section tone="bark"> ; les
+     titres n'y touchent pas, seul le texte suivi en profite. */
+  .on-dark .t-body,
+  .on-dark .t-lead,
+  .on-dark .t-small {
+    letter-spacing: 0.005em;
+  }
+
+  .on-dark .t-body {
+    line-height: 1.75;
+  }
+
+  .on-dark .t-lead {
+    line-height: 1.6;
+  }
+
+  .on-dark .t-small {
+    line-height: 1.65;
+  }
+
+  /* Les capitales espacées perdent le plus à contraste inversé. */
+  .on-dark .t-label {
+    letter-spacing: 0.16em;
   }
 
   /* ---------- Champs de saisie ----------

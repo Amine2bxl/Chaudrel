@@ -13,7 +13,7 @@ export default function CTASection({
   const { openDialog } = useContactDialog();
 
   return (
-    <section className="border-t border-cream/10 bg-bark py-section text-cream">
+    <section className="on-dark border-t border-cream/10 bg-bark py-section text-cream">
       <Container>
         <div className="lg:grid lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-7">

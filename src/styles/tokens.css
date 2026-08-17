@@ -42,9 +42,17 @@
   --r-logo: 0.8125rem; /* 13 px sur 40 px — carré adouci */
 
   /* ---------- Rythme vertical ----------
-     Une seule variable pilote la respiration de toutes les sections. */
+     Trois intervalles nommés, et rien entre les deux. Le rythme d'une page
+     tient au contraste entre le serré et le large : cinq valeurs différentes
+     pour séparer deux blocs ne créent pas de nuance, elles effacent la
+     cadence. Les micro-écarts internes à un composant (intitulé → valeur)
+     restent libres, ils ne portent pas la structure.
+       section  d'une section à l'autre
+       block    d'un titre à son contenu, d'un bloc majeur au suivant
+       group    d'un groupe apparenté au suivant, à l'intérieur d'un bloc */
   --space-section: clamp(4.5rem, 8vw, 8.5rem);
   --space-block: clamp(2.5rem, 4.5vw, 4.5rem);
+  --space-group: clamp(1.75rem, 2.5vw, 2.5rem);
 
   /* ---------- Élévation ----------
      Toujours un décalage vertical et un flou, teintés dans le brun du fond. */

@@ -174,7 +174,17 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
               style={{ transitionDelay: `${900 + i * 90}ms` }}
             >
               <span className={cn('t-label block', light ? 'text-umber-light' : 'text-umber')}>{s.n}</span>
-              <h3 className={cn('t-h3 mt-2 text-balance', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
+              {/* Pas `t-h3` ici : dans sept colonnes de 150 px, ce corps casse
+                  les titres en deux lignes et désaligne la rangée. C'est un
+                  repère de graphique, pas un titre de section. */}
+              <h3
+                className={cn(
+                  'mt-2 text-balance font-sans text-[1.0625rem] font-semibold leading-[1.25] tracking-[-0.012em]',
+                  light ? 'text-cream' : 'text-ink'
+                )}
+              >
+                {s.title}
+              </h3>
               {/* Le texte reste dans le document pour les lecteurs d'écran et
                   l'indexation ; seule sa présentation change. */}
               <span className="sr-only">{s.text}</span>
