@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import MobileBar from '@/components/layout/MobileBar';
 import Footer from '@/components/layout/Footer';
+import ContactDialog from '@/components/layout/ContactDialog';
+import { ContactDialogProvider } from '@/lib/contactDialog';
 import Seo from '@/lib/SeoHead';
 import Home from '@/pages/Home';
 import Projects from '@/pages/Projects';
@@ -13,7 +15,6 @@ import Method from '@/pages/Method';
 import About from '@/pages/About';
 import Faq from '@/pages/Faq';
 import Quote from '@/pages/Quote';
-import Contact from '@/pages/Contact';
 import Legal from '@/pages/Legal';
 import NotFound from '@/pages/NotFound';
 
@@ -27,28 +28,34 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-cream">
-      <Seo />
-      <ScrollToTop />
-      <Navbar />
-      <main id="main">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/realisations" element={<Projects />} />
-          <Route path="/realisations/:slug" element={<Project />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/services/:slug" element={<Service />} />
-          <Route path="/methode" element={<Method />} />
-          <Route path="/a-propos" element={<About />} />
-          <Route path="/faq" element={<Faq />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/devis" element={<Quote />} />
-          <Route path="/legal/politique-mentions" element={<Legal />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-      <MobileBar />
-    </div>
+    <ContactDialogProvider>
+      <div className="min-h-screen bg-cream">
+        <Seo />
+        <ScrollToTop />
+        <Navbar />
+        <main id="main">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/realisations" element={<Projects />} />
+            <Route path="/realisations/:slug" element={<Project />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/:slug" element={<Service />} />
+            <Route path="/methode" element={<Method />} />
+            <Route path="/a-propos" element={<About />} />
+            <Route path="/faq" element={<Faq />} />
+            <Route path="/devis" element={<Quote />} />
+            <Route path="/legal/politique-mentions" element={<Legal />} />
+            {/* La page contact a été retirée : ses coordonnées vivent dans la
+                fenêtre de contact. On redirige plutôt que de renvoyer une 404
+                aux liens et favoris existants. */}
+            <Route path="/contact" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <Footer />
+        <MobileBar />
+        <ContactDialog />
+      </div>
+    </ContactDialogProvider>
   );
 }

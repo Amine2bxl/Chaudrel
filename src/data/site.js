@@ -27,6 +27,16 @@ export const BRAND = {
   ],
   // TODO_VALIDATION : confirmer le numéro utilisé pour WhatsApp Business.
   whatsapp: '32477273118',
+  /**
+   * ⚠️ TODO_VALIDATION — horaires provisoires, posés pour que la fenêtre de
+   * contact soit complète. À remplacer par les horaires réels avant mise en
+   * ligne (voir docs/VERIFICATION.md). Ne pas publier en l'état.
+   */
+  hours: [
+    { days: 'Lundi – Vendredi', time: '8h – 18h' },
+    { days: 'Samedi', time: 'Sur rendez-vous' },
+    { days: 'Dimanche', time: 'Fermé' },
+  ],
   zone: 'Toute la Belgique',
   zoneShort: 'Belgique',
   // Villes citées dans le SEO local. Le siège est à Bruxelles, l'intervention
@@ -74,7 +84,6 @@ export const NAV = [
   { label: 'Réalisations', to: '/realisations' },
   { label: 'Services', to: '/services' },
   { label: 'Méthode', to: '/methode' },
-  { label: 'Contact', to: '/contact' },
 ];
 
 export const MOBILE_NAV = [

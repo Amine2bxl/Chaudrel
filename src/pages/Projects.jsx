@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
 import ProjectShowcase from '@/components/sections/ProjectShowcase';
-import QuickQuote from '@/components/sections/QuickQuote';
+import CTASection from '@/components/sections/CTASection';
 import { Container, Section } from '@/components/ui';
 import { PROJECTS, activeCategories, projectsByCategory } from '@/data/projects';
 import { cn } from '@/lib/utils';
@@ -78,7 +78,11 @@ export default function Projects() {
         </Container>
       </Section>
 
-      <QuickQuote source="projects" />
+      <CTASection
+        title="Votre projet ressemble à l’un des nôtres ?"
+        text="Répondez à cinq questions. Nous organisons une visite et vous remettons un devis détaillé, gratuitement."
+        source="projects"
+      />
     </>
   );
 }

@@ -1,14 +1,17 @@
 import { Link, useLocation } from 'react-router-dom';
-import { whatsappUrl } from '@/data/site';
+import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
-import { cn } from '@/lib/utils';
 
 /**
- * Barre d'action mobile : le devis et WhatsApp toujours à portée de pouce.
- * Deux actions seulement — la navigation est dans le menu.
+ * Barre d'action mobile : deux gestes, toujours à portée de pouce.
+ * Le devis mène au questionnaire ; « Nous joindre » ouvre la fenêtre qui porte
+ * téléphones, WhatsApp, e-mail, horaires et adresse — plutôt qu'un seul canal
+ * imposé.
  */
 export default function MobileBar() {
   const { pathname } = useLocation();
+  const { openDialog } = useContactDialog();
+
   if (pathname === '/devis') return null;
 
   return (
@@ -23,15 +26,13 @@ export default function MobileBar() {
       >
         Demander un devis
       </Link>
-      <a
-        href={whatsappUrl()}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'mobile_bar' })}
+      <button
+        type="button"
+        onClick={() => openDialog('mobile_bar')}
         className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-ink/12 bg-shell text-ink shadow-soft active:translate-y-px"
       >
-        WhatsApp
-      </a>
+        Nous joindre
+      </button>
     </div>
   );
 }

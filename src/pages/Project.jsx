@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import BeforeAfter from '@/components/sections/BeforeAfter';
-import QuickQuote from '@/components/sections/QuickQuote';
+import CTASection from '@/components/sections/CTASection';
 import { Container, Media, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { getProject, projectSiblings } from '@/data/projects';
@@ -139,10 +139,10 @@ export default function Project() {
         </Container>
       </Section>
 
-      <QuickQuote
-        source="project_detail"
+      <CTASection
         title="Vous avez un projet similaire ?"
-        lead="Décrivez-le en quelques lignes. Nous revenons vers vous, puis nous convenons d’une visite sur place."
+        text="Répondez à cinq questions. Nous revenons vers vous, puis nous convenons d’une visite sur place."
+        source="project_detail"
       />
     </>
   );

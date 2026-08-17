@@ -1,14 +1,17 @@
 import { Button, Container } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import { BRAND, whatsappUrl } from '@/data/site';
+import { BRAND } from '@/data/site';
+import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 
 /** Bloc de conversion en fin de page. Une phrase, deux actions, les numéros. */
 export default function CTASection({
   title = 'Un projet en tête ?',
-  text = 'Décrivez-le nous en deux minutes. Nous organisons une visite et vous remettons un devis détaillé, gratuitement.',
+  text = 'Répondez à cinq questions. Nous organisons une visite et vous remettons un devis détaillé, gratuitement.',
   source = 'cta',
 }) {
+  const { openDialog } = useContactDialog();
+
   return (
     <section className="border-t border-cream/10 bg-bark py-section text-cream">
       <Container>
@@ -24,19 +27,15 @@ export default function CTASection({
                 to="/devis"
                 variant="solidLight"
                 size="lg"
+                arrow
                 onClick={() => track(EVENTS.QUOTE_CTA, { source })}
               >
                 Demander un devis
               </Button>
-              <Button
-                href={whatsappUrl()}
-                variant="outlineLight"
-                size="lg"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track(EVENTS.WHATSAPP_CLICK, { source })}
-              >
-                WhatsApp
+              {/* Un seul appel secondaire : la fenêtre porte tous les canaux
+                  plutôt que d'en imposer un. */}
+              <Button variant="outlineLight" size="lg" onClick={() => openDialog(source)}>
+                Nous joindre
               </Button>
             </div>
 

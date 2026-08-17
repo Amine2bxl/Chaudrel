@@ -2,7 +2,7 @@ import Hero, { ProofBand } from '@/components/sections/Hero';
 import ProjectGrid from '@/components/sections/ProjectGrid';
 import ServiceList from '@/components/sections/ServiceList';
 import ProcessCurve from '@/components/sections/ProcessCurve';
-import QuickQuote from '@/components/sections/QuickQuote';
+import CTASection from '@/components/sections/CTASection';
 import { Button, Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { PROJECTS } from '@/data/projects';
@@ -99,7 +99,7 @@ export default function Home() {
         </Container>
       </Section>
 
-      <QuickQuote source="home" />
+      <CTASection source="home" />
     </>
   );
 }

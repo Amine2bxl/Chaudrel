@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { BRAND, LOGO, NAV, whatsappUrl } from '@/data/site';
+import { BRAND, LOGO, NAV } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
+import { useContactDialog } from '@/lib/contactDialog';
 import { Button } from '@/components/ui';
 
 /** Deux lignes qui deviennent une croix — pas d'icône importée. */
@@ -41,6 +42,7 @@ function Wordmark() {
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const { openDialog } = useContactDialog();
   const { pathname } = useLocation();
 
   useEffect(() => setOpen(false), [pathname]);
@@ -90,6 +92,16 @@ export default function Navbar() {
               )}
             </NavLink>
           ))}
+
+          {/* Contact n'a plus de page : il ouvre la fenêtre qui porte toutes
+              les coordonnées. */}
+          <button
+            type="button"
+            onClick={() => openDialog('navbar')}
+            className="t-label pb-2 pt-1 text-ink/60 transition-colors duration-fast hover:text-ink"
+          >
+            Contact
+          </button>
 
           <a
             href={`tel:${BRAND.phones[0].tel}`}
@@ -147,14 +159,8 @@ export default function Navbar() {
               <Button to="/devis" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
                 Demander un devis
               </Button>
-              <Button
-                href={whatsappUrl()}
-                variant="outline"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'menu' })}
-              >
-                WhatsApp
+              <Button variant="outline" onClick={() => openDialog('menu')}>
+                Nous joindre
               </Button>
             </div>
 

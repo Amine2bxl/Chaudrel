@@ -47,6 +47,9 @@ export const localBusinessLd = () => ({
     ...BRAND.areaServed.map((name) => ({ '@type': 'City', name })),
   ],
   sameAs: Object.values(BRAND.socials),
+  // TODO_VALIDATION : horaires provisoires (voir BRAND.hours). Les publier tels
+  // quels enverrait de fausses heures à Google — à confirmer avant mise en ligne.
+  openingHours: BRAND.hours.map((h) => `${h.days} ${h.time}`),
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Services de rénovation',
@@ -173,18 +176,6 @@ const STATIC = {
       breadcrumbLd([
         { name: 'Accueil', path: '/' },
         { name: 'Demander un devis', path: '/devis' },
-      ]),
-    ],
-  },
-  '/contact': {
-    title: 'Contact — Chaudrel Rénovation',
-    description:
-      "Téléphone, WhatsApp, e-mail ou formulaire : joignez Chaudrel pour votre projet de rénovation, partout en Belgique.",
-    ld: () => [
-      localBusinessLd(),
-      breadcrumbLd([
-        { name: 'Accueil', path: '/' },
-        { name: 'Contact', path: '/contact' },
       ]),
     ],
   },
