@@ -364,6 +364,10 @@
 .hero-d5 {
   animation-delay: 0.6s;
 }
+/* Le mot-symbole entre en dernier : la promesse se lit avant la signature. */
+.hero-d6 {
+  animation-delay: 0.72s;
+}
 
 @keyframes slow-zoom {
   from {

@@ -113,9 +113,35 @@ const SIZES = {
   lg: 'px-9 py-[1.15rem] text-[12px]',
 };
 
-export function Button({ to, href, variant = 'solid', size = 'md', className, children, ...rest }) {
+/* Pastille de flèche logée dans la pilule. Elle donne la direction et se
+   décale au survol. Décorative : le libellé dit déjà où l'on va. */
+const ARROW_TONE = {
+  solid: 'bg-cream/15 text-cream',
+  solidLight: 'bg-ink/10 text-ink',
+  outline: 'bg-ink/[0.07] text-ink',
+  outlineLight: 'bg-cream/15 text-cream',
+};
+
+function ArrowChip({ variant }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        '-mr-3 ml-1 grid h-7 w-7 flex-none place-items-center rounded-full',
+        'transition-transform duration-300 ease-soft group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5',
+        ARROW_TONE[variant]
+      )}
+    >
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <path d="M1.5 9.5 9.5 1.5M3.5 1.5h6v6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
+}
+
+export function Button({ to, href, variant = 'solid', size = 'md', arrow = false, className, children, ...rest }) {
   const classes = cn(
-    'inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full font-semibold uppercase tracking-[0.14em]',
+    'group/btn inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full font-semibold uppercase tracking-[0.14em]',
     'transition-[background-color,box-shadow,transform,border-color] duration-300 ease-soft',
     'active:translate-y-px',
     VARIANTS[variant],
@@ -123,23 +149,30 @@ export function Button({ to, href, variant = 'solid', size = 'md', className, ch
     className
   );
 
+  const content = (
+    <>
+      {children}
+      {arrow && <ArrowChip variant={variant} />}
+    </>
+  );
+
   if (to) {
     return (
       <Link to={to} className={classes} {...rest}>
-        {children}
+        {content}
       </Link>
     );
   }
   if (href) {
     return (
       <a href={href} className={classes} {...rest}>
-        {children}
+        {content}
       </a>
     );
   }
   return (
     <button type="button" className={classes} {...rest}>
-      {children}
+      {content}
     </button>
   );
 }
