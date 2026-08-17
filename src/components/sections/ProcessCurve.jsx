@@ -19,6 +19,28 @@ import { cn } from '@/lib/utils';
    Contact et livraison au niveau du sol, planification au sommet. */
 const PROFILE = [0.18, 0.42, 0.62, 0.8, 0.94, 0.62, 0.2];
 
+/**
+ * Tracé du serpent mobile.
+ *
+ * Sept étapes, sept ventres alternés dans une boîte de 60 × 700 étirée
+ * verticalement. Les points de contrôle sont symétriques autour de chaque
+ * nœud, sinon la courbe casse à chaque changement de côté.
+ */
+const SERPENT = (() => {
+  const steps = 7;
+  const span = 700 / steps;
+  let d = 'M 10 0';
+  for (let i = 0; i < steps; i += 1) {
+    const y0 = i * span;
+    const y1 = y0 + span;
+    // Alternance des côtés : 10 (gauche) puis 30 (droite).
+    const from = i % 2 === 0 ? 10 : 30;
+    const to = i % 2 === 0 ? 30 : 10;
+    d += ` C ${from} ${y0 + span * 0.45}, ${to} ${y1 - span * 0.45}, ${to} ${y1}`;
+  }
+  return d;
+})();
+
 const W = 1000;
 const H = 260;
 const PAD_X = 40;
@@ -205,33 +227,61 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
         </p>
       </div>
 
-      {/* ---------- Mobile : la même progression, à la verticale ---------- */}
-      <ol className="relative lg:hidden">
-        <span
+      {/* ---------- Mobile : la même progression, en serpent ----------
+          La ligne droite ne dit rien d'un chantier. Ici le tracé serpente
+          entre les étapes, alternant à gauche et à droite du texte : c'est un
+          chemin qu'on suit, pas une règle graduée.
+
+          Le SVG est étiré derrière la liste, en `preserveAspectRatio="none"`
+          pour que la courbe s'ajuste à la hauteur réelle du texte, quelle que
+          soit la longueur des phrases une fois traduites ou zoomées. */}
+      <div className="relative lg:hidden">
+        <svg
           aria-hidden="true"
-          className={cn(
-            'absolute bottom-8 left-[7px] top-2 w-px origin-top transition-transform duration-[1200ms] ease-soft',
-            light ? 'bg-gold-light/40' : 'bg-gold/30',
-            drawn ? 'scale-y-100' : 'scale-y-0'
-          )}
-        />
-        {steps.map((s, i) => (
-          <li key={s.n} className="relative pb-9 pl-9 last:pb-0">
-            <span
-              aria-hidden="true"
-              className={cn(
-                'absolute left-0 top-[7px] h-[15px] w-[15px] rounded-full border-[3px] transition-opacity duration-slow',
-                light ? 'border-gold-light bg-bark' : 'border-gold bg-cream',
-                drawn ? 'opacity-100' : 'opacity-0'
-              )}
-              style={{ transitionDelay: `${i * 110}ms` }}
-            />
-            <span className={cn('t-label block', light ? 'text-gold-light' : 'text-gold')}>{s.n}</span>
-            <h3 className={cn('t-h3 mt-1.5', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
-            <p className={cn('t-small mt-1.5', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
-          </li>
-        ))}
-      </ol>
+          viewBox="0 0 60 700"
+          preserveAspectRatio="none"
+          className="absolute bottom-4 left-0 top-3 h-[calc(100%-1.75rem)] w-[40px]"
+        >
+          <path
+            d={SERPENT}
+            fill="none"
+            strokeWidth="2"
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            className={light ? 'stroke-gold-light/45' : 'stroke-gold/40'}
+            style={{
+              strokeDasharray: 1400,
+              strokeDashoffset: drawn ? 0 : 1400,
+              transition: 'stroke-dashoffset 1800ms var(--ease-soft)',
+            }}
+          />
+        </svg>
+
+        <ol className="relative">
+          {steps.map((s, i) => (
+            <li key={s.n} className="relative pb-9 pl-[58px] last:pb-0">
+              {/* Le point se cale sur le ventre de la courbe : les étapes
+                  impaires sont poussées vers la droite, les paires reviennent. */}
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'absolute top-[6px] h-[15px] w-[15px] rounded-full border-[3px] transition-opacity duration-slow',
+                  light ? 'border-gold-light bg-bark' : 'border-gold bg-cream',
+                  drawn ? 'opacity-100' : 'opacity-0'
+                )}
+                style={{
+                  // Centres du tracé : 6,7 px et 20 px, moins la moitié du point.
+                  left: `${i % 2 === 0 ? -1 : 12}px`,
+                  transitionDelay: `${300 + i * 130}ms`,
+                }}
+              />
+              <span className={cn('t-label block', light ? 'text-gold-light' : 'text-gold')}>{s.n}</span>
+              <h3 className={cn('t-h3 mt-1.5', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
+              <p className={cn('t-small mt-1.5', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
   );
 }

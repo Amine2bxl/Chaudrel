@@ -1,5 +1,5 @@
 import Hero, { ProofBand } from '@/components/sections/Hero';
-import ProjectGrid from '@/components/sections/ProjectGrid';
+import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import ServiceList from '@/components/sections/ServiceList';
 import ProcessCurve from '@/components/sections/ProcessCurve';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
@@ -9,7 +9,7 @@ import Reveal from '@/lib/reveal';
 import { PROJECTS } from '@/data/projects';
 import { BRAND } from '@/data/site';
 
-const featured = PROJECTS.filter((p) => p.featured).slice(0, 3);
+const featured = PROJECTS.filter((p) => p.featured);
 
 /**
  * L'accueil répond à quatre questions, dans cet ordre, puis demande le devis :
@@ -39,9 +39,7 @@ export default function Home() {
             text="Chaque projet est mené du premier coup de marteau au nettoyage final."
           />
 
-          <div className="mt-block">
-            <ProjectGrid projects={featured} variant="editorial" />
-          </div>
+          <ProjectCarousel projects={featured} className="mt-block" />
 
           <div className="mt-12">
             <TextLink to="/realisations">Toutes les réalisations</TextLink>
