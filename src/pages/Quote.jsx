@@ -67,13 +67,13 @@ export default function Quote() {
   const validate = (s) => {
     const e = {};
     if (s === 1 && !data.projectType) e.projectType = 'Sélectionnez un type de projet.';
-    if (s === 2 && data.description.trim().length < 10) e.description = 'Quelques mots suffisent, mais il en faut quelques-uns.';
-    if (s === 3 && !data.budget) e.budget = 'Sélectionnez une option.';
+    if (s === 2 && data.description.trim().length < 10) e.description = 'Décrivez le projet en quelques mots : pièces concernées et état actuel.';
+    if (s === 3 && !data.budget) e.budget = 'Indiquez si vous avez déjà un budget en tête.';
     if (s === 4 && !data.city.trim()) e.city = 'Indiquez la commune du chantier.';
     if (s === 5) {
       if (data.name.trim().length < 2) e.name = 'Indiquez votre nom.';
-      if (!PHONE_RE.test(data.phone.trim())) e.phone = 'Numéro de téléphone invalide.';
-      if (!EMAIL_RE.test(data.email.trim())) e.email = 'Adresse e-mail invalide.';
+      if (!PHONE_RE.test(data.phone.trim())) e.phone = 'Numéro incomplet. Exemple : 0477 27 31 18.';
+      if (!EMAIL_RE.test(data.email.trim())) e.email = 'Adresse e-mail incomplète. Exemple : prenom@exemple.be';
       if (!data.consent) e.consent = 'Votre accord est nécessaire pour vous recontacter.';
     }
     setErrors(e);
@@ -108,7 +108,7 @@ export default function Quote() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || 'Envoi impossible');
+        throw new Error(body.error || 'L’envoi a échoué.');
       }
       setStatus('success');
       track(EVENTS.QUOTE_SUCCESS, { projectType: data.projectType });
@@ -237,7 +237,7 @@ export default function Quote() {
               )}
 
               {step === 2 && (
-                <Fieldset legend="Racontez-nous." error={errors.description}>
+                <Fieldset legend="Décrivez votre projet." error={errors.description}>
                   <label htmlFor="description" className="t-small block text-ink/65">
                     Surface, pièces concernées, état actuel, échéance souhaitée.
                   </label>
@@ -335,7 +335,7 @@ export default function Quote() {
                   </Button>
                 ) : (
                   <Button type="submit" variant="solid" size="lg" disabled={status === 'loading'}>
-                    {status === 'loading' ? 'Envoi…' : 'Envoyer ma demande'}
+                    {status === 'loading' ? 'Envoi en cours…' : 'Envoyer ma demande'}
                   </Button>
                 )}
               </div>
@@ -369,7 +369,7 @@ export default function Quote() {
             <span className="t-label text-ink/65">Pourquoi ces questions</span>
             <ul className="mt-6 space-y-5 border-t border-ink/12 pt-6">
               {[
-                'Elles nous évitent trois allers-retours avant la visite.',
+                'Elles nous évitent plusieurs allers-retours avant la visite.',
                 'Le devis est gratuit et sans engagement.',
                 'Vos données servent uniquement à répondre à votre demande.',
               ].map((t) => (

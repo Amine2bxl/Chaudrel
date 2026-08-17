@@ -60,9 +60,20 @@ export default function Projects() {
           {items.length > 0 ? (
             <ProjectShowcase projects={items} className="mt-16 lg:mt-24" />
           ) : (
-            <p className="t-lead mt-16 text-ink/60">
-              Aucune réalisation publiée dans cette catégorie pour le moment.
-            </p>
+            /* Un état vide dit ce qui se passe et propose la sortie : ici,
+               revenir à la sélection complète plutôt que rester bloqué. */
+            <div className="mt-16">
+              <p className="t-lead text-ink/60">
+                Aucun chantier publié dans cette catégorie pour le moment.
+              </p>
+              <button
+                type="button"
+                onClick={() => setFilter('all')}
+                className="link-line t-label mt-5 inline-block pb-1 text-ink"
+              >
+                Voir tous les chantiers
+              </button>
+            </div>
           )}
         </Container>
       </Section>

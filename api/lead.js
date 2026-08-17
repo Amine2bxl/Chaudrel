@@ -68,7 +68,7 @@ export default async function handler(req, res) {
   if (!lead.consent) errors.push('consentement');
 
   if (errors.length) {
-    return res.status(400).json({ error: `Champs invalides : ${errors.join(', ')}.` });
+    return res.status(400).json({ error: `Ces informations n'ont pas été acceptées : ${errors.join(', ')}. Corrigez-les et renvoyez la demande.` });
   }
 
   const { RESEND_API_KEY, LEAD_TO_EMAIL, LEAD_FROM_EMAIL } = process.env;
@@ -78,7 +78,9 @@ export default async function handler(req, res) {
       description: `${lead.description.slice(0, 120)}…`,
     });
     return res.status(503).json({
-      error: "Le service d'envoi n'est pas encore configuré. Contactez-nous par téléphone ou WhatsApp.",
+      // L'état de notre configuration ne regarde pas le visiteur : il a
+      // besoin d'un autre chemin, pas d'un diagnostic.
+      error: "L'envoi automatique est momentanément indisponible. Appelez-nous ou écrivez sur WhatsApp : votre demande sera traitée de la même façon.",
     });
   }
 
@@ -115,13 +117,13 @@ export default async function handler(req, res) {
     if (!r.ok) {
       const detail = await r.text();
       console.error('[lead] Resend error', r.status, detail);
-      return res.status(502).json({ error: "L'envoi a échoué. Réessayez ou contactez-nous directement." });
+      return res.status(502).json({ error: "L'envoi a échoué. Réessayez, ou appelez-nous si cela se reproduit." });
     }
 
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('[lead] Exception', err);
-    return res.status(500).json({ error: "Erreur serveur pendant l'envoi." });
+    return res.status(500).json({ error: "L'envoi a échoué de notre côté. Réessayez, ou appelez-nous si cela se reproduit." });
   }
 }
 

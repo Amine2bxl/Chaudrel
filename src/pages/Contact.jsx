@@ -95,7 +95,7 @@ export default function Contact() {
                   className="group flex items-baseline justify-between gap-4 py-5"
                 >
                   <span className="t-h3 transition-colors group-hover:text-umber">WhatsApp</span>
-                  <span className="t-label text-ink/65">Réponse rapide</span>
+                  <span className="t-label text-ink/65">Écrire un message</span>
                 </a>
               </li>
               <li className="border-b border-ink/12">
@@ -135,7 +135,7 @@ export default function Contact() {
               <Reveal className="border-t border-ink/12 pt-8">
                 <h2 className="t-h2">Message envoyé.</h2>
                 <p className="t-body measure mt-5 text-ink/65">
-                  Merci. Nous revenons vers vous rapidement. Si votre demande est urgente, appelez-nous —{' '}
+                  Nous revenons vers vous pour en discuter. Si votre demande est urgente, appelez-nous au{' '}
                   <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
                     {BRAND.phones[0].number}
                   </a>
@@ -216,7 +216,7 @@ export default function Contact() {
                   className="mt-8"
                   disabled={status === 'loading'}
                 >
-                  {status === 'loading' ? 'Envoi…' : 'Envoyer'}
+                  {status === 'loading' ? 'Envoi en cours…' : 'Envoyer mon message'}
                 </Button>
 
                 {status === 'error' && (

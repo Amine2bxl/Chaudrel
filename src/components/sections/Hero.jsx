@@ -34,7 +34,7 @@ export default function Hero() {
             Demander un devis
           </Button>
           <Button to="/realisations" variant="outlineLight" size="lg">
-            Voir nos réalisations
+            Voir les réalisations
           </Button>
         </div>
 

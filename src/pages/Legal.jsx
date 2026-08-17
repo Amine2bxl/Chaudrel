@@ -36,7 +36,7 @@ export default function Legal() {
     <>
       <PageHero
         title="Mentions légales & confidentialité"
-        intro="Identité de l'éditeur, hébergement, propriété intellectuelle et traitement des données personnelles."
+        intro="Identité de l’éditeur, hébergement, propriété intellectuelle et traitement des données personnelles."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Mentions légales' }]}
       />
 
@@ -53,7 +53,7 @@ export default function Legal() {
                   {BRAND.address.city} (Belgique)
                 </>,
                 <>
-                  <strong>Numéro d'entreprise / TVA :</strong> BE 0812.283.245
+                  <strong>Numéro d’entreprise / TVA :</strong> BE 0812.283.245
                 </>,
                 <>
                   <strong>Date de constitution :</strong> 15 juin 2009
@@ -106,7 +106,7 @@ export default function Legal() {
 
           <Block title="4. Propriété intellectuelle">
             <p>
-              L'ensemble du contenu de ce site (textes, images, logos, photographies, vidéos, icônes) est la propriété
+              L’ensemble du contenu de ce site (textes, images, logos, photographies, vidéos, icônes) est la propriété
               exclusive de Chaudrel Rénovation SRL ou de ses partenaires. Toute reproduction, représentation ou
               diffusion, totale ou partielle, est interdite sans autorisation écrite préalable.
             </p>
@@ -125,7 +125,7 @@ export default function Legal() {
           <Block title="6. Droit applicable">
             <p>
               Les présentes mentions légales sont régies par le <strong>droit belge</strong>. En cas de litige et après
-              tentative de recherche d'une solution amiable, les tribunaux de l'arrondissement judiciaire de Bruxelles
+              tentative de recherche d’une solution amiable, les tribunaux de l’arrondissement judiciaire de Bruxelles
               seront seuls compétents.
             </p>
           </Block>
@@ -158,7 +158,7 @@ export default function Legal() {
             <p>Vos données servent exclusivement à :</p>
             <List
               items={[
-                "Répondre à votre demande de devis ou d'information",
+                "Répondre à votre demande de devis ou d’information",
                 'Vous recontacter dans le cadre de votre projet',
                 'Établir une proposition adaptée',
                 'Assurer le suivi du chantier',
@@ -167,7 +167,7 @@ export default function Legal() {
             />
             <p>
               Les traitements reposent sur votre <strong>consentement</strong> (formulaire de contact) ou sur
-              l'<strong>exécution d'un contrat</strong> (devis, chantier, facturation). La conservation comptable est
+              l'<strong>exécution d’un contrat</strong> (devis, chantier, facturation). La conservation comptable est
               fondée sur une <strong>obligation légale</strong>.
             </p>
           </Block>
@@ -183,12 +183,12 @@ export default function Legal() {
 
           <Block title="11. Vos droits (RGPD)">
             <p>
-              Vous disposez d'un droit d'accès, de rectification, d'effacement, de portabilité, de limitation et
-              d'opposition au traitement de vos données. Pour les exercer, écrivez-nous à{' '}
+              Vous disposez d’un droit d’accès, de rectification, d’effacement, de portabilité, de limitation et
+              d’opposition au traitement de vos données. Pour les exercer, écrivez-nous à{' '}
               <a href={`mailto:${BRAND.email}`} className="link-line text-umber">
                 {BRAND.email}
               </a>{' '}
-              — nous répondons dans un délai d'un mois.
+              — nous répondons dans un délai d’un mois.
             </p>
             <p>
               En cas de réclamation, vous pouvez saisir l'<strong>Autorité de protection des données</strong> — Rue de la
@@ -207,15 +207,15 @@ export default function Legal() {
 
           <Block title="12. Cookies">
             <p>
-              Ce site n'utilise <strong>aucun cookie publicitaire</strong> ni tracker tiers. Aucune donnée n'est
-              transmise à des fins marketing. Si un outil de mesure d'audience est ajouté ultérieurement, un bandeau de
+              Ce site n’utilise <strong>aucun cookie publicitaire</strong> ni tracker tiers. Aucune donnée n’est
+              transmise à des fins marketing. Si un outil de mesure d’audience est ajouté ultérieurement, un bandeau de
               consentement sera mis en place.
             </p>
           </Block>
 
           <Block title="13. Sécurité">
             <p>
-              Les données transitent chiffrées via HTTPS/TLS. Aucune donnée n'est transférée vers un pays tiers sans
+              Les données transitent chiffrées via HTTPS/TLS. Aucune donnée n’est transférée vers un pays tiers sans
               garanties conformes au RGPD.
             </p>
           </Block>

@@ -95,10 +95,10 @@ export default function QuickQuote({
   const validate = () => {
     const e = {};
     if (!data.projectType) e.projectType = 'Sélectionnez un type de projet.';
-    if (data.description.trim().length < 10) e.description = 'Décrivez le projet en quelques mots.';
+    if (data.description.trim().length < 10) e.description = 'Décrivez le projet en quelques mots : pièces concernées et état actuel.';
     if (data.name.trim().length < 2) e.name = 'Indiquez votre nom.';
-    if (!PHONE_RE.test(data.phone.trim())) e.phone = 'Numéro de téléphone invalide.';
-    if (!EMAIL_RE.test(data.email.trim())) e.email = 'Adresse e-mail invalide.';
+    if (!PHONE_RE.test(data.phone.trim())) e.phone = 'Numéro incomplet. Exemple : 0477 27 31 18.';
+    if (!EMAIL_RE.test(data.email.trim())) e.email = 'Adresse e-mail incomplète. Exemple : prenom@exemple.be';
     if (!data.consent) e.consent = 'Votre accord est nécessaire pour vous recontacter.';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -120,7 +120,7 @@ export default function QuickQuote({
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || 'Envoi impossible');
+        throw new Error(body.error || 'L’envoi a échoué.');
       }
       setStatus('success');
       track(EVENTS.QUOTE_SUCCESS, { projectType: data.projectType, source });
@@ -283,9 +283,15 @@ export default function QuickQuote({
               </div>
 
               {status === 'error' && (
-                <p className="t-small rounded-md bg-error-light/[0.12] px-4 py-3 text-error-light" role="alert">
-                  {serverError} Appelez-nous au {BRAND.phones[0].number} ou écrivez sur WhatsApp.
-                </p>
+                /* Deux phrases distinctes : le message du serveur est complet
+                   en lui-même, le repli est une phrase à part — pas un fragment
+                   recollé derrière. */
+                <div className="rounded-md bg-error-light/[0.12] px-4 py-3" role="alert">
+                  <p className="t-small text-error-light">{serverError}</p>
+                  <p className="t-small mt-1 text-cream/70">
+                    Appelez-nous au {BRAND.phones[0].number} ou écrivez sur WhatsApp.
+                  </p>
+                </div>
               )}
 
               <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
@@ -294,7 +300,7 @@ export default function QuickQuote({
                   disabled={status === 'loading'}
                   className="t-label inline-flex items-center justify-center rounded-full bg-cream px-9 py-[1.15rem] font-semibold text-ink shadow-soft transition-all duration-300 ease-soft hover:bg-shell hover:shadow-lift active:translate-y-px disabled:opacity-60"
                 >
-                  {status === 'loading' ? 'Envoi…' : 'Envoyer la demande'}
+                  {status === 'loading' ? 'Envoi en cours…' : 'Envoyer ma demande'}
                 </button>
                 <Link to="/devis" className="link-line t-small text-cream/70">
                   Formulaire détaillé

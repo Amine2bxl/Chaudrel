@@ -6,13 +6,13 @@ export default function NotFound() {
     <>
       <PageHero
         label="Erreur 404"
-        title="Cette page n'existe pas"
+        title="Cette page n’existe pas"
         intro="Le lien est peut-être ancien ou mal recopié. Voici par où continuer."
       />
       <Section tone="cream">
         <Container className="flex flex-wrap gap-3">
           <Button to="/" variant="solid">
-            Retour à l'accueil
+            Retour à l’accueil
           </Button>
           <Button to="/realisations" variant="outline">
             Voir les réalisations
