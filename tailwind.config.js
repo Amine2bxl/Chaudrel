@@ -26,6 +26,7 @@ export default {
         gold: {
           DEFAULT: rgb('gold'),
           deep: rgb('gold-deep'),
+          hover: rgb('gold-hover'),
           light: rgb('gold-light'),
         },
         error: {

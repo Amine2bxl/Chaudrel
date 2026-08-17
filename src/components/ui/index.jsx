@@ -1,3 +1,4 @@
+import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import Reveal from '@/lib/reveal';
@@ -102,7 +103,8 @@ export function SectionHeading({ label, title, text, tone = 'dark', align = 'sta
    brun ferait du brun la couleur dominante, ce qu'il n'est pas. */
 
 const VARIANTS = {
-  solid: 'bg-ink text-cream shadow-soft hover:bg-bark hover:shadow-lift',
+  // Le devis est l'action de la marque : il porte le laiton.
+  solid: 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift',
   solidLight: 'bg-cream text-ink shadow-soft hover:bg-shell hover:shadow-lift',
   outline: 'border border-ink/15 bg-shell/70 text-ink hover:border-ink/30 hover:bg-shell hover:shadow-soft',
   outlineLight: 'border border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/10',
@@ -117,7 +119,7 @@ const SIZES = {
 /* Pastille de flèche logée dans la pilule. Elle donne la direction et se
    décale au survol. Décorative : le libellé dit déjà où l'on va. */
 const ARROW_TONE = {
-  solid: 'bg-cream/15 text-cream',
+  solid: 'bg-cream/20 text-cream',
   solidLight: 'bg-ink/10 text-ink',
   outline: 'bg-ink/[0.07] text-ink',
   outlineLight: 'bg-cream/15 text-cream',
@@ -234,5 +236,53 @@ export function Panel({ className, children, as: Tag = 'div', ...rest }) {
     <Tag className={cn('rounded-lg border border-ink/[0.07] bg-shell shadow-soft', className)} {...rest}>
       {children}
     </Tag>
+  );
+}
+
+/**
+ * Repli — un intitulé, un chevron qui pivote, du contenu qui se déploie.
+ *
+ * Motif repris du `StreakCard` de 21st.dev, réécrit dans notre système : le
+ * composant d'origine dépendait de shadcn et d'un `StreakCalendar` absent, et
+ * apportait ses propres jetons (`bg-card`, `text-primary`) en parallèle des
+ * nôtres. Seule la mécanique était utile.
+ *
+ * `aria-expanded` + `aria-controls` : un lecteur d'écran annonce l'état et
+ * trouve la zone pilotée.
+ */
+export function Disclosure({ title, defaultOpen = false, className, children }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const contentId = useId();
+
+  return (
+    <div className={cn('overflow-hidden rounded-lg border border-ink/[0.09] bg-shell', className)}>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls={contentId}
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-fast hover:bg-cream/60"
+      >
+        <span className="t-h3">{title}</span>
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          className={cn('flex-none text-ink/50 transition-transform duration-300 ease-soft', open && 'rotate-180')}
+        >
+          <path d="M2 5l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      {open && (
+        <div id={contentId} className="border-t border-ink/[0.09] px-5 py-5">
+          {children}
+        </div>
+      )}
+    </div>
   );
 }

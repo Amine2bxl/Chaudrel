@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
-import { Button, Container, Section } from '@/components/ui';
+import { Button, Container, Disclosure, Section } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { METHOD } from '@/data/method';
 import { BRAND, whatsappUrl } from '@/data/site';
@@ -381,7 +381,8 @@ export default function Quote() {
             <ul className="mt-6 space-y-5 border-t border-ink/12 pt-6">
               {[
                 'Elles nous évitent plusieurs allers-retours avant la visite.',
-                'Le devis est gratuit et sans engagement.',
+                `${BRAND.promises.quote}.`,
+                `${BRAND.promises.responseTime} à votre demande.`,
                 'Vos données servent uniquement à répondre à votre demande.',
               ].map((t) => (
                 <li key={t} className="t-small text-ink/65">
@@ -389,6 +390,22 @@ export default function Quote() {
                 </li>
               ))}
             </ul>
+
+            {/* Ce qui se passe après l'envoi : replié, parce que c'est une
+                question qu'on se pose seulement si on se la pose. */}
+            <Disclosure title="Et après ?" className="mt-8">
+              <ol className="space-y-4">
+                {METHOD.slice(2, 6).map((m) => (
+                  <li key={m.n} className="flex gap-3.5">
+                    <span className="t-num mt-0.5 flex-none text-ink/40">{m.n}</span>
+                    <div>
+                      <p className="t-small font-semibold text-ink">{m.title}</p>
+                      <p className="t-small mt-1 text-ink/65">{m.text}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </Disclosure>
 
             {/* Deux issues, pas une liste de liens : écrire tout de suite sur
                 WhatsApp, ou ouvrir la fiche complète (téléphones, e-mail,

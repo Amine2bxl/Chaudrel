@@ -15,6 +15,10 @@
      AA pour du texte courant. Il ne sert donc jamais à écrire un paragraphe —
      seulement des repères, des grands corps et des bordures. Sur fond sombre,
      c'est `gold-light` (8:1) qui prend le relais.
+
+     Le bouton « Devis gratuit » est en laiton, comme demandé, mais dans la
+     nuance `gold-deep` : son libellé fait 11 px, et du crème sur #8C764E ne
+     donne que 4,0:1. `gold-deep` monte à 5,8:1 en restant franchement laiton.
      Les triplets RVB existent pour que Tailwind puisse appliquer une opacité
      (`text-ink/65`) sans dupliquer la couleur. */
   --c-cream-rgb: 247 245 242; /* fond de page — crème de Chaudrel */
@@ -23,7 +27,8 @@
   --c-ink-rgb: 26 26 26; /* texte et actions primaires */
   --c-bark-rgb: 28 28 28; /* sections sombres */
   --c-gold-rgb: 140 118 78; /* accent : page active, focus, repères */
-  --c-gold-deep-rgb: 111 93 61;
+  --c-gold-deep-rgb: 111 93 61; /* fond du bouton devis — 5,8:1 sous le crème */
+  --c-gold-hover-rgb: 122 102 66; /* son survol — 5,1:1, passe encore */
   --c-gold-light-rgb: 201 174 131; /* le même accent sur fond sombre */
   --c-error-rgb: 154 59 35;
   --c-error-light-rgb: 232 145 122;

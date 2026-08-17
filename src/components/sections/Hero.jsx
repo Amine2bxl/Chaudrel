@@ -61,7 +61,7 @@ export default function Hero() {
               partout en Belgique.
             </p>
 
-            <div className="hero-in hero-d4 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div data-page-cta className="hero-in hero-d4 mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Button
                 to="/devis"
                 variant="solidLight"

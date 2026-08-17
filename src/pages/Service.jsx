@@ -86,7 +86,7 @@ export default function Service() {
             </div>
 
             <aside className="lg:col-span-4 lg:col-start-9">
-              <div className="border-t border-ink/12 pt-6">
+              <div data-page-cta className="border-t border-ink/12 pt-6">
                 <span className="t-label text-ink/65">Devis gratuit</span>
                 <p className="t-body mt-4 text-ink/65">
                   Décrivez votre projet {service.title.toLowerCase()}. Nous organisons une visite et vous remettons une
