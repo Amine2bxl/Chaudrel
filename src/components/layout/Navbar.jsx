@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Phone } from 'lucide-react';
 import { BRAND, LOGO, NAV } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
@@ -93,23 +94,19 @@ export default function Navbar() {
             </NavLink>
           ))}
 
-          {/* Contact n'a plus de page : il ouvre la fenêtre qui porte toutes
-              les coordonnées. */}
+          {/* Une seule action de contact : un icône, pas un numéro. Le numéro
+              affiché ne faisait qu'appeler sans contexte ; l'icône ouvre la
+              fenêtre qui porte toutes les coordonnées — appeler, WhatsApp,
+              e-mail, horaires, adresse. */}
           <button
             type="button"
             onClick={() => openDialog('navbar')}
-            className="t-label pb-2 pt-1 text-ink/60 transition-colors duration-fast hover:text-ink"
+            aria-label="Nous joindre"
+            title="Nous joindre"
+            className="grid h-10 w-10 place-items-center rounded-full text-ink/70 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
           >
-            Contact
+            <Phone size={18} strokeWidth={1.7} aria-hidden="true" />
           </button>
-
-          <a
-            href={`tel:${BRAND.phones[0].tel}`}
-            onClick={() => track(EVENTS.PHONE_CLICK, { source: 'navbar' })}
-            className="hidden t-small tabular-nums text-ink/65 transition-colors duration-fast hover:text-ink xl:ml-1 xl:inline"
-          >
-            {BRAND.phones[0].number}
-          </a>
 
           <Button to="/devis" size="sm" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
             Devis gratuit

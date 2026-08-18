@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
-import ProjectShowcase from '@/components/sections/ProjectShowcase';
+import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section } from '@/components/ui';
 import { PROJECTS, activeCategories, projectsByCategory } from '@/data/projects';
@@ -14,8 +14,8 @@ export default function Projects() {
   return (
     <>
       <PageHero
-        title="Nos chantiers, tels qu’ils ont été livrés."
-        intro="Les photos sont les nôtres, prises sur nos chantiers. Aucune image d’illustration."
+        title="Des chantiers livrés, pas des images d’archives."
+        intro="Chaque photo est prise sur nos chantiers, au moment de la livraison. Une seule réalisation à la fois, en grand."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Réalisations' }]}
       />
 
@@ -58,7 +58,7 @@ export default function Projects() {
           </div>
 
           {items.length > 0 ? (
-            <ProjectShowcase projects={items} className="mt-block" />
+            <ProjectCarousel projects={items} className="mt-block" />
           ) : (
             /* Un état vide dit ce qui se passe et propose la sortie : ici,
                revenir à la sélection complète plutôt que rester bloqué. */

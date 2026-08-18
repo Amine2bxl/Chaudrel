@@ -1,6 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
-import ProjectGrid from '@/components/sections/ProjectGrid';
+import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import ProcessCurve from '@/components/sections/ProcessCurve';
 import FaqAccordion from '@/components/sections/FaqAccordion';
 import CTASection from '@/components/sections/CTASection';
@@ -119,7 +119,7 @@ export default function Service() {
         <Section tone="white">
           <Container>
             <SectionHeading title="Des chantiers de ce type." />
-            <ProjectGrid projects={related} className="mt-block" />
+            <ProjectCarousel projects={related} className="mt-block" />
           </Container>
         </Section>
       )}

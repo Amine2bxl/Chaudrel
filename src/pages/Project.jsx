@@ -55,7 +55,9 @@ export default function Project() {
   if (!project) return <Navigate to="/realisations" replace />;
 
   const { prev, next } = projectSiblings(project.slug);
-  const gallery = project.images ?? [];
+  // La galerie ne répète pas la photo déjà montrée en en-tête : on ne montre
+  // pas deux fois la même image sur une même page.
+  const gallery = (project.images ?? []).filter((im) => im.src !== project.cover.src);
 
   return (
     <>
@@ -117,19 +119,23 @@ export default function Project() {
             </div>
           )}
 
-          {/* Galerie : première image en grand, les suivantes en appui. */}
+          {/* Galerie : les vues complémentaires, quand il y en a. La première
+              en grand, les suivantes en appui. */}
           {gallery.length > 0 && (
-            <div className="mt-block grid gap-8 lg:grid-cols-12">
-              {gallery.map((im, i) => (
-                <Media
-                  key={im.src}
-                  src={im.src}
-                  alt={im.alt}
-                  ratio={i === 0 ? 'aspect-[16/10]' : 'aspect-[4/5]'}
-                  className={i === 0 ? 'lg:col-span-12' : 'lg:col-span-6'}
-                  priority={i === 0}
-                />
-              ))}
+            <div className="mt-block">
+              <SectionHeading title="Sur le chantier." />
+              <div className="mt-10 grid gap-8 lg:grid-cols-12">
+                {gallery.map((im, i) => (
+                  <Media
+                    key={im.src}
+                    src={im.src}
+                    alt={im.alt}
+                    ratio={i === 0 ? 'aspect-[16/10]' : 'aspect-[4/5]'}
+                    className={i === 0 ? 'lg:col-span-12' : 'lg:col-span-6'}
+                    priority={i === 0}
+                  />
+                ))}
+              </div>
             </div>
           )}
 
