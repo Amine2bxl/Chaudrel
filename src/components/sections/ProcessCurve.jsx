@@ -19,27 +19,32 @@ import { cn } from '@/lib/utils';
    Contact et livraison au niveau du sol, planification au sommet. */
 const PROFILE = [0.18, 0.42, 0.62, 0.8, 0.94, 0.62, 0.2];
 
+/* Gouttière du serpent, en pixels : largeur de la colonne, et les deux
+   abscisses entre lesquelles le tracé oscille. Les points de la liste se
+   calent sur ces mêmes valeurs — une seule source, donc jamais de décalage. */
+const SNAKE = { width: 44, left: 8, right: 30, dot: 15 };
+
 /**
- * Tracé du serpent mobile.
+ * Trace le serpent à partir des positions réelles des points.
  *
- * Sept étapes, sept ventres alternés dans une boîte de 60 × 700 étirée
- * verticalement. Les points de contrôle sont symétriques autour de chaque
- * nœud, sinon la courbe casse à chaque changement de côté.
+ * La version précédente découpait la hauteur en sept parts égales. Mais les
+ * étapes n'ont pas la même longueur de texte : leurs points tombaient donc à
+ * côté de la courbe. Ici les ordonnées viennent de la mise en page mesurée.
  */
-const SERPENT = (() => {
-  const steps = 7;
-  const span = 700 / steps;
-  let d = 'M 10 0';
-  for (let i = 0; i < steps; i += 1) {
-    const y0 = i * span;
-    const y1 = y0 + span;
-    // Alternance des côtés : 10 (gauche) puis 30 (droite).
-    const from = i % 2 === 0 ? 10 : 30;
-    const to = i % 2 === 0 ? 30 : 10;
-    d += ` C ${from} ${y0 + span * 0.45}, ${to} ${y1 - span * 0.45}, ${to} ${y1}`;
+function snakePath(ys) {
+  if (ys.length < 2) return '';
+  const xAt = (i) => (i % 2 === 0 ? SNAKE.left : SNAKE.right);
+  let d = `M ${xAt(0)} ${ys[0].toFixed(1)}`;
+  for (let i = 1; i < ys.length; i += 1) {
+    const y0 = ys[i - 1];
+    const y1 = ys[i];
+    const dy = (y1 - y0) * 0.5;
+    // Tangentes verticales aux deux extrémités : la courbe passe par le point
+    // sans casser, et le ventre se forme entre deux étapes.
+    d += ` C ${xAt(i - 1)} ${(y0 + dy).toFixed(1)}, ${xAt(i)} ${(y1 - dy).toFixed(1)}, ${xAt(i)} ${y1.toFixed(1)}`;
   }
   return d;
-})();
+}
 
 const W = 1000;
 const H = 260;
@@ -95,6 +100,40 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  /* ---------- Mesure du serpent (mobile) ----------
+     La courbe doit passer par les points, et les points bougent avec le texte :
+     leurs ordonnées sont relevées après le rendu, puis à chaque changement de
+     taille. Sans cela, la courbe découpe la hauteur en parts égales et rate
+     toutes les étapes dont le texte est plus long que les autres. */
+  const snakeRef = useRef(null);
+  const dotRefs = useRef([]);
+  const [dotYs, setDotYs] = useState([]);
+  const [snakeH, setSnakeH] = useState(0);
+
+  useEffect(() => {
+    const wrap = snakeRef.current;
+    if (!wrap || typeof ResizeObserver === 'undefined') return undefined;
+
+    const measure = () => {
+      const base = wrap.getBoundingClientRect();
+      const ys = dotRefs.current.filter(Boolean).map((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top - base.top + r.height / 2;
+      });
+      setDotYs(ys);
+      setSnakeH(Math.round(base.height));
+    };
+
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [steps]);
+
+  // Longueur du tracé, pour l'écrire au scroll. Majorée d'un quart : la marge
+  // évite qu'un arrondi laisse un bout de courbe non dessiné.
+  const snakeLen = Math.round((snakeH || 0) * 1.25) || 1;
 
   const stroke = light ? 'stroke-gold-light' : 'stroke-gold';
   const dot = light ? 'fill-gold-light' : 'fill-gold';
@@ -228,50 +267,57 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
       </div>
 
       {/* ---------- Mobile : la même progression, en serpent ----------
-          La ligne droite ne dit rien d'un chantier. Ici le tracé serpente
-          entre les étapes, alternant à gauche et à droite du texte : c'est un
-          chemin qu'on suit, pas une règle graduée.
+          La ligne droite ne disait rien d'un chantier. Le tracé serpente entre
+          les étapes : c'est un chemin qu'on suit, pas une règle graduée.
 
-          Le SVG est étiré derrière la liste, en `preserveAspectRatio="none"`
-          pour que la courbe s'ajuste à la hauteur réelle du texte, quelle que
-          soit la longueur des phrases une fois traduites ou zoomées. */}
-      <div className="relative lg:hidden">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 60 700"
-          preserveAspectRatio="none"
-          className="absolute bottom-4 left-0 top-3 h-[calc(100%-1.75rem)] w-[40px]"
-        >
-          <path
-            d={SERPENT}
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            className={light ? 'stroke-gold-light/45' : 'stroke-gold/40'}
-            style={{
-              strokeDasharray: 1400,
-              strokeDashoffset: drawn ? 0 : 1400,
-              transition: 'stroke-dashoffset 1800ms var(--ease-soft)',
-            }}
-          />
-        </svg>
+          Les ordonnées viennent de la mise en page réelle, mesurée après le
+          rendu. C'est la seule façon de faire passer la courbe exactement par
+          chaque point : les étapes n'ont pas la même longueur de texte, donc
+          pas la même hauteur. */}
+      <div ref={snakeRef} className="relative lg:hidden">
+        {snakeH > 0 && (
+          <svg
+            aria-hidden="true"
+            viewBox={`0 0 ${SNAKE.width} ${snakeH}`}
+            width={SNAKE.width}
+            height={snakeH}
+            className="absolute left-0 top-0"
+            style={{ height: snakeH }}
+          >
+            <path
+              d={snakePath(dotYs)}
+              fill="none"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className={light ? 'stroke-gold-light/45' : 'stroke-gold/40'}
+              style={{
+                strokeDasharray: snakeLen,
+                strokeDashoffset: drawn ? 0 : snakeLen,
+                transition: 'stroke-dashoffset 1800ms var(--ease-soft)',
+              }}
+            />
+          </svg>
+        )}
 
         <ol className="relative">
           {steps.map((s, i) => (
-            <li key={s.n} className="relative pb-9 pl-[58px] last:pb-0">
-              {/* Le point se cale sur le ventre de la courbe : les étapes
-                  impaires sont poussées vers la droite, les paires reviennent. */}
+            <li key={s.n} className="relative pb-9 last:pb-0" style={{ paddingLeft: SNAKE.width + 18 }}>
+              {/* Même abscisse que la courbe, à un demi-point près : le repère
+                  est posé sur le tracé, pas à côté. */}
               <span
+                ref={(el) => {
+                  dotRefs.current[i] = el;
+                }}
                 aria-hidden="true"
                 className={cn(
-                  'absolute top-[6px] h-[15px] w-[15px] rounded-full border-[3px] transition-opacity duration-slow',
+                  'absolute top-[6px] rounded-full border-[3px] transition-opacity duration-slow',
                   light ? 'border-gold-light bg-bark' : 'border-gold bg-cream',
                   drawn ? 'opacity-100' : 'opacity-0'
                 )}
                 style={{
-                  // Centres du tracé : 6,7 px et 20 px, moins la moitié du point.
-                  left: `${i % 2 === 0 ? -1 : 12}px`,
+                  width: SNAKE.dot,
+                  height: SNAKE.dot,
+                  left: (i % 2 === 0 ? SNAKE.left : SNAKE.right) - SNAKE.dot / 2,
                   transitionDelay: `${300 + i * 130}ms`,
                 }}
               />

@@ -1,6 +1,5 @@
 import { Button, Container } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import { BRAND } from '@/data/site';
 import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 
@@ -39,19 +38,6 @@ export default function CTASection({
               </Button>
             </div>
 
-            <ul className="mt-8 space-y-2 border-t border-cream/15 pt-6">
-              {BRAND.phones.map((p) => (
-                <li key={p.tel}>
-                  <a
-                    href={`tel:${p.tel}`}
-                    onClick={() => track(EVENTS.PHONE_CLICK, { source })}
-                    className="link-line t-small text-cream/60 transition-colors hover:text-cream"
-                  >
-                    {p.number} — {p.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
           </Reveal>
         </div>
       </Container>
