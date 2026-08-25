@@ -31,6 +31,15 @@ import {
  * Aucune donnée nouvelle : tout vient de `BRAND`.
  */
 
+/* Les réseaux, dans l'ordre où Chaudrel les alimente. Une clé absente de
+   BRAND.socials disparaît de la barre au lieu d'y laisser un trou. */
+const SOCIALS = [
+  { key: 'instagram', label: 'Instagram', icon: InstagramIcon },
+  { key: 'tiktok', label: 'TikTok', icon: TiktokIcon },
+  { key: 'facebook', label: 'Facebook', icon: FacebookIcon },
+  { key: 'youtube', label: 'YouTube', icon: YoutubeIcon },
+];
+
 /* Une rangée : icône dans sa pastille, libellé, description, chevron. */
 function Row({ to, href, icon: Icon, label, hint, onClick, primary = false }) {
   const inner = (
@@ -48,7 +57,7 @@ function Row({ to, href, icon: Icon, label, hint, onClick, primary = false }) {
       <span className="min-w-0 flex-1">
         <span className={cn('block t-label', primary ? 'text-cream' : 'text-ink')}>{label}</span>
         {hint && (
-          <span className={cn('mt-1 block t-small', primary ? 'text-cream/70' : 'text-ink/55')}>{hint}</span>
+          <span className={cn('mt-1 block t-small', primary ? 'text-cream/90' : 'text-ink/55')}>{hint}</span>
         )}
       </span>
 
@@ -101,7 +110,7 @@ function Row({ to, href, icon: Icon, label, hint, onClick, primary = false }) {
 function GroupLabel({ children }) {
   return (
     <div className="mb-4 mt-9 flex items-center gap-4 first:mt-0">
-      <span className="t-label flex-none text-ink/40">{children}</span>
+      <span className="t-label flex-none text-ink/65">{children}</span>
       <span aria-hidden="true" className="h-px flex-1 bg-ink/10" />
     </div>
   );
@@ -111,11 +120,23 @@ export default function Links() {
   const t = (event, extra) => () => track(event, { source: 'links', ...extra });
 
   return (
-    <div className="bg-cream">
+    <div className="relative isolate overflow-hidden bg-cream">
+      {/* Halo derrière l'en-tête : sans lui, une colonne de cartes blanches sur
+          un aplat crème n'a aucun point de départ — le regard entre par le
+          milieu. Un seul dégradé, très bas en opacité ; il ne se voit pas, il
+          se sent. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[26rem]"
+        style={{
+          background:
+            'radial-gradient(60% 100% at 50% 0%, rgb(var(--c-gold-rgb) / 0.10) 0%, rgb(var(--c-gold-rgb) / 0) 70%)',
+        }}
+      />
       {/* pt = hauteur de la barre flottante ; pb = barre d'action mobile. */}
       <div className="mx-auto w-full max-w-lg px-5 pb-[calc(66px+3rem)] pt-28 sm:px-6 lg:pb-24 lg:pt-36">
         <Reveal className="text-center">
-          <span className="mx-auto grid h-16 w-16 place-items-center overflow-hidden rounded-logo bg-shell shadow-soft">
+          <span className="mx-auto grid h-16 w-16 place-items-center overflow-hidden rounded-logo bg-shell shadow-lift ring-1 ring-ink/[0.06]">
             <img src={LOGO} alt="" aria-hidden="true" width="64" height="64" className="h-full w-full object-cover" />
           </span>
           <h1 className="mt-5 font-wordmark text-[22px] uppercase leading-none tracking-[0.2em] text-ink">
@@ -133,7 +154,7 @@ export default function Links() {
               to="/devis"
               icon={QuoteIcon}
               label="Devis gratuit"
-              hint={`${BRAND.promises.quote} · ${BRAND.promises.responseTime}`}
+              hint={`Sans engagement · ${BRAND.promises.responseTime}`}
               onClick={t(EVENTS.QUOTE_CTA)}
               primary
             />
@@ -147,15 +168,15 @@ export default function Links() {
             <Row
               href={`tel:${BRAND.phones[0].tel}`}
               icon={PhoneIcon}
-              label={BRAND.phones[0].number}
-              hint={BRAND.phones[0].name}
+              label={`Appeler ${BRAND.phones[0].name}`}
+              hint={BRAND.phones[0].number}
               onClick={t(EVENTS.PHONE_CLICK)}
             />
             <Row
               href={`mailto:${BRAND.email}`}
               icon={MailIcon}
-              label={BRAND.email}
-              hint="Par e-mail"
+              label="Nous écrire"
+              hint={BRAND.email.toLowerCase()}
               onClick={t(EVENTS.EMAIL_CLICK)}
             />
           </div>
@@ -167,36 +188,32 @@ export default function Links() {
           </div>
 
           <GroupLabel>Nous suivre</GroupLabel>
-          <div className="space-y-2.5">
-            <Row
-              href={BRAND.socials.instagram}
-              icon={InstagramIcon}
-              label="Instagram"
-              onClick={t(EVENTS.SOCIAL_CLICK, { network: 'instagram' })}
-            />
-            <Row
-              href={BRAND.socials.tiktok}
-              icon={TiktokIcon}
-              label="TikTok"
-              onClick={t(EVENTS.SOCIAL_CLICK, { network: 'tiktok' })}
-            />
-            <Row
-              href={BRAND.socials.facebook}
-              icon={FacebookIcon}
-              label="Facebook"
-              onClick={t(EVENTS.SOCIAL_CLICK, { network: 'facebook' })}
-            />
-            <Row
-              href={BRAND.socials.youtube}
-              icon={YoutubeIcon}
-              label="YouTube"
-              onClick={t(EVENTS.SOCIAL_CLICK, { network: 'youtube' })}
-            />
-          </div>
+          {/* Une barre d'icônes, pas quatre rangées. Une rangée pleine largeur
+              promet une phrase ; « Instagram » n'en est pas une, et quatre
+              d'affilée diluaient les six lignes qui, elles, amènent un
+              chantier. Le nom reste dans le libellé accessible. */}
+          <ul className="flex flex-wrap justify-center gap-2.5">
+            {SOCIALS.map(({ key, label, icon: Icon }) =>
+              BRAND.socials[key] ? (
+                <li key={key}>
+                  <a
+                    href={BRAND.socials[key]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
+                    className="grid h-[3.25rem] w-[3.25rem] place-items-center rounded-md border border-ink/[0.09] bg-shell text-ink/70 transition-all duration-fast ease-soft hover:border-ink/20 hover:text-ink hover:shadow-soft active:translate-y-px"
+                  >
+                    <Icon width="19" height="19" />
+                  </a>
+                </li>
+              ) : null
+            )}
+          </ul>
         </Reveal>
 
         <Reveal delay={200} className="mt-10 text-center">
-          <address className="t-small not-italic text-ink/45">
+          <address className="t-small not-italic text-ink/65">
             {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city}
             <br />
             TVA {BRAND.vat}

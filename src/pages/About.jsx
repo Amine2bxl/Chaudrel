@@ -1,5 +1,4 @@
 import PageHero from '@/components/sections/PageHero';
-import Testimonials from '@/components/sections/Testimonials';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Media, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
@@ -65,17 +64,6 @@ export default function About() {
           </div>
         </Container>
       </Section>
-
-      <Section tone="white">
-        <Container>
-          <SectionHeading
-            title="Le travail se juge aux finitions."
-            text="Ce qui reste une fois le chantier terminé, ce sont les angles, les joints, les raccords. C’est là que se voit le sérieux d’une entreprise."
-          />
-        </Container>
-      </Section>
-
-      <Testimonials limit={3} tone="cream" />
 
       <CTASection source="about" />
     </>

@@ -1,13 +1,40 @@
 /**
  * Les étapes d'un chantier Chaudrel.
- * Texte volontairement court : une ligne par étape.
+ *
+ * Quatre, pas sept. Les sept précédentes décrivaient notre organisation
+ * interne : « premier contact », « analyse du projet » et « visite » sont trois
+ * lignes dans notre agenda, mais un seul moment pour le client — celui où
+ * quelqu'un vient voir. Idem pour « planification » et « travaux ». Découper
+ * plus fin ne rassure pas, ça dilue : sept titres se survolent, quatre se
+ * lisent.
+ *
+ * Rien n'a été retiré du fond, seulement du découpage.
+ *
+ * `icon` désigne un symbole de BrandIcons — le repère posé sur la courbe.
  */
 export const METHOD = [
-  { n: '01', title: 'Premier contact', text: 'Vous nous écrivez ou vous appelez. On comprend votre projet en quelques minutes.' },
-  { n: '02', title: 'Analyse du projet', text: 'On identifie ce qui est faisable, ce qui demande une étude, ce qui peut attendre.' },
-  { n: '03', title: 'Visite', text: 'On vient voir le lieu, mesurer et écouter. Gratuit, sans engagement.' },
-  { n: '04', title: 'Devis', text: 'Un devis détaillé, poste par poste. Vous savez ce qui est inclus.' },
-  { n: '05', title: 'Planification', text: 'Dates, ordre des travaux, intervenants. Le calendrier est fixé avant de commencer.' },
-  { n: '06', title: 'Travaux', text: 'Un interlocuteur suit le chantier et vous tient informé à chaque étape.' },
-  { n: '07', title: 'Livraison', text: 'On parcourt le chantier avec vous. Il est terminé quand vous le dites.' },
+  {
+    n: '01',
+    title: 'Contact et visite',
+    icon: 'pin',
+    text: 'Vous nous écrivez ou vous appelez. On vient voir le lieu, mesurer et écouter. Gratuit, sans engagement.',
+  },
+  {
+    n: '02',
+    title: 'Devis détaillé',
+    icon: 'quote',
+    text: 'Un devis poste par poste. Vous savez ce qui est inclus, et ce qui ne l’est pas, avant de décider.',
+  },
+  {
+    n: '03',
+    title: 'Chantier',
+    icon: 'tools',
+    text: 'Dates et ordre des travaux fixés avant de commencer. Un seul interlocuteur vous tient informé.',
+  },
+  {
+    n: '04',
+    title: 'Livraison',
+    icon: 'check',
+    text: 'On parcourt le chantier avec vous. Il est terminé quand vous le dites.',
+  },
 ];

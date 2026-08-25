@@ -133,9 +133,9 @@ const STATIC = {
     ],
   },
   '/methode': {
-    title: 'Notre méthode — 7 étapes, zéro surprise | Chaudrel',
+    title: 'Notre méthode — Quatre étapes, zéro surprise | Chaudrel',
     description:
-      "Du premier contact à la livraison : les sept étapes d'un chantier Chaudrel, et ce qui se passe à chacune d'elles.",
+      "Du premier contact à la livraison : les quatre étapes d'un chantier Chaudrel.",
     ld: () => [
       breadcrumbLd([
         { name: 'Accueil', path: '/' },

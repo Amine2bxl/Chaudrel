@@ -1,35 +1,50 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { METHOD } from '@/data/method';
+import { ICONS } from '@/components/ui/BrandIcons';
 import { cn } from '@/lib/utils';
 
 /**
  * Les étapes d'un chantier, posées sur une courbe.
  *
- * La ligne droite ponctuée de sept points ne racontait rien : elle mesurait un
- * axe. Un chantier ne se lit pas comme un axe — il monte à la préparation,
- * s'aplatit pendant les travaux, redescend à la livraison. La courbe suit ce
- * profil, et chaque étape est posée dessus à sa hauteur réelle.
+ * La courbe n'est pas un ornement : sa hauteur est la charge de travail. Le
+ * premier contact ne coûte rien, le devis engage un peu, le chantier est le
+ * sommet, la livraison redescend au calme. On lit le déroulé sans lire une
+ * seule ligne — c'est tout ce qu'on demande à une illustration.
  *
- * Tout est calculé une fois, en SVG, sans dépendance : le tracé s'écrit au
- * scroll (`stroke-dasharray`), les points apparaissent derrière lui. Sur les
- * petits écrans la courbe devient verticale — même donnée, autre lecture.
+ * Chaque étape porte son texte à côté d'elle, au-dessus ou en dessous du tracé
+ * selon la place libre. La version précédente affichait les phrases une par
+ * une, au survol, dans une zone unique sous le graphique : quatre lignes
+ * courtes tiennent toutes en même temps, donc ni survol, ni état, ni phrase
+ * qui disparaît quand la souris bouge.
+ *
+ * Sur les petits écrans la courbe devient un serpent vertical — même donnée,
+ * autre lecture.
  */
 
-/* Hauteur relative de chaque étape, de 0 (bas) à 1 (haut).
-   Contact et livraison au niveau du sol, planification au sommet. */
-const PROFILE = [0.18, 0.42, 0.62, 0.8, 0.94, 0.62, 0.2];
+/* Hauteur relative de chaque étape, de 0 (bas) à 1 (haut) : la charge. */
+const PROFILE = [0.14, 0.46, 0.92, 0.36];
 
-/* Gouttière du serpent, en pixels : largeur de la colonne, et les deux
-   abscisses entre lesquelles le tracé oscille. Les points de la liste se
-   calent sur ces mêmes valeurs — une seule source, donc jamais de décalage. */
-const SNAKE = { width: 44, left: 8, right: 30, dot: 15 };
+/* Côté où poser le texte. Le tracé occupe le reste. */
+const ABOVE = [true, true, false, true];
+
+const W = 1000;
+const H = 300;
+/* Marge latérale : assez large pour qu'un bloc de texte centré sur la première
+   ou la dernière étape ne déborde pas du cadre. */
+const PAD_X = 150;
+
+/* Gouttière du serpent, en pixels : largeur de la colonne, les deux abscisses
+   entre lesquelles le tracé oscille, et le diamètre du repère. Les repères de
+   la liste se calent sur ces mêmes valeurs — une seule source, jamais de
+   décalage. */
+const SNAKE = { width: 60, left: 19, right: 41, dot: 38 };
 
 /**
- * Trace le serpent à partir des positions réelles des points.
+ * Trace le serpent à partir des positions réelles des repères.
  *
- * La version précédente découpait la hauteur en sept parts égales. Mais les
- * étapes n'ont pas la même longueur de texte : leurs points tombaient donc à
- * côté de la courbe. Ici les ordonnées viennent de la mise en page mesurée.
+ * Les ordonnées viennent de la mise en page mesurée, pas d'un découpage en
+ * parts égales : les étapes n'ont pas la même longueur de texte, donc pas la
+ * même hauteur, et une courbe calculée à l'aveugle les rate toutes.
  */
 function snakePath(ys) {
   if (ys.length < 2) return '';
@@ -39,16 +54,12 @@ function snakePath(ys) {
     const y0 = ys[i - 1];
     const y1 = ys[i];
     const dy = (y1 - y0) * 0.5;
-    // Tangentes verticales aux deux extrémités : la courbe passe par le point
+    // Tangentes verticales aux deux extrémités : la courbe passe par le repère
     // sans casser, et le ventre se forme entre deux étapes.
     d += ` C ${xAt(i - 1)} ${(y0 + dy).toFixed(1)}, ${xAt(i)} ${(y1 - dy).toFixed(1)}, ${xAt(i)} ${y1.toFixed(1)}`;
   }
   return d;
 }
-
-const W = 1000;
-const H = 260;
-const PAD_X = 40;
 
 /** Courbe de Catmull-Rom convertie en Bézier cubique : lisse, sans à-coups. */
 function smoothPath(points) {
@@ -59,11 +70,10 @@ function smoothPath(points) {
     const p1 = points[i];
     const p2 = points[i + 1];
     const p3 = points[i + 2] || p2;
-    const c1x = p1.x + (p2.x - p0.x) / 6;
-    const c1y = p1.y + (p2.y - p0.y) / 6;
-    const c2x = p2.x - (p3.x - p1.x) / 6;
-    const c2y = p2.y - (p3.y - p1.y) / 6;
-    d += ` C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
+    d +=
+      ` C ${(p1.x + (p2.x - p0.x) / 6).toFixed(1)} ${(p1.y + (p2.y - p0.y) / 6).toFixed(1)},` +
+      ` ${(p2.x - (p3.x - p1.x) / 6).toFixed(1)} ${(p2.y - (p3.y - p1.y) / 6).toFixed(1)},` +
+      ` ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
   }
   return d;
 }
@@ -72,13 +82,13 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
   const light = tone === 'light'; // « light » = texte clair sur fond sombre
   const ref = useRef(null);
   const [drawn, setDrawn] = useState(false);
-  const [active, setActive] = useState(null);
 
   const { points, line, area } = useMemo(() => {
     const span = (W - PAD_X * 2) / (steps.length - 1);
     const pts = steps.map((s, i) => ({
       x: PAD_X + i * span,
-      y: H - 30 - (PROFILE[i] ?? 0.5) * (H - 70),
+      y: H - 24 - (PROFILE[i] ?? 0.5) * (H - 56),
+      above: ABOVE[i] ?? true,
       step: s,
     }));
     const d = smoothPath(pts);
@@ -101,11 +111,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
     return () => io.disconnect();
   }, []);
 
-  /* ---------- Mesure du serpent (mobile) ----------
-     La courbe doit passer par les points, et les points bougent avec le texte :
-     leurs ordonnées sont relevées après le rendu, puis à chaque changement de
-     taille. Sans cela, la courbe découpe la hauteur en parts égales et rate
-     toutes les étapes dont le texte est plus long que les autres. */
+  /* ---------- Mesure du serpent (mobile) ---------- */
   const snakeRef = useRef(null);
   const dotRefs = useRef([]);
   const [dotYs, setDotYs] = useState([]);
@@ -117,11 +123,12 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
 
     const measure = () => {
       const base = wrap.getBoundingClientRect();
-      const ys = dotRefs.current.filter(Boolean).map((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top - base.top + r.height / 2;
-      });
-      setDotYs(ys);
+      setDotYs(
+        dotRefs.current.filter(Boolean).map((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top - base.top + r.height / 2;
+        })
+      );
       setSnakeH(Math.round(base.height));
     };
 
@@ -135,145 +142,154 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
   // évite qu'un arrondi laisse un bout de courbe non dessiné.
   const snakeLen = Math.round((snakeH || 0) * 1.25) || 1;
 
-  const stroke = light ? 'stroke-gold-light' : 'stroke-gold';
-  const dot = light ? 'fill-gold-light' : 'fill-gold';
+  const accent = light ? 'text-gold-light' : 'text-gold';
+
+  /** Le repère posé sur le tracé : pastille pleine, symbole de l'étape. */
+  const Badge = ({ step, size }) => {
+    const Icon = ICONS[step.icon];
+    return (
+      <span
+        className={cn(
+          'grid place-items-center rounded-md shadow-lift',
+          light ? 'bg-cream text-bark' : 'bg-shell text-ink'
+        )}
+        style={{ width: size, height: size }}
+      >
+        {Icon ? <Icon width={size * 0.42} height={size * 0.42} /> : null}
+      </span>
+    );
+  };
 
   return (
     <div ref={ref} className={className}>
       {/* ---------- Desktop : la courbe ---------- */}
-      <div className="hidden lg:block">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          className="w-full overflow-visible"
-          role="img"
-          aria-label={`Déroulé d'un chantier en ${steps.length} étapes, de ${steps[0].title} à ${steps[steps.length - 1].title}`}
-        >
-          <defs>
-            <linearGradient id="chaudrel-curve-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="currentColor" stopOpacity="0.14" />
-              <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-            </linearGradient>
-          </defs>
+      {/* Le padding vertical fait la place aux textes, qui débordent
+          volontairement du cadre du tracé. */}
+      <div className="relative hidden pb-28 pt-24 lg:block">
+        <div className="relative">
+          <svg
+            viewBox={`0 0 ${W} ${H}`}
+            className="w-full overflow-visible"
+            role="img"
+            aria-label={`Déroulé d'un chantier en ${steps.length} étapes, de ${steps[0].title} à ${steps[steps.length - 1].title}`}
+          >
+            <defs>
+              <linearGradient id="chaudrel-curve-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="currentColor" stopOpacity="0.16" />
+                <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+              </linearGradient>
+            </defs>
 
-          {/* Remplissage sous la courbe : donne du corps au tracé sans le
-              charger. Il apparaît une fois la ligne écrite. */}
-          <path
-            d={area}
-            fill="url(#chaudrel-curve-fill)"
-            className={cn(
-              'transition-opacity duration-[900ms] ease-soft',
-              light ? 'text-gold-light' : 'text-gold',
-              drawn ? 'opacity-100' : 'opacity-0'
-            )}
-            style={{ transitionDelay: '700ms' }}
-          />
+            {/* Remplissage sous la courbe : donne du corps au tracé sans le
+                charger. Il apparaît une fois la ligne écrite. */}
+            <path
+              d={area}
+              fill="url(#chaudrel-curve-fill)"
+              className={cn(
+                'transition-opacity duration-[900ms] ease-soft',
+                accent,
+                drawn ? 'opacity-100' : 'opacity-0'
+              )}
+              style={{ transitionDelay: '700ms' }}
+            />
 
-          <path
-            d={line}
-            fill="none"
-            strokeWidth="2"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            className={stroke}
-            style={{
-              strokeDasharray: 2400,
-              strokeDashoffset: drawn ? 0 : 2400,
-              transition: 'stroke-dashoffset 1600ms var(--ease-soft)',
-            }}
-          />
+            <path
+              d={line}
+              fill="none"
+              strokeWidth="2"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              className={light ? 'stroke-gold-light' : 'stroke-gold'}
+              style={{
+                strokeDasharray: 2400,
+                strokeDashoffset: drawn ? 0 : 2400,
+                transition: 'stroke-dashoffset 1600ms var(--ease-soft)',
+              }}
+            />
+          </svg>
 
-          {/* Le graphique ne capte pas la souris : c'est la légende, en dessous,
-              qui pilote l'étape active. Deux surfaces de survol aux frontières
-              différentes se contredisaient — le point surligné n'était pas
-              toujours celui dont la phrase s'affichait. */}
-          {points.map((p, i) => (
-            <g key={p.step.n} className="pointer-events-none">
-              <line
-                x1={p.x}
-                y1={p.y}
-                x2={p.x}
-                y2={H - 8}
-                strokeWidth="1"
-                vectorEffect="non-scaling-stroke"
+          {/* Repères, chiffres fantômes et textes : en HTML par-dessus le
+              tracé, aux mêmes coordonnées. La typographie reste celle du site,
+              ce qu'un `<text>` SVG ne sait pas faire aussi bien. */}
+          {points.map((p, i) => {
+            const x = `${(p.x / W) * 100}%`;
+            const y = `${(p.y / H) * 100}%`;
+            return (
+              <div key={p.step.n}>
+                {/* Le chiffre en filigrane donne l'échelle et le rang sans
+                    ajouter de bloc de texte. Décoratif : le rang est déjà
+                    porté par la liste ordonnée du texte. */}
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'pointer-events-none absolute select-none font-display leading-[0.75] transition-opacity duration-[1200ms] ease-soft',
+                    'text-[7.5rem] xl:text-[9rem]',
+                    light ? 'text-cream/[0.09]' : 'text-ink/[0.075]',
+                    drawn ? 'opacity-100' : 'opacity-0'
+                  )}
+                  style={{
+                    left: x,
+                    top: y,
+                    transform: 'translate(-50%, -62%)',
+                    transitionDelay: `${800 + i * 110}ms`,
+                  }}
+                >
+                  {i + 1}
+                </span>
+
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    'absolute transition-[opacity,transform] duration-slow ease-soft',
+                    drawn ? 'opacity-100' : 'opacity-0'
+                  )}
+                  style={{
+                    // Transform en ligne : il porte le centrage ET l'entrée,
+                    // qu'une classe utilitaire écraserait.
+                    left: x,
+                    top: y,
+                    transform: `translate(-50%, -50%)${drawn ? '' : ' scale(0.6)'}`,
+                    transitionDelay: `${900 + i * 110}ms`,
+                  }}
+                >
+                  <Badge step={p.step} size={52} />
+                </span>
+              </div>
+            );
+          })}
+
+          {/* Les textes forment une vraie liste ordonnée : c'est l'ordre qui
+              porte le sens, et un lecteur d'écran doit l'entendre. */}
+          <ol>
+            {points.map((p, i) => (
+              <li
+                key={p.step.n}
                 className={cn(
-                  'transition-opacity duration-slow',
-                  light ? 'stroke-cream/20' : 'stroke-ink/15',
-                  drawn ? (active === i ? 'opacity-100' : 'opacity-40') : 'opacity-0'
-                )}
-                style={{ transitionDelay: `${700 + i * 90}ms` }}
-              />
-              <circle
-                cx={p.x}
-                cy={p.y}
-                r={active === i ? 7 : 5}
-                className={cn(
-                  dot,
-                  'transition-[r,opacity] duration-slow ease-soft',
+                  // Largeur suivie sur l'écart entre étapes : à 1024 px il
+                  // n'est que de 221 px, donc un bloc fixe de 15 rem
+                  // chevaucherait son voisin.
+                  'absolute w-[12.5rem] xl:w-[15rem] transition-opacity duration-slow',
                   drawn ? 'opacity-100' : 'opacity-0'
                 )}
-                style={{ transitionDelay: `${700 + i * 90}ms` }}
-              />
-            </g>
-          ))}
-        </svg>
-
-        {/* Sous chaque point, le numéro et le titre — rien de plus : sept
-            colonnes de paragraphe se cassent en bouillie dès 1280 px. La phrase
-            de l'étape s'affiche dans une zone de lecture unique, sous le
-            graphique, ce qui garde l'alignement avec les points. */}
-        <ol className="mt-7 grid" style={{ gridTemplateColumns: `repeat(${steps.length}, minmax(0, 1fr))` }}>
-          {steps.map((s, i) => (
-            <li
-              key={s.n}
-              onMouseEnter={() => setActive(i)}
-              onMouseLeave={() => setActive(null)}
-              className={cn(
-                'px-2 transition-opacity duration-slow',
-                drawn ? 'opacity-100' : 'opacity-0',
-                active !== null && active !== i && 'opacity-50'
-              )}
-              style={{ transitionDelay: `${900 + i * 90}ms` }}
-            >
-              <span className={cn('t-label block', light ? 'text-gold-light' : 'text-gold')}>{s.n}</span>
-              {/* Pas `t-h3` ici : dans sept colonnes de 150 px, ce corps casse
-                  les titres en deux lignes et désaligne la rangée. C'est un
-                  repère de graphique, pas un titre de section. */}
-              <h3
-                className={cn(
-                  'mt-2 text-balance font-sans text-[1.0625rem] font-semibold leading-[1.25] tracking-[-0.012em]',
-                  light ? 'text-cream' : 'text-ink'
-                )}
+                style={{
+                  left: `${(p.x / W) * 100}%`,
+                  [p.above ? 'bottom' : 'top']: `calc(${p.above ? 100 - (p.y / H) * 100 : (p.y / H) * 100}% + 2.75rem)`,
+                  transform: 'translateX(-50%)',
+                  transitionDelay: `${1000 + i * 110}ms`,
+                }}
               >
-                {s.title}
-              </h3>
-              {/* Le texte reste dans le document pour les lecteurs d'écran et
-                  l'indexation ; seule sa présentation change. */}
-              <span className="sr-only">{s.text}</span>
-            </li>
-          ))}
-        </ol>
-
-        <p
-          aria-hidden="true"
-          className={cn(
-            'mt-10 min-h-[3.25rem] max-w-[62ch] border-t pt-6 t-lead transition-opacity duration-slow',
-            light ? 'border-cream/15 text-cream/70' : 'border-ink/12 text-ink/70',
-            drawn ? 'opacity-100' : 'opacity-0'
-          )}
-          style={{ transitionDelay: '1500ms' }}
-        >
-          {steps[active ?? 0].text}
-        </p>
+                <h3 className={cn('t-h3 text-balance', light ? 'text-cream' : 'text-ink')}>{p.step.title}</h3>
+                <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{p.step.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
 
       {/* ---------- Mobile : la même progression, en serpent ----------
-          La ligne droite ne disait rien d'un chantier. Le tracé serpente entre
-          les étapes : c'est un chemin qu'on suit, pas une règle graduée.
-
           Les ordonnées viennent de la mise en page réelle, mesurée après le
-          rendu. C'est la seule façon de faire passer la courbe exactement par
-          chaque point : les étapes n'ont pas la même longueur de texte, donc
-          pas la même hauteur. */}
+          rendu : c'est la seule façon de faire passer la courbe exactement par
+          chaque repère. */}
       <div ref={snakeRef} className="relative lg:hidden">
         {snakeH > 0 && (
           <svg
@@ -301,29 +317,24 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
 
         <ol className="relative">
           {steps.map((s, i) => (
-            <li key={s.n} className="relative pb-9 last:pb-0" style={{ paddingLeft: SNAKE.width + 18 }}>
-              {/* Même abscisse que la courbe, à un demi-point près : le repère
-                  est posé sur le tracé, pas à côté. */}
+            <li key={s.n} className="relative pb-10 last:pb-0" style={{ paddingLeft: SNAKE.width + 20 }}>
+              {/* Même abscisse que la courbe : le repère est posé sur le
+                  tracé, pas à côté. */}
               <span
                 ref={(el) => {
                   dotRefs.current[i] = el;
                 }}
                 aria-hidden="true"
-                className={cn(
-                  'absolute top-[6px] rounded-full border-[3px] transition-opacity duration-slow',
-                  light ? 'border-gold-light bg-bark' : 'border-gold bg-cream',
-                  drawn ? 'opacity-100' : 'opacity-0'
-                )}
+                className={cn('absolute top-0 transition-opacity duration-slow', drawn ? 'opacity-100' : 'opacity-0')}
                 style={{
-                  width: SNAKE.dot,
-                  height: SNAKE.dot,
                   left: (i % 2 === 0 ? SNAKE.left : SNAKE.right) - SNAKE.dot / 2,
                   transitionDelay: `${300 + i * 130}ms`,
                 }}
-              />
-              <span className={cn('t-label block', light ? 'text-gold-light' : 'text-gold')}>{s.n}</span>
-              <h3 className={cn('t-h3 mt-1.5', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
-              <p className={cn('t-small mt-1.5', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
+              >
+                <Badge step={s} size={SNAKE.dot} />
+              </span>
+              <h3 className={cn('t-h3', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
+              <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
             </li>
           ))}
         </ol>

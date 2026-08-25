@@ -29,7 +29,7 @@ export const FAQS = [
   },
   {
     q: 'Comment se déroule un projet ?',
-    a: "En sept étapes : premier contact, analyse du projet, visite sur place, devis détaillé, planification, travaux, livraison. Un seul interlocuteur suit le chantier du début à la fin.",
+    a: "En quatre étapes : contact et visite, devis détaillé, chantier, livraison. Un seul interlocuteur suit le chantier du début à la fin.",
   },
   {
     q: 'Prenez-vous en charge une rénovation complète ?',

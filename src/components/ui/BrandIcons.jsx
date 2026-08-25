@@ -98,3 +98,33 @@ export function PinIcon(props) {
     </svg>
   );
 }
+
+export function ToolsIcon(props) {
+  return (
+    <svg {...box} {...props} fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M10.2 2.4a3.1 3.1 0 0 0 3.9 4l-6 6a1.7 1.7 0 0 1-2.4-2.4l6-6Z" />
+      <path d="M4.6 2.3 6.9 4.6 5.5 6 3.2 3.7a1.6 1.6 0 0 1 1.4-1.4Z" />
+      <path d="m11.4 9.8 2.5 2.5a1.5 1.5 0 0 1-2.1 2.1L9.3 12" />
+    </svg>
+  );
+}
+
+export function CheckIcon(props) {
+  return (
+    <svg {...box} {...props} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m3.2 8.4 3.3 3.3 6.3-7.4" />
+    </svg>
+  );
+}
+
+/** Table des symboles utilisables par clé — voir `icon` dans src/data/method.js. */
+export const ICONS = {
+  pin: PinIcon,
+  quote: QuoteIcon,
+  tools: ToolsIcon,
+  check: CheckIcon,
+  gallery: GalleryIcon,
+  phone: PhoneIcon,
+  mail: MailIcon,
+  whatsapp: WhatsappIcon,
+};

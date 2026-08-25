@@ -27,7 +27,7 @@ export default function Method() {
   return (
     <>
       <PageHero
-        title="Sept étapes, zéro surprise."
+        title="Quatre étapes, zéro surprise."
         intro="Une rénovation réussie tient autant à l’organisation qu’au travail sur le chantier. Voici exactement comment nous procédons."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Notre méthode' }]}
       />

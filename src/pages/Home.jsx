@@ -16,7 +16,7 @@ const featured = PROJECTS.filter((p) => p.featured);
  *   1. qu'est-ce qu'ils font ?        → hero + trois faits
  *   2. est-ce que c'est bien fait ?   → trois chantiers
  *   3. est-ce qu'ils font mon poste ? → services
- *   4. comment ça se passe ?          → les sept étapes
+ *   4. comment ça se passe ?          → les quatre étapes
  *   → formulaire.
  *
  * Tout ce qui ne répond pas à l'une de ces questions a quitté la page : le
@@ -66,7 +66,7 @@ export default function Home() {
         <Container>
           <SectionHeading
             tone="light"
-            title="Sept étapes, zéro surprise."
+            title="Quatre étapes, zéro surprise."
             text="Vous savez à tout moment où en est votre chantier, ce qui a été fait et ce qui vient ensuite."
           />
           <ProcessCurve tone="light" className="mt-block" />
