@@ -108,10 +108,10 @@ export default function Home() {
             {/* Emphase par la couleur, pas par la graisse : le contexte
                 s'écrit en gris, la phrase qui compte revient au noir du texte.
                 L'œil trouve la conclusion sans qu'on la mette en gras. */}
-            <p className="t-lead measure mt-6 text-cream/45">
+            <p className="t-lead measure mt-6 text-ink/45">
               {BRAND.founders[0].name} suit les chantiers et la technique. {BRAND.founders[1].name} s’occupe du design et
               de la relation client. Cette répartition n’a pas bougé depuis le premier jour,{' '}
-              <span className="text-cream">et c’est pour cela que vous n’avez jamais qu’un seul interlocuteur.</span>
+              <span className="text-ink">et c’est pour cela que vous n’avez jamais qu’un seul interlocuteur.</span>
             </p>
             <div className="mt-9">
               <TextLink to="/a-propos">Découvrir Chaudrel</TextLink>

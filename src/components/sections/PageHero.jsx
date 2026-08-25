@@ -12,7 +12,7 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
   const hasImage = Boolean(image);
 
   return (
-    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-bark' : 'bg-ground')}>
+    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-bark' : 'bg-cream')}>
       {hasImage && (
         <>
           <img
@@ -32,7 +32,7 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
       <Container className={cn('pb-14 pt-28 lg:pb-20 lg:pt-40', hasImage && 'pb-20 lg:pb-28')}>
         {breadcrumb.length > 0 && (
           <nav aria-label="Fil d'Ariane" className="mb-10">
-            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-cream/65' : 'text-cream/65')}>
+            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-cream/65' : 'text-ink/65')}>
               {breadcrumb.map((b, i) => (
                 <li key={b.to || b.label} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">/</span>}
@@ -41,7 +41,7 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
                       {b.label}
                     </Link>
                   ) : (
-                    <span aria-current="page" className={hasImage ? 'text-cream/70' : 'text-cream/65'}>
+                    <span aria-current="page" className={hasImage ? 'text-cream/70' : 'text-ink/65'}>
                       {b.label}
                     </span>
                   )}
@@ -58,7 +58,7 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
           <div className={cn(aside && 'lg:col-span-7')}>
             {/* `ch` se calcule sur la police de l'élément : la largeur se pose
                 donc sur le titre, jamais sur le conteneur. */}
-            <h1 className={cn('t-h1 max-w-[16ch] text-balance', hasImage ? 'text-cream' : 'text-cream')}>{title}</h1>
+            <h1 className={cn('t-h1 max-w-[16ch] text-balance', hasImage ? 'text-cream' : 'text-ink')}>{title}</h1>
           </div>
 
           {(intro || aside) && (
@@ -66,7 +66,7 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
               className={cn(
                 'mt-6',
                 aside && 'lg:col-span-5 lg:mt-0 lg:self-end',
-                hasImage ? 'text-cream/65' : 'text-cream/65'
+                hasImage ? 'text-cream/65' : 'text-ink/65'
               )}
             >
               {intro && <p className="t-lead measure">{intro}</p>}

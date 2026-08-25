@@ -12,24 +12,13 @@ export function Container({ className, children, as: Tag = 'div' }) {
   return <Tag className={cn('mx-auto w-full max-w-page px-5 sm:px-8 lg:px-12', className)}>{children}</Tag>;
 }
 
-/* Le site n'a plus qu'un sol. Les tons ne changent plus la couleur de fond —
-   ils règlent la profondeur : `ground` est le sol, `surface` une surface posée
-   dessus, `glow` une section que le halo vert traverse. Alterner des aplats
-   clairs et sombres n'a plus de sens quand tout est sombre ; c'est la lumière
-   qui sépare les sections, pas la teinte.
-
-   Les noms clairs d'avant (`cream`, `white`, `shell`, `sand`) restent acceptés
-   pour ne pas réécrire chaque page : ils pointent tous vers le sol. */
 const TONES = {
-  ground: 'bg-ground',
-  surface: 'bg-surface',
-  glow: 'bg-ground section-glow',
-
-  cream: 'bg-ground',
-  white: 'bg-surface',
-  shell: 'bg-surface',
-  sand: 'bg-surface',
-  bark: 'bg-ground',
+  cream: 'bg-cream text-ink',
+  white: 'bg-shell text-ink', // « white » historique : coquille, jamais blanc pur
+  shell: 'bg-shell text-ink',
+  sand: 'bg-sand text-ink',
+  // `on-dark` déclenche la compensation typographique du texte clair.
+  bark: 'bg-bark text-cream on-dark',
 };
 
 export function Section({ id, tone = 'cream', className, children, ...rest }) {
@@ -46,14 +35,14 @@ export function Rule({ tone = 'dark', className, delay = 0 }) {
     <Reveal
       from="line"
       delay={delay}
-      className={cn('h-px w-full', tone === 'light' ? 'bg-cream/20' : 'bg-cream/15', className)}
+      className={cn('h-px w-full', tone === 'light' ? 'bg-cream/20' : 'bg-ink/15', className)}
     />
   );
 }
 
 export function Label({ children, tone = 'dark', className }) {
   return (
-    <span className={cn('t-label', tone === 'light' ? 'text-cream/65' : 'text-cream/65', className)}>{children}</span>
+    <span className={cn('t-label', tone === 'light' ? 'text-cream/65' : 'text-ink/65', className)}>{children}</span>
   );
 }
 
@@ -79,7 +68,7 @@ export function SectionHeading({ title, text, tone = 'dark', align = 'stack', cl
       <Reveal className={cn(split && 'lg:col-span-7')}>
         {/* La largeur se pose sur le titre : `ch` se calcule sur la police de
             l'élément, pas sur celle du conteneur. */}
-        <h2 className={cn('t-h2 max-w-[18ch] text-balance', light ? 'text-cream' : 'text-cream')}>{title}</h2>
+        <h2 className={cn('t-h2 max-w-[18ch] text-balance', light ? 'text-cream' : 'text-ink')}>{title}</h2>
       </Reveal>
 
       {(text || children) && (
@@ -88,7 +77,7 @@ export function SectionHeading({ title, text, tone = 'dark', align = 'stack', cl
           className={cn(
             'mt-5',
             split && 'lg:col-span-5 lg:mt-0 lg:self-end',
-            light ? 'text-cream/60' : 'text-cream/65'
+            light ? 'text-cream/60' : 'text-ink/65'
           )}
         >
           {text && <p className="t-lead measure">{text}</p>}
@@ -109,21 +98,12 @@ export function SectionHeading({ title, text, tone = 'dark', align = 'stack', cl
    ne sert qu'à signaler : page active, focus, repères. Une action primaire en
    brun ferait du brun la couleur dominante, ce qu'il n'est pas. */
 
-/* L'action principale est cerclée, pas remplie.
-   Sur un sol sombre, un aplat de laiton devient une tache : il attire l'œil
-   mais écrase la photo derrière lui. Un filet de laiton sur du vide garde la
-   même autorité en laissant passer le fond — c'est le geste de la référence,
-   et c'est aussi le seul qui tienne posé sur une image de chantier.
-   Le laiton clair donne 8,8:1 sur le sol : le libellé passe largement. */
 const VARIANTS = {
-  solid: 'border border-gold-light/60 text-gold-light hover:border-gold-light hover:bg-gold-light/10',
-  solidLight: 'border border-gold-light/60 text-gold-light hover:border-gold-light hover:bg-gold-light/10',
-  outline: 'border border-cream/20 text-cream hover:border-cream/45 hover:bg-cream/[0.06]',
-  outlineLight: 'border border-cream/20 text-cream hover:border-cream/45 hover:bg-cream/[0.06]',
-  /* Le seul aplat encore plein : réservé aux endroits où le laiton cerclé se
-     poserait sur une surface déjà cernée — barre d'action mobile, page de
-     liens. Du sol sur du laiton : 8,8:1. */
-  fill: 'bg-gold-light text-ground hover:bg-gold-light/90',
+  // Le devis est l'action de la marque : il porte le laiton.
+  solid: 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift',
+  solidLight: 'bg-cream text-ink shadow-soft hover:bg-shell hover:shadow-lift',
+  outline: 'border border-ink/15 bg-shell/70 text-ink hover:border-ink/30 hover:bg-shell hover:shadow-soft',
+  outlineLight: 'border border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/10',
 };
 
 const SIZES = {
@@ -135,11 +115,10 @@ const SIZES = {
 /* Pastille de flèche logée dans la pilule. Elle donne la direction et se
    décale au survol. Décorative : le libellé dit déjà où l'on va. */
 const ARROW_TONE = {
-  solid: 'bg-gold-light/15 text-gold-light',
-  solidLight: 'bg-gold-light/15 text-gold-light',
-  outline: 'bg-cream/10 text-cream',
-  outlineLight: 'bg-cream/10 text-cream',
-  fill: 'bg-ground/15 text-ground',
+  solid: 'bg-cream/20 text-cream',
+  solidLight: 'bg-ink/10 text-ink',
+  outline: 'bg-ink/[0.07] text-ink',
+  outlineLight: 'bg-cream/15 text-cream',
 };
 
 function ArrowChip({ variant }) {
@@ -201,7 +180,7 @@ export function Button({ to, href, variant = 'solid', size = 'md', arrow = false
 export function TextLink({ to, href, className, children, tone = 'dark', ...rest }) {
   const classes = cn(
     'link-line tap t-label inline-block pb-1',
-    tone === 'light' ? 'text-cream' : 'text-cream',
+    tone === 'light' ? 'text-cream' : 'text-ink',
     className
   );
 
@@ -248,7 +227,7 @@ export function Media({
     />
   );
 
-  const shell = cn('overflow-hidden rounded-lg bg-raised', ratio, className);
+  const shell = cn('overflow-hidden rounded-lg bg-sand', ratio, className);
 
   if (!reveal) return <div className={shell}>{img}</div>;
 
@@ -266,7 +245,7 @@ export function Media({
  */
 export function Panel({ className, children, as: Tag = 'div', ...rest }) {
   return (
-    <Tag className={cn('rounded-lg border border-cream/[0.07] bg-surface shadow-soft', className)} {...rest}>
+    <Tag className={cn('rounded-lg border border-ink/[0.07] bg-shell shadow-soft', className)} {...rest}>
       {children}
     </Tag>
   );
@@ -288,13 +267,13 @@ export function Disclosure({ title, defaultOpen = false, className, children }) 
   const contentId = useId();
 
   return (
-    <div className={cn('overflow-hidden rounded-lg border border-cream/[0.09] bg-surface', className)}>
+    <div className={cn('overflow-hidden rounded-lg border border-ink/[0.09] bg-shell', className)}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={contentId}
-        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-fast hover:bg-cream/[0.05]"
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-fast hover:bg-cream/60"
       >
         <span className="t-h3">{title}</span>
         <svg
@@ -305,14 +284,14 @@ export function Disclosure({ title, defaultOpen = false, className, children }) 
           fill="none"
           stroke="currentColor"
           strokeWidth="1.6"
-          className={cn('flex-none text-cream/50 transition-transform duration-300 ease-soft', open && 'rotate-180')}
+          className={cn('flex-none text-ink/50 transition-transform duration-300 ease-soft', open && 'rotate-180')}
         >
           <path d="M2 5l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </button>
 
       {open && (
-        <div id={contentId} className="border-t border-cream/[0.09] px-5 py-5">
+        <div id={contentId} className="border-t border-ink/[0.09] px-5 py-5">
           {children}
         </div>
       )}

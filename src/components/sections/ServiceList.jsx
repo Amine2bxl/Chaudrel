@@ -23,7 +23,7 @@ export default function ServiceList({ services = SERVICES, tone = 'dark', classN
           as="li"
           key={s.slug}
           delay={i * 55}
-          className={cn('border-b last:border-b-0', light ? 'border-cream/12' : 'border-cream/[0.09]')}
+          className={cn('border-b last:border-b-0', light ? 'border-cream/12' : 'border-ink/[0.09]')}
         >
           <Link
             to={`/services/${s.slug}`}
@@ -32,14 +32,14 @@ export default function ServiceList({ services = SERVICES, tone = 'dark', classN
               'group grid grid-cols-[1fr_auto] items-center gap-x-6 gap-y-2 rounded-lg px-4 py-5',
               'transition-colors duration-300 ease-soft sm:px-5 sm:py-6',
               'lg:grid-cols-[minmax(0,20ch)_1fr_auto] lg:gap-x-10',
-              light ? 'hover:bg-cream/[0.05]' : 'hover:bg-surface'
+              light ? 'hover:bg-cream/[0.05]' : 'hover:bg-shell'
             )}
           >
             <h3
               className={cn(
                 'font-display text-[1.5rem] leading-[1.05] tracking-[-0.01em] transition-colors duration-300',
                 'sm:text-[1.75rem] lg:text-[2rem]',
-                light ? 'text-cream group-hover:text-gold-light' : 'text-cream group-hover:text-gold'
+                light ? 'text-cream group-hover:text-gold-light' : 'text-ink group-hover:text-gold'
               )}
             >
               {s.title}
@@ -48,7 +48,7 @@ export default function ServiceList({ services = SERVICES, tone = 'dark', classN
             <p
               className={cn(
                 'col-span-2 col-start-1 t-small max-w-[52ch] lg:col-span-1 lg:col-start-2',
-                light ? 'text-cream/65' : 'text-cream/65'
+                light ? 'text-cream/65' : 'text-ink/65'
               )}
             >
               {s.excerpt}
@@ -62,7 +62,7 @@ export default function ServiceList({ services = SERVICES, tone = 'dark', classN
                 'transition-all duration-300 ease-soft lg:col-start-3',
                 light
                   ? 'border-cream/30 text-cream/70 group-hover:border-gold-light group-hover:bg-gold-light group-hover:text-bark'
-                  : 'border-cream/[0.18] text-cream/65 group-hover:border-gold group-hover:bg-gold group-hover:text-cream'
+                  : 'border-ink/[0.18] text-ink/65 group-hover:border-gold group-hover:bg-gold group-hover:text-cream'
               )}
               aria-hidden="true"
             >

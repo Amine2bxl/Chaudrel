@@ -7,54 +7,40 @@
 
 :root {
   /* ---------- Couleur ----------
-     Le site est sombre. Le fond n'est pas un noir neutre : c'est un vert
-     très profond, presque éteint, qui donne à la photo de chantier la même
-     chaleur qu'un atelier le soir. Un noir pur rendrait chaque image grise.
+     Le crème est la couleur principale de Chaudrel : c'est le fond du site,
+     la barre de navigation, les surfaces. Le graphite porte le texte et les
+     actions. L'or de laiton n'est qu'un accent : page active, focus, repères.
 
-     Trois plans, et rien de plus : le vide autour du cadre, le sol de la
-     page, les surfaces posées dessus. Leur écart est volontairement ténu —
-     une carte se détache par un filet clair, pas par un bond de valeur.
+     ⚠️ #8C764E donne 4,0:1 sur le crème et 3,9:1 sur le sombre : sous le seuil
+     AA pour du texte courant. Il ne sert donc jamais à écrire un paragraphe —
+     seulement des repères, des grands corps et des bordures. Sur fond sombre,
+     c'est `gold-light` (8:1) qui prend le relais.
 
-     Le laiton reste l'accent de Chaudrel. Sur ce fond il monte à 8,8:1 : il
-     peut enfin porter du texte courant, ce que le crème lui interdisait.
-
-     Les triplets RVB existent pour que Tailwind applique une opacité
-     (`text-cream/70`) sans dupliquer la couleur. */
-
-  /* Les trois plans du sombre. */
-  --c-void-rgb: 35 35 35; /* hors cadre — la table sur laquelle la page est posée */
-  --c-ground-rgb: 14 22 19; /* le sol de la page */
-  --c-surface-rgb: 22 33 29; /* panneaux, cartes */
-  --c-raised-rgb: 30 44 39; /* champs de saisie, pastilles */
-  --c-glow-rgb: 31 64 52; /* halo vert derrière les sujets — jamais un aplat */
-
-  /* Les valeurs claires. Inchangées : le crème de Chaudrel porte désormais
-     le texte au lieu du fond, et sa chaleur relie l'écran aux photos. */
-  --c-cream-rgb: 247 245 242; /* texte principal — 16,4:1 sur le sol */
-  --c-shell-rgb: 255 255 255; /* le blanc franc : pastilles, repères posés sur le sombre */
-  --c-sand-rgb: 234 229 222; /* fond d'image en attente */
-  --c-ink-rgb: 26 26 26; /* texte posé sur une surface claire — pastilles, boutons pleins */
-  --c-bark-rgb: 28 28 28; /* voiles sombres sur photo */
-
-  /* Laiton. `gold-light` est l'accent courant du site sombre ; `gold` reste la
-     nuance éteinte des repères et des filets, où 4:1 suffit. */
-  --c-gold-rgb: 140 118 78; /* repères, filets, grands corps */
-  --c-gold-deep-rgb: 111 93 61; /* aplats profonds */
-  --c-gold-hover-rgb: 122 102 66;
-  --c-gold-light-rgb: 201 174 131; /* l'accent — 8,8:1 sur le sol */
-
+     Le bouton « Devis gratuit » est en laiton, comme demandé, mais dans la
+     nuance `gold-deep` : son libellé fait 11 px, et du crème sur #8C764E ne
+     donne que 4,0:1. `gold-deep` monte à 5,8:1 en restant franchement laiton.
+     Les triplets RVB existent pour que Tailwind puisse appliquer une opacité
+     (`text-ink/65`) sans dupliquer la couleur. */
+  --c-cream-rgb: 247 245 242; /* fond de page — crème de Chaudrel */
+  --c-shell-rgb: 255 255 255; /* surfaces surélevées : cartes, champs, panneaux */
+  --c-sand-rgb: 234 229 222; /* aplats discrets, fond d'image en attente */
+  --c-ink-rgb: 26 26 26; /* texte et actions primaires */
+  --c-bark-rgb: 28 28 28; /* sections sombres */
+  --c-gold-rgb: 140 118 78; /* accent : page active, focus, repères */
+  --c-gold-deep-rgb: 111 93 61; /* fond du bouton devis — 5,8:1 sous le crème */
+  --c-gold-hover-rgb: 122 102 66; /* son survol — 5,1:1, passe encore */
+  --c-gold-light-rgb: 201 174 131; /* le même accent sur fond sombre */
   /* Vert de validation. Réservé à ce qui est terminé et vérifié — jamais
-     décoratif : s'il apparaît ailleurs qu'un état achevé, il ne veut plus rien
-     dire. `green-light` donne 7,6:1 sur le sol ; `green` sert d'aplat sous du
-     crème, au même rapport. */
+     décoratif : s'il apparaît ailleurs que sur un état achevé, il ne veut plus
+     rien dire. Désaturé pour tenir à côté du laiton sans le concurrencer.
+     #3D6B4E : 5,7:1 sous le crème, et le crème dessus au même rapport.
+     #7FB08D : la même fonction sur fond sombre — 6,9:1 sur le bark. */
   --c-green-rgb: 61 107 78;
   --c-green-light-rgb: 127 176 141;
 
   --c-error-rgb: 154 59 35;
-  --c-error-light-rgb: 232 145 122; /* l'erreur lisible sur le sombre */
+  --c-error-light-rgb: 232 145 122;
 
-  --c-ground: rgb(var(--c-ground-rgb));
-  --c-surface: rgb(var(--c-surface-rgb));
   --c-cream: rgb(var(--c-cream-rgb));
   --c-shell: rgb(var(--c-shell-rgb));
   --c-ink: rgb(var(--c-ink-rgb));

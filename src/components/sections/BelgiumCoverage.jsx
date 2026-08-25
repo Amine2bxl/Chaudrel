@@ -73,7 +73,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
       </Reveal>
 
       <div className="mt-10 lg:col-span-7 lg:mt-0">
-        <p className={cn('t-lead measure', light ? 'text-cream/70' : 'text-cream/70')}>
+        <p className={cn('t-lead measure', light ? 'text-cream/70' : 'text-ink/70')}>
 {BRAND.zoneSentence}
         </p>
 
@@ -92,7 +92,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                 aria-pressed={active === p.id}
                 className={cn(
                   'group flex w-full items-center gap-3 border-b py-3 text-left transition-colors duration-fast',
-                  light ? 'border-cream/12' : 'border-cream/[0.09]'
+                  light ? 'border-cream/12' : 'border-ink/[0.09]'
                 )}
               >
                 <span
@@ -112,10 +112,10 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                     active === p.id
                       ? light
                         ? 'text-cream'
-                        : 'text-cream'
+                        : 'text-ink'
                       : light
                         ? 'text-cream/60 group-hover:text-cream'
-                        : 'text-cream/60 group-hover:text-cream'
+                        : 'text-ink/60 group-hover:text-ink'
                   )}
                 >
                   {p.name}

@@ -196,8 +196,8 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
                 ? 'bg-green-light text-bark'
                 : 'bg-green text-cream'
               : light
-                ? 'bg-ground text-bark'
-                : 'bg-surface text-cream'
+                ? 'bg-cream text-bark'
+                : 'bg-shell text-ink'
           )}
           style={{ width: size, height: size }}
         >
@@ -289,7 +289,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
                   className={cn(
                     'pointer-events-none absolute select-none font-display leading-[0.75] transition-opacity duration-[1200ms] ease-soft',
                     'text-[7.5rem] xl:text-[9rem]',
-                    light ? 'text-cream/[0.09]' : 'text-cream/[0.075]',
+                    light ? 'text-cream/[0.09]' : 'text-ink/[0.075]',
                     drawn ? 'opacity-100' : 'opacity-0'
                   )}
                   style={{
@@ -343,8 +343,8 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
                   transitionDelay: `${1000 + i * 110}ms`,
                 }}
               >
-                <h3 className={cn('t-h3 text-balance', light ? 'text-cream' : 'text-cream')}>{p.step.title}</h3>
-                <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-cream/65')}>{p.step.text}</p>
+                <h3 className={cn('t-h3 text-balance', light ? 'text-cream' : 'text-ink')}>{p.step.title}</h3>
+                <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{p.step.text}</p>
               </li>
             ))}
           </ol>
@@ -409,8 +409,8 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
               >
                 <Badge step={s} size={SNAKE.dot} last={i === steps.length - 1} />
               </span>
-              <h3 className={cn('t-h3', light ? 'text-cream' : 'text-cream')}>{s.title}</h3>
-              <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-cream/65')}>{s.text}</p>
+              <h3 className={cn('t-h3', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
+              <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
             </li>
           ))}
         </ol>

@@ -61,7 +61,7 @@ export default function Service() {
         <Container>
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
             <div className="lg:col-span-7">
-              <p className="t-h3 measure text-cream">{service.intro}</p>
+              <p className="t-h3 measure text-ink">{service.intro}</p>
 
               {/* Les postes sont groupés par nature plutôt qu'alignés en une
                   liste numérotée : trente lignes d'affilée ne se lisent pas, et
@@ -70,10 +70,10 @@ export default function Service() {
                 <div className="mt-block space-y-10">
                   {service.groups.map((g, gi) => (
                     <Reveal key={g.title} delay={gi * 90}>
-                      <h2 className="t-label text-cream/55">{g.title}</h2>
+                      <h2 className="t-label text-ink/55">{g.title}</h2>
                       <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-2.5">
                         {g.items.map((item) => (
-                          <li key={item} className="t-body flex items-baseline gap-2.5 text-cream/75">
+                          <li key={item} className="t-body flex items-baseline gap-2.5 text-ink/75">
                             <span aria-hidden="true" className="h-1 w-1 flex-none rounded-full bg-gold" />
                             {item}
                           </li>
@@ -86,24 +86,24 @@ export default function Service() {
             </div>
 
             <aside className="lg:col-span-4 lg:col-start-9">
-              <div data-page-cta className="border-t border-cream/12 pt-6">
-                <span className="t-label text-cream/65">Devis gratuit</span>
-                <p className="t-body mt-4 text-cream/65">
+              <div data-page-cta className="border-t border-ink/12 pt-6">
+                <span className="t-label text-ink/65">Devis gratuit</span>
+                <p className="t-body mt-4 text-ink/65">
                   Décrivez votre projet {service.title.toLowerCase()}. Nous organisons une visite et vous remettons une
                   proposition détaillée, sans engagement.
                 </p>
                 <Button to="/devis" variant="solid" className="mt-7 w-full">
                   Devis gratuit
                 </Button>
-                <p className="t-small mt-5 text-cream/65">{BRAND.zoneLong}.</p>
+                <p className="t-small mt-5 text-ink/65">{BRAND.zoneLong}.</p>
               </div>
 
               <nav aria-label="Autres services" className="mt-12">
-                <span className="t-label text-cream/65">Autres services</span>
+                <span className="t-label text-ink/65">Autres services</span>
                 <ul className="mt-5 space-y-2.5">
                   {others.map((s) => (
                     <li key={s.slug}>
-                      <Link to={`/services/${s.slug}`} className="link-line t-small text-cream/65 hover:text-cream">
+                      <Link to={`/services/${s.slug}`} className="link-line t-small text-ink/65 hover:text-ink">
                         {s.title}
                       </Link>
                     </li>

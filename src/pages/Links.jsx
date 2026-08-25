@@ -48,16 +48,16 @@ function Row({ to, href, icon: Icon, label, hint, onClick, primary = false }) {
         aria-hidden="true"
         className={cn(
           'grid h-11 w-11 flex-none place-items-center rounded-full transition-colors duration-fast',
-          primary ? 'bg-cream/20 text-cream' : 'bg-cream/[0.06] text-cream group-hover:bg-cream/10'
+          primary ? 'bg-cream/20 text-cream' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
         )}
       >
         <Icon width="17" height="17" />
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className={cn('block t-label', primary ? 'text-cream' : 'text-cream')}>{label}</span>
+        <span className={cn('block t-label', primary ? 'text-cream' : 'text-ink')}>{label}</span>
         {hint && (
-          <span className={cn('mt-1 block t-small', primary ? 'text-cream/90' : 'text-cream/55')}>{hint}</span>
+          <span className={cn('mt-1 block t-small', primary ? 'text-cream/90' : 'text-ink/55')}>{hint}</span>
         )}
       </span>
 
@@ -71,7 +71,7 @@ function Row({ to, href, icon: Icon, label, hint, onClick, primary = false }) {
         strokeWidth="1.6"
         className={cn(
           'flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5',
-          primary ? 'text-cream/70' : 'text-cream/35'
+          primary ? 'text-cream/70' : 'text-ink/35'
         )}
       >
         <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -83,7 +83,7 @@ function Row({ to, href, icon: Icon, label, hint, onClick, primary = false }) {
     'group flex w-full items-center gap-4 rounded-lg px-4 py-4 text-left transition-all duration-fast ease-soft active:translate-y-px sm:px-5',
     primary
       ? 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift'
-      : 'border border-cream/[0.09] bg-surface hover:border-cream/20 hover:shadow-soft'
+      : 'border border-ink/[0.09] bg-shell hover:border-ink/20 hover:shadow-soft'
   );
 
   if (to) {
@@ -110,8 +110,8 @@ function Row({ to, href, icon: Icon, label, hint, onClick, primary = false }) {
 function GroupLabel({ children }) {
   return (
     <div className="mb-4 mt-9 flex items-center gap-4 first:mt-0">
-      <span className="t-label flex-none text-cream/65">{children}</span>
-      <span aria-hidden="true" className="h-px flex-1 bg-cream/10" />
+      <span className="t-label flex-none text-ink/65">{children}</span>
+      <span aria-hidden="true" className="h-px flex-1 bg-ink/10" />
     </div>
   );
 }
@@ -120,7 +120,7 @@ export default function Links() {
   const t = (event, extra) => () => track(event, { source: 'links', ...extra });
 
   return (
-    <div className="relative isolate overflow-hidden bg-ground">
+    <div className="relative isolate overflow-hidden bg-cream">
       {/* Halo derrière l'en-tête : sans lui, une colonne de cartes blanches sur
           un aplat crème n'a aucun point de départ — le regard entre par le
           milieu. Un seul dégradé, très bas en opacité ; il ne se voit pas, il
@@ -136,13 +136,13 @@ export default function Links() {
       {/* pt = hauteur de la barre flottante ; pb = barre d'action mobile. */}
       <div className="mx-auto w-full max-w-lg px-5 pb-[calc(66px+3rem)] pt-28 sm:px-6 lg:pb-24 lg:pt-36">
         <Reveal className="text-center">
-          <span className="mx-auto grid h-16 w-16 place-items-center overflow-hidden rounded-logo bg-surface shadow-lift ring-1 ring-cream/[0.06]">
+          <span className="mx-auto grid h-16 w-16 place-items-center overflow-hidden rounded-logo bg-shell shadow-lift ring-1 ring-ink/[0.06]">
             <img src={LOGO} alt="" aria-hidden="true" width="64" height="64" className="h-full w-full object-cover" />
           </span>
-          <h1 className="mt-5 font-wordmark text-[22px] uppercase leading-none tracking-[0.2em] text-cream">
+          <h1 className="mt-5 font-wordmark text-[22px] uppercase leading-none tracking-[0.2em] text-ink">
             {BRAND.name}
           </h1>
-          <p className="t-small mt-3 text-cream/60">
+          <p className="t-small mt-3 text-ink/60">
             Entreprise de rénovation · {BRAND.zoneLong}
           </p>
         </Reveal>
@@ -202,7 +202,7 @@ export default function Links() {
                     rel="noopener noreferrer"
                     aria-label={label}
                     onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
-                    className="grid h-[3.25rem] w-[3.25rem] place-items-center rounded-md border border-cream/[0.09] bg-surface text-cream/70 transition-all duration-fast ease-soft hover:border-cream/20 hover:text-cream hover:shadow-soft active:translate-y-px"
+                    className="grid h-[3.25rem] w-[3.25rem] place-items-center rounded-md border border-ink/[0.09] bg-shell text-ink/70 transition-all duration-fast ease-soft hover:border-ink/20 hover:text-ink hover:shadow-soft active:translate-y-px"
                   >
                     <Icon width="19" height="19" />
                   </a>
@@ -213,7 +213,7 @@ export default function Links() {
         </Reveal>
 
         <Reveal delay={200} className="mt-10 text-center">
-          <address className="t-small not-italic text-cream/65">
+          <address className="t-small not-italic text-ink/65">
             {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city}
             <br />
             TVA {BRAND.vat}
@@ -223,7 +223,7 @@ export default function Links() {
               rate. Le trait reste collé au mot, la zone déborde autour. */}
           <Link
             to="/"
-            className="link-line t-label mt-3 inline-flex min-h-[44px] items-center px-2 text-cream"
+            className="link-line t-label mt-3 inline-flex min-h-[44px] items-center px-2 text-ink"
           >
             Voir le site
           </Link>

@@ -43,9 +43,9 @@ export default function Method() {
           <SectionHeading title="Quatre règles qui ne bougent pas." />
           <div className="mt-block grid gap-x-16 gap-y-12 lg:grid-cols-2">
             {PRINCIPES.map((p, i) => (
-              <Reveal key={p.title} delay={i * 90} className="border-t border-cream/12 pt-6">
+              <Reveal key={p.title} delay={i * 90} className="border-t border-ink/12 pt-6">
                 <h3 className="t-h2 text-[1.5rem] lg:text-[1.75rem]">{p.title}</h3>
-                <p className="t-body measure mt-4 text-cream/65">{p.text}</p>
+                <p className="t-body measure mt-4 text-ink/65">{p.text}</p>
               </Reveal>
             ))}
           </div>
