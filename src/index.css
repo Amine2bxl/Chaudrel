@@ -278,6 +278,26 @@
   .link-line:focus-visible {
     background-size: 100% 1px;
   }
+
+  /* Zone tactile de 44 px sans déplacer un pixel.
+     Un lien de texte fait 11 à 15 px de haut : c'est la hauteur des lettres,
+     pas celle d'un pouce. Grossir la boîte réglerait la cible mais décrocherait
+     le soulignement, posé sur le bas de la boîte, et casserait le rythme
+     vertical. Le pseudo-élément étend la surface cliquable au-dessus et en
+     dessous du texte, là où il n'y a rien.
+     Réservé aux contrôles alignés horizontalement : deux `.tap` empilés
+     verticalement à moins de 44 px se recouvriraient. */
+  .tap {
+    position: relative;
+  }
+
+  .tap::after {
+    content: '';
+    position: absolute;
+    inset: 50% -0.375rem auto;
+    height: 2.75rem;
+    transform: translateY(-50%);
+  }
 }
 
 /* ---------- Scrollbar ---------- */

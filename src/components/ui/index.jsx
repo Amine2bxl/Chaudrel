@@ -1,6 +1,7 @@
 import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { imageAttrs, SIZES as IMG_SIZES } from '@/lib/image';
 import Reveal from '@/lib/reveal';
 
 /* ============================================================
@@ -58,18 +59,13 @@ export function Label({ children, tone = 'dark', className }) {
  *   reste disponible quand la colonne de droite porte autre chose qu'un
  *   paragraphe de remplissage.
  */
-export function SectionHeading({ label, title, text, tone = 'dark', align = 'stack', className, children }) {
+export function SectionHeading({ title, text, tone = 'dark', align = 'stack', className, children }) {
   const light = tone === 'light';
   const split = align === 'split';
 
   return (
     <div className={cn(split && 'lg:grid lg:grid-cols-12 lg:gap-10', className)}>
       <Reveal className={cn(split && 'lg:col-span-7')}>
-        {label && (
-          <div className="mb-5">
-            <Label tone={tone}>{label}</Label>
-          </div>
-        )}
         {/* La largeur se pose sur le titre : `ch` se calcule sur la police de
             l'élément, pas sur celle du conteneur. */}
         <h2 className={cn('t-h2 max-w-[18ch] text-balance', light ? 'text-cream' : 'text-ink')}>{title}</h2>
@@ -183,7 +179,7 @@ export function Button({ to, href, variant = 'solid', size = 'md', arrow = false
 /** Lien texte avec soulignement qui se déploie au survol. */
 export function TextLink({ to, href, className, children, tone = 'dark', ...rest }) {
   const classes = cn(
-    'link-line t-label inline-block pb-1',
+    'link-line tap t-label inline-block pb-1',
     tone === 'light' ? 'text-cream' : 'text-ink',
     className
   );
@@ -203,11 +199,27 @@ export function TextLink({ to, href, className, children, tone = 'dark', ...rest
 }
 
 /** Image au ratio contrôlé, révélée par un volet au scroll. */
-export function Media({ src, alt, ratio = 'aspect-[4/5]', className, imgClassName, priority = false, reveal = true }) {
+export function Media({
+  src,
+  alt,
+  ratio = 'aspect-[4/5]',
+  className,
+  imgClassName,
+  priority = false,
+  reveal = true,
+  sizes = IMG_SIZES.half,
+  width = 1200,
+  height = 900,
+}) {
   const img = (
     <img
-      src={src}
+      {...imageAttrs(src, sizes)}
       alt={alt}
+      // Dimensions déclarées : le navigateur réserve la place avant que la
+      // photo arrive. Sans elles, le texte qui suit saute au chargement.
+      // Le cadre impose déjà son rapport ; ces valeurs ne servent qu'au calcul.
+      width={width}
+      height={height}
       loading={priority ? 'eager' : 'lazy'}
       decoding={priority ? 'sync' : 'async'}
       fetchpriority={priority ? 'high' : undefined}

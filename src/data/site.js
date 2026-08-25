@@ -11,6 +11,8 @@ export const BRAND = {
   legalName: 'Chaudrel Rénovation',
   tagline: 'Transformer un espace. Créer un lieu.',
   founded: 2009,
+  // Graphie telle que Chaudrel l'écrit — conservée pour les `mailto:` et le
+  // JSON-LD. Voir EMAIL_DISPLAY plus bas pour l'affichage.
   email: 'Info@chaudrel.be',
   vat: 'BE0812283245',
   address: {
@@ -121,3 +123,14 @@ export const PROOF = [
   { value: 'Toute la Belgique', label: 'Zone d’intervention' },
   { value: 'Un interlocuteur', label: 'Du devis à la livraison' },
 ];
+
+/**
+ * L'adresse telle qu'on l'affiche : en minuscules.
+ *
+ * Chaudrel l'écrit « Info@… ». À l'écran, la majuscule se lit comme une faute
+ * de frappe, et elle n'apparaissait que sur certaines pages — la même adresse
+ * s'écrivait de deux façons selon l'endroit. La casse d'une adresse n'a aucun
+ * effet chez les fournisseurs courants : seul l'affichage change, le `mailto:`
+ * et le JSON-LD gardent la graphie d'origine.
+ */
+export const EMAIL_DISPLAY = BRAND.email.toLowerCase();

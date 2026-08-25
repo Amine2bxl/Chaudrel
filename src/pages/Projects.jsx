@@ -37,8 +37,8 @@ export default function Projects() {
                   aria-pressed={on}
                   onClick={() => setFilter(c.id)}
                   className={cn(
-                    'relative t-label pb-1 transition-colors duration-fast',
-                    on ? 'text-ink' : 'text-ink/50 hover:text-ink'
+                    'relative tap t-label pb-1 transition-colors duration-fast',
+                    on ? 'text-ink' : 'text-ink/65 hover:text-ink'
                   )}
                 >
                   {c.label}
@@ -69,7 +69,7 @@ export default function Projects() {
               <button
                 type="button"
                 onClick={() => setFilter('all')}
-                className="link-line t-label mt-5 inline-block pb-1 text-ink"
+                className="link-line tap t-label mt-5 inline-block pb-1 text-ink"
               >
                 Voir tous les chantiers
               </button>

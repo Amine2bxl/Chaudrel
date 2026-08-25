@@ -49,7 +49,10 @@ export default function Quote() {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const [started, setStarted] = useState(false);
-  const [serverError, setServerError] = useState('');
+  /* Le détail technique part dans les mesures, jamais à l'écran : « Failed to
+     fetch » ou le champ `error` de l'API sont écrits pour un journal, pas pour
+     quelqu'un qui attend un devis. L'écran dit ce qui s'est passé et par où
+     passer maintenant. */
 
   const set = (key) => (value) => {
     setData((d) => ({ ...d, [key]: value }));
@@ -79,16 +82,24 @@ export default function Quote() {
     return Object.keys(e).length === 0;
   };
 
+  /* `scroll-behavior: auto` en CSS ne bride pas un appel JS explicite : c'est
+     l'appel qui gagne. La préférence se lit donc ici. */
+  const scrollTop = () =>
+    window.scrollTo({
+      top: 0,
+      behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+
   const next = () => {
     if (!validate(step)) return;
     track(EVENTS.QUOTE_STEP, { step });
     setStep((s) => Math.min(STEPS.length, s + 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTop();
   };
 
   const back = () => {
     setStep((s) => Math.max(1, s - 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollTop();
   };
 
   const submit = async (e) => {
@@ -96,7 +107,6 @@ export default function Quote() {
     if (!validate(STEPS.length)) return;
 
     setStatus('loading');
-    setServerError('');
     track(EVENTS.QUOTE_SUBMIT, { projectType: data.projectType });
 
     try {
@@ -111,10 +121,9 @@ export default function Quote() {
       }
       setStatus('success');
       track(EVENTS.QUOTE_SUCCESS, { projectType: data.projectType });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollTop();
     } catch (err) {
       setStatus('error');
-      setServerError(err.message);
       track(EVENTS.QUOTE_ERROR, { message: err.message });
     }
   };
@@ -358,7 +367,11 @@ export default function Quote() {
               {status === 'error' && (
                 <div role="alert" className="mt-8 rounded-md bg-error/[0.07] px-5 py-4">
                   <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
-                  {serverError && <p className="t-small mt-1 text-ink/65">{serverError}</p>}
+                  {/* La première inquiétude est de devoir tout retaper : on y
+                      répond avant de proposer autre chose. */}
+                  <p className="t-small mt-2 text-ink/65">
+                    Vos réponses sont toujours à l’écran. Réessayez dans un instant, ou joignez-nous directement.
+                  </p>
                   <p className="t-small mt-3 text-ink/65">
                     Appelez-nous au{' '}
                     <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">

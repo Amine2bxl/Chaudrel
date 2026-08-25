@@ -7,6 +7,14 @@ const rgb = (name) => `rgb(var(--c-${name}-rgb) / <alpha-value>)`;
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
+  /* Sur un écran tactile, un `:hover` reste collé après le tap : la carte
+     touchée garde son état de survol jusqu'au tap suivant, ailleurs. Ce drapeau
+     enferme toutes les variantes `hover:` dans `@media (hover: hover)`, donc
+     l'effet n'existe que là où un curseur existe. */
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+
   theme: {
     extend: {
       fontFamily: {

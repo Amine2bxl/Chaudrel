@@ -19,7 +19,7 @@ export default function Footer() {
   const year = new Date().getFullYear();
   const { openDialog } = useContactDialog();
 
-  const link = 'link-line t-small text-cream/60 transition-colors duration-fast hover:text-cream';
+  const link = 'link-line tap t-small text-cream/60 transition-colors duration-fast hover:text-cream';
 
   return (
     <footer className="border-t border-cream/10 bg-bark text-cream">

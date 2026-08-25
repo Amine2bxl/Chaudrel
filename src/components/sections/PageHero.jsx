@@ -1,27 +1,26 @@
 import { Link } from 'react-router-dom';
 import { Container } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
  * En-tête de page interne : fil d'Ariane, label, H1, une phrase.
  * Sans image par défaut — le vide fait le travail. L'image reste possible
  * quand la page a un visuel qui mérite la pleine largeur.
  */
-export default function PageHero({ label, title, intro, image, breadcrumb = [], aside }) {
+export default function PageHero({ title, intro, image, breadcrumb = [], aside }) {
   const hasImage = Boolean(image);
-  // Le fil d'Ariane se termine déjà par le nom de la page : répéter ce nom
-  // dans un sur-titre juste en dessous ne dit rien de plus. Le label ne sert
-  // donc que sur les pages sans fil d'Ariane.
-  const showLabel = Boolean(label) && breadcrumb.length === 0;
 
   return (
     <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-bark' : 'bg-cream')}>
       {hasImage && (
         <>
           <img
-            src={image}
+            {...imageAttrs(image, SIZES.full)}
             alt=""
             aria-hidden="true"
+            width="1920"
+            height="1080"
             fetchpriority="high"
             decoding="sync"
             className="absolute inset-0 -z-10 h-full w-full object-cover"
@@ -38,7 +37,7 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
                 <li key={b.to || b.label} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">/</span>}
                   {b.to ? (
-                    <Link to={b.to} className="transition-colors hover:text-gold">
+                    <Link to={b.to} className="tap transition-colors hover:text-gold">
                       {b.label}
                     </Link>
                   ) : (
@@ -57,9 +56,6 @@ export default function PageHero({ label, title, intro, image, breadcrumb = [], 
             largeur de lecture. */}
         <div className={cn(aside && 'lg:grid lg:grid-cols-12 lg:gap-12')}>
           <div className={cn(aside && 'lg:col-span-7')}>
-            {showLabel && (
-              <p className={cn('t-label mb-5', hasImage ? 'text-cream/60' : 'text-ink/65')}>{label}</p>
-            )}
             {/* `ch` se calcule sur la police de l'élément : la largeur se pose
                 donc sur le titre, jamais sur le conteneur. */}
             <h1 className={cn('t-h1 max-w-[16ch] text-balance', hasImage ? 'text-cream' : 'text-ink')}>{title}</h1>

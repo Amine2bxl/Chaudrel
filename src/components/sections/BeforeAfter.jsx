@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
  * Comparateur avant / après : deux boutons, pas de glissière.
@@ -15,8 +16,10 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
       <div className={cn('relative overflow-hidden rounded-lg bg-sand', ratio)}>
         <img
           key={src}
-          src={src}
+          {...imageAttrs(src, SIZES.half)}
           alt={`${label} — ${showBefore ? 'avant' : 'après'} travaux`}
+          width="1200"
+          height="800"
           loading="lazy"
           decoding="async"
           className="soft-in h-full w-full object-cover"

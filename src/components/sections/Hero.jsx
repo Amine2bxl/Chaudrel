@@ -2,6 +2,7 @@ import { Container } from '@/components/ui';
 import { Button } from '@/components/ui';
 import { BRAND, PROOF, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
+import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
  * Hero — la photo, la promesse, l'action.
@@ -15,10 +16,10 @@ export default function Hero() {
   return (
     <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-bark">
       <img
-        src="/photos/hero.webp"
+        {...imageAttrs('/photos/hero.webp', SIZES.full)}
         alt="Maison rénovée par Chaudrel, façade et intérieur éclairé à la tombée du jour"
         width="1920"
-        height="1280"
+        height="1080"
         fetchpriority="high"
         decoding="sync"
         className="slow-zoom absolute inset-0 -z-20 h-full w-full object-cover"

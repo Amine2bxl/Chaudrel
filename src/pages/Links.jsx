@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BRAND, LOGO, whatsappUrl } from '@/data/site';
+import { BRAND, EMAIL_DISPLAY, LOGO, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import Reveal from '@/lib/reveal';
 import { cn } from '@/lib/utils';
@@ -176,7 +176,7 @@ export default function Links() {
               href={`mailto:${BRAND.email}`}
               icon={MailIcon}
               label="Nous écrire"
-              hint={BRAND.email.toLowerCase()}
+              hint={EMAIL_DISPLAY}
               onClick={t(EVENTS.EMAIL_CLICK)}
             />
           </div>

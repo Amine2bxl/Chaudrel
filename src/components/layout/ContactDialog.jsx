@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { BRAND, whatsappUrl } from '@/data/site';
+import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
 import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
@@ -169,7 +169,7 @@ export default function ContactDialog() {
               onClick={() => track(EVENTS.EMAIL_CLICK, { source: `dialog:${source}` })}
               className={cn(linkClass, 'break-all')}
             >
-              {BRAND.email}
+              {EMAIL_DISPLAY}
             </a>
           </Row>
 

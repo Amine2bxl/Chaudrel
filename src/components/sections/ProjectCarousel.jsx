@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { EVENTS, track } from '@/lib/analytics';
+import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
  * Galerie de chantiers — un projet au centre, les voisins entrevus derrière.
@@ -119,14 +120,13 @@ export default function ProjectCarousel({ projects, className }) {
                 >
                   <div className="relative h-full w-full overflow-hidden">
                     <img
-                      src={p.cover.src}
+                      {...imageAttrs(p.cover.src, SIZES.stage)}
                       alt={p.cover.alt}
                       width={p.cover.w}
                       height={p.cover.h}
                       loading={isActive ? 'eager' : 'lazy'}
                       decoding="async"
                       fetchpriority={isActive ? 'high' : undefined}
-                      sizes="(min-width: 1024px) 64vw, (min-width: 640px) 76vw, 100vw"
                       className={cn(
                         'h-full w-full object-cover transition-[transform,filter] duration-[1400ms] ease-soft',
                         isActive ? 'saturate-100 group-hover:scale-[1.03]' : 'saturate-[0.55]'
@@ -235,7 +235,7 @@ export default function ProjectCarousel({ projects, className }) {
               aria-label={`Aller au chantier ${i + 1} : ${p.title}`}
               aria-current={i === index ? 'true' : undefined}
               className={cn(
-                't-num text-[0.8125rem] leading-none transition-colors duration-fast',
+                'tap t-num text-[0.8125rem] leading-none transition-colors duration-fast',
                 i === index ? 'text-ink' : 'text-ink/35 hover:text-ink/70'
               )}
             >
