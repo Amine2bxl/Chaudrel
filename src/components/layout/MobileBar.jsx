@@ -87,7 +87,7 @@ export default function MobileBar() {
         type="button"
         tabIndex={hidden ? -1 : undefined}
         onClick={() => openDialog('mobile_bar')}
-        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-ink/12 bg-shell text-ink shadow-soft active:translate-y-px"
+        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-cream/12 bg-surface text-cream shadow-soft active:translate-y-px"
       >
         Nous joindre
       </button>

@@ -116,7 +116,7 @@ export default function ProjectCarousel({ projects, className }) {
                   to={`/realisations/${p.slug}`}
                   tabIndex={isActive ? undefined : -1}
                   onClick={() => track(EVENTS.PROJECT_VIEW, { project: p.slug, source: 'carousel' })}
-                  className="group block h-full w-full overflow-hidden rounded-lg bg-sand shadow-lift"
+                  className="group block h-full w-full overflow-hidden rounded-lg bg-raised shadow-lift"
                 >
                   <div className="relative h-full w-full overflow-hidden">
                     <img
@@ -189,7 +189,7 @@ export default function ProjectCarousel({ projects, className }) {
             onClick={() => go(-1)}
             aria-label="Chantier précédent"
             aria-controls={regionId}
-            className="absolute left-2 top-1/2 z-40 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-cream text-ink shadow-lift transition-all duration-fast ease-soft hover:bg-shell hover:scale-105 active:scale-95 sm:-left-5 sm:h-12 sm:w-12"
+            className="absolute left-2 top-1/2 z-40 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-ground text-cream shadow-lift transition-all duration-fast ease-soft hover:bg-surface hover:scale-105 active:scale-95 sm:-left-5 sm:h-12 sm:w-12"
           >
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
               <path d="M10 2 4 8l6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -200,7 +200,7 @@ export default function ProjectCarousel({ projects, className }) {
             onClick={() => go(1)}
             aria-label="Chantier suivant"
             aria-controls={regionId}
-            className="absolute right-2 top-1/2 z-40 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-cream text-ink shadow-lift transition-all duration-fast ease-soft hover:bg-shell hover:scale-105 active:scale-95 sm:-right-5 sm:h-12 sm:w-12"
+            className="absolute right-2 top-1/2 z-40 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-ground text-cream shadow-lift transition-all duration-fast ease-soft hover:bg-surface hover:scale-105 active:scale-95 sm:-right-5 sm:h-12 sm:w-12"
           >
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
               <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -214,12 +214,12 @@ export default function ProjectCarousel({ projects, className }) {
           les autres restent des numéros discrets, cliquables. Un chiffre dit où
           l'on est dans la série, ce qu'un point ne dit pas. */}
       <div className="mt-8 flex items-center gap-5">
-        <span className={cn('t-num flex-none text-[1.375rem] leading-none', 'text-ink')}>
+        <span className={cn('t-num flex-none text-[1.375rem] leading-none', 'text-cream')}>
           {String(index + 1).padStart(2, '0')}
         </span>
 
         {/* Filet de progression : sa portion pleine avance avec la sélection. */}
-        <span aria-hidden="true" className="relative h-px flex-1 bg-ink/15">
+        <span aria-hidden="true" className="relative h-px flex-1 bg-cream/15">
           <span
             className="absolute inset-y-0 left-0 bg-gold transition-[width] duration-slow ease-soft motion-reduce:transition-none"
             style={{ width: `${((index + 1) / count) * 100}%` }}
@@ -236,7 +236,7 @@ export default function ProjectCarousel({ projects, className }) {
               aria-current={i === index ? 'true' : undefined}
               className={cn(
                 'tap t-num text-[0.8125rem] leading-none transition-colors duration-fast',
-                i === index ? 'text-ink' : 'text-ink/35 hover:text-ink/70'
+                i === index ? 'text-cream' : 'text-cream/35 hover:text-cream/70'
               )}
             >
               {String(i + 1).padStart(2, '0')}

@@ -24,7 +24,7 @@ export default function Projects() {
           {/* Bascules éditoriales, pas des pastilles : même langage d'état actif
               que la navigation — le texte s'assombrit, un point brun l'ancre. */}
           <div
-            className="flex flex-wrap items-center gap-x-7 gap-y-3 border-b border-ink/[0.09] pb-6"
+            className="flex flex-wrap items-center gap-x-7 gap-y-3 border-b border-cream/[0.09] pb-6"
             role="group"
             aria-label="Filtrer les réalisations"
           >
@@ -38,7 +38,7 @@ export default function Projects() {
                   onClick={() => setFilter(c.id)}
                   className={cn(
                     'relative tap t-label pb-1 transition-colors duration-fast',
-                    on ? 'text-ink' : 'text-ink/65 hover:text-ink'
+                    on ? 'text-cream' : 'text-cream/65 hover:text-cream'
                   )}
                 >
                   {c.label}
@@ -52,7 +52,7 @@ export default function Projects() {
                 </button>
               );
             })}
-            <span className="t-label ml-auto tabular-nums text-ink/50">
+            <span className="t-label ml-auto tabular-nums text-cream/50">
               {String(items.length).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
             </span>
           </div>
@@ -63,13 +63,13 @@ export default function Projects() {
             /* Un état vide dit ce qui se passe et propose la sortie : ici,
                revenir à la sélection complète plutôt que rester bloqué. */
             <div className="mt-block">
-              <p className="t-lead text-ink/60">
+              <p className="t-lead text-cream/60">
                 Aucun chantier publié dans cette catégorie pour le moment.
               </p>
               <button
                 type="button"
                 onClick={() => setFilter('all')}
-                className="link-line tap t-label mt-5 inline-block pb-1 text-ink"
+                className="link-line tap t-label mt-5 inline-block pb-1 text-cream"
               >
                 Voir tous les chantiers
               </button>

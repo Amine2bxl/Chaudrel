@@ -1,52 +1,25 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import BeforeAfter from '@/components/sections/BeforeAfter';
+import SiblingBar from '@/components/sections/SiblingBar';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Media, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import { getProject, projectSiblings } from '@/data/projects';
+import { PROJECTS, getProject, projectSiblings } from '@/data/projects';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
 /** Une ligne de la fiche technique : intitulé sur filet, valeur dessous. */
 function Spec({ label, children }) {
   return (
-    <div className="border-t border-ink/12 py-4">
-      <dt className="t-label text-ink/55">{label}</dt>
+    <div className="border-t border-cream/12 py-4">
+      <dt className="t-label text-cream/55">{label}</dt>
       <dd className="mt-1.5 t-body">{children}</dd>
     </div>
   );
 }
 
 /** Navigation éditoriale : le chantier précédent et le suivant, par leur nom. */
-function ProjectNav({ prev, next }) {
-  if (!prev && !next) return null;
-  const Item = ({ project, dir }) => {
-    if (!project) return <span />;
-    const forward = dir === 'next';
-    return (
-      <Link
-        to={`/realisations/${project.slug}`}
-        onClick={() => track(EVENTS.PROJECT_VIEW, { project: project.slug, source: 'sibling' })}
-        className={cn('group flex flex-col gap-2', forward && 'items-end text-right')}
-      >
-        <span className="t-label text-ink/50">{forward ? 'Chantier suivant' : 'Chantier précédent'}</span>
-        <span className="font-display text-[1.5rem] leading-tight tracking-[-0.01em] text-ink transition-colors duration-fast group-hover:text-gold sm:text-[1.75rem]">
-          {project.title}
-        </span>
-        <span className="t-small text-ink/55">
-          {project.type} · {project.location}
-        </span>
-      </Link>
-    );
-  };
-  return (
-    <div className="grid grid-cols-2 gap-8 border-t border-ink/12 pt-10">
-      <Item project={prev} dir="prev" />
-      <Item project={next} dir="next" />
-    </div>
-  );
-}
 
 export default function Project() {
   const { slug } = useParams();
@@ -77,7 +50,7 @@ export default function Project() {
         <Container>
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
             <Reveal className="lg:col-span-7">
-              <p className="t-lead measure text-ink/75">{project.description}</p>
+              <p className="t-lead measure text-cream/75">{project.description}</p>
             </Reveal>
 
             <Reveal delay={120} as="dl" className="lg:col-span-4 lg:col-start-9">
@@ -86,12 +59,12 @@ export default function Project() {
               {project.year && <Spec label="Livraison">{project.year}</Spec>}
               {project.materials?.length > 0 && <Spec label="Matériaux">{project.materials.join(' · ')}</Spec>}
               {project.works?.length > 0 && (
-                <div className="border-y border-ink/12 py-4">
-                  <dt className="t-label text-ink/55">Travaux réalisés</dt>
+                <div className="border-y border-cream/12 py-4">
+                  <dt className="t-label text-cream/55">Travaux réalisés</dt>
                   <dd className="mt-2">
                     <ul className="space-y-1.5">
                       {project.works.map((w) => (
-                        <li key={w} className="t-small flex gap-2.5 text-ink/70">
+                        <li key={w} className="t-small flex gap-2.5 text-cream/70">
                           <span aria-hidden="true" className="mt-[7px] h-1 w-1 flex-none rounded-full bg-gold" />
                           {w}
                         </li>
@@ -139,11 +112,19 @@ export default function Project() {
             </div>
           )}
 
-          <div className="mt-block">
-            <ProjectNav prev={prev} next={next} />
-          </div>
         </Container>
       </Section>
+
+      {/* La navigation entre chantiers quitte le corps de page pour se coller
+          en bas : c'est une commande permanente, pas un paragraphe qu'on
+          dépasse en défilant. */}
+      <SiblingBar
+        label="Chantier"
+        current={project.slug}
+        items={PROJECTS}
+        prev={prev && { to: `/realisations/${prev.slug}`, title: prev.title }}
+        next={next && { to: `/realisations/${next.slug}`, title: next.title }}
+      />
 
       <CTASection
         title="Vous avez un projet similaire ?"

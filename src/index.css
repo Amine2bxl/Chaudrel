@@ -22,8 +22,8 @@
 
   body {
     font-family: var(--font-ui);
-    background-color: var(--c-cream);
-    color: var(--c-ink);
+    background-color: var(--c-ground);
+    color: var(--c-cream);
     font-size: 16px;
     line-height: 1.6;
     font-feature-settings: 'ss01', 'cv05';
@@ -502,4 +502,54 @@
 
 .seal-ring {
   animation: seal-ring 1100ms var(--ease-soft) forwards;
+}
+
+/* ---------- Le monde sombre ---------- */
+
+/* Halo. Le fond n'est pas un aplat : une nappe verte très diffuse monte
+   derrière le sujet, comme la lumière d'un atelier le soir. Sans elle, un
+   sombre uniforme rend chaque photo grise et le site plat. Elle est en
+   `background`, jamais en élément : rien à empiler, rien à nettoyer. */
+.section-glow {
+  background-image: radial-gradient(
+    75% 90% at 50% 0%,
+    rgb(var(--c-glow-rgb) / 0.5) 0%,
+    rgb(var(--c-glow-rgb) / 0) 68%
+  );
+}
+
+/* Le cadre. La page est posée sur une table sombre au lieu de toucher les
+   bords de l'écran : c'est ce qui donne à la référence son air d'objet plutôt
+   que de document. Le procédé coûte de la largeur, donc il ne s'applique qu'à
+   partir du moment où il en reste à donner — sur un téléphone, chaque pixel
+   horizontal sert au contenu. */
+@media (min-width: 1024px) {
+  body {
+    background-color: var(--c-void);
+  }
+
+  .app-frame {
+    margin: 1.25rem;
+    border-radius: var(--r-xl);
+    overflow: clip;
+    background-color: var(--c-ground);
+    box-shadow: 0 24px 80px -24px rgb(0 0 0 / 0.75);
+  }
+}
+
+/* Rail latéral : la poignée de menu en haut, les réseaux dessous, sur toute la
+   hauteur. Il tient la marge gauche que le cadre libère et donne au site son
+   axe vertical. Masqué tant que la largeur manque. */
+.app-rail {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .app-rail {
+    display: flex;
+  }
+
+  .app-frame > .app-shell {
+    padding-left: 4.5rem;
+  }
 }

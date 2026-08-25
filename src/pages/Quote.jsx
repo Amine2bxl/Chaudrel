@@ -142,20 +142,20 @@ export default function Quote() {
           <Container>
             <div className="grid gap-12 lg:grid-cols-12">
               <ol className="lg:col-span-7">
-                <span className="t-label text-ink/65">La suite</span>
+                <span className="t-label text-cream/65">La suite</span>
                 {METHOD.slice(2, 5).map((s) => (
-                  <li key={s.n} className="flex gap-8 border-b border-ink/12 py-6 first:border-t first:mt-5">
-                    <span className="t-num text-2xl text-ink/40">{s.n}</span>
+                  <li key={s.n} className="flex gap-8 border-b border-cream/12 py-6 first:border-t first:mt-5">
+                    <span className="t-num text-2xl text-cream/40">{s.n}</span>
                     <div>
                       <h2 className="t-h3">{s.title}</h2>
-                      <p className="t-small mt-1.5 text-ink/65">{s.text}</p>
+                      <p className="t-small mt-1.5 text-cream/65">{s.text}</p>
                     </div>
                   </li>
                 ))}
               </ol>
 
               <div className="lg:col-span-4 lg:col-start-9">
-                <p className="t-body text-ink/65">
+                <p className="t-body text-cream/65">
                   En attendant, vous pouvez parcourir nos chantiers récents, ou nous écrire directement.
                 </p>
                 <div className="mt-7 flex flex-col gap-3">
@@ -194,15 +194,15 @@ export default function Quote() {
             {/* Progression */}
             <div>
               <div className="flex items-baseline justify-between">
-                <span className="t-label text-ink/65">
+                <span className="t-label text-cream/65">
                   {String(step).padStart(2, '0')} — {STEPS[step - 1]}
                 </span>
-                <span className="t-label text-ink/65">
+                <span className="t-label text-cream/65">
                   {step} / {STEPS.length}
                 </span>
               </div>
               <div
-                className="mt-4 h-1 w-full overflow-hidden rounded-full bg-ink/[0.09]"
+                className="mt-4 h-1 w-full overflow-hidden rounded-full bg-cream/[0.09]"
                 role="progressbar"
                 aria-valuenow={step}
                 aria-valuemin={1}
@@ -243,7 +243,7 @@ export default function Quote() {
                   </div>
 
                   <div className="mt-10">
-                    <span className="t-label text-ink/55">Type de bien</span>
+                    <span className="t-label text-cream/55">Type de bien</span>
                     <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
                       {PROPERTY_TYPES.map((t) => (
                         <Choice
@@ -266,7 +266,7 @@ export default function Quote() {
 
               {step === 2 && (
                 <Fieldset legend="Décrivez votre projet." error={errors.description}>
-                  <label htmlFor="description" className="t-small block text-ink/65">
+                  <label htmlFor="description" className="t-small block text-cream/65">
                     Surface, pièces concernées, état actuel, échéance souhaitée.
                   </label>
                   <textarea
@@ -294,7 +294,7 @@ export default function Quote() {
                       inputMode="numeric"
                     />
                   </div>
-                  <p className="t-small mt-6 text-ink/65">{BRAND.zoneLong}.</p>
+                  <p className="t-small mt-6 text-cream/65">{BRAND.zoneLong}.</p>
                 </Fieldset>
               )}
 
@@ -323,7 +323,7 @@ export default function Quote() {
                     <Field id="email" label="E-mail" type="email" value={data.email} onChange={set('email')} error={errors.email} autoComplete="email" />
                   </div>
 
-                  <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-ink/65">
+                  <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-cream/65">
                     <input
                       type="checkbox"
                       checked={data.consent}
@@ -333,7 +333,7 @@ export default function Quote() {
                     />
                     <span>
                       J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
-                      <a href="/legal/politique-mentions" className="link-line text-ink">
+                      <a href="/legal/politique-mentions" className="link-line text-cream">
                         Politique de confidentialité
                       </a>
                     </span>
@@ -366,19 +366,19 @@ export default function Quote() {
 
               {status === 'error' && (
                 <div role="alert" className="mt-8 rounded-md bg-error/[0.07] px-5 py-4">
-                  <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
+                  <p className="t-body text-cream">Votre demande n’a pas pu être envoyée.</p>
                   {/* La première inquiétude est de devoir tout retaper : on y
                       répond avant de proposer autre chose. */}
-                  <p className="t-small mt-2 text-ink/65">
+                  <p className="t-small mt-2 text-cream/65">
                     Vos réponses sont toujours à l’écran. Réessayez dans un instant, ou joignez-nous directement.
                   </p>
-                  <p className="t-small mt-3 text-ink/65">
+                  <p className="t-small mt-3 text-cream/65">
                     Appelez-nous au{' '}
-                    <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
+                    <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-cream">
                       {BRAND.phones[0].number}
                     </a>{' '}
                     ou écrivez sur{' '}
-                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-ink">
+                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-cream">
                       WhatsApp
                     </a>
                     .
@@ -390,15 +390,15 @@ export default function Quote() {
 
           {/* Réassurance */}
           <aside className="lg:col-span-4 lg:col-start-9">
-            <span className="t-label text-ink/65">Pourquoi ces questions</span>
-            <ul className="mt-6 space-y-5 border-t border-ink/12 pt-6">
+            <span className="t-label text-cream/65">Pourquoi ces questions</span>
+            <ul className="mt-6 space-y-5 border-t border-cream/12 pt-6">
               {[
                 'Elles nous évitent plusieurs allers-retours avant la visite.',
                 `${BRAND.promises.quote}.`,
                 `${BRAND.promises.responseTime} à votre demande.`,
                 'Vos données servent uniquement à répondre à votre demande.',
               ].map((t) => (
-                <li key={t} className="t-small text-ink/65">
+                <li key={t} className="t-small text-cream/65">
                   {t}
                 </li>
               ))}
@@ -410,10 +410,10 @@ export default function Quote() {
               <ol className="space-y-4">
                 {METHOD.slice(2, 6).map((m) => (
                   <li key={m.n} className="flex gap-3.5">
-                    <span className="t-num mt-0.5 flex-none text-ink/40">{m.n}</span>
+                    <span className="t-num mt-0.5 flex-none text-cream/40">{m.n}</span>
                     <div>
-                      <p className="t-small font-semibold text-ink">{m.title}</p>
-                      <p className="t-small mt-1 text-ink/65">{m.text}</p>
+                      <p className="t-small font-semibold text-cream">{m.title}</p>
+                      <p className="t-small mt-1 text-cream/65">{m.text}</p>
                     </div>
                   </li>
                 ))}
@@ -423,15 +423,15 @@ export default function Quote() {
             {/* Deux issues, pas une liste de liens : écrire tout de suite sur
                 WhatsApp, ou ouvrir la fiche complète (téléphones, e-mail,
                 horaires, adresse). */}
-            <div className="mt-10 border-t border-ink/12 pt-6">
-              <p className="t-small text-ink/65">Vous préférez parler ?</p>
+            <div className="mt-10 border-t border-cream/12 pt-6">
+              <p className="t-small text-cream/65">Vous préférez parler ?</p>
               <div className="mt-4 flex flex-col gap-2.5">
                 <a
                   href={whatsappUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_sidebar' })}
-                  className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-ink/15 bg-shell px-5 py-4 text-ink transition-all duration-fast ease-soft hover:border-ink/30 hover:shadow-soft active:translate-y-px"
+                  className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-cream/15 bg-surface px-5 py-4 text-cream transition-all duration-fast ease-soft hover:border-cream/30 hover:shadow-soft active:translate-y-px"
                 >
                   <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
                     <path d="M8 0a8 8 0 0 0-6.9 12L0 16l4.1-1.1A8 8 0 1 0 8 0Zm0 14.6a6.6 6.6 0 0 1-3.4-.9l-.2-.2-2.5.7.7-2.4-.2-.3A6.6 6.6 0 1 1 8 14.6Zm3.6-4.9c-.2-.1-1.2-.6-1.3-.6-.2-.1-.3-.1-.4.1l-.6.7c-.1.1-.2.1-.4 0a5.4 5.4 0 0 1-2.6-2.3c-.2-.3.2-.3.5-1 0-.1 0-.2 0-.3l-.6-1.3c-.1-.4-.3-.3-.4-.3h-.4a.7.7 0 0 0-.5.3c-.2.2-.7.7-.7 1.7s.7 2 .8 2.1a7.6 7.6 0 0 0 3 2.6c1.1.4 1.5.5 2 .4.4 0 1.2-.5 1.3-.9.2-.5.2-.9.1-1 0-.1-.1-.1-.3-.2Z" />
@@ -441,7 +441,7 @@ export default function Quote() {
                 <button
                   type="button"
                   onClick={() => openDialog('quote_sidebar')}
-                  className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-ink/15 bg-shell px-5 py-4 text-ink transition-all duration-fast ease-soft hover:border-ink/30 hover:shadow-soft active:translate-y-px"
+                  className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-cream/15 bg-surface px-5 py-4 text-cream transition-all duration-fast ease-soft hover:border-cream/30 hover:shadow-soft active:translate-y-px"
                 >
                   Toutes nos coordonnées
                 </button>
@@ -480,8 +480,8 @@ function Choice({ name, label, checked, onChange }) {
       className={cn(
         'flex cursor-pointer items-center gap-4 rounded-md border px-5 py-4 transition-all duration-300 ease-soft',
         checked
-          ? 'border-gold bg-gold/[0.06] text-ink shadow-soft'
-          : 'border-ink/[0.12] bg-shell text-ink/70 hover:border-ink/25 hover:text-ink'
+          ? 'border-gold bg-gold/[0.06] text-cream shadow-soft'
+          : 'border-cream/[0.12] bg-surface text-cream/70 hover:border-cream/25 hover:text-cream'
       )}
     >
       <input type="radio" name={name} checked={checked} onChange={onChange} className="sr-only" />
@@ -489,10 +489,10 @@ function Choice({ name, label, checked, onChange }) {
         aria-hidden="true"
         className={cn(
           'grid h-[18px] w-[18px] flex-shrink-0 place-items-center rounded-full border transition-colors duration-300',
-          checked ? 'border-gold bg-gold' : 'border-ink/25 bg-shell'
+          checked ? 'border-gold bg-gold' : 'border-cream/25 bg-surface'
         )}
       >
-        {checked && <span className="block h-1.5 w-1.5 rounded-full bg-cream" />}
+        {checked && <span className="block h-1.5 w-1.5 rounded-full bg-ground" />}
       </span>
       <span className="t-body">{label}</span>
     </label>
@@ -502,7 +502,7 @@ function Choice({ name, label, checked, onChange }) {
 function Field({ id, label, value, onChange, error, type = 'text', className, ...rest }) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="t-label text-ink/65">
+      <label htmlFor={id} className="t-label text-cream/65">
         {label}
       </label>
       <input

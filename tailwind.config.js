@@ -26,6 +26,11 @@ export default {
         wordmark: ['var(--font-wordmark)'],
       },
       colors: {
+        void: rgb('void'),
+        ground: rgb('ground'),
+        surface: rgb('surface'),
+        raised: rgb('raised'),
+        glow: rgb('glow'),
         cream: rgb('cream'),
         shell: rgb('shell'),
         sand: rgb('sand'),

@@ -7,14 +7,14 @@ import { cn } from '@/lib/utils';
 /* Une ligne de la fenêtre : intitulé discret, valeur cliquable en grand. */
 function Row({ label, children }) {
   return (
-    <div className="border-t border-ink/[0.09] py-4 first:border-t-0 first:pt-0">
-      <p className="t-label text-ink/50">{label}</p>
+    <div className="border-t border-cream/[0.09] py-4 first:border-t-0 first:pt-0">
+      <p className="t-label text-cream/50">{label}</p>
       <div className="mt-2">{children}</div>
     </div>
   );
 }
 
-const linkClass = 'link-line font-display text-[1.375rem] leading-none tracking-[-0.01em] text-ink';
+const linkClass = 'link-line font-display text-[1.375rem] leading-none tracking-[-0.01em] text-cream';
 
 /**
  * Fenêtre de contact — toutes les coordonnées de Chaudrel, au même endroit.
@@ -88,16 +88,16 @@ export default function ContactDialog() {
         aria-modal="true"
         aria-labelledby="contact-dialog-title"
         tabIndex={-1}
-        className="panel-in relative w-full max-w-md rounded-xl bg-cream p-6 shadow-lift outline-none sm:p-8"
+        className="panel-in relative w-full max-w-md rounded-xl bg-ground p-6 shadow-lift outline-none sm:p-8"
       >
         <div className="flex items-start justify-between gap-6">
           <div>
             <h2 id="contact-dialog-title" className="t-h2 text-[1.625rem] sm:text-[1.875rem]">
               Nous joindre
             </h2>
-            <p className="t-small mt-2 text-ink/60">
+            <p className="t-small mt-2 text-cream/60">
               {BRAND.promises.responseTime}. Pour un chiffrage, passez plutôt par{' '}
-              <a href="/devis" className="link-line text-ink">
+              <a href="/devis" className="link-line text-cream">
                 la demande de devis
               </a>
               .
@@ -107,7 +107,7 @@ export default function ContactDialog() {
             type="button"
             onClick={closeDialog}
             aria-label="Fermer"
-            className="-mr-1 -mt-1 grid h-10 w-10 flex-none place-items-center rounded-full text-ink/60 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
+            className="-mr-1 -mt-1 grid h-10 w-10 flex-none place-items-center rounded-full text-cream/60 transition-colors duration-fast hover:bg-cream/5 hover:text-cream"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M1 1l12 12M13 1L1 13" strokeLinecap="round" />
@@ -121,7 +121,7 @@ export default function ContactDialog() {
           <a
             href={`tel:${BRAND.phones[0].tel}`}
             onClick={() => track(EVENTS.PHONE_CLICK, { source: `dialog:${source}` })}
-            className="t-label inline-flex items-center justify-center gap-2.5 rounded-full bg-ink px-5 py-4 text-cream shadow-soft transition-all duration-fast ease-soft hover:bg-bark hover:shadow-lift active:translate-y-px"
+            className="t-label inline-flex items-center justify-center gap-2.5 rounded-full bg-cream px-5 py-4 text-ground shadow-soft transition-all duration-fast ease-soft hover:bg-shell hover:shadow-lift active:translate-y-px"
           >
             <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path
@@ -136,7 +136,7 @@ export default function ContactDialog() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: `dialog:${source}` })}
-            className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-ink/15 bg-shell px-5 py-4 text-ink transition-all duration-fast ease-soft hover:border-ink/30 hover:shadow-soft active:translate-y-px"
+            className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-cream/15 bg-surface px-5 py-4 text-cream transition-all duration-fast ease-soft hover:border-cream/30 hover:shadow-soft active:translate-y-px"
           >
             <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
               <path d="M8 0a8 8 0 0 0-6.9 12L0 16l4.1-1.1A8 8 0 1 0 8 0Zm0 14.6a6.6 6.6 0 0 1-3.4-.9l-.2-.2-2.5.7.7-2.4-.2-.3A6.6 6.6 0 1 1 8 14.6Zm3.6-4.9c-.2-.1-1.2-.6-1.3-.6-.2-.1-.3-.1-.4.1l-.6.7c-.1.1-.2.1-.4 0a5.4 5.4 0 0 1-2.6-2.3c-.2-.3.2-.3.5-1 0-.1 0-.2 0-.3l-.6-1.3c-.1-.4-.3-.3-.4-.3h-.4a.7.7 0 0 0-.5.3c-.2.2-.7.7-.7 1.7s.7 2 .8 2.1a7.6 7.6 0 0 0 3 2.6c1.1.4 1.5.5 2 .4.4 0 1.2-.5 1.3-.9.2-.5.2-.9.1-1 0-.1-.1-.1-.3-.2Z" />
@@ -157,7 +157,7 @@ export default function ContactDialog() {
                   >
                     {p.number}
                   </a>
-                  <span className="t-small text-ink/50">{p.name}</span>
+                  <span className="t-small text-cream/50">{p.name}</span>
                 </li>
               ))}
             </ul>
@@ -178,20 +178,20 @@ export default function ContactDialog() {
             <ul className="space-y-1.5">
               {BRAND.hours.map((h) => (
                 <li key={h.days} className="t-small flex items-baseline justify-between gap-6">
-                  <span className="text-ink/70">{h.days}</span>
-                  <span className="tabular-nums text-ink">{h.time}</span>
+                  <span className="text-cream/70">{h.days}</span>
+                  <span className="tabular-nums text-cream">{h.time}</span>
                 </li>
               ))}
             </ul>
           </Row>
 
           <Row label="Adresse">
-            <address className="t-small not-italic text-ink/70">
+            <address className="t-small not-italic text-cream/70">
               {BRAND.address.street}
               <br />
               {BRAND.address.postalCode} {BRAND.address.city}
             </address>
-            <p className="t-small mt-2 text-ink/50">{BRAND.zoneLong}.</p>
+            <p className="t-small mt-2 text-cream/50">{BRAND.zoneLong}.</p>
           </Row>
         </div>
       </div>

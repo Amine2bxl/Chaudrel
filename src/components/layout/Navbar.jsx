@@ -9,7 +9,7 @@ import { Button } from '@/components/ui';
 
 /** Deux lignes qui deviennent une croix — pas d'icône importée. */
 function MenuIcon({ open }) {
-  const bar = 'block h-px w-6 bg-ink transition-all duration-fast ease-soft';
+  const bar = 'block h-px w-6 bg-cream transition-all duration-fast ease-soft';
   return (
     <span className="relative flex h-6 w-6 flex-col items-center justify-center gap-[6px]">
       <span className={cn(bar, open && 'translate-y-[3.5px] rotate-45')} />
@@ -22,10 +22,10 @@ function MenuIcon({ open }) {
 function Wordmark() {
   return (
     <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel — accueil">
-      <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-logo bg-shell shadow-soft">
+      <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-logo bg-surface shadow-soft">
         <img src={LOGO} alt="" aria-hidden="true" width="40" height="40" className="h-full w-full object-cover" />
       </span>
-      <span className="font-wordmark text-[19px] uppercase leading-none tracking-[0.2em] text-ink sm:text-[21px]">
+      <span className="font-wordmark text-[19px] uppercase leading-none tracking-[0.2em] text-cream sm:text-[21px]">
         {BRAND.name}
       </span>
     </Link>
@@ -43,6 +43,15 @@ function Wordmark() {
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  /* La barre reste transparente sur le premier écran — le hero porte déjà son
+     propre contraste — et prend un fond dès que du contenu passe derrière. */
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const sync = () => setScrolled(window.scrollY > 24);
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+    return () => window.removeEventListener('scroll', sync);
+  }, []);
   const { openDialog } = useContactDialog();
   const { pathname } = useLocation();
 
@@ -58,19 +67,28 @@ export default function Navbar() {
   const linkClass = ({ isActive }) =>
     cn(
       'relative t-label pb-2 pt-1 transition-colors duration-fast',
-      isActive ? 'text-ink' : 'text-ink/60 hover:text-ink'
+      isActive ? 'text-cream' : 'text-cream/60 hover:text-cream'
     );
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <a
         href="#main"
-        className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-cream"
+        className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:rounded-full focus:bg-cream focus:px-5 focus:py-3 focus:text-ground"
       >
         Aller au contenu
       </a>
 
-      <div className="mx-auto my-2.5 flex w-[calc(100%-1.25rem)] max-w-[1240px] items-center justify-between rounded-full bg-cream/95 px-4 py-2.5 shadow-soft backdrop-blur-md sm:my-3 sm:px-5 lg:px-6">
+      {/* Plus de pilule flottante. Sur un sol sombre, une barre posée dessus
+          sans cadre a plus d'autorité qu'une capsule qui flotte : elle fait
+          partie de la page au lieu de s'y superposer. Le fond n'apparaît qu'au
+          défilement, quand du contenu passe derrière. */}
+      <div
+        className={cn(
+          'mx-auto flex w-full max-w-page items-center justify-between px-5 py-4 transition-colors duration-slow sm:px-8 lg:px-12 lg:py-6',
+          scrolled ? 'bg-ground/85 backdrop-blur-lg' : 'bg-transparent'
+        )}
+      >
         <Wordmark />
 
         <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Navigation principale">
@@ -85,7 +103,7 @@ export default function Navbar() {
                   <span
                     aria-hidden="true"
                     className={cn(
-                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-gold transition-opacity duration-fast',
+                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-gold-light transition-opacity duration-fast',
                       isActive ? 'opacity-100' : 'opacity-0'
                     )}
                   />
@@ -103,7 +121,7 @@ export default function Navbar() {
             onClick={() => openDialog('navbar')}
             aria-label="Nous joindre"
             title="Nous joindre"
-            className="grid h-10 w-10 place-items-center rounded-full text-ink/70 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
+            className="grid h-10 w-10 place-items-center rounded-full text-cream/70 transition-colors duration-fast hover:bg-cream/5 hover:text-cream"
           >
             <Phone size={18} strokeWidth={1.7} aria-hidden="true" />
           </button>
@@ -118,7 +136,7 @@ export default function Navbar() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
-          className="grid h-11 w-11 place-items-center rounded-full transition-colors duration-fast hover:bg-ink/5 lg:hidden"
+          className="grid h-11 w-11 place-items-center rounded-full transition-colors duration-fast hover:bg-cream/5 lg:hidden"
         >
           <MenuIcon open={open} />
         </button>
@@ -126,8 +144,8 @@ export default function Navbar() {
 
       {open && (
         <div className="mx-auto w-full max-w-[1240px] px-2.5 lg:hidden">
-          <nav className="panel-in overflow-hidden rounded-xl bg-cream p-5 shadow-lift sm:p-6" aria-label="Navigation mobile">
-            <ul className="divide-y divide-ink/10">
+          <nav className="panel-in overflow-hidden rounded-xl bg-ground p-5 shadow-lift sm:p-6" aria-label="Navigation mobile">
+            <ul className="divide-y divide-cream/10">
               {NAV.map((item, i) => (
                 <li key={item.to}>
                   <NavLink
@@ -137,7 +155,7 @@ export default function Navbar() {
                     className={({ isActive }) =>
                       cn(
                         'panel-in flex items-center justify-between gap-4 py-4 font-display text-[1.75rem] tracking-[-0.01em]',
-                        isActive ? 'text-ink' : 'text-ink/60'
+                        isActive ? 'text-cream' : 'text-cream/60'
                       )
                     }
                   >
@@ -164,7 +182,7 @@ export default function Navbar() {
             <a
               href={`tel:${BRAND.phones[0].tel}`}
               onClick={() => track(EVENTS.PHONE_CLICK, { source: 'menu' })}
-              className="t-small mt-6 block tabular-nums text-ink/65"
+              className="t-small mt-6 block tabular-nums text-cream/65"
             >
               {BRAND.phones[0].number}
             </a>

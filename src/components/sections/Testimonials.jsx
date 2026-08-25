@@ -32,22 +32,22 @@ export default function Testimonials({ limit, tone = 'white' }) {
         <div className="mt-block lg:grid lg:grid-cols-12 lg:gap-16">
           {items[0] && (
             <Reveal as="figure" className="lg:col-span-7">
-              <blockquote className="t-h2 text-[1.375rem] leading-[1.45] text-ink sm:text-[1.625rem]">
+              <blockquote className="t-h2 text-[1.375rem] leading-[1.45] text-cream sm:text-[1.625rem]">
                 « {items[0].quote} »
               </blockquote>
-              <figcaption className="mt-8 flex items-baseline gap-4 border-t border-ink/12 pt-4">
+              <figcaption className="mt-8 flex items-baseline gap-4 border-t border-cream/12 pt-4">
                 <span className="t-h3">{items[0].name}</span>
-                <span className="t-label text-ink/65">{items[0].location}</span>
-                <span className="t-small ml-auto text-ink/65">{items[0].project}</span>
+                <span className="t-label text-cream/65">{items[0].location}</span>
+                <span className="t-small ml-auto text-cream/65">{items[0].project}</span>
               </figcaption>
             </Reveal>
           )}
 
           <div className="mt-block space-y-10 lg:col-span-4 lg:col-start-9 lg:mt-0">
             {items.slice(1).map((t, i) => (
-              <Reveal as="figure" key={t.id} delay={120 + i * 90} className="border-t border-ink/12 pt-5">
-                <blockquote className="t-small text-ink/70">« {t.quote} »</blockquote>
-                <figcaption className="t-label mt-4 text-ink/65">
+              <Reveal as="figure" key={t.id} delay={120 + i * 90} className="border-t border-cream/12 pt-5">
+                <blockquote className="t-small text-cream/70">« {t.quote} »</blockquote>
+                <figcaption className="t-label mt-4 text-cream/65">
                   {t.name} — {t.location}
                 </figcaption>
               </Reveal>
@@ -61,13 +61,13 @@ export default function Testimonials({ limit, tone = 'white' }) {
               href={GOOGLE_REVIEWS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="link-line t-label text-ink"
+              className="link-line t-label text-cream"
             >
               Voir les avis Google
             </a>
           )}
           {!TESTIMONIALS_VALIDATED && (
-            <p className={cn('t-small text-ink/65')}>
+            <p className={cn('t-small text-cream/65')}>
               <Label>À valider</Label>{' '}
               <span className="ml-2">
                 avis repris de l’ancien site, à confirmer ou à remplacer par des avis Google avant publication.

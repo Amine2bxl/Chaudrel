@@ -4,9 +4,9 @@ import { BRAND, EMAIL_DISPLAY } from '@/data/site';
 
 function Block({ title, children }) {
   return (
-    <section className="border-t border-ink/10 py-10 first:border-t-0 first:pt-0">
-      <h2 className="font-display text-2xl text-ink">{title}</h2>
-      <div className="mt-4 space-y-4 text-[15px] font-light leading-[1.85] text-ink/70">{children}</div>
+    <section className="border-t border-cream/10 py-10 first:border-t-0 first:pt-0">
+      <h2 className="font-display text-2xl text-cream">{title}</h2>
+      <div className="mt-4 space-y-4 text-[15px] font-light leading-[1.85] text-cream/70">{children}</div>
     </section>
   );
 }
@@ -63,7 +63,7 @@ export default function Legal() {
                 </>,
                 <>
                   <strong>E-mail :</strong>{' '}
-                  <a href={`mailto:${BRAND.email}`} className="link-line tap text-gold-deep">
+                  <a href={`mailto:${BRAND.email}`} className="link-line tap text-gold-light">
                     {EMAIL_DISPLAY}
                   </a>
                 </>,
@@ -80,7 +80,7 @@ export default function Legal() {
           <Block title="2. Hébergeur">
             <p>
               Le site est hébergé par <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA 91789, USA —{' '}
-              <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="link-line tap text-gold-deep">
+              <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="link-line tap text-gold-light">
                 vercel.com
               </a>
               .
@@ -133,7 +133,7 @@ export default function Legal() {
           <Block title="7. Responsable du traitement des données">
             <p>
               Chaudrel Rénovation SRL, {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city} —{' '}
-              <a href={`mailto:${BRAND.email}`} className="link-line tap text-gold-deep">
+              <a href={`mailto:${BRAND.email}`} className="link-line tap text-gold-light">
                 {EMAIL_DISPLAY}
               </a>
               .
@@ -185,7 +185,7 @@ export default function Legal() {
             <p>
               Vous disposez d’un droit d’accès, de rectification, d’effacement, de portabilité, de limitation et
               d’opposition au traitement de vos données. Pour les exercer, écrivez-nous à{' '}
-              <a href={`mailto:${BRAND.email}`} className="link-line tap text-gold-deep">
+              <a href={`mailto:${BRAND.email}`} className="link-line tap text-gold-light">
                 {EMAIL_DISPLAY}
               </a>{' '}
               — nous répondons dans un délai d’un mois.
@@ -197,7 +197,7 @@ export default function Legal() {
                 href="https://www.autoriteprotectiondonnees.be"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="link-line tap text-gold-deep"
+                className="link-line tap text-gold-light"
               >
                 autoriteprotectiondonnees.be
               </a>

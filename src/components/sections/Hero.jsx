@@ -27,8 +27,10 @@ export default function Hero() {
       {/* Deux voiles : un dégradé qui remonte du bas pour asseoir le texte, et
           un lavis brun très léger qui réchauffe la photo et la relie à la
           palette au lieu de la laisser grise et générique. */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-bark via-bark/55 to-bark/45" aria-hidden="true" />
-      <div className="absolute inset-0 -z-10 bg-gold/10 mix-blend-multiply" aria-hidden="true" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ground via-ground/70 to-ground/40" aria-hidden="true" />
+      {/* Nappe verte : elle relie la photo au sol de la page. Sans elle, l'image
+          reste un rectangle posé sur un fond d'une autre famille. */}
+      <div className="absolute inset-0 -z-10 bg-glow/25 mix-blend-multiply" aria-hidden="true" />
 
       {/* ---------- Ancres de coin ----------
           Deux repères courts, opposés en diagonale, qui cadrent la photo sans
@@ -39,9 +41,9 @@ export default function Hero() {
             ces capitales — la ligne cassait une fois de trop. */}
         <div className="hero-in hero-d1 flex items-start justify-between gap-8">
           <p className="t-label whitespace-nowrap text-cream/75">
-            Entreprise
+            Entreprise de rénovation
             <br />
-            de rénovation
+            <span className="text-gold-light">depuis {BRAND.founded}</span>
           </p>
           <p className="t-label whitespace-nowrap text-right text-cream/75">
             Bruxelles
@@ -53,7 +55,18 @@ export default function Hero() {
 
       {/* ---------- Bloc de promesse ---------- */}
       <Container className="relative z-10 mt-auto pb-[calc(66px+2.5rem)] lg:pb-20">
-        <div className="lg:flex lg:items-end lg:justify-between lg:gap-16">
+        {/* L'année de fondation, en filigrane derrière la promesse. C'est le
+            geste de la référence — un nombre géant posé derrière le sujet —
+            mais avec le seul chiffre que Chaudrel ait confirmé. Aucun compteur
+            inventé n'aurait tenu ici. L'ancre en haut à gauche le décode. */}
+        <span
+          aria-hidden="true"
+          className="hero-in hero-d2 pointer-events-none absolute bottom-24 right-0 select-none font-display leading-[0.72] text-cream/[0.07] text-[9rem] sm:text-[14rem] lg:bottom-16 lg:text-[20rem]"
+        >
+          {BRAND.founded}
+        </span>
+
+        <div className="relative lg:flex lg:items-end lg:justify-between lg:gap-16">
           <div className="lg:max-w-[46ch]">
             <h1 className="hero-in hero-d2 t-h1 max-w-[15ch] text-cream">Du premier plan à la dernière clé.</h1>
 
@@ -130,13 +143,13 @@ export default function Hero() {
  */
 export function ProofBand() {
   return (
-    <section className="border-b border-ink/10 bg-cream py-10 lg:hidden">
+    <section className="border-b border-cream/10 bg-ground py-10 lg:hidden">
       <Container>
         <dl className="grid gap-6 sm:grid-cols-3 sm:gap-10">
           {PROOF.map((p) => (
-            <div key={p.label} className="border-t border-ink/15 pt-4">
-              <dt className="t-small text-ink/65">{p.label}</dt>
-              <dd className="mt-1.5 font-display text-[1.375rem] leading-none text-ink">{p.value}</dd>
+            <div key={p.label} className="border-t border-cream/15 pt-4">
+              <dt className="t-small text-cream/65">{p.label}</dt>
+              <dd className="mt-1.5 font-display text-[1.375rem] leading-none text-cream">{p.value}</dd>
             </div>
           ))}
         </dl>
