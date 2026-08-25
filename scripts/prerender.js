@@ -156,7 +156,10 @@ function main() {
   }
 
   console.log(`[prerender] OK — ${pages.length} pages générées`);
-  writeSitemap(pages.map((p) => p.path));
+  // Une URL `noindex` dans le sitemap est une consigne contradictoire : le
+  // sitemap la propose à l'indexation, la balise la refuse. Search Console la
+  // remonte en avertissement. On ne liste donc que les pages indexables.
+  writeSitemap(pages.filter((p) => !p.meta.robots.includes('noindex')).map((p) => p.path));
 }
 
 main();

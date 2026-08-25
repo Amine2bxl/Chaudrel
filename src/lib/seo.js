@@ -179,6 +179,16 @@ const STATIC = {
       ]),
     ],
   },
+  '/liens': {
+    title: 'Tous nos liens | Chaudrel Rénovation',
+    description:
+      'Devis gratuit, WhatsApp, téléphone, réalisations et réseaux sociaux de Chaudrel Rénovation, réunis sur une page.',
+    // `noindex` : c'est une page de redirection depuis les bios réseaux, pas
+    // une page de contenu. Indexée, elle concurrencerait l'accueil sur le nom
+    // de la marque. `follow` pour que les liens internes gardent leur valeur.
+    robots: 'noindex, follow',
+    ld: () => [],
+  },
   '/legal/politique-mentions': {
     title: 'Mentions légales & politique de confidentialité | Chaudrel',
     description: 'Mentions légales, politique de confidentialité et gestion des données personnelles de Chaudrel Rénovation.',

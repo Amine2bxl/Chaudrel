@@ -15,6 +15,7 @@ import Method from '@/pages/Method';
 import About from '@/pages/About';
 import Faq from '@/pages/Faq';
 import Quote from '@/pages/Quote';
+import Links from '@/pages/Links';
 import Legal from '@/pages/Legal';
 import NotFound from '@/pages/NotFound';
 
@@ -44,6 +45,12 @@ export default function App() {
             <Route path="/a-propos" element={<About />} />
             <Route path="/faq" element={<Faq />} />
             <Route path="/devis" element={<Quote />} />
+            {/* Page de liens, destination des bios réseaux. `/link` est
+                l'adresse courte qu'on écrit dans un profil ; elle redirige vers
+                l'URL française du site, qui reste la seule canonique. */}
+            <Route path="/liens" element={<Links />} />
+            <Route path="/link" element={<Navigate to="/liens" replace />} />
+            <Route path="/links" element={<Navigate to="/liens" replace />} />
             <Route path="/legal/politique-mentions" element={<Legal />} />
             {/* La page contact a été retirée : ses coordonnées vivent dans la
                 fenêtre de contact. On redirige plutôt que de renvoyer une 404

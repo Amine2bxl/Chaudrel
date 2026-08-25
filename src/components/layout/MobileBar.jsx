@@ -4,6 +4,9 @@ import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
+/** Routes où la barre ferait doublon avec le contenu de la page. */
+const HIDDEN_ON = new Set(['/devis', '/liens']);
+
 /**
  * Barre d'action mobile — deux gestes, à portée de pouce, et jamais en double.
  *
@@ -22,8 +25,9 @@ export default function MobileBar() {
   const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
-    // Le questionnaire est lui-même l'action : pas de barre par-dessus.
-    if (pathname === '/devis') return undefined;
+    // Le questionnaire est lui-même l'action, et la page de liens porte déjà
+    // devis, appel et WhatsApp en pleine largeur : pas de barre par-dessus.
+    if (HIDDEN_ON.has(pathname)) return undefined;
 
     const visible = new Set();
     const sync = () => setHidden(visible.size > 0 || window.scrollY < 240);
@@ -59,7 +63,7 @@ export default function MobileBar() {
     };
   }, [pathname]);
 
-  if (pathname === '/devis') return null;
+  if (HIDDEN_ON.has(pathname)) return null;
 
   return (
     <div
