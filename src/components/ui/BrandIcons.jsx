@@ -109,10 +109,25 @@ export function ToolsIcon(props) {
   );
 }
 
-export function CheckIcon(props) {
+/* Longueur du tracé de la coche, arrondie au-dessus : 4,67 + 9,72 unités. */
+const CHECK_LEN = 15;
+
+/**
+ * La coche. `draw={false}` la laisse non tracée : le trait s'écrit ensuite,
+ * comme une main qui coche. C'est le seul geste de la page qui raconte un
+ * achèvement — d'où le tracé plutôt qu'un simple fondu.
+ */
+export function CheckIcon({ draw = true, ...props }) {
   return (
-    <svg {...box} {...props} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m3.2 8.4 3.3 3.3 6.3-7.4" />
+    <svg {...box} {...props} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path
+        d="m3.2 8.4 3.3 3.3 6.3-7.4"
+        style={{
+          strokeDasharray: CHECK_LEN,
+          strokeDashoffset: draw ? 0 : CHECK_LEN,
+          transition: 'stroke-dashoffset 620ms var(--ease-soft)',
+        }}
+      />
     </svg>
   );
 }

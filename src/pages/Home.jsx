@@ -70,6 +70,16 @@ export default function Home() {
             text="Vous savez à tout moment où en est votre chantier, ce qui a été fait et ce qui vient ensuite."
           />
           <ProcessCurve tone="light" className="mt-block" />
+
+          {/* La page « méthode » n'était liée depuis nulle part : ni la
+              navigation, ni une section. Prérendue et dans le sitemap, mais
+              inatteignable en cliquant — donc invisible. Sa place est ici,
+              juste après le résumé qu'elle développe. */}
+          <div className="mt-12">
+            <TextLink to="/methode" tone="light">
+              Le détail de chaque étape
+            </TextLink>
+          </div>
         </Container>
       </Section>
 

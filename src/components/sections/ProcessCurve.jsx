@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { METHOD } from '@/data/method';
 import { ICONS } from '@/components/ui/BrandIcons';
 import { cn } from '@/lib/utils';
@@ -80,6 +80,11 @@ function smoothPath(points) {
 
 export default function ProcessCurve({ steps = METHOD, tone = 'dark', className }) {
   const light = tone === 'light'; // « light » = texte clair sur fond sombre
+  // Identifiants uniques : deux courbes sur une même page partageraient sinon
+  // leurs dégradés, et la seconde hériterait des couleurs de la première.
+  const uid = useId().replace(/:/g, '');
+  const fillId = `curve-fill-${uid}`;
+  const strokeId = `curve-stroke-${uid}`;
   const ref = useRef(null);
   const [drawn, setDrawn] = useState(false);
 
@@ -94,6 +99,16 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
     const d = smoothPath(pts);
     return { points: pts, line: d, area: `${d} L ${pts[pts.length - 1].x} ${H} L ${pts[0].x} ${H} Z` };
   }, [steps]);
+
+  /* La validation arrive après la courbe, pas avec elle. Tout allumer d'un coup
+     ne raconte rien ; ici on voit le trait rejoindre la livraison, puis la
+     livraison se valider. L'ordre est le message. */
+  const [sealed, setSealed] = useState(false);
+  useEffect(() => {
+    if (!drawn) return undefined;
+    const id = setTimeout(() => setSealed(true), 1700);
+    return () => clearTimeout(id);
+  }, [drawn]);
 
   useEffect(() => {
     const el = ref.current;
@@ -143,19 +158,57 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
   const snakeLen = Math.round((snakeH || 0) * 1.25) || 1;
 
   const accent = light ? 'text-gold-light' : 'text-gold';
+  /* Les dégradés SVG ne lisent pas les classes Tailwind : ils prennent les
+     mêmes jetons, directement. */
+  const goldStop = `rgb(var(--c-gold${light ? '-light' : ''}-rgb))`;
+  const greenStop = `rgb(var(--c-green${light ? '-light' : ''}-rgb))`;
 
-  /** Le repère posé sur le tracé : pastille pleine, symbole de l'étape. */
-  const Badge = ({ step, size }) => {
+  /**
+   * Le repère posé sur le tracé : pastille pleine, symbole de l'étape.
+   *
+   * La dernière passe au vert quand le chantier est livré. Le vert n'est pas
+   * une décoration de fin de liste : c'est la seule couleur du site réservée à
+   * un état achevé, et la promesse qu'elle illustre — « il est terminé quand
+   * vous le dites » — est la seule que le visiteur contrôle. C'est là que se
+   * gagne la confiance, donc c'est là qu'on la marque.
+   */
+  const Badge = ({ step, size, last = false }) => {
     const Icon = ICONS[step.icon];
+    const done = last && sealed;
     return (
-      <span
-        className={cn(
-          'grid place-items-center rounded-md shadow-lift',
-          light ? 'bg-cream text-bark' : 'bg-shell text-ink'
+      <span className="relative grid place-items-center">
+        {/* L'onde part du bord de la pastille et s'efface. Décorative : le
+            changement de couleur suffit à porter l'information. */}
+        {done && (
+          <span
+            aria-hidden="true"
+            className={cn(
+              'seal-ring pointer-events-none absolute inset-0 rounded-md',
+              light ? 'bg-green-light' : 'bg-green'
+            )}
+          />
         )}
-        style={{ width: size, height: size }}
-      >
-        {Icon ? <Icon width={size * 0.42} height={size * 0.42} /> : null}
+        <span
+          className={cn(
+            'relative grid place-items-center rounded-md shadow-lift transition-colors duration-[550ms] ease-soft',
+            done
+              ? light
+                ? 'bg-green-light text-bark'
+                : 'bg-green text-cream'
+              : light
+                ? 'bg-cream text-bark'
+                : 'bg-shell text-ink'
+          )}
+          style={{ width: size, height: size }}
+        >
+          {Icon ? (
+            <Icon
+              width={size * 0.42}
+              height={size * 0.42}
+              {...(last ? { draw: done } : {})}
+            />
+          ) : null}
+        </span>
       </span>
     );
   };
@@ -174,9 +227,21 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
             aria-label={`Déroulé d'un chantier en ${steps.length} étapes, de ${steps[0].title} à ${steps[steps.length - 1].title}`}
           >
             <defs>
-              <linearGradient id="chaudrel-curve-fill" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="currentColor" stopOpacity="0.16" />
                 <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Le tracé vire au vert sur son dernier tiers, au moment où la
+                  livraison se valide. Sans lui, la pastille verte serait un
+                  accident isolé : c'est la ligne qui la rend inévitable. */}
+              <linearGradient id={strokeId} x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor={goldStop} />
+                <stop offset="66%" stopColor={goldStop} />
+                <stop
+                  offset="100%"
+                  style={{ stopColor: sealed ? greenStop : goldStop, transition: 'stop-color 550ms var(--ease-soft)' }}
+                />
               </linearGradient>
             </defs>
 
@@ -184,7 +249,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
                 charger. Il apparaît une fois la ligne écrite. */}
             <path
               d={area}
-              fill="url(#chaudrel-curve-fill)"
+              fill={`url(#${fillId})`}
               className={cn(
                 'transition-opacity duration-[900ms] ease-soft',
                 accent,
@@ -199,7 +264,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
               strokeWidth="2"
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
-              className={light ? 'stroke-gold-light' : 'stroke-gold'}
+              stroke={`url(#${strokeId})`}
               style={{
                 strokeDasharray: 2400,
                 strokeDashoffset: drawn ? 0 : 2400,
@@ -252,7 +317,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
                     transitionDelay: `${900 + i * 110}ms`,
                   }}
                 >
-                  <Badge step={p.step} size={52} />
+                  <Badge step={p.step} size={52} last={i === points.length - 1} />
                 </span>
               </div>
             );
@@ -300,12 +365,23 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
             className="absolute left-0 top-0"
             style={{ height: snakeH }}
           >
+            <defs>
+              <linearGradient id={`${strokeId}-v`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={goldStop} stopOpacity="0.45" />
+                <stop offset="72%" stopColor={goldStop} stopOpacity="0.45" />
+                <stop
+                  offset="100%"
+                  stopOpacity="0.95"
+                  style={{ stopColor: sealed ? greenStop : goldStop, transition: 'stop-color 550ms var(--ease-soft)' }}
+                />
+              </linearGradient>
+            </defs>
             <path
               d={snakePath(dotYs)}
               fill="none"
               strokeWidth="2"
               strokeLinecap="round"
-              className={light ? 'stroke-gold-light/45' : 'stroke-gold/40'}
+              stroke={`url(#${strokeId}-v)`}
               style={{
                 strokeDasharray: snakeLen,
                 strokeDashoffset: drawn ? 0 : snakeLen,
@@ -331,7 +407,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
                   transitionDelay: `${300 + i * 130}ms`,
                 }}
               >
-                <Badge step={s} size={SNAKE.dot} />
+                <Badge step={s} size={SNAKE.dot} last={i === steps.length - 1} />
               </span>
               <h3 className={cn('t-h3', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
               <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>

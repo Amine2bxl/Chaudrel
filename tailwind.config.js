@@ -29,6 +29,10 @@ export default {
           hover: rgb('gold-hover'),
           light: rgb('gold-light'),
         },
+        green: {
+          DEFAULT: rgb('green'),
+          light: rgb('green-light'),
+        },
         error: {
           DEFAULT: rgb('error'),
           light: rgb('error-light'),
