@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Container } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { useDeclareDarkHero } from '@/lib/heroTone';
 import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
@@ -10,6 +11,8 @@ import { imageAttrs, SIZES } from '@/lib/image';
  */
 export default function PageHero({ title, intro, image, breadcrumb = [], aside }) {
   const hasImage = Boolean(image);
+  // Seul un en-tête à image est sombre : la barre s'y écrit en clair.
+  useDeclareDarkHero(hasImage);
 
   return (
     <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-bark' : 'bg-cream')}>

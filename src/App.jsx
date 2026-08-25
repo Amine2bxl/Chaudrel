@@ -3,8 +3,10 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import MobileBar from '@/components/layout/MobileBar';
 import Footer from '@/components/layout/Footer';
+import SideRail from '@/components/layout/SideRail';
 import ContactDialog from '@/components/layout/ContactDialog';
 import { ContactDialogProvider } from '@/lib/contactDialog';
+import { HeroToneProvider } from '@/lib/heroTone';
 import Seo from '@/lib/SeoHead';
 import Home from '@/pages/Home';
 import Projects from '@/pages/Projects';
@@ -30,11 +32,17 @@ function ScrollToTop() {
 export default function App() {
   return (
     <ContactDialogProvider>
-      <div className="min-h-screen bg-cream">
+      <HeroToneProvider>
+      {/* Le cadre pose la page sur le sable de la palette au lieu de la laisser
+          toucher les bords de l'écran ; le rail tient la marge qu'il libère.
+          Les deux ne s'activent qu'en grand format — voir index.css. */}
+      <div className="app-frame min-h-screen bg-cream">
         <Seo />
         <ScrollToTop />
-        <Navbar />
-        <main id="main">
+        <SideRail />
+        <div className="app-shell">
+          <Navbar />
+          <main id="main">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/realisations" element={<Projects />} />
@@ -58,11 +66,13 @@ export default function App() {
             <Route path="/contact" element={<Navigate to="/" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </main>
-        <Footer />
+          </main>
+          <Footer />
+        </div>
         <MobileBar />
         <ContactDialog />
       </div>
+      </HeroToneProvider>
     </ContactDialogProvider>
   );
 }

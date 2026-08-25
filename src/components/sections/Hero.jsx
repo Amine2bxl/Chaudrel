@@ -2,6 +2,7 @@ import { Container } from '@/components/ui';
 import { Button } from '@/components/ui';
 import { BRAND, PROOF, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
+import { useDeclareDarkHero } from '@/lib/heroTone';
 import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
@@ -13,6 +14,9 @@ import { imageAttrs, SIZES } from '@/lib/image';
  * à établir. Les trois faits affichés sont vérifiables.
  */
 export default function Hero() {
+  // La barre de navigation s'écrit en clair tant que ce hero est à l'écran.
+  useDeclareDarkHero();
+
   return (
     <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-bark">
       <img
@@ -39,9 +43,9 @@ export default function Hero() {
             ces capitales — la ligne cassait une fois de trop. */}
         <div className="hero-in hero-d1 flex items-start justify-between gap-8">
           <p className="t-label whitespace-nowrap text-cream/75">
-            Entreprise
+            Entreprise de rénovation
             <br />
-            de rénovation
+            <span className="text-gold-light">depuis {BRAND.founded}</span>
           </p>
           <p className="t-label whitespace-nowrap text-right text-cream/75">
             Bruxelles
@@ -53,7 +57,19 @@ export default function Hero() {
 
       {/* ---------- Bloc de promesse ---------- */}
       <Container className="relative z-10 mt-auto pb-[calc(66px+2.5rem)] lg:pb-20">
-        <div className="lg:flex lg:items-end lg:justify-between lg:gap-16">
+        {/* L'année de fondation, en filigrane derrière la promesse. C'est le
+            geste de la référence — un nombre géant posé derrière le sujet —
+            mais avec le seul chiffre que Chaudrel ait confirmé. Un compteur
+            inventé n'aurait pas tenu à cette taille. L'ancre en haut à gauche
+            le décode. */}
+        <span
+          aria-hidden="true"
+          className="hero-in hero-d2 pointer-events-none absolute bottom-24 right-0 select-none font-display leading-[0.72] text-cream/[0.08] text-[9rem] sm:text-[14rem] lg:bottom-16 lg:text-[19rem]"
+        >
+          {BRAND.founded}
+        </span>
+
+        <div className="relative lg:flex lg:items-end lg:justify-between lg:gap-16">
           <div className="lg:max-w-[46ch]">
             <h1 className="hero-in hero-d2 t-h1 max-w-[15ch] text-cream">Du premier plan à la dernière clé.</h1>
 

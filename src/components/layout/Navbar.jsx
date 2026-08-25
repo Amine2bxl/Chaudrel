@@ -5,11 +5,12 @@ import { BRAND, LOGO, NAV } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { useContactDialog } from '@/lib/contactDialog';
+import { useHeroTone } from '@/lib/heroTone';
 import { Button } from '@/components/ui';
 
 /** Deux lignes qui deviennent une croix — pas d'icône importée. */
-function MenuIcon({ open }) {
-  const bar = 'block h-px w-6 bg-ink transition-all duration-fast ease-soft';
+function MenuIcon({ open, onDark }) {
+  const bar = cn('block h-px w-6 transition-all duration-fast ease-soft', onDark ? 'bg-cream' : 'bg-ink');
   return (
     <span className="relative flex h-6 w-6 flex-col items-center justify-center gap-[6px]">
       <span className={cn(bar, open && 'translate-y-[3.5px] rotate-45')} />
@@ -19,13 +20,18 @@ function MenuIcon({ open }) {
 }
 
 /** Logotype : carré aux coins adoucis, jamais rond, jamais à angle vif. */
-function Wordmark() {
+function Wordmark({ onDark }) {
   return (
     <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel — accueil">
       <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-logo bg-shell shadow-soft">
         <img src={LOGO} alt="" aria-hidden="true" width="40" height="40" className="h-full w-full object-cover" />
       </span>
-      <span className="font-wordmark text-[19px] uppercase leading-none tracking-[0.2em] text-ink sm:text-[21px]">
+      <span
+        className={cn(
+          'font-wordmark text-[19px] uppercase leading-none tracking-[0.2em] sm:text-[21px]',
+          onDark ? 'text-cream' : 'text-ink'
+        )}
+      >
         {BRAND.name}
       </span>
     </Link>
@@ -42,9 +48,24 @@ function Wordmark() {
  * brun sous l'onglet actif.
  */
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
   const { openDialog } = useContactDialog();
   const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
+  /* La barre reste transparente sur le premier écran — le hero porte déjà son
+     propre contraste — et prend un fond dès que du contenu passe derrière. */
+  const [scrolled, setScrolled] = useState(false);
+  /* Aplatir la barre lui a coûté le fond crème qui garantissait son contraste.
+     Sur un en-tête sombre elle écrit donc en clair, et repasse en foncé dès
+     qu'un fond apparaît au défilement. C'est l'en-tête qui se déclare — aucune
+     liste de routes à tenir à jour ici. */
+  const darkHero = useHeroTone();
+
+  useEffect(() => {
+    const sync = () => setScrolled(window.scrollY > 24);
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+    return () => window.removeEventListener('scroll', sync);
+  }, []);
 
   useEffect(() => setOpen(false), [pathname]);
 
@@ -55,10 +76,19 @@ export default function Navbar() {
     };
   }, [open]);
 
+  /* Clair sur le hero sombre, foncé partout ailleurs. */
+  const onDark = darkHero && !scrolled;
+
   const linkClass = ({ isActive }) =>
     cn(
       'relative t-label pb-2 pt-1 transition-colors duration-fast',
-      isActive ? 'text-ink' : 'text-ink/60 hover:text-ink'
+      onDark
+        ? isActive
+          ? 'text-cream'
+          : 'text-cream/75 hover:text-cream'
+        : isActive
+          ? 'text-ink'
+          : 'text-ink/60 hover:text-ink'
     );
 
   return (
@@ -70,8 +100,33 @@ export default function Navbar() {
         Aller au contenu
       </a>
 
-      <div className="mx-auto my-2.5 flex w-[calc(100%-1.25rem)] max-w-[1240px] items-center justify-between rounded-full bg-cream/95 px-4 py-2.5 shadow-soft backdrop-blur-md sm:my-3 sm:px-5 lg:px-6">
-        <Wordmark />
+      {/* Plus de pilule flottante. Une barre qui fait partie de la page a plus
+          d'autorité qu'une capsule qui s'y superpose, et elle libère la marge
+          latérale pour le rail. Elle s'aligne sur la même gouttière que le
+          contenu, ce que la pilule centrée ne faisait pas : titre de page et
+          logo tombent enfin sur le même axe. Le fond n'apparaît qu'au
+          défilement, quand du contenu passe derrière. */}
+      {/* Voile du haut. Une barre transparente posée sur une photo n'a aucun
+          contraste garanti : il dépend du pixel qui se trouve dessous, et le
+          ciel d'un hero est clair. Ce dégradé assombrit juste la bande occupée
+          par la barre, sans toucher au reste de l'image. Il ne sert que sur un
+          hero sombre et avant tout défilement — ailleurs, le fond crème fait
+          déjà le travail. */}
+      <div
+        aria-hidden="true"
+        className={cn(
+          'pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bark/65 to-transparent transition-opacity duration-slow',
+          onDark ? 'opacity-100' : 'opacity-0'
+        )}
+      />
+
+      <div
+        className={cn(
+          'relative mx-auto flex w-full max-w-page items-center justify-between px-5 py-4 transition-colors duration-slow sm:px-8 lg:px-12 lg:py-6',
+          scrolled ? 'bg-cream/90 backdrop-blur-lg' : 'bg-transparent'
+        )}
+      >
+        <Wordmark onDark={onDark} />
 
         <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Navigation principale">
           {NAV.map((item) => (
@@ -103,7 +158,10 @@ export default function Navbar() {
             onClick={() => openDialog('navbar')}
             aria-label="Nous joindre"
             title="Nous joindre"
-            className="grid h-10 w-10 place-items-center rounded-full text-ink/70 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
+            className={cn(
+              'grid h-10 w-10 place-items-center rounded-full transition-colors duration-fast',
+              onDark ? 'text-cream/75 hover:bg-cream/10 hover:text-cream' : 'text-ink/70 hover:bg-ink/5 hover:text-ink'
+            )}
           >
             <Phone size={18} strokeWidth={1.7} aria-hidden="true" />
           </button>
@@ -120,7 +178,7 @@ export default function Navbar() {
           aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
           className="grid h-11 w-11 place-items-center rounded-full transition-colors duration-fast hover:bg-ink/5 lg:hidden"
         >
-          <MenuIcon open={open} />
+          <MenuIcon open={open} onDark={onDark} />
         </button>
       </div>
 
