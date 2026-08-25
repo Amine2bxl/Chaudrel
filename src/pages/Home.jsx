@@ -95,10 +95,13 @@ export default function Home() {
             <h2 className="t-h2 max-w-[18ch] text-balance">
               Deux artisans, une même exigence depuis {BRAND.founded}.
             </h2>
-            <p className="t-lead measure mt-6 text-ink/65">
+            {/* Emphase par la couleur, pas par la graisse : le contexte
+                s'écrit en gris, la phrase qui compte revient au noir du texte.
+                L'œil trouve la conclusion sans qu'on la mette en gras. */}
+            <p className="t-lead measure mt-6 text-ink/45">
               {BRAND.founders[0].name} suit les chantiers et la technique. {BRAND.founders[1].name} s’occupe du design et
-              de la relation client. Cette répartition n’a pas bougé depuis le premier jour, et c’est aussi pour cela que
-              vous n’avez jamais qu’un seul interlocuteur.
+              de la relation client. Cette répartition n’a pas bougé depuis le premier jour,{' '}
+              <span className="text-ink">et c’est pour cela que vous n’avez jamais qu’un seul interlocuteur.</span>
             </p>
             <div className="mt-9">
               <TextLink to="/a-propos">Découvrir Chaudrel</TextLink>

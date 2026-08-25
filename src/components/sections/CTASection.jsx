@@ -3,7 +3,13 @@ import Reveal from '@/lib/reveal';
 import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 
-/** Bloc de conversion en fin de page. Une phrase, deux actions, les numéros. */
+/**
+ * Bande de conversion en fin de page.
+ *
+ * Centrée, contrairement au reste du site qui est aligné à gauche : c'est le
+ * point d'arrêt de la lecture, pas un paragraphe de plus. La composition
+ * symétrique fait ralentir l'œil là où il faut décider.
+ */
 export default function CTASection({
   title = 'Un projet en tête ?',
   text = 'Quatre questions, deux minutes. Nous organisons une visite et vous remettons un devis détaillé, gratuitement.',
@@ -14,32 +20,27 @@ export default function CTASection({
   return (
     <section data-page-cta className="on-dark border-t border-cream/10 bg-bark py-section text-cream">
       <Container>
-        <div className="lg:grid lg:grid-cols-12 lg:gap-16">
-          <Reveal className="lg:col-span-7">
-            <h2 className="t-h1">{title}</h2>
-            <p className="t-body measure mt-6 text-cream/60">{text}</p>
-          </Reveal>
+        <Reveal className="mx-auto max-w-3xl text-center">
+          <h2 className="t-h1 mx-auto max-w-[18ch] text-balance">{title}</h2>
+          <p className="t-lead mx-auto mt-6 max-w-[52ch] text-cream/60">{text}</p>
 
-          <Reveal delay={120} className="mt-10 lg:col-span-5 lg:mt-0 lg:self-end">
-            <div className="flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-              <Button
-                to="/devis"
-                variant="solidLight"
-                size="lg"
-                arrow
-                onClick={() => track(EVENTS.QUOTE_CTA, { source })}
-              >
-                Devis gratuit
-              </Button>
-              {/* Un seul appel secondaire : la fenêtre porte tous les canaux
-                  plutôt que d'en imposer un. */}
-              <Button variant="outlineLight" size="lg" onClick={() => openDialog(source)}>
-                Nous joindre
-              </Button>
-            </div>
-
-          </Reveal>
-        </div>
+          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Button
+              to="/devis"
+              variant="solidLight"
+              size="lg"
+              arrow
+              onClick={() => track(EVENTS.QUOTE_CTA, { source })}
+            >
+              Devis gratuit
+            </Button>
+            {/* Un seul appel secondaire : la fenêtre porte tous les canaux
+                plutôt que d'en imposer un. */}
+            <Button variant="outlineLight" size="lg" onClick={() => openDialog(source)}>
+              Nous joindre
+            </Button>
+          </div>
+        </Reveal>
       </Container>
     </section>
   );

@@ -148,6 +148,21 @@ export default function ProjectCarousel({ projects, className }) {
                       style={{ opacity: isActive ? 0 : STAGE.side.dim }}
                     />
 
+                    {/* Chiffre en filigrane, calé dans l'angle : il donne
+                        l'échelle de l'image et signe le rang du chantier sans
+                        ajouter de bloc de texte. Décoratif — le rang est déjà
+                        énoncé par les repères numérotés. */}
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        'pointer-events-none absolute bottom-1 right-4 font-display leading-[0.8] text-cream/15 transition-opacity duration-[600ms] ease-soft sm:right-7',
+                        'text-[5rem] sm:text-[8rem] lg:text-[10rem]',
+                        isActive ? 'opacity-100' : 'opacity-0'
+                      )}
+                    >
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+
                     <div
                       className={cn(
                         'absolute inset-x-0 top-0 p-5 text-center transition-opacity duration-[600ms] ease-soft sm:p-7',
@@ -194,26 +209,40 @@ export default function ProjectCarousel({ projects, className }) {
         </div>
       </div>
 
-      {/* Repères : même langage que le point d'onglet actif de la navigation. */}
-      <div className="mt-7 flex items-center justify-center gap-2.5">
-        {projects.map((p, i) => (
-          <button
-            key={p.slug}
-            type="button"
-            onClick={() => setIndex(i)}
-            aria-label={`Aller au chantier ${i + 1} : ${p.title}`}
-            aria-current={i === index ? 'true' : undefined}
-            className="grid h-6 w-6 place-items-center rounded-full"
-          >
-            <span
-              aria-hidden="true"
+      {/* Repères numérotés — le motif « 01 —— 02 03 04 » de la référence.
+          L'index courant est écrit en grand et tiré par un filet qui se remplit ;
+          les autres restent des numéros discrets, cliquables. Un chiffre dit où
+          l'on est dans la série, ce qu'un point ne dit pas. */}
+      <div className="mt-8 flex items-center gap-5">
+        <span className={cn('t-num flex-none text-[1.375rem] leading-none', 'text-ink')}>
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        {/* Filet de progression : sa portion pleine avance avec la sélection. */}
+        <span aria-hidden="true" className="relative h-px flex-1 bg-ink/15">
+          <span
+            className="absolute inset-y-0 left-0 bg-gold transition-[width] duration-slow ease-soft motion-reduce:transition-none"
+            style={{ width: `${((index + 1) / count) * 100}%` }}
+          />
+        </span>
+
+        <div className="flex flex-none items-center gap-3">
+          {projects.map((p, i) => (
+            <button
+              key={p.slug}
+              type="button"
+              onClick={() => setIndex(i)}
+              aria-label={`Aller au chantier ${i + 1} : ${p.title}`}
+              aria-current={i === index ? 'true' : undefined}
               className={cn(
-                'block rounded-full transition-all duration-fast ease-soft',
-                i === index ? 'h-2 w-2 bg-gold' : 'h-1.5 w-1.5 bg-ink/20 hover:bg-ink/40'
+                't-num text-[0.8125rem] leading-none transition-colors duration-fast',
+                i === index ? 'text-ink' : 'text-ink/35 hover:text-ink/70'
               )}
-            />
-          </button>
-        ))}
+            >
+              {String(i + 1).padStart(2, '0')}
+            </button>
+          ))}
+        </div>
       </div>
 
       <p ref={liveRef} aria-live="polite" className="sr-only" />
