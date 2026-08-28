@@ -23,7 +23,23 @@ const PROJECT_TYPES = [
    qualifier la demande. */
 const PROPERTY_TYPES = ['Maison', 'Appartement', 'Commerce', 'Autre'];
 
-const STEPS = ['Projet', 'Description', 'Lieu', 'Coordonnées'];
+/* Les questions de qualification (docs/RESEAUX-SOCIAUX.md) : la surface donne
+   un ordre de grandeur, l'occupation conditionne le planning, l'échéance et le
+   budget permettent de préparer une visite et une réponse utiles. Chaque
+   question offre une issue « je ne sais pas » : personne n'est bloqué. */
+const SURFACE_OPTIONS = ['Moins de 50 m²', '50 à 100 m²', '100 à 150 m²', 'Plus de 150 m²', 'Je ne sais pas encore'];
+const OCCUPIED_OPTIONS = ['Oui, entièrement', 'Partiellement', 'Non, le logement sera vide'];
+const TIMELINE_OPTIONS = ['Dès que possible', 'Dans le mois', 'Dans 1 à 3 mois', 'Plus tard dans l’année', 'Pas encore de date'];
+const BUDGET_OPTIONS = [
+  'Moins de 10 000 €',
+  '10 000 à 30 000 €',
+  '30 000 à 80 000 €',
+  'Plus de 80 000 €',
+  'Je préfère en discuter',
+];
+const OWNER_STATUS_OPTIONS = ['Je suis propriétaire', 'Je suis locataire'];
+
+const STEPS = ['Projet', 'Description', 'Lieu', 'Calendrier & budget', 'Coordonnées'];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+0-9][0-9\s./-]{7,}$/;
@@ -31,9 +47,14 @@ const PHONE_RE = /^[+0-9][0-9\s./-]{7,}$/;
 const EMPTY = {
   projectType: '',
   propertyType: '',
+  surface: '',
   description: '',
+  occupied: '',
   city: '',
   postalCode: '',
+  timeline: '',
+  budget: '',
+  ownerStatus: '',
   firstName: '',
   lastName: '',
   phone: '',
@@ -68,10 +89,19 @@ export default function Quote() {
     if (s === 1) {
       if (!data.projectType) e.projectType = 'Sélectionnez un type de projet.';
       if (!data.propertyType) e.propertyType = 'Indiquez de quel type de bien il s’agit.';
+      if (!data.surface) e.surface = 'Précisez l’ordre de grandeur de la surface.';
     }
-    if (s === 2 && data.description.trim().length < 10) e.description = 'Décrivez le projet en quelques mots : pièces concernées et état actuel.';
+    if (s === 2) {
+      if (data.description.trim().length < 10) e.description = 'Décrivez le projet en quelques mots : pièces concernées et état actuel.';
+      if (!data.occupied) e.occupied = 'Le logement sera-t-il occupé pendant les travaux ?';
+    }
     if (s === 3 && !data.city.trim()) e.city = 'Indiquez la commune du chantier.';
     if (s === 4) {
+      if (!data.budget) e.budget = 'Sélectionnez une fourchette pour avancer.';
+      if (!data.timeline) e.timeline = 'Indiquez l’échéance souhaitée.';
+      if (!data.ownerStatus) e.ownerStatus = 'Précisez votre situation — c’est elle qui détermine les autorisations.';
+    }
+    if (s === 5) {
       if (data.firstName.trim().length < 2) e.firstName = 'Indiquez votre prénom.';
       if (data.lastName.trim().length < 2) e.lastName = 'Indiquez votre nom.';
       if (!PHONE_RE.test(data.phone.trim())) e.phone = 'Numéro incomplet. Exemple : 0477 27 31 18.';
@@ -135,7 +165,7 @@ export default function Quote() {
       <>
         <PageHero
           title="C’est noté. Merci."
-          intro="Nous revenons vers vous pour convenir d’une visite et préparer votre devis."
+          intro="Vous venez de recevoir un e-mail de confirmation. Nous revenons vers vous pour convenir d’une visite et préparer votre devis."
           breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
         />
         <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
@@ -183,7 +213,7 @@ export default function Quote() {
   return (
     <>
       <PageHero
-        title="Quatre questions, deux minutes."
+        title="Cinq questions, deux minutes."
         intro="Gratuit et sans engagement. Plus votre description est précise, plus notre réponse le sera."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
       />
@@ -229,54 +259,58 @@ export default function Quote() {
               </div>
 
               {step === 1 && (
-                <Fieldset legend="Quel type de projet ?" error={errors.projectType}>
-                  <div className="grid gap-2.5 sm:grid-cols-2">
-                    {PROJECT_TYPES.map((t) => (
-                      <Choice
-                        key={t}
-                        name="projectType"
-                        label={t}
-                        checked={data.projectType === t}
-                        onChange={() => set('projectType')(t)}
-                      />
-                    ))}
-                  </div>
-
-                  <div className="mt-10">
-                    <span className="t-label text-ink/55">Type de bien</span>
-                    <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
-                      {PROPERTY_TYPES.map((t) => (
-                        <Choice
-                          key={t}
-                          name="propertyType"
-                          label={t}
-                          checked={data.propertyType === t}
-                          onChange={() => set('propertyType')(t)}
-                        />
-                      ))}
-                    </div>
-                    {errors.propertyType && (
-                      <p role="alert" className="t-small mt-4 text-error">
-                        {errors.propertyType}
-                      </p>
-                    )}
-                  </div>
+                <Fieldset legend="Votre projet, en bref.">
+                  <ChoiceGroup
+                    label="Type de travaux"
+                    name="projectType"
+                    options={PROJECT_TYPES}
+                    value={data.projectType}
+                    onChange={set('projectType')}
+                    error={errors.projectType}
+                  />
+                  <ChoiceGroup
+                    label="Type de bien"
+                    name="propertyType"
+                    options={PROPERTY_TYPES}
+                    value={data.propertyType}
+                    onChange={set('propertyType')}
+                    error={errors.propertyType}
+                  />
+                  <ChoiceGroup
+                    label="Surface approximative"
+                    name="surface"
+                    options={SURFACE_OPTIONS}
+                    value={data.surface}
+                    onChange={set('surface')}
+                    hint="Un ordre de grandeur suffit : il donne le cadre au devis."
+                    error={errors.surface}
+                  />
                 </Fieldset>
               )}
 
               {step === 2 && (
                 <Fieldset legend="Décrivez votre projet." error={errors.description}>
                   <label htmlFor="description" className="t-small block text-ink/65">
-                    Surface, pièces concernées, état actuel, échéance souhaitée.
+                    Pièces concernées, état actuel, ce que vous imaginez.
                   </label>
                   <textarea
                     id="description"
-                    rows={7}
+                    rows={6}
                     value={data.description}
                     onChange={(e) => set('description')(e.target.value)}
                     aria-invalid={Boolean(errors.description)}
                     placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
                     className="field mt-4"
+                  />
+
+                  <ChoiceGroup
+                    label="Le logement sera-t-il occupé pendant les travaux ?"
+                    name="occupied"
+                    options={OCCUPIED_OPTIONS}
+                    value={data.occupied}
+                    onChange={set('occupied')}
+                    hint="Cela conditionne le planning : certains postes (peinture, poussière) sont plus simples logement vide."
+                    error={errors.occupied}
                   />
                 </Fieldset>
               )}
@@ -299,6 +333,37 @@ export default function Quote() {
               )}
 
               {step === 4 && (
+                <Fieldset legend="Quand, et avec quel budget ?">
+                  <ChoiceGroup
+                    label="Échéance souhaitée"
+                    name="timeline"
+                    options={TIMELINE_OPTIONS}
+                    value={data.timeline}
+                    onChange={set('timeline')}
+                    error={errors.timeline}
+                  />
+                  <ChoiceGroup
+                    label="Budget prévisionnel"
+                    name="budget"
+                    options={BUDGET_OPTIONS}
+                    value={data.budget}
+                    onChange={set('budget')}
+                    hint="Une fourchette large suffit. Si vous hésitez, dites-le : la visite nous aidera à cadrer."
+                    error={errors.budget}
+                  />
+                  <ChoiceGroup
+                    label="Vous êtes ?"
+                    name="ownerStatus"
+                    options={OWNER_STATUS_OPTIONS}
+                    value={data.ownerStatus}
+                    onChange={set('ownerStatus')}
+                    hint="Si vous êtes locataire, certains travaux nécessitent l’accord du propriétaire."
+                    error={errors.ownerStatus}
+                  />
+                </Fieldset>
+              )}
+
+              {step === 5 && (
                 <Fieldset legend="Comment vous joindre ?">
                   <div className="space-y-8">
                     <div className="grid gap-8 sm:grid-cols-2">
@@ -394,6 +459,7 @@ export default function Quote() {
             <ul className="mt-6 space-y-5 border-t border-ink/12 pt-6">
               {[
                 'Elles nous évitent plusieurs allers-retours avant la visite.',
+                'Votre budget et vos dates nous permettent de préparer une réponse précise.',
                 `${BRAND.promises.quote}.`,
                 `${BRAND.promises.responseTime} à votre demande.`,
                 'Vos données servent uniquement à répondre à votre demande.',
@@ -496,6 +562,21 @@ function Choice({ name, label, checked, onChange }) {
       </span>
       <span className="t-body">{label}</span>
     </label>
+  );
+}
+
+function ChoiceGroup({ label, name, options, value, onChange, error, hint }) {
+  return (
+    <div className={cn(label && 'mt-10')}>
+      {label && <span className="t-label text-ink/55">{label}</span>}
+      <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+        {options.map((t) => (
+          <Choice key={t} name={name} label={t} checked={value === t} onChange={() => onChange(t)} />
+        ))}
+      </div>
+      {hint && <p className="t-small mt-3 text-ink/50">{hint}</p>}
+      {error && <FieldError>{error}</FieldError>}
+    </div>
   );
 }
 

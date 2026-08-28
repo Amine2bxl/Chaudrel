@@ -3,7 +3,6 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import MobileBar from '@/components/layout/MobileBar';
 import Footer from '@/components/layout/Footer';
-import SideRail from '@/components/layout/SideRail';
 import ContactDialog from '@/components/layout/ContactDialog';
 import { ContactDialogProvider } from '@/lib/contactDialog';
 import { HeroToneProvider } from '@/lib/heroTone';
@@ -39,7 +38,6 @@ export default function App() {
       <div className="app-frame min-h-screen bg-cream">
         <Seo />
         <ScrollToTop />
-        <SideRail />
         <div className="app-shell">
           <Navbar />
           <main id="main">

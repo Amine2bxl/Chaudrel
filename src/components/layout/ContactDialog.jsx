@@ -3,6 +3,7 @@ import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
 import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
+import SocialLinks from '@/components/layout/SocialLinks';
 
 /* Une ligne de la fenêtre : intitulé discret, valeur cliquable en grand. */
 function Row({ label, children }) {
@@ -192,6 +193,10 @@ export default function ContactDialog() {
               {BRAND.address.postalCode} {BRAND.address.city}
             </address>
             <p className="t-small mt-2 text-ink/50">{BRAND.zoneLong}.</p>
+          </Row>
+
+          <Row label="Nous suivre">
+            <SocialLinks tone="dark" source={`dialog:${source}`} size="sm" />
           </Row>
         </div>
       </div>

@@ -116,12 +116,12 @@ export default function Service() {
       </Section>
 
       {related.length > 0 && (
-        <Section tone="white">
-          <Container>
-            <SectionHeading title="Des chantiers de ce type." />
-            <ProjectCarousel projects={related} className="mt-block" />
-          </Container>
-        </Section>
+        <ProjectCarousel
+          projects={related}
+          sectionLabel="Sur le chantier"
+          title="Des chantiers de ce type."
+          text="Les mêmes gestes, déjà appliqués."
+        />
       )}
 
       <Section tone="bark">

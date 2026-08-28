@@ -32,20 +32,13 @@ export default function Home() {
       <ProofBand />
 
       {/* La preuve avant le discours */}
-      <Section tone="cream">
-        <Container>
-          <SectionHeading
-            title="Des chantiers finis, habités, utilisés."
-            text="Chaque projet est mené du premier coup de marteau au nettoyage final."
-          />
-
-          <ProjectCarousel projects={featured} className="mt-block" />
-
-          <div className="mt-12">
-            <TextLink to="/realisations">Toutes les réalisations</TextLink>
-          </div>
-        </Container>
-      </Section>
+      <ProjectCarousel
+        projects={featured}
+        sectionLabel="La preuve"
+        title="Des chantiers finis, habités, utilisés."
+        text="Chaque projet est mené du premier coup de marteau au nettoyage final."
+        link={{ label: 'Toutes les réalisations', to: '/realisations' }}
+      />
 
       <Section tone="shell">
         <Container>

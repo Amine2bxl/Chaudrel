@@ -73,8 +73,20 @@ Manquent pour être crédible : au moins 1 projet **salle de bain**, 1 **apparte
 | Variable Vercel | Rôle |
 |---|---|
 | `RESEND_API_KEY` | clé API Resend pour l'envoi des demandes de devis |
-| `LEAD_TO_EMAIL` | boîte qui reçoit les leads (ex. Info@chaudrel.be) |
+| `LEAD_TO_EMAIL` | boîte qui reçoit les leads (ex. Info@chaudrel.be), ou plusieurs adresses séparées par des virgules |
+| `LEAD_BCC_EMAIL` | optionnel — copie cachée de la notification (ex. second gérant) |
 | `LEAD_FROM_EMAIL` | expéditeur vérifié chez Resend (ex. site@chaudrel.be) |
+
+À chaque demande envoyée :
+1. la **notification interne** (avec type de projet, surface, échéance, budget,
+   situation, occupation, description et coordonnées) part vers `LEAD_TO_EMAIL`
+   (et `LEAD_BCC_EMAIL`) — c'est le seul envoi dont dépend le statut de la demande ;
+2. une **confirmation automatique** part au visiteur (récapitulatif + suite), envoyée
+   en best-effort : son échec ne fait pas échouer la demande.
+
+Le formulaire `/devis` collecte désormais les questions de qualification
+(`docs/RESEAUX-SOCIAUX.md`) : surface approximative, occupation du logement,
+échéance, budget et situation (propriétaire/locataire).
 
 Tant que ces variables sont absentes, `/api/lead` répond 503 et le formulaire
 affiche téléphone + WhatsApp en repli : **aucun lead n'est perdu silencieusement**.

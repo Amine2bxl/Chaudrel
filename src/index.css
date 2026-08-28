@@ -528,18 +528,7 @@
   }
 }
 
-/* Rail latéral : il tient la marge gauche que le cadre libère et donne au site
-   son axe vertical, qui lui manquait. Masqué tant que la largeur manque. */
-.app-rail {
-  display: none;
-}
-
+/* Rail latéral — supprimé : les réseaux ont rejoint le pied de page et la
+   fenêtre de contact (src/components/layout/SocialLinks.jsx). Le `.app-shell`
+   ne réserve plus la marge gauche qui était la sienne. */
 @media (min-width: 1024px) {
-  .app-rail {
-    display: flex;
-  }
-
-  .app-shell {
-    padding-left: 4.5rem;
-  }
-}

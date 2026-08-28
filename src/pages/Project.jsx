@@ -128,7 +128,7 @@ export default function Project() {
 
       <CTASection
         title="Vous avez un projet similaire ?"
-        text="Quatre questions, deux minutes. Nous revenons vers vous, puis nous convenons d’une visite sur place."
+        text="Cinq questions, deux minutes. Nous revenons vers vous, puis nous convenons d’une visite sur place."
         source="project_detail"
       />
     </>
