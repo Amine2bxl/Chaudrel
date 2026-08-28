@@ -148,7 +148,11 @@ export default function Links() {
         </Reveal>
 
         <Reveal delay={100} className="mt-10">
-          <GroupLabel>Votre projet</GroupLabel>
+          {/* La colonne de liens vit dans une carte : c'est la lecture « link
+              tree » attendue d'une bio — une seule carte, un geste par ligne,
+              pas de page derrière. */}
+          <div className="rounded-2xl bg-shell p-5 shadow-lift ring-1 ring-ink/[0.05] sm:p-8">
+            <GroupLabel>Votre projet</GroupLabel>
           <div className="space-y-2.5">
             <Row
               to="/devis"
@@ -210,6 +214,7 @@ export default function Links() {
               ) : null
             )}
           </ul>
+          </div>
         </Reveal>
 
         <Reveal delay={200} className="mt-10 text-center">

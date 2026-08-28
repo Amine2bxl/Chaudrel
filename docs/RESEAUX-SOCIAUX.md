@@ -133,20 +133,26 @@ Ces étiquettes sont le CRM tant qu'il n'y a pas de CRM.
 
 ---
 
-## 5. Linktree
+## 5. Linktree — intégré au site
+
+Plus de service externe : la page **`https://chaudrel.be/liens`** (route `/liens`,
+alias `/link` et `/links`) est le linktree du site. Elle est pensée pour un pouce, sur
+un téléphone, en trois secondes — une carte, des rangées hautes, quatre réseaux
+en pied. C'est l'adresse à mettre dans les bios Instagram, TikTok et Facebook,
+au lieu de rediriger vers linktr.ee.
 
 Ordre imposé par l'intention : action commerciale d'abord, exploration ensuite.
+1. **Demander un devis gratuit** → `/devis`
+2. **Nous écrire sur WhatsApp** → `wa.me/32477273118`
+3. **Appeler** → `tel:+32477273118`
+4. **Nous écrire** → `mailto:Info@chaudrel.be`
+5. **Voir nos réalisations** → `/realisations`
+6. **Nos services** → `/services`
+7. **Les réseaux** (Instagram, TikTok, Facebook, YouTube)
 
-1. **Demander un devis gratuit** → `https://chaudrel.be/devis`
-2. **Nous écrire sur WhatsApp** → `https://wa.me/32477273118`
-3. **Voir nos réalisations** → `https://chaudrel.be/realisations`
-4. **Nos services** → `https://chaudrel.be/services`
-5. **Site web** → `https://chaudrel.be`
-6. **Appeler** → `tel:+32477273118`
-7. **Instagram** / **Facebook**
-
-Ajouter `?utm_source=linktree` sur les liens vers le site pour mesurer l'apport réel.
-Idem sur les autres profils : `?utm_source=instagram`, `?utm_source=facebook`.
+Ajouter `?utm_source=instagram` (ou `facebook`, `tiktok`) sur les liens des
+profils vers le site pour mesurer l'apport réel — y compris la page `/liens` si
+elle est liée depuis un profil.
 
 ---
 

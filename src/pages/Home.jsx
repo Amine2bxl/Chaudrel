@@ -1,10 +1,10 @@
 import Hero, { ProofBand } from '@/components/sections/Hero';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
-import ServiceList from '@/components/sections/ServiceList';
-import ProcessCurve from '@/components/sections/ProcessCurve';
+import ServicesBoard from '@/components/sections/ServicesBoard';
+import ProcessTimeline from '@/components/sections/ProcessTimeline';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import CTASection from '@/components/sections/CTASection';
-import { Button, Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
+import { Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { PROJECTS } from '@/data/projects';
 import { BRAND } from '@/data/site';
@@ -46,12 +46,7 @@ export default function Home() {
             title="Une rénovation complète, ou un seul poste."
             text="Dans les deux cas, c’est nous qui coordonnons les corps de métier."
           />
-          <ServiceList className="mt-block" />
-          <div className="mt-12">
-            <Button to="/services" variant="outline">
-              Voir tous les services
-            </Button>
-          </div>
+          <ServicesBoard className="mt-block" />
         </Container>
       </Section>
 
@@ -62,7 +57,7 @@ export default function Home() {
             title="Quatre étapes, zéro surprise."
             text="Vous savez à tout moment où en est votre chantier, ce qui a été fait et ce qui vient ensuite."
           />
-          <ProcessCurve tone="light" className="mt-block" />
+          <ProcessTimeline tone="light" className="mt-block" />
 
           {/* La page « méthode » n'était liée depuis nulle part : ni la
               navigation, ni une section. Prérendue et dans le sitemap, mais

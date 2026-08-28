@@ -82,6 +82,7 @@ export default function Hero() {
                 to="/devis"
                 size="lg"
                 arrow
+                className="w-full justify-center sm:w-auto"
                 onClick={() => track(EVENTS.QUOTE_CTA, { source: 'hero' })}
               >
                 Devis gratuit
@@ -91,6 +92,7 @@ export default function Hero() {
                 href={`tel:${BRAND.phones[0].tel}`}
                 variant="outlineLight"
                 size="lg"
+                className="w-full justify-center sm:w-auto"
                 onClick={() => track(EVENTS.PHONE_CLICK, { source: 'hero' })}
               >
                 <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
@@ -108,6 +110,7 @@ export default function Hero() {
                 size="lg"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="w-full justify-center sm:w-auto"
                 onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'hero' })}
               >
                 <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">

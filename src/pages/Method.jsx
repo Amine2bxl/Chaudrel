@@ -1,5 +1,5 @@
 import PageHero from '@/components/sections/PageHero';
-import ProcessCurve from '@/components/sections/ProcessCurve';
+import ProcessTimeline from '@/components/sections/ProcessTimeline';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
@@ -34,7 +34,7 @@ export default function Method() {
 
       <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
-          <ProcessCurve />
+          <ProcessTimeline />
         </Container>
       </Section>
 

@@ -1,7 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
-import ProcessCurve from '@/components/sections/ProcessCurve';
 import FaqAccordion from '@/components/sections/FaqAccordion';
 import CTASection from '@/components/sections/CTASection';
 import { Button, Container, Section, SectionHeading } from '@/components/ui';
@@ -123,13 +122,6 @@ export default function Service() {
           text="Les mêmes gestes, déjà appliqués."
         />
       )}
-
-      <Section tone="bark">
-        <Container>
-          <SectionHeading tone="light" title="Le déroulé, étape par étape." />
-          <ProcessCurve tone="light" className="mt-block" />
-        </Container>
-      </Section>
 
       {service.faqs?.length > 0 && (
         <Section tone="cream">

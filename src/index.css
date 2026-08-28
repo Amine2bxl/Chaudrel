@@ -481,29 +481,6 @@
   }
 }
 
-/* Halo de validation : une onde, une seule fois. Un halo qui pulse en boucle
-   réclame l'attention sans rien annoncer de neuf — celui-ci confirme, puis se
-   tait. `forwards` le laisse invisible à la fin plutôt que de le remettre à
-   son état initial, où il réapparaîtrait. */
-@keyframes seal-ring {
-  0% {
-    opacity: 0.5;
-    transform: scale(0.7);
-  }
-  70% {
-    opacity: 0;
-    transform: scale(1.85);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.85);
-  }
-}
-
-.seal-ring {
-  animation: seal-ring 1100ms var(--ease-soft) forwards;
-}
-
 /* Le cadre et le rail sont retirés : le site est en plein écran, sans liseré
    sable ni borne sur les côtés. (Le rail latéral a déjà été supprimé — les
    réseaux vivent au pied de page et dans la fenêtre de contact.) */

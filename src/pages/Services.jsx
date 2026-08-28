@@ -1,32 +1,20 @@
 import PageHero from '@/components/sections/PageHero';
-import ServiceList from '@/components/sections/ServiceList';
-import ProcessCurve from '@/components/sections/ProcessCurve';
+import ServicesBoard from '@/components/sections/ServicesBoard';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Section, SectionHeading } from '@/components/ui';
+import { Container, Section } from '@/components/ui';
 
 export default function Services() {
   return (
     <>
       <PageHero
-        title="Un chantier, un interlocuteur."
-        intro="Nous prenons en charge la rénovation complète comme le poste isolé. Dans les deux cas, la coordination est de notre côté."
+        title="Six métiers, un seul interlocuteur."
+        intro="Nous prenons en charge la rénovation complète comme le poste isolé. Dépliez un métier pour voir ce qu'il recouvre, puis demandez le devis."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Services' }]}
       />
 
       <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
-          <ServiceList />
-        </Container>
-      </Section>
-
-      <Section tone="bark">
-        <Container>
-          <SectionHeading
-            tone="light"
-            title="Comment se déroule un chantier."
-            text="Le même déroulé pour une salle de bain que pour une maison entière. Seule la durée change."
-          />
-          <ProcessCurve tone="light" className="mt-block" />
+          <ServicesBoard />
         </Container>
       </Section>
 
