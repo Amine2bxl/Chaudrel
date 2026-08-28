@@ -531,4 +531,3 @@
 /* Rail latéral — supprimé : les réseaux ont rejoint le pied de page et la
    fenêtre de contact (src/components/layout/SocialLinks.jsx). Le `.app-shell`
    ne réserve plus la marge gauche qui était la sienne. */
-@media (min-width: 1024px) {
