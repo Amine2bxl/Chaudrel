@@ -30,15 +30,11 @@ function ScrollToTop() {
 export default function App() {
   return (
     <ContactDialogProvider>
-      {/* Le cadre pose la page sur le sable de la palette au lieu de la laisser
-          toucher les bords de l'écran. Il ne s'active qu'en grand format —
-          voir index.css. */}
-      <div className="app-frame min-h-screen bg-cream">
+      <div className="min-h-screen bg-cream">
         <Seo />
         <ScrollToTop />
-        <div className="app-shell">
-          <Navbar />
-          <main id="main">
+        <Navbar />
+        <main id="main">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/realisations" element={<Projects />} />
@@ -62,9 +58,8 @@ export default function App() {
             <Route path="/contact" element={<Navigate to="/" replace />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-          </main>
-          <Footer />
-        </div>
+        </main>
+        <Footer />
         <MobileBar />
         <ContactDialog />
       </div>

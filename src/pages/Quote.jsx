@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
-import { Button, Container, Disclosure, Section } from '@/components/ui';
+import { Button, Container, Section } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import { METHOD } from '@/data/method';
 import { BRAND, whatsappUrl } from '@/data/site';
+import { PROVINCES } from '@/data/belgium';
 import { EVENTS, track } from '@/lib/analytics';
 import { useContactDialog } from '@/lib/contactDialog';
 import { cn } from '@/lib/utils';
@@ -39,10 +39,29 @@ const BUDGET_OPTIONS = [
 ];
 const OWNER_STATUS_OPTIONS = ['Je suis propriétaire', 'Je suis locataire'];
 
+/* Chaudrel intervient dans toute la Belgique : l'étape du lieu commence par la
+   province. Les noms viennent de src/data/belgium.js (mêmes données que la
+   carte de couverture). */
+const PROVINCE_NAMES = PROVINCES.map((p) => p.name);
+
 const STEPS = ['Projet', 'Description', 'Lieu', 'Calendrier & budget', 'Coordonnées'];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+0-9][0-9\s./-]{7,}$/;
+const POSTAL_RE = /^\d{4}$/;
+
+/* Limites des pièces jointes — à garder dans l'enveloppe de l'endpoint Vercel
+   (4,5 Mo max sur le corps) : 5 photos/plans, une vidéo courte, 3 Mo au total. */
+const ATTACH = {
+  maxFiles: 5, // images + documents
+  maxVideo: 1,
+  perFile: 1 * 1024 * 1024, // image/PDF
+  perVideo: 1.5 * 1024 * 1024,
+  total: 3 * 1024 * 1024,
+};
+/* Le corps voyage en base64 (+33 %) : on garde donc une marge sous la limite
+   de l'endpoint en comparant les chaînes encodées. */
+const ATTACH_TOTAL_B64 = Math.ceil(ATTACH.total * 1.4);
 
 const EMPTY = {
   projectType: '',
@@ -50,8 +69,9 @@ const EMPTY = {
   surface: '',
   description: '',
   occupied: '',
-  city: '',
+  province: '',
   postalCode: '',
+  commune: '',
   timeline: '',
   budget: '',
   ownerStatus: '',
@@ -61,6 +81,7 @@ const EMPTY = {
   email: '',
   consent: false,
   company: '',
+  files: [],
 };
 
 export default function Quote() {
@@ -70,10 +91,7 @@ export default function Quote() {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const [started, setStarted] = useState(false);
-  /* Le détail technique part dans les mesures, jamais à l'écran : « Failed to
-     fetch » ou le champ `error` de l'API sont écrits pour un journal, pas pour
-     quelqu'un qui attend un devis. L'écran dit ce qui s'est passé et par où
-     passer maintenant. */
+  const [serverError, setServerError] = useState('');
 
   const set = (key) => (value) => {
     setData((d) => ({ ...d, [key]: value }));
@@ -95,7 +113,10 @@ export default function Quote() {
       if (data.description.trim().length < 10) e.description = 'Décrivez le projet en quelques mots : pièces concernées et état actuel.';
       if (!data.occupied) e.occupied = 'Le logement sera-t-il occupé pendant les travaux ?';
     }
-    if (s === 3 && !data.city.trim()) e.city = 'Indiquez la commune du chantier.';
+    if (s === 3) {
+      if (!data.province) e.province = 'Indiquez la province du chantier.';
+      if (!POSTAL_RE.test(data.postalCode.trim())) e.postalCode = 'Code postal à 4 chiffres. Exemple : 1030.';
+    }
     if (s === 4) {
       if (!data.budget) e.budget = 'Sélectionnez une fourchette pour avancer.';
       if (!data.timeline) e.timeline = 'Indiquez l’échéance souhaitée.';
@@ -112,24 +133,16 @@ export default function Quote() {
     return Object.keys(e).length === 0;
   };
 
-  /* `scroll-behavior: auto` en CSS ne bride pas un appel JS explicite : c'est
-     l'appel qui gagne. La préférence se lit donc ici. */
-  const scrollTop = () =>
-    window.scrollTo({
-      top: 0,
-      behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-    });
-
   const next = () => {
     if (!validate(step)) return;
     track(EVENTS.QUOTE_STEP, { step });
     setStep((s) => Math.min(STEPS.length, s + 1));
-    scrollTop();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const back = () => {
     setStep((s) => Math.max(1, s - 1));
-    scrollTop();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const submit = async (e) => {
@@ -137,13 +150,18 @@ export default function Quote() {
     if (!validate(STEPS.length)) return;
 
     setStatus('loading');
-    track(EVENTS.QUOTE_SUBMIT, { projectType: data.projectType });
+    setServerError('');
+    track(EVENTS.QUOTE_SUBMIT, { projectType: data.projectType, files: data.files.length });
 
     try {
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, sentAt: new Date().toISOString() }),
+        body: JSON.stringify({
+          ...data,
+          files: data.files.map((f) => ({ name: f.name, type: f.type, data: f.data })),
+          sentAt: new Date().toISOString(),
+        }),
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
@@ -151,9 +169,10 @@ export default function Quote() {
       }
       setStatus('success');
       track(EVENTS.QUOTE_SUCCESS, { projectType: data.projectType });
-      scrollTop();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setStatus('error');
+      setServerError(err.message);
       track(EVENTS.QUOTE_ERROR, { message: err.message });
     }
   };
@@ -165,44 +184,41 @@ export default function Quote() {
       <>
         <PageHero
           title="C’est noté. Merci."
-          intro="Vous venez de recevoir un e-mail de confirmation. Nous revenons vers vous pour convenir d’une visite et préparer votre devis."
+          intro="Votre demande et ses fichiers viennent de partir. Vous recevez un e-mail de confirmation, puis nous convenons d’une visite et préparons votre devis."
           breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
         />
         <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
-          <Container>
-            <div className="grid gap-12 lg:grid-cols-12">
-              <ol className="lg:col-span-7">
-                <span className="t-label text-ink/65">La suite</span>
-                {METHOD.slice(2, 5).map((s) => (
-                  <li key={s.n} className="flex gap-8 border-b border-ink/12 py-6 first:border-t first:mt-5">
-                    <span className="t-num text-2xl text-ink/40">{s.n}</span>
-                    <div>
-                      <h2 className="t-h3">{s.title}</h2>
-                      <p className="t-small mt-1.5 text-ink/65">{s.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
+          <Container className="max-w-[46rem]">
+            <ol>
+              <span className="t-label text-ink/65">La suite</span>
+              {[
+                { n: '01', title: 'Analyse', text: "Nous prenons connaissance de votre demande et de vos photos." },
+                { n: '02', title: 'Visite', text: 'Nous convenons d’un rendez-vous sur place, gratuit et sans engagement.' },
+                { n: '03', title: 'Devis', text: 'Un devis détaillé, poste par poste, dans un délai court.' },
+              ].map((s) => (
+                <li key={s.n} className="flex gap-8 border-b border-ink/12 py-6 first:border-t first:mt-5">
+                  <span className="t-num text-2xl text-ink/40">{s.n}</span>
+                  <div>
+                    <h2 className="t-h3">{s.title}</h2>
+                    <p className="t-small mt-1.5 text-ink/65">{s.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
 
-              <div className="lg:col-span-4 lg:col-start-9">
-                <p className="t-body text-ink/65">
-                  En attendant, vous pouvez parcourir nos chantiers récents, ou nous écrire directement.
-                </p>
-                <div className="mt-7 flex flex-col gap-3">
-                  <Button to="/realisations" variant="solid">
-                    Voir les réalisations
-                  </Button>
-                  <Button
-                    href={whatsappUrl('Bonjour Chaudrel, je viens de vous envoyer une demande de devis.')}
-                    variant="outline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_success' })}
-                  >
-                    WhatsApp
-                  </Button>
-                </div>
-              </div>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Button to="/realisations" variant="solid">
+                Voir les réalisations
+              </Button>
+              <Button
+                href={whatsappUrl('Bonjour Chaudrel, je viens de vous envoyer une demande de devis.')}
+                variant="outline"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_success' })}
+              >
+                WhatsApp
+              </Button>
             </div>
           </Container>
         </Section>
@@ -214,309 +230,486 @@ export default function Quote() {
     <>
       <PageHero
         title="Cinq questions, deux minutes."
-        intro="Gratuit et sans engagement. Plus votre description est précise, plus notre réponse le sera."
+        intro="Gratuit et sans engagement. Photos, plan ou vidéo ? Joignez-les : elles nous font gagner une visite et un aller-retour."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
-        <Container className="grid gap-16 lg:grid-cols-12 lg:gap-20">
-          <div className="lg:col-span-7">
-            {/* Progression */}
-            <div>
-              <div className="flex items-baseline justify-between">
-                <span className="t-label text-ink/65">
-                  {String(step).padStart(2, '0')} — {STEPS[step - 1]}
-                </span>
-                <span className="t-label text-ink/65">
-                  {step} / {STEPS.length}
-                </span>
-              </div>
-              <div
-                className="mt-4 h-1 w-full overflow-hidden rounded-full bg-ink/[0.09]"
-                role="progressbar"
-                aria-valuenow={step}
-                aria-valuemin={1}
-                aria-valuemax={STEPS.length}
-                aria-label="Progression du formulaire"
-              >
-                <div
-                  className="h-full origin-left rounded-full bg-gold transition-transform duration-700 ease-soft"
-                  style={{ transform: `scaleX(${progress})` }}
-                />
-              </div>
+      <Section tone="cream" className="pt-0 pb-16 md:pt-0 lg:pt-0">
+        <Container className="max-w-[46rem]">
+          {/* Progression */}
+          <div>
+            <div className="flex items-baseline justify-between">
+              <span className="t-label text-ink/65">
+                {String(step).padStart(2, '0')} — {STEPS[step - 1]}
+              </span>
+              <span className="t-label text-ink/65">
+                {step} / {STEPS.length}
+              </span>
             </div>
-
-            <form onSubmit={submit} noValidate className="mt-12">
-              <div className="absolute left-[-9999px]" aria-hidden="true">
-                <label htmlFor="company">Ne pas remplir</label>
-                <input
-                  id="company"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  value={data.company}
-                  onChange={(e) => set('company')(e.target.value)}
-                />
-              </div>
-
-              {step === 1 && (
-                <Fieldset legend="Votre projet, en bref.">
-                  <ChoiceGroup
-                    label="Type de travaux"
-                    name="projectType"
-                    options={PROJECT_TYPES}
-                    value={data.projectType}
-                    onChange={set('projectType')}
-                    error={errors.projectType}
-                  />
-                  <ChoiceGroup
-                    label="Type de bien"
-                    name="propertyType"
-                    options={PROPERTY_TYPES}
-                    value={data.propertyType}
-                    onChange={set('propertyType')}
-                    error={errors.propertyType}
-                  />
-                  <ChoiceGroup
-                    label="Surface approximative"
-                    name="surface"
-                    options={SURFACE_OPTIONS}
-                    value={data.surface}
-                    onChange={set('surface')}
-                    hint="Un ordre de grandeur suffit : il donne le cadre au devis."
-                    error={errors.surface}
-                  />
-                </Fieldset>
-              )}
-
-              {step === 2 && (
-                <Fieldset legend="Décrivez votre projet." error={errors.description}>
-                  <label htmlFor="description" className="t-small block text-ink/65">
-                    Pièces concernées, état actuel, ce que vous imaginez.
-                  </label>
-                  <textarea
-                    id="description"
-                    rows={6}
-                    value={data.description}
-                    onChange={(e) => set('description')(e.target.value)}
-                    aria-invalid={Boolean(errors.description)}
-                    placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
-                    className="field mt-4"
-                  />
-
-                  <ChoiceGroup
-                    label="Le logement sera-t-il occupé pendant les travaux ?"
-                    name="occupied"
-                    options={OCCUPIED_OPTIONS}
-                    value={data.occupied}
-                    onChange={set('occupied')}
-                    hint="Cela conditionne le planning : certains postes (peinture, poussière) sont plus simples logement vide."
-                    error={errors.occupied}
-                  />
-                </Fieldset>
-              )}
-
-              {step === 3 && (
-                <Fieldset legend="Où se situe le chantier ?" error={errors.city}>
-                  <div className="grid gap-8 sm:grid-cols-[2fr_1fr]">
-                    <Field id="city" label="Commune" value={data.city} onChange={set('city')} error={errors.city} autoComplete="address-level2" />
-                    <Field
-                      id="postalCode"
-                      label="Code postal"
-                      value={data.postalCode}
-                      onChange={set('postalCode')}
-                      autoComplete="postal-code"
-                      inputMode="numeric"
-                    />
-                  </div>
-                  <p className="t-small mt-6 text-ink/65">{BRAND.zoneLong}.</p>
-                </Fieldset>
-              )}
-
-              {step === 4 && (
-                <Fieldset legend="Quand, et avec quel budget ?">
-                  <ChoiceGroup
-                    label="Échéance souhaitée"
-                    name="timeline"
-                    options={TIMELINE_OPTIONS}
-                    value={data.timeline}
-                    onChange={set('timeline')}
-                    error={errors.timeline}
-                  />
-                  <ChoiceGroup
-                    label="Budget prévisionnel"
-                    name="budget"
-                    options={BUDGET_OPTIONS}
-                    value={data.budget}
-                    onChange={set('budget')}
-                    hint="Une fourchette large suffit. Si vous hésitez, dites-le : la visite nous aidera à cadrer."
-                    error={errors.budget}
-                  />
-                  <ChoiceGroup
-                    label="Vous êtes ?"
-                    name="ownerStatus"
-                    options={OWNER_STATUS_OPTIONS}
-                    value={data.ownerStatus}
-                    onChange={set('ownerStatus')}
-                    hint="Si vous êtes locataire, certains travaux nécessitent l’accord du propriétaire."
-                    error={errors.ownerStatus}
-                  />
-                </Fieldset>
-              )}
-
-              {step === 5 && (
-                <Fieldset legend="Comment vous joindre ?">
-                  <div className="space-y-8">
-                    <div className="grid gap-8 sm:grid-cols-2">
-                      <Field
-                        id="firstName"
-                        label="Prénom"
-                        value={data.firstName}
-                        onChange={set('firstName')}
-                        error={errors.firstName}
-                        autoComplete="given-name"
-                      />
-                      <Field
-                        id="lastName"
-                        label="Nom"
-                        value={data.lastName}
-                        onChange={set('lastName')}
-                        error={errors.lastName}
-                        autoComplete="family-name"
-                      />
-                    </div>
-                    <Field id="phone" label="Téléphone" type="tel" value={data.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" />
-                    <Field id="email" label="E-mail" type="email" value={data.email} onChange={set('email')} error={errors.email} autoComplete="email" />
-                  </div>
-
-                  <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-ink/65">
-                    <input
-                      type="checkbox"
-                      checked={data.consent}
-                      onChange={(e) => set('consent')(e.target.checked)}
-                      aria-invalid={Boolean(errors.consent)}
-                      className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-gold"
-                    />
-                    <span>
-                      J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
-                      <a href="/legal/politique-mentions" className="link-line text-ink">
-                        Politique de confidentialité
-                      </a>
-                    </span>
-                  </label>
-                  {errors.consent && <FieldError>{errors.consent}</FieldError>}
-                </Fieldset>
-              )}
-
-              <div className="mt-12 flex flex-wrap items-center gap-4">
-                {step > 1 && (
-                  <Button variant="outline" onClick={back} disabled={status === 'loading'}>
-                    Retour
-                  </Button>
-                )}
-
-                {step < STEPS.length ? (
-                  <Button variant="solid" onClick={next}>
-                    Continuer
-                  </Button>
-                ) : (
-                  <Button type="submit" variant="solid" size="lg" disabled={status === 'loading'}>
-                    {status === 'loading' ? 'Envoi en cours…' : 'Envoyer ma demande'}
-                  </Button>
-                )}
-              </div>
-
-              <p aria-live="polite" className="sr-only">
-                {status === 'loading' ? 'Envoi de votre demande en cours' : ''}
-              </p>
-
-              {status === 'error' && (
-                <div role="alert" className="mt-8 rounded-md bg-error/[0.07] px-5 py-4">
-                  <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
-                  {/* La première inquiétude est de devoir tout retaper : on y
-                      répond avant de proposer autre chose. */}
-                  <p className="t-small mt-2 text-ink/65">
-                    Vos réponses sont toujours à l’écran. Réessayez dans un instant, ou joignez-nous directement.
-                  </p>
-                  <p className="t-small mt-3 text-ink/65">
-                    Appelez-nous au{' '}
-                    <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
-                      {BRAND.phones[0].number}
-                    </a>{' '}
-                    ou écrivez sur{' '}
-                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-ink">
-                      WhatsApp
-                    </a>
-                    .
-                  </p>
-                </div>
-              )}
-            </form>
+            <div
+              className="mt-4 h-1 w-full overflow-hidden rounded-full bg-ink/[0.09]"
+              role="progressbar"
+              aria-valuenow={step}
+              aria-valuemin={1}
+              aria-valuemax={STEPS.length}
+              aria-label="Progression du formulaire"
+            >
+              <div
+                className="h-full origin-left rounded-full bg-gold transition-transform duration-700 ease-soft"
+                style={{ transform: `scaleX(${progress})` }}
+              />
+            </div>
           </div>
 
-          {/* Réassurance */}
-          <aside className="lg:col-span-4 lg:col-start-9">
-            <span className="t-label text-ink/65">Pourquoi ces questions</span>
-            <ul className="mt-6 space-y-5 border-t border-ink/12 pt-6">
+          <form onSubmit={submit} noValidate className="mt-10">
+            <div className="absolute left-[-9999px]" aria-hidden="true">
+              <label htmlFor="company">Ne pas remplir</label>
+              <input
+                id="company"
+                tabIndex={-1}
+                autoComplete="off"
+                value={data.company}
+                onChange={(e) => set('company')(e.target.value)}
+              />
+            </div>
+
+            {step === 1 && (
+              <Fieldset legend="Votre projet, en bref.">
+                <ChoiceGroup
+                  label="Type de travaux"
+                  name="projectType"
+                  options={PROJECT_TYPES}
+                  value={data.projectType}
+                  onChange={set('projectType')}
+                  error={errors.projectType}
+                />
+                <ChoiceGroup
+                  label="Type de bien"
+                  name="propertyType"
+                  options={PROPERTY_TYPES}
+                  value={data.propertyType}
+                  onChange={set('propertyType')}
+                  error={errors.propertyType}
+                />
+                <ChoiceGroup
+                  label="Surface approximative"
+                  name="surface"
+                  options={SURFACE_OPTIONS}
+                  value={data.surface}
+                  onChange={set('surface')}
+                  hint="Un ordre de grandeur suffit : il donne le cadre au devis."
+                  error={errors.surface}
+                />
+              </Fieldset>
+            )}
+
+            {step === 2 && (
+              <Fieldset legend="Décrivez votre projet." error={errors.description}>
+                <label htmlFor="description" className="t-small block text-ink/65">
+                  Pièces concernées, état actuel, ce que vous imaginez.
+                </label>
+                <textarea
+                  id="description"
+                  rows={5}
+                  value={data.description}
+                  onChange={(e) => set('description')(e.target.value)}
+                  aria-invalid={Boolean(errors.description)}
+                  placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
+                  className="field mt-4"
+                />
+
+                <ChoiceGroup
+                  label="Le logement sera-t-il occupé pendant les travaux ?"
+                  name="occupied"
+                  options={OCCUPIED_OPTIONS}
+                  value={data.occupied}
+                  onChange={set('occupied')}
+                  hint="Cela conditionne le planning : certains postes (peinture, poussière) sont plus simples logement vide."
+                  error={errors.occupied}
+                />
+
+                {/* Pièces jointes : photos, plan ou une courte vidéo. Elles
+                    partent dans le même e-mail que la demande. */}
+                <FileUpload files={data.files} onChange={set('files')} />
+              </Fieldset>
+            )}
+
+            {step === 3 && (
+              <Fieldset legend="Où se situe le projet ?" error={errors.province}>
+                <label htmlFor="province" className="t-label text-ink/55">
+                  Province
+                </label>
+                <select
+                  id="province"
+                  name="province"
+                  value={data.province}
+                  onChange={(e) => set('province')(e.target.value)}
+                  aria-invalid={Boolean(errors.province)}
+                  className="field mt-2"
+                >
+                  <option value="">Choisir une province…</option>
+                  {PROVINCE_NAMES.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+
+                <div className="mt-8 grid gap-8 sm:grid-cols-[1fr_2fr]">
+                  <Field
+                    id="postalCode"
+                    label="Code postal"
+                    value={data.postalCode}
+                    onChange={set('postalCode')}
+                    error={errors.postalCode}
+                    autoComplete="postal-code"
+                    inputMode="numeric"
+                  />
+                  <Field
+                    id="commune"
+                    label="Commune"
+                    value={data.commune}
+                    onChange={set('commune')}
+                    hint="Facultatif — le code postal suffit parfois."
+                    autoComplete="address-level2"
+                  />
+                </div>
+                <p className="t-small mt-6 text-ink/65">{BRAND.zoneLong}.</p>
+              </Fieldset>
+            )}
+
+            {step === 4 && (
+              <Fieldset legend="Quand, et avec quel budget ?">
+                <ChoiceGroup
+                  label="Échéance souhaitée"
+                  name="timeline"
+                  options={TIMELINE_OPTIONS}
+                  value={data.timeline}
+                  onChange={set('timeline')}
+                  error={errors.timeline}
+                />
+                <ChoiceGroup
+                  label="Budget prévisionnel"
+                  name="budget"
+                  options={BUDGET_OPTIONS}
+                  value={data.budget}
+                  onChange={set('budget')}
+                  hint="Une fourchette large suffit. Si vous hésitez, dites-le : la visite nous aidera à cadrer."
+                  error={errors.budget}
+                />
+                <ChoiceGroup
+                  label="Vous êtes ?"
+                  name="ownerStatus"
+                  options={OWNER_STATUS_OPTIONS}
+                  value={data.ownerStatus}
+                  onChange={set('ownerStatus')}
+                  hint="Si vous êtes locataire, certains travaux nécessitent l’accord du propriétaire."
+                  error={errors.ownerStatus}
+                />
+              </Fieldset>
+            )}
+
+            {step === 5 && (
+              <Fieldset legend="Comment vous joindre ?">
+                <div className="space-y-8">
+                  <div className="grid gap-8 sm:grid-cols-2">
+                    <Field
+                      id="firstName"
+                      label="Prénom"
+                      value={data.firstName}
+                      onChange={set('firstName')}
+                      error={errors.firstName}
+                      autoComplete="given-name"
+                    />
+                    <Field
+                      id="lastName"
+                      label="Nom"
+                      value={data.lastName}
+                      onChange={set('lastName')}
+                      error={errors.lastName}
+                      autoComplete="family-name"
+                    />
+                  </div>
+                  <Field id="phone" label="Téléphone" type="tel" value={data.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" />
+                  <Field id="email" label="E-mail" type="email" value={data.email} onChange={set('email')} error={errors.email} autoComplete="email" />
+                </div>
+
+                <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-ink/65">
+                  <input
+                    type="checkbox"
+                    checked={data.consent}
+                    onChange={(e) => set('consent')(e.target.checked)}
+                    aria-invalid={Boolean(errors.consent)}
+                    className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-gold"
+                  />
+                  <span>
+                    J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
+                    <a href="/legal/politique-mentions" className="link-line text-ink">
+                      Politique de confidentialité
+                    </a>
+                  </span>
+                </label>
+                {errors.consent && <FieldError>{errors.consent}</FieldError>}
+              </Fieldset>
+            )}
+
+            <div className="mt-12 flex flex-wrap items-center gap-4">
+              {step > 1 && (
+                <Button variant="outline" onClick={back} disabled={status === 'loading'}>
+                  Retour
+                </Button>
+              )}
+
+              {step < STEPS.length ? (
+                <Button variant="solid" onClick={next}>
+                  Continuer
+                </Button>
+              ) : (
+                <Button type="submit" variant="solid" size="lg" disabled={status === 'loading'}>
+                  {status === 'loading' ? 'Envoi en cours…' : 'Envoyer ma demande'}
+                </Button>
+              )}
+            </div>
+
+            <p aria-live="polite" className="sr-only">
+              {status === 'loading' ? 'Envoi de votre demande en cours' : ''}
+            </p>
+
+            {status === 'error' && (
+              <div role="alert" className="mt-8 rounded-md bg-error/[0.07] px-5 py-4">
+                <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
+                {serverError && <p className="t-small mt-1 text-ink/65">{serverError}</p>}
+                <p className="t-small mt-3 text-ink/65">
+                  Appelez-nous au{' '}
+                  <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
+                    {BRAND.phones[0].number}
+                  </a>{' '}
+                  ou écrivez sur{' '}
+                  <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-ink">
+                    WhatsApp
+                  </a>
+                  .
+                </p>
+              </div>
+            )}
+          </form>
+
+          {/* Réassurance compacte : une ligne de traite après le formulaire, au
+              lieu de la colonne latérale qui doublonnait la page. */}
+          <div className="mt-14 border-t border-ink/12 pt-8">
+            <ul className="grid gap-x-10 gap-y-2.5 sm:grid-cols-2">
               {[
-                'Elles nous évitent plusieurs allers-retours avant la visite.',
-                'Votre budget et vos dates nous permettent de préparer une réponse précise.',
                 `${BRAND.promises.quote}.`,
                 `${BRAND.promises.responseTime} à votre demande.`,
-                'Vos données servent uniquement à répondre à votre demande.',
+                'Photos, plans et vidéo partent dans le même e-mail.',
+                'Vos données servent uniquement à répondre.',
               ].map((t) => (
-                <li key={t} className="t-small text-ink/65">
+                <li key={t} className="t-small flex items-start gap-2.5 text-ink/65">
+                  <span aria-hidden="true" className="mt-[7px] h-1 w-1 flex-none rounded-full bg-gold" />
                   {t}
                 </li>
               ))}
             </ul>
 
-            {/* Ce qui se passe après l'envoi : replié, parce que c'est une
-                question qu'on se pose seulement si on se la pose. */}
-            <Disclosure title="Et après ?" className="mt-8">
-              <ol className="space-y-4">
-                {METHOD.slice(2, 6).map((m) => (
-                  <li key={m.n} className="flex gap-3.5">
-                    <span className="t-num mt-0.5 flex-none text-ink/40">{m.n}</span>
-                    <div>
-                      <p className="t-small font-semibold text-ink">{m.title}</p>
-                      <p className="t-small mt-1 text-ink/65">{m.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </Disclosure>
-
-            {/* Deux issues, pas une liste de liens : écrire tout de suite sur
-                WhatsApp, ou ouvrir la fiche complète (téléphones, e-mail,
-                horaires, adresse). */}
-            <div className="mt-10 border-t border-ink/12 pt-6">
-              <p className="t-small text-ink/65">Vous préférez parler ?</p>
-              <div className="mt-4 flex flex-col gap-2.5">
-                <a
-                  href={whatsappUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_sidebar' })}
-                  className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-ink/15 bg-shell px-5 py-4 text-ink transition-all duration-fast ease-soft hover:border-ink/30 hover:shadow-soft active:translate-y-px"
-                >
-                  <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
-                    <path d="M8 0a8 8 0 0 0-6.9 12L0 16l4.1-1.1A8 8 0 1 0 8 0Zm0 14.6a6.6 6.6 0 0 1-3.4-.9l-.2-.2-2.5.7.7-2.4-.2-.3A6.6 6.6 0 1 1 8 14.6Zm3.6-4.9c-.2-.1-1.2-.6-1.3-.6-.2-.1-.3-.1-.4.1l-.6.7c-.1.1-.2.1-.4 0a5.4 5.4 0 0 1-2.6-2.3c-.2-.3.2-.3.5-1 0-.1 0-.2 0-.3l-.6-1.3c-.1-.4-.3-.3-.4-.3h-.4a.7.7 0 0 0-.5.3c-.2.2-.7.7-.7 1.7s.7 2 .8 2.1a7.6 7.6 0 0 0 3 2.6c1.1.4 1.5.5 2 .4.4 0 1.2-.5 1.3-.9.2-.5.2-.9.1-1 0-.1-.1-.1-.3-.2Z" />
-                  </svg>
-                  WhatsApp
-                </a>
-                <button
-                  type="button"
-                  onClick={() => openDialog('quote_sidebar')}
-                  className="t-label inline-flex items-center justify-center gap-2.5 rounded-full border border-ink/15 bg-shell px-5 py-4 text-ink transition-all duration-fast ease-soft hover:border-ink/30 hover:shadow-soft active:translate-y-px"
-                >
-                  Toutes nos coordonnées
-                </button>
-              </div>
+            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <span className="t-small text-ink/65">Vous préférez parler ?</span>
+              <a
+                href={whatsappUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_footer' })}
+                className="link-line t-label inline-block pb-1 text-ink"
+              >
+                WhatsApp
+              </a>
+              <button type="button" onClick={() => openDialog('quote_footer')} className="link-line t-label inline-block pb-1 text-ink">
+                Toutes nos coordonnées
+              </button>
             </div>
-          </aside>
+          </div>
         </Container>
       </Section>
     </>
+  );
+}
+
+/* ---------- Pièces jointes ---------- */
+
+const fmtBytes = (bytes) => {
+  if (bytes < 1024) return `${bytes} o`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} Ko`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
+};
+
+/** Lit un fichier en base64 (sans préfixe data URL). */
+function readAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = String(reader.result);
+      resolve({ dataUrl, base64: dataUrl.slice(dataUrl.indexOf(',') + 1) });
+    };
+    reader.onerror = () => reject(new Error(`Impossible de lire ${file.name}.`));
+    reader.readAsDataURL(file);
+  });
+}
+
+/** Réduit une image (canvas) pour qu'elle reste légère dans l'e-mail. */
+function shrinkImage(dataUrl, max = 1600, quality = 0.82) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, max / Math.max(img.width, img.height));
+      if (scale >= 1 && dataUrl.length < 400 * 1024) {
+        resolve(dataUrl.slice(dataUrl.indexOf(',') + 1));
+        return;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      const out = canvas.toDataURL('image/jpeg', quality);
+      resolve(out.slice(out.indexOf(',') + 1));
+    };
+    img.onerror = () => resolve(dataUrl.slice(dataUrl.indexOf(',') + 1));
+    img.src = dataUrl;
+  });
+}
+
+function FileUpload({ files, onChange }) {
+  const inputRef = useRef(null);
+  const [error, setError] = useState('');
+
+  const addFiles = async (list) => {
+    setError('');
+    const incoming = Array.from(list);
+    let images = files.filter((f) => f.type !== 'video/mp4' && f.type !== 'video/webm' && f.type !== 'video/quicktime').length;
+    let videos = files.filter((f) => f.type.startsWith('video/')).length;
+
+    for (const file of incoming) {
+      const isVideo = file.type.startsWith('video/');
+      const isImage = file.type.startsWith('image/');
+      const isPdf = file.type === 'application/pdf';
+
+      if (!isVideo && !isImage && !isPdf) {
+        setError('Formats acceptés : JPG, PNG, WebP, PDF et une vidéo (MP4/WebM/MOV).');
+        return;
+      }
+      if (isVideo) {
+        if (videos >= ATTACH.maxVideo) {
+          setError('Une seule vidéo par demande.');
+          return;
+        }
+        if (file.size > ATTACH.perVideo) {
+          setError(`La vidéo dépasse ${fmtBytes(ATTACH.perVideo)}.`);
+          return;
+        }
+        videos += 1;
+      } else {
+        if (images >= ATTACH.maxFiles) {
+          setError(`Jusqu’à ${ATTACH.maxFiles} photos ou plans.`);
+          return;
+        }
+        if (file.size > ATTACH.perFile && isPdf) {
+          setError(`Le PDF dépasse ${fmtBytes(ATTACH.perFile)}.`);
+          return;
+        }
+        images += 1;
+      }
+    }
+
+    const processed = [];
+    for (const file of incoming) {
+      const isImage = file.type.startsWith('image/');
+      const raw = await readAsBase64(file);
+      const data = isImage ? await shrinkImage(raw.dataUrl) : raw.base64;
+
+      const sized = {
+        name: isImage && file.type !== 'image/jpeg' ? `${file.name.replace(/\.[^.]+$/, '')}.jpg` : file.name,
+        type: isImage ? 'image/jpeg' : file.type,
+        data,
+        size: Math.round((data.length * 3) / 4), // volume approximatif en octets
+        kind: file.type.startsWith('video/') ? 'video' : 'image',
+      };
+
+      // Total : on garde sous le plafond pour que l'envoi tienne dans l'endpoint.
+      const total = [...files, ...processed].reduce((acc, f) => f.data.length, 0);
+      if (total + sized.data.length > ATTACH_TOTAL_B64) {
+        setError(`L’ensemble des fichiers dépasse ${fmtBytes(ATTACH.total)}.`);
+        return;
+      }
+      processed.push(sized);
+    }
+
+    if (processed.length) onChange([...files, ...processed]);
+  };
+
+  const remove = (index) => onChange(files.filter((_, i) => i !== index));
+
+  return (
+    <div className="mt-10">
+      <span className="t-label text-ink/55">Photos, plan ou vidéo</span>
+      <span className="t-small mt-1 block text-ink/50">
+        Facultatif — jusqu’à {ATTACH.maxFiles} photos ou PDF et une courte vidéo ({fmtBytes(ATTACH.total)} au total).
+      </span>
+
+      <button
+        type="button"
+        onClick={() => inputRef.current?.click()}
+        className="mt-4 flex w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-ink/20 bg-shell px-6 py-7 text-ink/55 transition-colors duration-fast hover:border-gold hover:text-ink"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+        </svg>
+        <span className="t-small">Choisir des fichiers, ou déposer ici</span>
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        accept="image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/webm,video/quicktime"
+        onChange={(e) => {
+          if (e.target.files?.length) addFiles(e.target.files);
+          e.target.value = '';
+        }}
+        className="sr-only"
+      />
+
+      {files.length > 0 && (
+        <ul className="mt-4 space-y-2">
+          {files.map((f, i) => (
+            <li key={`${f.name}-${i}`} className="flex items-center gap-3 rounded-md border border-ink/10 bg-shell px-3 py-2">
+              {f.kind === 'image' && (
+                <img src={`data:${f.type};base64,${f.data}`} alt="" className="h-10 w-10 flex-none rounded-xs object-cover" />
+              )}
+              {f.kind === 'video' && (
+                <span className="grid h-10 w-10 flex-none place-items-center rounded-xs bg-gold/[0.09] text-gold">
+                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                    <path d="M8 5.5v13l11-6.5-11-6.5Z" />
+                  </svg>
+                </span>
+              )}
+              <span className="min-w-0 flex-1">
+                <span className="block truncate t-small text-ink">{f.name}</span>
+                <span className="t-small text-ink/50">{fmtBytes(f.size)}</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => remove(i)}
+                aria-label={`Retirer ${f.name}`}
+                className="grid h-8 w-8 flex-none place-items-center rounded-full text-ink/50 transition-colors duration-fast hover:bg-error/[0.08] hover:text-error"
+              >
+                <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M1 1l12 12M13 1L1 13" strokeLinecap="round" />
+                </svg>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {error && <FieldError>{error}</FieldError>}
+    </div>
   );
 }
 
@@ -580,10 +773,10 @@ function ChoiceGroup({ label, name, options, value, onChange, error, hint }) {
   );
 }
 
-function Field({ id, label, value, onChange, error, type = 'text', className, ...rest }) {
+function Field({ id, label, value, onChange, error, hint, type = 'text', className, ...rest }) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="t-label text-ink/65">
+      <label htmlFor={id} className="t-label text-ink/55">
         {label}
       </label>
       <input
@@ -592,14 +785,16 @@ function Field({ id, label, value, onChange, error, type = 'text', className, ..
         type={type}
         value={value}
         aria-invalid={Boolean(error)}
-        aria-describedby={error ? `${id}-error` : undefined}
+        aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined}
         onChange={(e) => onChange(e.target.value)}
-        className={cn(
-          'field mt-2',
-          error && 'field-error'
-        )}
+        className={cn('field mt-2', error && 'field-error')}
         {...rest}
       />
+      {hint && !error && (
+        <p id={`${id}-hint`} className="t-small mt-2 text-ink/50">
+          {hint}
+        </p>
+      )}
       {error && (
         <p id={`${id}-error`} role="alert" className="t-small mt-2 text-error">
           {error}

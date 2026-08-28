@@ -86,7 +86,15 @@ Manquent pour être crédible : au moins 1 projet **salle de bain**, 1 **apparte
 
 Le formulaire `/devis` collecte désormais les questions de qualification
 (`docs/RESEAUX-SOCIAUX.md`) : surface approximative, occupation du logement,
-échéance, budget et situation (propriétaire/locataire).
+échéance, budget, situation (propriétaire/locataire), **province + code postal**
+(l'intervention couvre toute la Belgique), et **pièces jointes** : jusqu'à 5 photos
+ou PDF et une vidéo courte (3 Mo au total), envoyées en pièces jointes de la
+notification interne.
+
+> ⚠️ **PROVISOIRE (tests)** — tant que `LEAD_TO_EMAIL` n'est pas défini dans
+> Vercel, les demandes partent vers `amineazouzi2009@gmail.com` (destinataire de
+> test dans `api/lead.js`). La confirmation automatique au visiteur part, elle,
+> sur l'adresse saisie dans le formulaire.
 
 Tant que ces variables sont absentes, `/api/lead` répond 503 et le formulaire
 affiche téléphone + WhatsApp en repli : **aucun lead n'est perdu silencieusement**.

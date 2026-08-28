@@ -238,6 +238,7 @@ export default function CoverFlowCarousel({
                   filter: g.filter,
                   transformOrigin: 'center center',
                   transition: 'all 700ms cubic-bezier(0.25, 1, 0.5, 1)',
+                  willChange: 'transform, opacity',
                   boxShadow: isCenter
                     ? '0 30px 70px rgba(0,0,0,0.85), 0 0 40px rgba(201,174,131,0.2)'
                     : '0 18px 40px rgba(0,0,0,0.55)',

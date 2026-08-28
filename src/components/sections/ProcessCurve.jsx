@@ -1,116 +1,52 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { METHOD } from '@/data/method';
 import { ICONS } from '@/components/ui/BrandIcons';
 import { cn } from '@/lib/utils';
 
 /**
- * Les étapes d'un chantier, posées sur une courbe.
+ * Les étapes d'un chantier, en trois dimensions.
  *
- * La courbe n'est pas un ornement : sa hauteur est la charge de travail. Le
- * premier contact ne coûte rien, le devis engage un peu, le chantier est le
- * sommet, la livraison redescend au calme. On lit le déroulé sans lire une
- * seule ligne — c'est tout ce qu'on demande à une illustration.
+ * Plus de serpent : quatre colonnes se dressent depuis une même ligne de sol —
+ * le « niveau » de chaque étape est sa charge (le contact ne coûte rien, le
+ * chantier est le sommet, la livraison redescend au calme). Les colonnes
+ * se dressent au scroll chacune à leur rythme, et la livraison se scelle
+ * en vert quand tout est en place.
  *
- * Chaque étape porte son texte à côté d'elle, au-dessus ou en dessous du tracé
- * selon la place libre. La version précédente affichait les phrases une par
- * une, au survol, dans une zone unique sous le graphique : quatre lignes
- * courtes tiennent toutes en même temps, donc ni survol, ni état, ni phrase
- * qui disparaît quand la souris bouge.
+ * La profondeur tient à trois gestes, sans décor superflu :
+ *   · les colonnes sont des volumes — dégradé de matière et ombre portée ;
+ *   · les cartes posées sur leur sommet basculent d'un léger quart de tour à
+ *     l'apparition (perspective), puis se stabilisent à plat ;
+ *   · tout est posé sur la même ligne de sol, qui ancre la lecture.
  *
- * Sur les petits écrans la courbe devient un serpent vertical — même donnée,
- * autre lecture.
+ * Sur les petits écrans la même progression devient une liste verticale —
+ * même donnée, autre lecture.
  */
 
-/* Hauteur relative de chaque étape, de 0 (bas) à 1 (haut) : la charge. */
-const PROFILE = [0.14, 0.46, 0.92, 0.36];
-
-/* Côté où poser le texte. Le tracé occupe le reste. */
-const ABOVE = [true, true, false, true];
-
-const W = 1000;
+/* Niveau de chaque étape, en px depuis la ligne de sol : la charge. */
+const ELEV = [32, 104, 188, 88];
+const CARD = 58;
+/* Marge entre la ligne de sol et le bas du cadre, pour que l'ombre respire. */
+const GROUND = 30;
 const H = 300;
-/* Marge latérale : assez large pour qu'un bloc de texte centré sur la première
-   ou la dernière étape ne déborde pas du cadre. */
-const PAD_X = 150;
 
-/* Gouttière du serpent, en pixels : largeur de la colonne, les deux abscisses
-   entre lesquelles le tracé oscille, et le diamètre du repère. Les repères de
-   la liste se calent sur ces mêmes valeurs — une seule source, jamais de
-   décalage. */
-const SNAKE = { width: 60, left: 19, right: 41, dot: 38 };
-
-/**
- * Trace le serpent à partir des positions réelles des repères.
- *
- * Les ordonnées viennent de la mise en page mesurée, pas d'un découpage en
- * parts égales : les étapes n'ont pas la même longueur de texte, donc pas la
- * même hauteur, et une courbe calculée à l'aveugle les rate toutes.
- */
-function snakePath(ys) {
-  if (ys.length < 2) return '';
-  const xAt = (i) => (i % 2 === 0 ? SNAKE.left : SNAKE.right);
-  let d = `M ${xAt(0)} ${ys[0].toFixed(1)}`;
-  for (let i = 1; i < ys.length; i += 1) {
-    const y0 = ys[i - 1];
-    const y1 = ys[i];
-    const dy = (y1 - y0) * 0.5;
-    // Tangentes verticales aux deux extrémités : la courbe passe par le repère
-    // sans casser, et le ventre se forme entre deux étapes.
-    d += ` C ${xAt(i - 1)} ${(y0 + dy).toFixed(1)}, ${xAt(i)} ${(y1 - dy).toFixed(1)}, ${xAt(i)} ${y1.toFixed(1)}`;
-  }
-  return d;
-}
-
-/** Courbe de Catmull-Rom convertie en Bézier cubique : lisse, sans à-coups. */
-function smoothPath(points) {
-  if (points.length < 2) return '';
-  let d = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
-  for (let i = 0; i < points.length - 1; i += 1) {
-    const p0 = points[i - 1] || points[i];
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    const p3 = points[i + 2] || p2;
-    d +=
-      ` C ${(p1.x + (p2.x - p0.x) / 6).toFixed(1)} ${(p1.y + (p2.y - p0.y) / 6).toFixed(1)},` +
-      ` ${(p2.x - (p3.x - p1.x) / 6).toFixed(1)} ${(p2.y - (p3.y - p1.y) / 6).toFixed(1)},` +
-      ` ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
-  }
-  return d;
-}
+const reducedMotion =
+  typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 export default function ProcessCurve({ steps = METHOD, tone = 'dark', className }) {
   const light = tone === 'light'; // « light » = texte clair sur fond sombre
-  // Identifiants uniques : deux courbes sur une même page partageraient sinon
-  // leurs dégradés, et la seconde hériterait des couleurs de la première.
   const uid = useId().replace(/:/g, '');
-  const fillId = `curve-fill-${uid}`;
-  const strokeId = `curve-stroke-${uid}`;
   const ref = useRef(null);
-  const [drawn, setDrawn] = useState(false);
-
-  const { points, line, area } = useMemo(() => {
-    const span = (W - PAD_X * 2) / (steps.length - 1);
-    const pts = steps.map((s, i) => ({
-      x: PAD_X + i * span,
-      y: H - 24 - (PROFILE[i] ?? 0.5) * (H - 56),
-      above: ABOVE[i] ?? true,
-      step: s,
-    }));
-    const d = smoothPath(pts);
-    return { points: pts, line: d, area: `${d} L ${pts[pts.length - 1].x} ${H} L ${pts[0].x} ${H} Z` };
-  }, [steps]);
-
-  /* La validation arrive après la courbe, pas avec elle. Tout allumer d'un coup
-     ne raconte rien ; ici on voit le trait rejoindre la livraison, puis la
-     livraison se valider. L'ordre est le message. */
+  const [drawn, setDrawn] = useState(reducedMotion);
   const [sealed, setSealed] = useState(false);
+
   useEffect(() => {
     if (!drawn) return undefined;
-    const id = setTimeout(() => setSealed(true), 1700);
+    const id = setTimeout(() => setSealed(true), 1900);
     return () => clearTimeout(id);
   }, [drawn]);
 
   useEffect(() => {
+    if (reducedMotion) return undefined;
     const el = ref.current;
     if (!el) return undefined;
     const io = new IntersectionObserver(
@@ -120,77 +56,41 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
           io.disconnect();
         }
       },
-      { rootMargin: '-80px', threshold: 0.15 }
+      { rootMargin: '-60px', threshold: 0.2 }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
-  /* ---------- Mesure du serpent (mobile) ---------- */
-  const snakeRef = useRef(null);
-  const dotRefs = useRef([]);
-  const [dotYs, setDotYs] = useState([]);
-  const [snakeH, setSnakeH] = useState(0);
-
-  useEffect(() => {
-    const wrap = snakeRef.current;
-    if (!wrap || typeof ResizeObserver === 'undefined') return undefined;
-
-    const measure = () => {
-      const base = wrap.getBoundingClientRect();
-      setDotYs(
-        dotRefs.current.filter(Boolean).map((el) => {
-          const r = el.getBoundingClientRect();
-          return r.top - base.top + r.height / 2;
-        })
-      );
-      setSnakeH(Math.round(base.height));
-    };
-
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(wrap);
-    return () => ro.disconnect();
-  }, [steps]);
-
-  // Longueur du tracé, pour l'écrire au scroll. Majorée d'un quart : la marge
-  // évite qu'un arrondi laisse un bout de courbe non dessiné.
-  const snakeLen = Math.round((snakeH || 0) * 1.25) || 1;
-
   const accent = light ? 'text-gold-light' : 'text-gold';
-  /* Les dégradés SVG ne lisent pas les classes Tailwind : ils prennent les
-     mêmes jetons, directement. */
-  const goldStop = `rgb(var(--c-gold${light ? '-light' : ''}-rgb))`;
-  const greenStop = `rgb(var(--c-green${light ? '-light' : ''}-rgb))`;
+  const ghost = light ? 'text-cream/[0.08]' : 'text-ink/[0.07]';
+
+  const standBg = light
+    ? 'linear-gradient(180deg, rgb(255 255 255 / 0.12) 0%, rgb(255 255 255 / 0.03) 100%)'
+    : 'linear-gradient(180deg, rgb(255 255 255 / 0.02) 0%, rgb(255 255 255 / 0.09) 100%)';
+  const standBorder = light ? 'rgb(255 255 255 / 0.16)' : 'rgb(0 0 0 / 0.45)';
+  const groundLine = light ? 'rgb(140 118 78 / 0.55)' : 'rgb(201 174 131 / 0.55)';
 
   /**
-   * Le repère posé sur le tracé : pastille pleine, symbole de l'étape.
-   *
-   * La dernière passe au vert quand le chantier est livré. Le vert n'est pas
-   * une décoration de fin de liste : c'est la seule couleur du site réservée à
-   * un état achevé, et la promesse qu'elle illustre — « il est terminé quand
-   * vous le dites » — est la seule que le visiteur contrôle. C'est là que se
-   * gagne la confiance, donc c'est là qu'on la marque.
+   * Le repère posé sur le sommet de chaque colonne : pastille pleine, symbole
+   * de l'étape. La dernière passe au vert quand le chantier est livré : le vert
+   * est la seule couleur du site réservée à un état achevé.
    */
-  const Badge = ({ step, size, last = false }) => {
+  const Badge = ({ step, size = CARD, last = false }) => {
     const Icon = ICONS[step.icon];
     const done = last && sealed;
     return (
       <span className="relative grid place-items-center">
-        {/* L'onde part du bord de la pastille et s'efface. Décorative : le
-            changement de couleur suffit à porter l'information. */}
         {done && (
           <span
             aria-hidden="true"
-            className={cn(
-              'seal-ring pointer-events-none absolute inset-0 rounded-md',
-              light ? 'bg-green-light' : 'bg-green'
-            )}
+            className={cn('seal-ring pointer-events-none absolute inset-0 rounded-md', light ? 'bg-green-light' : 'bg-green')}
           />
         )}
         <span
           className={cn(
-            'relative grid place-items-center rounded-md shadow-lift transition-colors duration-[550ms] ease-soft',
+            'relative grid place-items-center rounded-md transition-colors duration-[550ms] ease-soft',
+            size === CARD ? 'shadow-lift' : 'shadow-soft',
             done
               ? light
                 ? 'bg-green-light text-bark'
@@ -201,13 +101,7 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
           )}
           style={{ width: size, height: size }}
         >
-          {Icon ? (
-            <Icon
-              width={size * 0.42}
-              height={size * 0.42}
-              {...(last ? { draw: done } : {})}
-            />
-          ) : null}
+          {Icon ? <Icon width={size * 0.42} height={size * 0.42} {...(last ? { draw: done } : {})} /> : null}
         </span>
       </span>
     );
@@ -215,204 +109,136 @@ export default function ProcessCurve({ steps = METHOD, tone = 'dark', className 
 
   return (
     <div ref={ref} className={className}>
-      {/* ---------- Desktop : la courbe ---------- */}
-      {/* Le padding vertical fait la place aux textes, qui débordent
-          volontairement du cadre du tracé. */}
-      <div className="relative hidden pb-28 pt-24 lg:block">
-        <div className="relative">
-          <svg
-            viewBox={`0 0 ${W} ${H}`}
-            className="w-full overflow-visible"
-            role="img"
-            aria-label={`Déroulé d'un chantier en ${steps.length} étapes, de ${steps[0].title} à ${steps[steps.length - 1].title}`}
-          >
-            <defs>
-              <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="currentColor" stopOpacity="0.16" />
-                <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-              </linearGradient>
+      {/* ---------- Desktop : les colonnes ---------- */}
+      <div className="relative hidden lg:block">
+        {/* Le cadre : hauteur fixe, colonnes en absolu, débordements rognés ;
+            c'est lui qui donne la perspective aux cartes qui basculent. */}
+        <div className="relative overflow-hidden" style={{ height: H, perspective: '1200px' }}>
+          {/* Ligne de sol : une seule, qui ancre toutes les colonnes. */}
+          <span
+            aria-hidden="true"
+            className="absolute left-0 right-0 block transition-opacity duration-slow"
+            style={{
+              bottom: GROUND - 6,
+              height: 1,
+              background: groundLine,
+              boxShadow: `0 0 18px ${groundLine}`,
+              opacity: drawn ? 1 : 0,
+            }}
+          />
 
-              {/* Le tracé vire au vert sur son dernier tiers, au moment où la
-                  livraison se valide. Sans lui, la pastille verte serait un
-                  accident isolé : c'est la ligne qui la rend inévitable. */}
-              <linearGradient id={strokeId} x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor={goldStop} />
-                <stop offset="66%" stopColor={goldStop} />
-                <stop
-                  offset="100%"
-                  style={{ stopColor: sealed ? greenStop : goldStop, transition: 'stop-color 550ms var(--ease-soft)' }}
-                />
-              </linearGradient>
-            </defs>
+          {steps.map((s, i) => {
+            const x = `${((i + 0.5) / steps.length) * 100}%`;
 
-            {/* Remplissage sous la courbe : donne du corps au tracé sans le
-                charger. Il apparaît une fois la ligne écrite. */}
-            <path
-              d={area}
-              fill={`url(#${fillId})`}
-              className={cn(
-                'transition-opacity duration-[900ms] ease-soft',
-                accent,
-                drawn ? 'opacity-100' : 'opacity-0'
-              )}
-              style={{ transitionDelay: '700ms' }}
-            />
-
-            <path
-              d={line}
-              fill="none"
-              strokeWidth="2"
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-              stroke={`url(#${strokeId})`}
-              style={{
-                strokeDasharray: 2400,
-                strokeDashoffset: drawn ? 0 : 2400,
-                transition: 'stroke-dashoffset 1600ms var(--ease-soft)',
-              }}
-            />
-          </svg>
-
-          {/* Repères, chiffres fantômes et textes : en HTML par-dessus le
-              tracé, aux mêmes coordonnées. La typographie reste celle du site,
-              ce qu'un `<text>` SVG ne sait pas faire aussi bien. */}
-          {points.map((p, i) => {
-            const x = `${(p.x / W) * 100}%`;
-            const y = `${(p.y / H) * 100}%`;
             return (
-              <div key={p.step.n}>
-                {/* Le chiffre en filigrane donne l'échelle et le rang sans
-                    ajouter de bloc de texte. Décoratif : le rang est déjà
-                    porté par la liste ordonnée du texte. */}
+              <div
+                key={s.n}
+                aria-hidden={!drawn}
+                className="absolute flex flex-col items-center justify-end"
+                style={{ left: x, bottom: GROUND, width: 56, transform: 'translateX(-50%)' }}
+              >
+                {/* Chiffre en filigrane derrière la carte. */}
                 <span
                   aria-hidden="true"
                   className={cn(
-                    'pointer-events-none absolute select-none font-display leading-[0.75] transition-opacity duration-[1200ms] ease-soft',
-                    'text-[7.5rem] xl:text-[9rem]',
-                    light ? 'text-cream/[0.09]' : 'text-ink/[0.075]',
+                    'pointer-events-none absolute select-none font-display leading-[0.75] transition-opacity duration-[1200ms]',
+                    'text-[6.5rem] xl:text-[7.5rem]',
+                    ghost,
                     drawn ? 'opacity-100' : 'opacity-0'
                   )}
                   style={{
-                    left: x,
-                    top: y,
-                    transform: 'translate(-50%, -62%)',
-                    transitionDelay: `${800 + i * 110}ms`,
+                    left: '50%',
+                    bottom: ELEV[i] + CARD * 0.5,
+                    transform: 'translate(-50%, 50%)',
+                    zIndex: 0,
+                    transitionDelay: `${600 + i * 120}ms`,
+                  }}
+                />
+
+                {/* La carte, posée sur le sommet de la colonne. Elle bascule
+                    d'un léger quart de tour à l'apparition puis se stabilise. */}
+                <span
+                  className="relative z-10 transition-[opacity,transform] duration-[650ms] ease-soft"
+                  style={{
+                    transitionDelay: `${260 + i * 120}ms`,
+                    opacity: drawn ? 1 : 0,
+                    transform: drawn
+                      ? 'rotateX(0deg) translateY(0) scale(1)'
+                      : 'rotateX(-26deg) translateY(18px) scale(0.86)',
                   }}
                 >
-                  {i + 1}
+                  <Badge step={s} last={i === steps.length - 1} />
                 </span>
 
+                {/* La colonne : volume en dégradé, elle se dresse depuis le sol. */}
                 <span
                   aria-hidden="true"
-                  className={cn(
-                    'absolute transition-[opacity,transform] duration-slow ease-soft',
-                    drawn ? 'opacity-100' : 'opacity-0'
-                  )}
+                  className="block w-full rounded-b-md transition-transform duration-[900ms] ease-soft"
                   style={{
-                    // Transform en ligne : il porte le centrage ET l'entrée,
-                    // qu'une classe utilitaire écraserait.
-                    left: x,
-                    top: y,
-                    transform: `translate(-50%, -50%)${drawn ? '' : ' scale(0.6)'}`,
-                    transitionDelay: `${900 + i * 110}ms`,
+                    height: ELEV[i],
+                    background: standBg,
+                    border: `0.5px solid ${standBorder}`,
+                    boxShadow: '0 18px 30px -18px rgb(0 0 0 / 0.35)',
+                    transform: drawn ? 'translateY(0)' : `translateY(${ELEV[i]}px)`,
+                    transitionDelay: `${100 + i * 120}ms`,
                   }}
-                >
-                  <Badge step={p.step} size={52} last={i === points.length - 1} />
-                </span>
+                />
               </div>
             );
           })}
-
-          {/* Les textes forment une vraie liste ordonnée : c'est l'ordre qui
-              porte le sens, et un lecteur d'écran doit l'entendre. */}
-          <ol>
-            {points.map((p, i) => (
-              <li
-                key={p.step.n}
-                className={cn(
-                  // Largeur suivie sur l'écart entre étapes : à 1024 px il
-                  // n'est que de 221 px, donc un bloc fixe de 15 rem
-                  // chevaucherait son voisin.
-                  'absolute w-[12.5rem] xl:w-[15rem] transition-opacity duration-slow',
-                  drawn ? 'opacity-100' : 'opacity-0'
-                )}
-                style={{
-                  left: `${(p.x / W) * 100}%`,
-                  [p.above ? 'bottom' : 'top']: `calc(${p.above ? 100 - (p.y / H) * 100 : (p.y / H) * 100}% + 2.75rem)`,
-                  transform: 'translateX(-50%)',
-                  transitionDelay: `${1000 + i * 110}ms`,
-                }}
-              >
-                <h3 className={cn('t-h3 text-balance', light ? 'text-cream' : 'text-ink')}>{p.step.title}</h3>
-                <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{p.step.text}</p>
-              </li>
-            ))}
-          </ol>
         </div>
-      </div>
 
-      {/* ---------- Mobile : la même progression, en serpent ----------
-          Les ordonnées viennent de la mise en page réelle, mesurée après le
-          rendu : c'est la seule façon de faire passer la courbe exactement par
-          chaque repère. */}
-      <div ref={snakeRef} className="relative lg:hidden">
-        {snakeH > 0 && (
-          <svg
-            aria-hidden="true"
-            viewBox={`0 0 ${SNAKE.width} ${snakeH}`}
-            width={SNAKE.width}
-            height={snakeH}
-            className="absolute left-0 top-0"
-            style={{ height: snakeH }}
-          >
-            <defs>
-              <linearGradient id={`${strokeId}-v`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={goldStop} stopOpacity="0.45" />
-                <stop offset="72%" stopColor={goldStop} stopOpacity="0.45" />
-                <stop
-                  offset="100%"
-                  stopOpacity="0.95"
-                  style={{ stopColor: sealed ? greenStop : goldStop, transition: 'stop-color 550ms var(--ease-soft)' }}
-                />
-              </linearGradient>
-            </defs>
-            <path
-              d={snakePath(dotYs)}
-              fill="none"
-              strokeWidth="2"
-              strokeLinecap="round"
-              stroke={`url(#${strokeId}-v)`}
-              style={{
-                strokeDasharray: snakeLen,
-                strokeDashoffset: drawn ? 0 : snakeLen,
-                transition: 'stroke-dashoffset 1800ms var(--ease-soft)',
-              }}
-            />
-          </svg>
-        )}
-
-        <ol className="relative">
+        {/* Les textes forment une vraie liste ordonnée : c'est l'ordre qui
+            porte le sens, et un lecteur d'écran doit l'entendre. */}
+        <ol className="mt-10 grid grid-cols-4 gap-x-6">
           {steps.map((s, i) => (
-            <li key={s.n} className="relative pb-10 last:pb-0" style={{ paddingLeft: SNAKE.width + 20 }}>
-              {/* Même abscisse que la courbe : le repère est posé sur le
-                  tracé, pas à côté. */}
-              <span
-                ref={(el) => {
-                  dotRefs.current[i] = el;
-                }}
-                aria-hidden="true"
-                className={cn('absolute top-0 transition-opacity duration-slow', drawn ? 'opacity-100' : 'opacity-0')}
-                style={{
-                  left: (i % 2 === 0 ? SNAKE.left : SNAKE.right) - SNAKE.dot / 2,
-                  transitionDelay: `${300 + i * 130}ms`,
-                }}
-              >
-                <Badge step={s} size={SNAKE.dot} last={i === steps.length - 1} />
-              </span>
-              <h3 className={cn('t-h3', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
-              <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
+            <li
+              key={s.n}
+              className={cn('text-center transition-opacity duration-slow', drawn ? 'opacity-100' : 'opacity-0')}
+              style={{ transitionDelay: `${420 + i * 120}ms` }}
+            >
+              <span className={cn('t-label', accent)}>{s.n}</span>
+              <h3 className={cn('t-h3 mt-3 text-balance', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
+              <p className={cn('t-small mx-auto mt-2 max-w-[24ch]', light ? 'text-cream/65' : 'text-ink/65')}>
+                {s.text}
+              </p>
             </li>
           ))}
+        </ol>
+      </div>
+
+      {/* ---------- Mobile : la même progression, en liste ---------- */}
+      <div className="relative lg:hidden">
+        {/* Rail de liaison vertical, derrière les repères. */}
+        <span
+          aria-hidden="true"
+          className="absolute bottom-5 left-[23px] top-5 w-px"
+          style={{ backgroundColor: light ? 'rgb(255 255 255 / 0.18)' : 'rgb(26 26 26 / 0.12)' }}
+        />
+
+        <ol className="relative">
+          {steps.map((s, i) => {
+            const last = i === steps.length - 1;
+            return (
+              <li
+                key={s.n}
+                className={cn(
+                  'relative flex gap-5 pb-9 transition-opacity duration-slow last:pb-0',
+                  drawn ? 'opacity-100' : 'opacity-0'
+                )}
+                style={{ transitionDelay: `${150 + i * 130}ms` }}
+              >
+                <span className="relative mt-1 flex-none">
+                  <Badge step={s} size={46} last={last} />
+                </span>
+                <div>
+                  <span className={cn('t-label', accent)}>{s.n}</span>
+                  <h3 className={cn('t-h3 mt-2', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
+                  <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
+                </div>
+              </li>
+            );
+          })}
         </ol>
       </div>
     </div>
