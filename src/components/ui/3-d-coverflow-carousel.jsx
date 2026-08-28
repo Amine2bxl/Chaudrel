@@ -39,6 +39,7 @@ export default function CoverFlowCarousel({
   onCardClick,
   children,
   regionLabel = 'Galerie',
+  caption = false,
 }) {
   const [index, setIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -360,7 +361,7 @@ export default function CoverFlowCarousel({
                       }}
                     />
 
-                    {item.desc && (
+                    {!caption && item.desc && (
                       <p
                         style={{
                           fontSize: '0.82rem',
@@ -375,37 +376,39 @@ export default function CoverFlowCarousel({
                       </p>
                     )}
 
-                    <a
-                      href={item.ctaUrl || '#'}
-                      tabIndex={isCenter ? 0 : -1}
-                      onClick={(e) => {
-                        if (onCtaClick) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          onCtaClick(item);
-                        }
-                      }}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '7px',
-                        padding: '8px 18px',
-                        borderRadius: '9999px',
-                        background: 'linear-gradient(135deg, var(--c-gold-light) 0%, #a48256 100%)',
-                        color: '#16100b',
-                        fontSize: '0.7rem',
-                        fontWeight: 800,
-                        letterSpacing: '0.14em',
-                        textTransform: 'uppercase',
-                        textDecoration: 'none',
-                        boxShadow: '0 4px 14px rgba(0,0,0,0.45), 0 0 15px rgba(201,174,131,0.25)',
-                        cursor: 'pointer',
-                        transition: 'transform 200ms ease, box-shadow 200ms ease',
-                      }}
-                    >
-                      <span>{item.ctaText || 'Voir le chantier'}</span>
-                      <ArrowRight width={13} height={13} strokeWidth={2.4} aria-hidden="true" />
-                    </a>
+                    {!caption && (
+                      <a
+                        href={item.ctaUrl || '#'}
+                        tabIndex={isCenter ? 0 : -1}
+                        onClick={(e) => {
+                          if (onCtaClick) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            onCtaClick(item);
+                          }
+                        }}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '7px',
+                          padding: '8px 18px',
+                          borderRadius: '9999px',
+                          background: 'linear-gradient(135deg, var(--c-gold-light) 0%, #a48256 100%)',
+                          color: '#16100b',
+                          fontSize: '0.7rem',
+                          fontWeight: 800,
+                          letterSpacing: '0.14em',
+                          textTransform: 'uppercase',
+                          textDecoration: 'none',
+                          boxShadow: '0 4px 14px rgba(0,0,0,0.45), 0 0 15px rgba(201,174,131,0.25)',
+                          cursor: 'pointer',
+                          transition: 'transform 200ms ease, box-shadow 200ms ease',
+                        }}
+                      >
+                        <span>{item.ctaText || 'Voir le chantier'}</span>
+                        <ArrowRight width={13} height={13} strokeWidth={2.4} aria-hidden="true" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </article>
@@ -459,6 +462,32 @@ export default function CoverFlowCarousel({
                 />
               </button>
             ))}
+          </div>
+        )}
+
+        {/* Légende du projet affiché : le texte sort de l'image pour se lire
+            confortablement, la carte ne garde que le titre. */}
+        {caption && items[index] && (
+          <div className="mx-auto mt-10 max-w-2xl text-center transition-opacity duration-slow">
+            <p className="t-label" style={{ color: 'var(--c-gold-light)' }}>
+              {[items[index].tag, items[index].titleLine2].filter(Boolean).join(' · ')}
+            </p>
+            {items[index].desc && (
+              <p className="t-lead mt-4 text-balance text-cream/85">{items[index].desc}</p>
+            )}
+            <a
+              href={items[index].ctaUrl || '#'}
+              onClick={(e) => {
+                if (onCtaClick || onCardClick) {
+                  e.preventDefault();
+                  (onCtaClick || onCardClick)(items[index]);
+                }
+              }}
+              className="group/btn mt-7 inline-flex items-center gap-2.5 rounded-full bg-gold-deep px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-cream shadow-soft transition-all duration-300 ease-soft hover:bg-gold-hover hover:shadow-lift active:translate-y-px"
+            >
+              {items[index].ctaText || 'Voir le chantier'}
+              <ArrowRight width={13} height={13} strokeWidth={2.4} aria-hidden="true" />
+            </a>
           </div>
         )}
 

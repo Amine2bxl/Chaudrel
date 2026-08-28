@@ -9,12 +9,12 @@ import { PROJECTS, getProject, projectSiblings } from '@/data/projects';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
-/** Une ligne de la fiche technique : intitulé sur filet, valeur dessous. */
+/** Une ligne de la fiche technique : intitulé à gauche, valeur en regard. */
 function Spec({ label, children }) {
   return (
-    <div className="border-t border-ink/12 py-4">
+    <div className="grid grid-cols-[7rem_1fr] items-baseline gap-4 border-t border-ink/12 py-3.5">
       <dt className="t-label text-ink/55">{label}</dt>
-      <dd className="mt-1.5 t-body">{children}</dd>
+      <dd className="t-body text-ink/85">{children}</dd>
     </div>
   );
 }
@@ -59,12 +59,12 @@ export default function Project() {
               {project.year && <Spec label="Livraison">{project.year}</Spec>}
               {project.materials?.length > 0 && <Spec label="Matériaux">{project.materials.join(' · ')}</Spec>}
               {project.works?.length > 0 && (
-                <div className="border-y border-ink/12 py-4">
+                <div className="border-t border-ink/12 py-4">
                   <dt className="t-label text-ink/55">Travaux réalisés</dt>
-                  <dd className="mt-2">
-                    <ul className="space-y-1.5">
+                  <dd className="mt-3">
+                    <ul className="space-y-2">
                       {project.works.map((w) => (
-                        <li key={w} className="t-small flex gap-2.5 text-ink/70">
+                        <li key={w} className="t-small flex gap-2.5 text-ink/75">
                           <span aria-hidden="true" className="mt-[7px] h-1 w-1 flex-none rounded-full bg-gold" />
                           {w}
                         </li>

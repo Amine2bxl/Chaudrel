@@ -34,9 +34,9 @@ export default function Home() {
       {/* La preuve avant le discours */}
       <ProjectCarousel
         projects={featured}
-        sectionLabel="La preuve"
-        title="Des chantiers finis, habités, utilisés."
-        text="Chaque projet est mené du premier coup de marteau au nettoyage final."
+        sectionLabel="Nos chantiers"
+        title="Le travail parle pour nous."
+        text="Une seule réalisation à la fois, en grand — comme elle a été livrée. Le reste du portfolio est à suivre."
         link={{ label: 'Toutes les réalisations', to: '/realisations' }}
       />
 

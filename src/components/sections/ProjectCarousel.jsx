@@ -22,6 +22,7 @@ export default function ProjectCarousel({
   text = '',
   link,
   autoplay = true,
+  caption = true,
 }) {
   const navigate = useNavigate();
 
@@ -53,6 +54,7 @@ export default function ProjectCarousel({
       autoplay={autoplay}
       className={className}
       regionLabel="Galerie des chantiers"
+      caption={caption}
       onCardClick={openProject}
       onCtaClick={openProject}
     >
