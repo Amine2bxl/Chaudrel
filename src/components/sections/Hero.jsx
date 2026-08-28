@@ -2,7 +2,6 @@ import { Container } from '@/components/ui';
 import { Button } from '@/components/ui';
 import { BRAND, PROOF, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
-import { useDeclareDarkHero } from '@/lib/heroTone';
 import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
@@ -14,9 +13,6 @@ import { imageAttrs, SIZES } from '@/lib/image';
  * à établir. Les trois faits affichés sont vérifiables.
  */
 export default function Hero() {
-  // La barre de navigation s'écrit en clair tant que ce hero est à l'écran.
-  useDeclareDarkHero();
-
   return (
     <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-bark">
       <img

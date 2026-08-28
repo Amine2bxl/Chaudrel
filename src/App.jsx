@@ -5,7 +5,6 @@ import MobileBar from '@/components/layout/MobileBar';
 import Footer from '@/components/layout/Footer';
 import ContactDialog from '@/components/layout/ContactDialog';
 import { ContactDialogProvider } from '@/lib/contactDialog';
-import { HeroToneProvider } from '@/lib/heroTone';
 import Seo from '@/lib/SeoHead';
 import Home from '@/pages/Home';
 import Projects from '@/pages/Projects';
@@ -31,10 +30,9 @@ function ScrollToTop() {
 export default function App() {
   return (
     <ContactDialogProvider>
-      <HeroToneProvider>
       {/* Le cadre pose la page sur le sable de la palette au lieu de la laisser
-          toucher les bords de l'écran ; le rail tient la marge qu'il libère.
-          Les deux ne s'activent qu'en grand format — voir index.css. */}
+          toucher les bords de l'écran. Il ne s'active qu'en grand format —
+          voir index.css. */}
       <div className="app-frame min-h-screen bg-cream">
         <Seo />
         <ScrollToTop />
@@ -70,7 +68,6 @@ export default function App() {
         <MobileBar />
         <ContactDialog />
       </div>
-      </HeroToneProvider>
     </ContactDialogProvider>
   );
 }
