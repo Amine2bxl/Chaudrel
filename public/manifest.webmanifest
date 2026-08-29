@@ -1,43 +1,10 @@
 {
   "name": "Chaudrel Rénovation",
   "short_name": "Chaudrel",
-  "description": "Rénovation complète, cuisine, salle de bain et aménagement intérieur à Bruxelles et en périphérie.",
+  "description": "Chaudrel Rénovation — Rénovation haut de gamme à Bruxelles. Cuisine, salle de bain, toiture, jardin, piscine.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#F4F0E8",
-  "theme_color": "#1B1512",
-  "categories": ["business", "lifestyle"],
-  "icons": [
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Demander un devis",
-      "url": "/devis"
-    },
-    {
-      "name": "Nos réalisations",
-      "url": "/realisations"
-    }
-  ]
-}
+  "orientation

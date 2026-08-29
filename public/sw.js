@@ -2,7 +2,7 @@
 // Stratégie : network-first pour le HTML, cache-first pour les assets statiques.
 // Permet d'installer la PWA + fonctionnement offline basique.
 
-const CACHE_VERSION = 'chaudrel-v3';
+const CACHE_VERSION = 'chaudrel-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
