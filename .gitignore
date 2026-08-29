@@ -38,3 +38,6 @@ coverage/
 
 # Vercel CLI
 .vercel/
+
+# Outils locaux (config de prévisualisation, hors projet)
+.claude/
