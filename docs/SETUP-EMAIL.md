@@ -42,6 +42,22 @@ Chez l'hébergeur du domaine (OVH, Cloudflare, Namecheap…) :
 2. Permissions : `Sending access` (envoi uniquement).
 3. Copier la clé (`re_...`) et la garder : elle n'est plus affichée ensuite.
 
+### Pas encore de domaine officiel pour chaudrel ? Pas un obstacle pour tester
+
+Resend fournit une **boîte d'essai sur son propre domaine** : l'expéditeur
+`onboarding@resend.dev`. Il fonctionne **sans créer ni vérifier de domaine**.
+Pour tester immédiatement :
+
+- mettre `LEAD_FROM_EMAIL = onboarding@resend.dev` (étape 5),
+- sauter les étapes 2-3 (domaine/DNS) tant que le domaine n'est pas officiel.
+
+Limites de la boîte d'essai : un petit pied de page « Sent with Resend » est
+ajouté aux e-mails, et l'envoi est limité en volume. Ça suffit largement pour
+la phase de test. Dès que chaudrel.be est officiel : ajoutez le domaine,
+vérifiez les DNS, et repassez à `site@chaudrel.be`.
+
+
+
 ## 5. Ajouter les variables dans Vercel
 
 1. Aller sur **https://vercel.com** → votre projet `chaudrel`.
@@ -51,7 +67,7 @@ Chez l'hébergeur du domaine (OVH, Cloudflare, Namecheap…) :
 | Variable | Valeur | Rôle |
 |---|---|---|
 | `RESEND_API_KEY` | `re_...` | la clé Resend de l'étape 4 |
-| `LEAD_FROM_EMAIL` | `site@chaudrel.be` | expéditeur vérifié (domaine de l'étape 3) |
+| `LEAD_FROM_EMAIL` | `site@chaudrel.be` (ou `onboarding@resend.dev` faute de domaine) | expéditeur |
 | `LEAD_TO_EMAIL` | `amineazouzi2009@gmail.com` | **destinataire de test** (mettre la vraie boîte en production) |
 | `LEAD_BCC_EMAIL` | *(facultatif)* | copie cachée, ex. le second gérant |
 

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
 import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
-import { GroupLabel, Row } from '@/components/layout/ContactList';
+import { Row } from '@/components/layout/ContactList';
 import {
   FacebookIcon,
   InstagramIcon,
@@ -16,13 +16,12 @@ import {
 } from '@/components/ui/BrandIcons';
 
 /**
- * Fenêtre de contact - les coordonnées, rangées dans la langue de la page
- * « Tous nos liens ».
+ * Fenêtre de contact - tout tient à l'écran, rien ne se plie.
  *
- * La structure de la fiche est conservée (parler, coordonnées, réseaux) mais
- * chaque ligne reprend les rangées de la carte de liens : pastille, intitulé,
- * description, chevron. Le fond se fige et se voile à l'ouverture ; la
- * fenêtre se ferme par Échap, par le fond, ou par une action interne.
+ * Une carte de visite : un titre, les trois gestes (devis, WhatsApp, appel),
+ * les coordonnées en bloc compact, les réseaux. Aucun défilement à
+ * l'intérieur - tout est visible d'un coup d'œil. Le fond se fige et se voile
+ * à l'ouverture ; fermeture par Échap, par le fond, ou par une action.
  */
 const SOCIALS = [
   { key: 'instagram', label: 'Instagram', icon: InstagramIcon },
@@ -31,11 +30,12 @@ const SOCIALS = [
   { key: 'youtube', label: 'YouTube', icon: YoutubeIcon },
 ];
 
-function Detail({ label, children }) {
+/** Une ligne de coordonnées : intitulé discret, valeur cliquable. */
+function Coord({ label, children }) {
   return (
-    <div className="grid grid-cols-[6.5rem_1fr] items-baseline gap-4 border-t border-ink/10 py-3 first:border-t-0 first:pt-0">
-      <dt className="t-label text-ink/55">{label}</dt>
-      <dd className="t-small text-ink/80">{children}</dd>
+    <div className="flex items-baseline justify-between gap-4">
+      <dt className="t-label flex-none text-ink/45">{label}</dt>
+      <dd className="t-small text-right text-ink/80">{children}</dd>
     </div>
   );
 }
@@ -91,7 +91,7 @@ export default function ContactDialog() {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center p-3 sm:items-center sm:p-6">
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <button
         type="button"
         aria-label="Fermer"
@@ -105,120 +105,111 @@ export default function ContactDialog() {
         aria-modal="true"
         aria-labelledby="contact-dialog-title"
         tabIndex={-1}
-        className="panel-in relative flex max-h-[92svh] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-cream shadow-lift outline-none"
+        className="panel-in relative w-full max-w-sm overflow-hidden rounded-2xl bg-cream shadow-lift outline-none"
       >
-        <div className="flex items-start justify-between gap-6 px-6 pb-2 pt-7 sm:px-8 sm:pt-8">
-          <div>
-            <h2 id="contact-dialog-title" className="t-h2 text-[1.625rem] sm:text-[1.75rem]">
-              Nous joindre
-            </h2>
-            <p className="t-small mt-2 text-ink/60">
-              {BRAND.promises.responseTime}. Pour un chiffrage, passez par la{' '}
-              <Link to="/devis" onClick={() => closeDialog()} className="link-line text-ink">
-                demande de devis
-              </Link>
-              .
-            </p>
-          </div>
+        {/* En-tête : un titre, une croix. Rien d'autre. */}
+        <div className="flex items-center justify-between gap-4 px-5 pb-2 pt-5">
+          <h2 id="contact-dialog-title" className="t-h2 text-[1.4rem]">
+            Nous joindre
+          </h2>
           <button
             type="button"
             onClick={closeDialog}
             aria-label="Fermer"
-            className="-mr-2 grid h-10 w-10 flex-none place-items-center rounded-full text-ink/60 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
+            className="-mr-1 grid h-10 w-10 flex-none place-items-center rounded-full text-ink/60 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M1 1l12 12M13 1L1 13" strokeLinecap="round" />
             </svg>
           </button>
         </div>
 
-        <div className="overflow-y-auto px-6 pb-6 pt-2 sm:px-8 sm:pb-8">
-          {/* Les trois gestes immédiats, dans l'ordre : décider, parler, écrire. */}
-          <div className="space-y-2.5">
-            <Row
-              to="/devis"
-              icon={QuoteIcon}
-              label="Devis gratuit"
-              hint={`Sans engagement - ${BRAND.promises.responseTime}`}
-              onClick={t(EVENTS.QUOTE_CTA)}
-              primary
-            />
-            <Row
-              href={`tel:${BRAND.phones[0].tel}`}
-              icon={PhoneIcon}
-              label="Appeler"
-              hint={BRAND.phones[0].number}
-              onClick={t(EVENTS.PHONE_CLICK)}
-            />
-            <Row
-              href={whatsappUrl()}
-              icon={WhatsappIcon}
-              label="WhatsApp"
-              hint="Écrivez-nous, photos bienvenues"
-              onClick={t(EVENTS.WHATSAPP_CLICK)}
-            />
-          </div>
+        {/* Les trois gestes : décider, écrire, parler. */}
+        <div className="space-y-2 px-5">
+          <Row
+            to="/devis"
+            icon={QuoteIcon}
+            label="Devis gratuit"
+            hint={`Sans engagement - ${BRAND.promises.responseTime}`}
+            onClick={t(EVENTS.QUOTE_CTA)}
+            primary
+            compact
+          />
+          <Row
+            href={whatsappUrl()}
+            icon={WhatsappIcon}
+            label="WhatsApp"
+            hint="Réponse rapide, photos bienvenues"
+            onClick={t(EVENTS.WHATSAPP_CLICK)}
+            compact
+          />
+          <Row
+            href={`tel:${BRAND.phones[0].tel}`}
+            icon={PhoneIcon}
+            label={`Appeler ${BRAND.phones[0].name}`}
+            hint={BRAND.phones[0].number}
+            onClick={t(EVENTS.PHONE_CLICK)}
+            compact
+          />
+        </div>
 
-          <GroupLabel>Coordonnées</GroupLabel>
-          <dl>
-            <Detail label="Téléphones">
-              <ul className="space-y-1">
-                {BRAND.phones.map((p) => (
-                  <li key={p.tel} className="flex items-baseline justify-between gap-4">
-                    <a href={`tel:${p.tel}`} onClick={t(EVENTS.PHONE_CLICK)} className="link-line tabular-nums text-ink">
-                      {p.number}
+        {/* Coordonnées, en bloc compact. */}
+        <dl className="mt-4 space-y-2.5 border-t border-ink/10 px-5 py-4">
+          <Coord label="Téléphones">
+            <span className="space-x-2">
+              {BRAND.phones.map((p) => (
+                <a key={p.tel} href={`tel:${p.tel}`} onClick={t(EVENTS.PHONE_CLICK)} className="link-line tabular-nums text-ink">
+                  {p.number}
+                </a>
+              ))}
+            </span>
+          </Coord>
+          <Coord label="E-mail">
+            <a href={`mailto:${BRAND.email}`} onClick={t(EVENTS.EMAIL_CLICK)} className="link-line break-all text-ink">
+              {EMAIL_DISPLAY}
+            </a>
+          </Coord>
+          <Coord label="Horaires">
+            <span className="inline-block text-left">
+              {BRAND.hours.map((h) => (
+                <span key={h.days} className="block tabular-nums">
+                  {h.days} · {h.time}
+                </span>
+              ))}
+            </span>
+          </Coord>
+          <Coord label="Adresse">
+            <address className="not-italic text-ink/80">
+              {BRAND.address.postalCode} {BRAND.address.city}
+              <br />
+              <span className="text-ink/55">{BRAND.zoneLong}</span>
+            </address>
+          </Coord>
+        </dl>
+
+        {/* Réseaux + site. */}
+        <div className="border-t border-ink/10 px-5 py-3">
+          <div className="flex items-center justify-between">
+            <span className="t-label text-ink/45">Nous suivre</span>
+            <ul className="flex items-center gap-1.5">
+              {SOCIALS.map(({ key, label, icon: Icon }) =>
+                BRAND.socials[key] ? (
+                  <li key={key}>
+                    <a
+                      href={BRAND.socials[key]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
+                      className="grid h-9 w-9 place-items-center rounded-full text-ink/60 transition-all duration-fast ease-soft hover:bg-ink/5 hover:text-gold"
+                    >
+                      <Icon width="17" height="17" />
                     </a>
-                    <span className="t-label text-ink/45">{p.name}</span>
                   </li>
-                ))}
-              </ul>
-            </Detail>
-            <Detail label="E-mail">
-              <a href={`mailto:${BRAND.email}`} onClick={t(EVENTS.EMAIL_CLICK)} className="link-line break-all text-ink">
-                {EMAIL_DISPLAY}
-              </a>
-            </Detail>
-            <Detail label="Horaires">
-              <ul className="space-y-1">
-                {BRAND.hours.map((h) => (
-                  <li key={h.days} className="flex items-baseline justify-between gap-4">
-                    <span className="text-ink/70">{h.days}</span>
-                    <span className="tabular-nums text-ink">{h.time}</span>
-                  </li>
-                ))}
-              </ul>
-            </Detail>
-            <Detail label="Adresse">
-              <address className="not-italic text-ink/70">
-                {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city}
-                <br />
-                {BRAND.zoneLong}.
-              </address>
-            </Detail>
-          </dl>
-
-          <GroupLabel>Nous suivre</GroupLabel>
-          <ul className="flex flex-wrap justify-center gap-2.5">
-            {SOCIALS.map(({ key, label, icon: Icon }) =>
-              BRAND.socials[key] ? (
-                <li key={key}>
-                  <a
-                    href={BRAND.socials[key]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
-                    className="grid h-11 w-11 place-items-center rounded-full border border-ink/10 text-ink/70 transition-all duration-fast ease-soft hover:border-gold/40 hover:text-gold"
-                  >
-                    <Icon width="18" height="18" />
-                  </a>
-                </li>
-              ) : null
-            )}
-          </ul>
-
-          <div className="mt-9 border-t border-ink/10 pt-5 text-center">
-            <Link to="/" onClick={() => closeDialog()} className="link-line t-label inline-flex min-h-[44px] items-center px-2 text-ink">
+                ) : null
+              )}
+            </ul>
+            <Link to="/" onClick={() => closeDialog()} className="link-line t-label inline-flex items-center gap-1 pb-0.5 text-ink">
               Voir le site
             </Link>
           </div>

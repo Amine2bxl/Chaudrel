@@ -7,24 +7,27 @@ import { cn } from '@/lib/utils';
  * le même design.
  */
 
-/** Une rangée : icône dans sa pastille, libellé, description, chevron. */
-export function Row({ to, href, icon: Icon, label, hint, onClick, primary = false, className }) {
+/** Une rangée : icône dans sa pastille, libellé, description, chevron.
+    `compact` resserre la rangée pour les fenêtres (toutes visibles, sans
+    défilement). */
+export function Row({ to, href, icon: Icon, label, hint, onClick, primary = false, compact = false, className }) {
   const inner = (
     <>
       <span
         aria-hidden="true"
         className={cn(
-          'grid h-11 w-11 flex-none place-items-center rounded-full transition-colors duration-fast',
+          'grid flex-none place-items-center rounded-full transition-colors duration-fast',
+          compact ? 'h-10 w-10' : 'h-11 w-11',
           primary ? 'bg-cream/20 text-cream' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
         )}
       >
-        <Icon width="17" height="17" />
+        <Icon width={compact ? 16 : 17} height={compact ? 16 : 17} />
       </span>
 
       <span className="min-w-0 flex-1">
         <span className={cn('block t-label', primary ? 'text-cream' : 'text-ink')}>{label}</span>
         {hint && (
-          <span className={cn('mt-1 block t-small', primary ? 'text-cream/90' : 'text-ink/55')}>{hint}</span>
+          <span className={cn('mt-0.5 block t-small', primary ? 'text-cream/90' : 'text-ink/55')}>{hint}</span>
         )}
       </span>
 
@@ -47,7 +50,8 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
   );
 
   const classes = cn(
-    'group flex w-full items-center gap-4 rounded-lg px-4 py-4 text-left transition-all duration-fast ease-soft active:translate-y-px sm:px-5',
+    'group flex w-full items-center gap-3.5 rounded-lg text-left transition-all duration-fast ease-soft active:translate-y-px',
+    compact ? 'px-4 py-3' : 'px-5 py-4',
     primary
       ? 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift'
       : 'border border-ink/[0.09] bg-shell hover:border-ink/20 hover:shadow-soft',
