@@ -63,7 +63,7 @@ export default function Home() {
               navigation, ni une section. Prérendue et dans le sitemap, mais
               inatteignable en cliquant - donc invisible. Sa place est ici,
               juste après le résumé qu'elle développe. */}
-          <div className="mt-12">
+          <div className="mt-8">
             <TextLink to="/methode" tone="light">
               Le détail de chaque étape
             </TextLink>

@@ -119,7 +119,7 @@ export const MOBILE_NAV = [
  * communiqué de chiffre réel.
  */
 export const PROOF = [
-  { value: 'Toute la Belgique', label: "Zone d'intervention confirmée" },
+  { value: '17 ans d’expérience', label: 'Depuis 2009' },
   { value: 'Un interlocuteur', label: 'Du devis à la livraison' },
 ];
 

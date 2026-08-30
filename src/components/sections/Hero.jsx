@@ -105,12 +105,19 @@ export default function Hero() {
                 WhatsApp
               </Button>
             </div>
+
+            {/* Sur mobile, la bulle n'existe pas : la preuve d'expérience tient
+                en une ligne sous les boutons. */}
+            <p className="hero-in hero-d6 mt-6 flex items-center gap-2.5 t-small text-cream/70 lg:hidden">
+              <span aria-hidden="true" className="h-1.5 w-1.5 flex-none rounded-full bg-gold-light" />
+              {PROOF[0].value} - depuis {BRAND.founded}
+            </p>
           </div>
 
           {/* Carte flottante : deux faits, aucun chiffre inventé. Elle se pose
               sur la photo comme dans les références, mais elle porte de
               l'information vérifiable, pas un compteur décoratif. */}
-          <dl className="hero-in hero-d5 mt-10 hidden w-full max-w-xs rounded-lg border border-cream/15 bg-bark/50 p-6 backdrop-blur-md lg:mt-0 lg:block">
+          <dl className="hero-in hero-d5 mt-10 hidden w-full max-w-xs rounded-lg border border-cream/15 bg-bark/50 p-6 shadow-[0_24px_50px_-30px_rgb(0_0_0/0.7)] ring-1 ring-cream/10 backdrop-blur-md lg:mt-0 lg:block">
             {PROOF.map((p, i) => (
               <div key={p.label} className={i > 0 ? 'mt-6 border-t border-cream/12 pt-6' : ''}>
                 <div className="flex items-center gap-2">
