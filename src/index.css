@@ -406,14 +406,6 @@ details[open] .faq-a {
   }
 }
 
-/* L'impulsion qui parcourt la ligne de la frise des étapes : une lumière qui
-   avance lentement le long de la courbe et ne se répète qu'au bout de 6 s. */
-@keyframes flow-dash {
-  to {
-    stroke-dashoffset: -600;
-  }
-}
-
 /* Hero */
 @keyframes fade-up {
   from {

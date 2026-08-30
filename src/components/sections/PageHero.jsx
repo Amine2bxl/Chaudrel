@@ -29,9 +29,9 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
         </>
       )}
 
-      <Container className={cn('pb-14 pt-28 lg:pb-20 lg:pt-40', hasImage && 'pb-20 lg:pb-28')}>
+      <Container className={cn('pb-12 pt-24 lg:pb-16 lg:pt-32', hasImage && 'pb-16 lg:pb-24')}>
         {breadcrumb.length > 0 && (
-          <nav aria-label="Fil d'Ariane" className="mb-10">
+          <nav aria-label="Fil d'Ariane" className="mb-8">
             <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-cream/65' : 'text-ink/65')}>
               {breadcrumb.map((b, i) => (
                 <li key={b.to || b.label} className="flex items-center gap-2">
