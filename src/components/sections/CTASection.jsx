@@ -22,7 +22,7 @@ export default function CTASection({
       <Container>
         <Reveal className="mx-auto max-w-3xl text-center">
           <h2 className="t-h1 mx-auto max-w-[18ch] text-balance">{title}</h2>
-          <p className="t-lead mx-auto mt-6 max-w-[52ch] text-cream/60">{text}</p>
+          <p className="t-lead mx-auto mt-6 max-w-[52ch] text-cream/70">{text}</p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button
@@ -30,13 +30,19 @@ export default function CTASection({
               variant="solidLight"
               size="lg"
               arrow
+              className="w-full justify-center sm:w-auto"
               onClick={() => track(EVENTS.QUOTE_CTA, { source })}
             >
               Devis gratuit
             </Button>
             {/* Un seul appel secondaire : la fenêtre porte tous les canaux
                 plutôt que d'en imposer un. */}
-            <Button variant="outlineLight" size="lg" onClick={() => openDialog(source)}>
+            <Button
+              variant="outlineLight"
+              size="lg"
+              className="w-full justify-center sm:w-auto"
+              onClick={() => openDialog(source)}
+            >
               Nous joindre
             </Button>
           </div>

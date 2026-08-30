@@ -1,17 +1,16 @@
 import { useMemo, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
-import ProjectGrid from '@/components/sections/ProjectGrid';
+import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section } from '@/components/ui';
 import { PROJECTS, activeCategories, categoryLabel, projectsByCategory } from '@/data/projects';
 import { cn } from '@/lib/utils';
 
 /**
- * /realisations - le portfolio, lu d'un coup d'œil.
+ * /realisations - le portfolio, un chantier à la fois, en grand.
  *
- * Un en-tête court, un filtre, une grille de cartes qui disent chacune de quoi
- * il s'agit (type, commune, titre) : rien de plus. Le détail de chaque
- * chantier vit sur sa page dédiée.
+ * Le même carrousel que l'accueil, nourri par le filtre : la une est la même
+ * expérience immersive, et les filtres recentrent la sélection.
  */
 export default function Projects() {
   const [filter, setFilter] = useState('all');
@@ -22,14 +21,12 @@ export default function Projects() {
     <>
       <PageHero
         title="Des chantiers livrés, pas des images d’archives."
-        intro="Filtrez par type de travaux, ou parcourez la sélection."
+        intro="Le portfolio dans son entier, une réalisation à la fois - comme elle a été livrée."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Réalisations' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="cream" className="pt-0 pb-0 md:pt-0 md:pb-0 lg:pt-0 lg:pb-0">
         <Container>
-          {/* Bascules éditoriales, pas des pastilles : même langage d'état actif
-              que la navigation - le texte s'assombrit, un point brun l'ancre. */}
           <div
             className="flex flex-wrap items-center gap-x-7 gap-y-3 border-b border-ink/[0.09] pb-6"
             role="group"
@@ -63,31 +60,29 @@ export default function Projects() {
               {String(items.length).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
             </span>
           </div>
-
-          {filter !== 'all' && items.length > 0 && (
-            <p className="t-h3 mt-block text-ink">
-              {categoryLabel(filter)}, en détail.
-            </p>
-          )}
-
-          {items.length > 0 ? (
-            <ProjectGrid projects={items} className="mt-block" />
-          ) : (
-            /* Un état vide dit ce qui se passe et propose la sortie : ici,
-                revenir à la sélection complète plutôt que rester bloqué. */
-            <div className="mt-block">
-              <p className="t-lead text-ink/60">Aucun chantier publié dans cette catégorie pour le moment.</p>
-              <button
-                type="button"
-                onClick={() => setFilter('all')}
-                className="link-line tap t-label mt-5 inline-block pb-1 text-ink"
-              >
-                Voir tous les chantiers
-              </button>
-            </div>
-          )}
         </Container>
       </Section>
+
+      {items.length > 0 ? (
+        <ProjectCarousel
+          projects={items}
+          sectionLabel="Nos chantiers"
+          title={filter === 'all' ? '' : `${categoryLabel(filter)}, en détail.`}
+        />
+      ) : (
+        <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+          <Container>
+            <p className="t-lead text-ink/60">Aucun chantier publié dans cette catégorie pour le moment.</p>
+            <button
+              type="button"
+              onClick={() => setFilter('all')}
+              className="link-line tap t-label mt-5 inline-flex items-center gap-1.5 pb-1 text-ink"
+            >
+              Voir tous les chantiers
+            </button>
+          </Container>
+        </Section>
+      )}
 
       <CTASection
         title="Vous voulez un chantier comme les nôtres ?"

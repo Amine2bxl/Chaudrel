@@ -47,6 +47,7 @@ export default function ProjectCarousel({
 
   return (
     <CoverFlowCarousel
+      key={items.map((i) => i.key).join('|')}
       items={items}
       sectionLabel={sectionLabel}
       title={title}

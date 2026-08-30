@@ -336,16 +336,16 @@
   will-change: opacity, transform;
 }
 .rv-up {
-  transform: translateY(28px);
+  transform: translateY(22px);
 }
 .rv-down {
-  transform: translateY(-20px);
+  transform: translateY(-18px);
 }
 .rv-left {
-  transform: translateX(-28px);
+  transform: translateX(-26px);
 }
 .rv-right {
-  transform: translateX(28px);
+  transform: translateX(26px);
 }
 .rv-fade {
   transform: none;
