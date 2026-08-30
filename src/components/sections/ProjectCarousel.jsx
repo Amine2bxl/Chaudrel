@@ -21,7 +21,7 @@ export default function ProjectCarousel({
   title = '',
   text = '',
   link,
-  autoplay = true,
+  autoplay = false,
   caption = true,
 }) {
   const navigate = useNavigate();

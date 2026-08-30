@@ -4,7 +4,7 @@ import ServicesBoard from '@/components/sections/ServicesBoard';
 import ProcessTimeline from '@/components/sections/ProcessTimeline';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
+import { Button, Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { PROJECTS } from '@/data/projects';
 import { BRAND } from '@/data/site';
@@ -60,13 +60,11 @@ export default function Home() {
           <ProcessTimeline tone="light" className="mt-block" />
 
           {/* La page « méthode » n'était liée depuis nulle part : ni la
-              navigation, ni une section. Prérendue et dans le sitemap, mais
-              inatteignable en cliquant - donc invisible. Sa place est ici,
-              juste après le résumé qu'elle développe. */}
-          <div className="mt-8">
-            <TextLink to="/methode" tone="light">
-              Le détail de chaque étape
-            </TextLink>
+              navigation, ni une section. Le bouton ci-dessous l'ouvre. */}
+          <div className="mt-10 text-center">
+            <Button to="/methode" variant="outlineLight">
+              Découvrir notre méthode
+            </Button>
           </div>
         </Container>
       </Section>

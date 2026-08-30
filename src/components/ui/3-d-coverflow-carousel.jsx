@@ -32,7 +32,7 @@ export default function CoverFlowCarousel({
   sectionLabel = '',
   title = '',
   text = '',
-  autoplay = true,
+  autoplay = false,
   autoplayDelay = 6000,
   className = '',
   onCtaClick,
