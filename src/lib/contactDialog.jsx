@@ -3,8 +3,8 @@ import { createContext, useCallback, useContext, useMemo, useState } from 'react
 /**
  * Une seule fenêtre de contact pour tout le site.
  *
- * Les coordonnées vivaient à quatre endroits — page contact, pied de page,
- * barre de navigation, barre d'action mobile — chacun avec sa sélection. Elles
+ * Les coordonnées vivaient à quatre endroits - page contact, pied de page,
+ * barre de navigation, barre d'action mobile - chacun avec sa sélection. Elles
  * vivent maintenant à un seul : n'importe quel appel à contact ouvre la même
  * fenêtre, avec la même information complète.
  */

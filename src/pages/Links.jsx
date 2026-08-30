@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/BrandIcons';
 
 /**
- * Page de liens — la destination des bios Instagram, TikTok et Facebook.
+ * Page de liens - la destination des bios Instagram, TikTok et Facebook.
  *
  * Elle est pensée pour un pouce, sur un téléphone, en trois secondes : une
  * colonne étroite, des rangées hautes, aucune décision à prendre au-delà du
@@ -122,7 +122,7 @@ export default function Links() {
   return (
     <div className="relative isolate overflow-hidden bg-cream">
       {/* Halo derrière l'en-tête : sans lui, une colonne de cartes blanches sur
-          un aplat crème n'a aucun point de départ — le regard entre par le
+          un aplat crème n'a aucun point de départ - le regard entre par le
           milieu. Un seul dégradé, très bas en opacité ; il ne se voit pas, il
           se sent. */}
       <div
@@ -149,7 +149,7 @@ export default function Links() {
 
         <Reveal delay={100} className="mt-10">
           {/* La colonne de liens vit dans une carte : c'est la lecture « link
-              tree » attendue d'une bio — une seule carte, un geste par ligne,
+              tree » attendue d'une bio - une seule carte, un geste par ligne,
               pas de page derrière. */}
           <div className="rounded-2xl bg-shell p-5 shadow-lift ring-1 ring-ink/[0.05] sm:p-8">
             <GroupLabel>Votre projet</GroupLabel>

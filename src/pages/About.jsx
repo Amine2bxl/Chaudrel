@@ -40,7 +40,7 @@ export default function About() {
               <p className="t-body measure text-ink/65">
                 {BRAND.founders[0].name} est sur les chantiers : technique, coordination, exécution.{' '}
                 {BRAND.founders[1].name} s’occupe du dessin, des matériaux et de la relation avec vous. À deux, ils
-                voient passer chaque décision — c’est ce qui permet de tenir la qualité sans multiplier les
+                voient passer chaque décision - c’est ce qui permet de tenir la qualité sans multiplier les
                 intermédiaires.
               </p>
               <p className="t-body measure text-ink/65">

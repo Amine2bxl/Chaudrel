@@ -1,5 +1,5 @@
 /**
- * Réalisations Chaudrel — modèle de données unique.
+ * Réalisations Chaudrel - modèle de données unique.
  *
  * Ajouter un chantier = ajouter un objet dans PROJECTS. Aucun composant ni
  * aucune route à toucher : la page /realisations, les pages /realisations/[slug],
@@ -11,7 +11,7 @@
  *   type        nature, en clair (« Rénovation complète », « Cuisine sur mesure »)
  *   categories  ids de CATEGORIES, pour le filtre et les projets liés
  *   location    commune réelle
- *   year        année de livraison — null tant que Chaudrel ne l'a pas confirmée
+ *   year        année de livraison - null tant que Chaudrel ne l'a pas confirmée
  *               (TODO_VALIDATION). Affichée uniquement si renseignée.
  *   featured    mis en avant sur l'accueil et en tête de portfolio
  *   summary     une phrase, sert d'accroche et de meta description
@@ -19,13 +19,13 @@
  *   works       postes réellement réalisés
  *   materials   matières employées
  *   cover       image d'ouverture { src, alt, w, h }
- *   images      galerie [{ src, alt, w, h }] — alt factuels, jamais inventés
+ *   images      galerie [{ src, alt, w, h }] - alt factuels, jamais inventés
  *   beforeAfter { before, after } quand une comparaison existe
  *
  * ⚠️ Localisations, matériaux et descriptifs proviennent de la V1 et doivent
  *    être confirmés par Chaudrel avant publication (voir docs/VERIFICATION.md).
  *
- * ⚠️ PHOTOS — qualité inégale, signalée à Chaudrel. `pf-2` et `pf-3` sont des
+ * ⚠️ PHOTOS - qualité inégale, signalée à Chaudrel. `pf-2` et `pf-3` sont des
  *    portraits basse définition (900×1125) ; les `ba-*` sont en 1200×800. Une
  *    vraie série de prises de vue reste le meilleur investisement visuel du
  *    site. Aucune image n'est inventée ni remplacée par du stock.
@@ -58,7 +58,7 @@ export const PROJECTS = [
     works: ['Redistribution des espaces', 'Électricité et plomberie', 'Sols et revêtements', 'Peinture et finitions'],
     materials: ['Pierre naturelle', 'Bois massif'],
     cover: img('/photos/pf-1.webp', 'Maison familiale rénovée à Uccle, pièce de vie après travaux', 1400, 933),
-    images: [img('/photos/pf-1.webp', 'Résidence Uccle — pièce de vie après rénovation complète', 1400, 933)],
+    images: [img('/photos/pf-1.webp', 'Résidence Uccle - pièce de vie après rénovation complète', 1400, 933)],
   },
   {
     slug: 'cuisine-ixelles',
@@ -80,8 +80,8 @@ export const PROJECTS = [
     materials: ['Marbre', 'Bois massif'],
     cover: img('/photos/pf-4.webp', 'Cuisine sur mesure à Ixelles, plan de travail continu après travaux', 1400, 933),
     images: [
-      img('/photos/pf-4.webp', 'Cuisine Ixelles — vue d’ensemble après rénovation', 1400, 933),
-      img('/photos/svc-cuisine.webp', 'Cuisine Ixelles — plan de travail et rangements sur mesure', 1200, 900),
+      img('/photos/pf-4.webp', 'Cuisine Ixelles - vue d’ensemble après rénovation', 1400, 933),
+      img('/photos/svc-cuisine.webp', 'Cuisine Ixelles - plan de travail et rangements sur mesure', 1200, 900),
     ],
     beforeAfter: { before: '/photos/ba-cuisine-avant.webp', after: '/photos/ba-cuisine-apres.webp' },
   },
@@ -99,7 +99,7 @@ export const PROJECTS = [
     works: ['Cloisons et ouvertures', 'Éclairage intégré', 'Sols', 'Finitions'],
     materials: ['Bois massif', 'Enduits'],
     cover: img('/photos/pf-2.webp', 'Villa à Tervuren, intérieur après aménagement', 900, 1125),
-    images: [img('/photos/pf-2.webp', 'Villa Tervuren — pièce de vie après aménagement intérieur', 900, 1125)],
+    images: [img('/photos/pf-2.webp', 'Villa Tervuren - pièce de vie après aménagement intérieur', 900, 1125)],
   },
   {
     slug: 'terrasse-woluwe',
@@ -115,7 +115,7 @@ export const PROJECTS = [
     works: ['Préparation du support', 'Pose pierre naturelle', 'Raccords et finitions'],
     materials: ['Pierre naturelle'],
     cover: img('/photos/pf-3.webp', 'Terrasse en pierre naturelle à Woluwe-Saint-Pierre après travaux', 900, 1125),
-    images: [img('/photos/pf-3.webp', 'Terrasse Woluwe — pierre naturelle et abords après rénovation', 900, 1125)],
+    images: [img('/photos/pf-3.webp', 'Terrasse Woluwe - pierre naturelle et abords après rénovation', 900, 1125)],
     beforeAfter: { before: '/photos/ba-terrasse-avant.webp', after: '/photos/ba-terrasse-apres.webp' },
   },
   {
@@ -132,7 +132,7 @@ export const PROJECTS = [
     works: ['Démolition', 'Reprise du support', 'Pose du revêtement', 'Bordures et raccords'],
     materials: ['Revêtement extérieur'],
     cover: img('/photos/ba-allee-apres.webp', 'Allée extérieure refaite à Uccle après travaux', 1200, 800),
-    images: [img('/photos/ba-allee-apres.webp', 'Allée Uccle — revêtement extérieur après remplacement', 1200, 800)],
+    images: [img('/photos/ba-allee-apres.webp', 'Allée Uccle - revêtement extérieur après remplacement', 1200, 800)],
     beforeAfter: { before: '/photos/ba-allee-avant.webp', after: '/photos/ba-allee-apres.webp' },
   },
 ];

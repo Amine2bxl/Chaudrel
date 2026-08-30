@@ -3,7 +3,7 @@
  *
  * Les logos de réseaux ne sont pas dans notre bibliothèque d'icônes : ils sont
  * tracés ici, tous sur une grille de 16, tous en `currentColor`, pour qu'ils
- * prennent la couleur du contexte au lieu d'importer leurs teintes de marque —
+ * prennent la couleur du contexte au lieu d'importer leurs teintes de marque -
  * un mur de logos multicolores casserait la palette de la page.
  */
 
@@ -115,7 +115,7 @@ const CHECK_LEN = 15;
 /**
  * La coche. `draw={false}` la laisse non tracée : le trait s'écrit ensuite,
  * comme une main qui coche. C'est le seul geste de la page qui raconte un
- * achèvement — d'où le tracé plutôt qu'un simple fondu.
+ * achèvement - d'où le tracé plutôt qu'un simple fondu.
  */
 export function CheckIcon({ draw = true, ...props }) {
   return (
@@ -132,7 +132,7 @@ export function CheckIcon({ draw = true, ...props }) {
   );
 }
 
-/** Table des symboles utilisables par clé — voir `icon` dans src/data/method.js. */
+/** Table des symboles utilisables par clé - voir `icon` dans src/data/method.js. */
 export const ICONS = {
   pin: PinIcon,
   quote: QuoteIcon,

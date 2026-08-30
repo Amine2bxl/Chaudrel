@@ -36,7 +36,7 @@ export default function Home() {
         projects={featured}
         sectionLabel="Nos chantiers"
         title="Le travail parle pour nous."
-        text="Une seule réalisation à la fois, en grand — comme elle a été livrée. Le reste du portfolio est à suivre."
+        text="Une seule réalisation à la fois, en grand - comme elle a été livrée. Le reste du portfolio est à suivre."
         link={{ label: 'Toutes les réalisations', to: '/realisations' }}
       />
 
@@ -61,7 +61,7 @@ export default function Home() {
 
           {/* La page « méthode » n'était liée depuis nulle part : ni la
               navigation, ni une section. Prérendue et dans le sitemap, mais
-              inatteignable en cliquant — donc invisible. Sa place est ici,
+              inatteignable en cliquant - donc invisible. Sa place est ici,
               juste après le résumé qu'elle développe. */}
           <div className="mt-12">
             <TextLink to="/methode" tone="light">

@@ -4,11 +4,11 @@ import { cn } from '@/lib/utils';
 import { FacebookIcon, InstagramIcon, TiktokIcon, YoutubeIcon } from '@/components/ui/BrandIcons';
 
 /**
- * Lien vers un compte Chaudrel. Les glyphes viennent de `BrandIcons` — tracés
+ * Lien vers un compte Chaudrel. Les glyphes viennent de `BrandIcons` - tracés
  * dans la charte, en `currentColor`, pour qu'ils prennent la teinte du contexte
  * au lieu d'importer leurs couleurs de marque.
  *
- * Emplacement voulu : pied de page et fenêtre de contact — là où on les
+ * Emplacement voulu : pied de page et fenêtre de contact - là où on les
  * cherche. Pas dans la navigation : la barre garde une seule action (« Devis
  * gratuit ») et la fenêtre de contact porte toutes les coordonnées. Le rail
  * latéral qui les portait avant est supprimé.

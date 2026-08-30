@@ -3,10 +3,10 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /*
- * Coverflow 3D — une publication au centre, ses voisins pivotés en profondeur.
+ * Coverflow 3D - une publication au centre, ses voisins pivotés en profondeur.
  *
  * Composant générique, sans dépendance au routing ni aux données du site :
- * il ne connaît que des éléments « carte » — image, titre, sous-titre, legende,
+ * il ne connaît que des éléments « carte » - image, titre, sous-titre, legende,
  * libellé et URL d'action. Les pages le nourrissent comme elles l'entendent
  * (les réalisations, les services, un futur usage) et l'action de la carte
  * revient à elles via `onCardClick`.
@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
  * La profondeur est construite sur des décalages exprimés en **pourcentage de la
  * largeur de carte**, pas en pixels : la composition tient d'elle-même de 360 px
  * à 1440 px. `rotateY` est appliqué sur chaque voisin, le plan central reste
- * droit — c'est lui que l'œil doit lire.
+ * droit - c'est lui que l'œil doit lire.
  *
  * Accessibilité :
  *  · `role="group"` + `aria-roledescription="carrousel"`, flèches clavier quand
@@ -94,7 +94,7 @@ export default function CoverFlowCarousel({
   useEffect(() => {
     const node = liveRef.current;
     if (node && items?.[index]) {
-      node.textContent = `${index + 1} sur ${total} — ${items[index].titleLine1}`;
+      node.textContent = `${index + 1} sur ${total} - ${items[index].titleLine1}`;
     }
   }, [index, items, total]);
 
@@ -159,7 +159,7 @@ export default function CoverFlowCarousel({
       onTouchEnd={handleTouchEnd}
     >
       {/* Ambiance : la photo du projet courant, floutée et assombrie, derrière
-          le plateau — elle prolonge la teinte du chantier au lieu du vide. */}
+          le plateau - elle prolonge la teinte du chantier au lieu du vide. */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
         <img
           src={items[index]?.img}
@@ -184,7 +184,7 @@ export default function CoverFlowCarousel({
       </div>
 
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-8">
-        {/* En-tête du bloc — libellé, titre éventuel, phrase éventuelle. */}
+        {/* En-tête du bloc - libellé, titre éventuel, phrase éventuelle. */}
         {(sectionLabel || title || text) && (
           <div className="mb-12 text-center lg:mb-14">
             {sectionLabel && (
@@ -274,7 +274,7 @@ export default function CoverFlowCarousel({
                   }}
                 />
 
-                {/* Contenu — visible uniquement sur la carte centrale */}
+                {/* Contenu - visible uniquement sur la carte centrale */}
                 <div
                   style={{
                     position: 'relative',
@@ -416,7 +416,7 @@ export default function CoverFlowCarousel({
           })}
         </div>
 
-        {/* Flèches — posées aux bords du plateau, à mi-hauteur. */}
+        {/* Flèches - posées aux bords du plateau, à mi-hauteur. */}
         {total > 1 && (
           <>
             <button

@@ -3,12 +3,12 @@
  *
  * Configuration requise (variables d'environnement Vercel) :
  *   RESEND_API_KEY    clé API Resend (https://resend.com)
- *   LEAD_TO_EMAIL     boîte(s) de réception interne — une adresse, ou plusieurs
+ *   LEAD_TO_EMAIL     boîte(s) de réception interne - une adresse, ou plusieurs
  *                     séparées par des virgules (ex. Info@chaudrel.be)
- *   LEAD_BCC_EMAIL    optionnel — copie cachée (le second gérant, par exemple)
+ *   LEAD_BCC_EMAIL    optionnel - copie cachée (le second gérant, par exemple)
  *   LEAD_FROM_EMAIL   expéditeur vérifié chez Resend (ex. site@chaudrel.be)
  *
- * ⚠️ PROVISOIRE — tant que `LEAD_TO_EMAIL` n'est pas défini, la destination de
+ * ⚠️ PROVISOIRE - tant que `LEAD_TO_EMAIL` n'est pas défini, la destination de
  *    test envoy@… reçoit les demandes (adresse d'Amine) pour vérifier que
  *    l'envoi et les pièces jointes fonctionnent. À retirer dès la mise en
  *    production réelle.
@@ -39,7 +39,7 @@ const ATTACH = {
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const DOC_TYPES = ['application/pdf'];
 
-/* ⚠️ PROVISOIRE (tests) — voir en-tête. */
+/* ⚠️ PROVISOIRE (tests) - voir en-tête. */
 const TEST_DESTINATION = 'amineazouzi2009@gmail.com';
 
 /* Limitation de débit best-effort (mémoire de l'instance). */
@@ -202,7 +202,7 @@ export default async function handler(req, res) {
 
   const { RESEND_API_KEY, LEAD_TO_EMAIL, LEAD_BCC_EMAIL, LEAD_FROM_EMAIL } = process.env;
   if (!RESEND_API_KEY || !LEAD_FROM_EMAIL) {
-    console.error('[lead] Envoi non configuré — lead reçu mais non transmis:', {
+    console.error('[lead] Envoi non configuré - lead reçu mais non transmis:', {
       ...lead,
       files: attachments.length,
       description: `${lead.description.slice(0, 120)}…`,
@@ -226,7 +226,7 @@ export default async function handler(req, res) {
     .filter(Boolean)
     .join('\n');
 
-  // 1. Notification interne — si elle échoue, le lead est considéré comme non
+  // 1. Notification interne - si elle échoue, le lead est considéré comme non
   //    reçu : c'est le seul envoi dont dépend la suite. Pièces jointes incluses.
   try {
     await sendEmail({
@@ -235,7 +235,7 @@ export default async function handler(req, res) {
       to: destination,
       bcc: LEAD_BCC_EMAIL,
       replyTo: lead.email,
-      subject: `Demande de devis — ${lead.projectType} — ${lead.postalCode}${lead.province ? `, ${lead.province.split(' ')[0]}` : ''}`,
+      subject: `Demande de devis - ${lead.projectType} - ${lead.postalCode}${lead.province ? `, ${lead.province.split(' ')[0]}` : ''}`,
       text: [
         `Type de projet : ${lead.projectType}`,
         `Type de bien : ${lead.propertyType || 'non précisé'}`,
@@ -243,7 +243,7 @@ export default async function handler(req, res) {
         `Échéance souhaitée : ${lead.timeline || 'non précisée'}`,
         `Budget prévisionnel : ${lead.budget || 'non précisé'}`,
         `Situation : ${lead.ownerStatus || 'non précisée'}`,
-        `Le logement sera occupé pendant les travaux : ${lead.occupied ? `oui — ${lead.occupied}` : 'non précisé'}`,
+        `Le logement sera occupé pendant les travaux : ${lead.occupied ? `oui - ${lead.occupied}` : 'non précisé'}`,
         '',
         'Lieu du chantier :',
         where,
@@ -268,7 +268,7 @@ export default async function handler(req, res) {
     });
   }
 
-  // 2. Confirmation automatique au visiteur — best-effort : le lead est déjà
+  // 2. Confirmation automatique au visiteur - best-effort : le lead est déjà
   //    chez nous, un échec ici ne doit pas faire échouer la demande.
   try {
     const recap = [
@@ -305,7 +305,7 @@ export default async function handler(req, res) {
       apiKey: RESEND_API_KEY,
       from: LEAD_FROM_EMAIL,
       to: lead.email,
-      subject: 'Chaudrel — votre demande de devis est bien reçue',
+      subject: 'Chaudrel - votre demande de devis est bien reçue',
       text: lines.join('\n'),
     });
   } catch (err) {

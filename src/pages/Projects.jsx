@@ -7,7 +7,7 @@ import { PROJECTS, activeCategories, categoryLabel, projectsByCategory } from '@
 import { cn } from '@/lib/utils';
 
 /**
- * /realisations — le portfolio, lu d'un coup d'œil.
+ * /realisations - le portfolio, lu d'un coup d'œil.
  *
  * Un en-tête court, un filtre, une grille de cartes qui disent chacune de quoi
  * il s'agit (type, commune, titre) : rien de plus. Le détail de chaque
@@ -29,7 +29,7 @@ export default function Projects() {
       <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
           {/* Bascules éditoriales, pas des pastilles : même langage d'état actif
-              que la navigation — le texte s'assombrit, un point brun l'ancre. */}
+              que la navigation - le texte s'assombrit, un point brun l'ancre. */}
           <div
             className="flex flex-wrap items-center gap-x-7 gap-y-3 border-b border-ink/[0.09] pb-6"
             role="group"

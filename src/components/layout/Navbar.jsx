@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { useContactDialog } from '@/lib/contactDialog';
 import { Button } from '@/components/ui';
 
-/** Deux lignes qui deviennent une croix — pas d'icône importée. */
+/** Deux lignes qui deviennent une croix - pas d'icône importée. */
 function MenuIcon({ open }) {
   const bar = 'block h-px w-6 bg-ink transition-all duration-fast ease-soft';
   return (
@@ -21,7 +21,7 @@ function MenuIcon({ open }) {
 /** Logotype : carré aux coins adoucis, jamais rond, jamais à angle vif. */
 function Wordmark() {
   return (
-    <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel — accueil">
+    <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel - accueil">
       <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-logo bg-shell shadow-soft">
         <img src={LOGO} alt="" aria-hidden="true" width="40" height="40" className="h-full w-full object-cover" />
       </span>
@@ -35,8 +35,8 @@ function Wordmark() {
 /**
  * Une seule barre de navigation pour tout le site.
  *
- * Elle ne change pas d'apparence selon la page : la version posée — capsule
- * crème, ombre teintée — est la seule. Un visiteur qui passe de l'accueil à une
+ * Elle ne change pas d'apparence selon la page : la version posée - capsule
+ * crème, ombre teintée - est la seule. Un visiteur qui passe de l'accueil à une
  * page intérieure ne doit pas avoir l'impression de changer de site, et la
  * page où il se trouve doit se lire sans réfléchir : c'est le rôle du point
  * brun sous l'onglet actif.
@@ -80,7 +80,7 @@ export default function Navbar() {
                 <>
                   {item.label}
                   {/* Repère de page courante : un point, pas une couleur de
-                      texte — il reste lisible pour qui distingue mal les
+                      texte - il reste lisible pour qui distingue mal les
                       teintes, et il ne coûte rien à l'œil. */}
                   <span
                     aria-hidden="true"
@@ -96,7 +96,7 @@ export default function Navbar() {
 
           {/* Une seule action de contact : un icône, pas un numéro. Le numéro
               affiché ne faisait qu'appeler sans contexte ; l'icône ouvre la
-              fenêtre qui porte toutes les coordonnées — appeler, WhatsApp,
+              fenêtre qui porte toutes les coordonnées - appeler, WhatsApp,
               e-mail, horaires, adresse. */}
           <button
             type="button"

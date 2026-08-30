@@ -1,5 +1,5 @@
 /* ============================================================
-   CHAUDREL — JETONS DE THÈME
+   CHAUDREL - JETONS DE THÈME
    Source unique de vérité. Rien n'est codé en dur ailleurs :
    tailwind.config.js lit ces variables, les composants lisent
    Tailwind. Changer une valeur ici la change partout.
@@ -12,7 +12,7 @@
      actions. L'or de laiton n'est qu'un accent : page active, focus, repères.
 
      ⚠️ #8C764E donne 4,0:1 sur le crème et 3,9:1 sur le sombre : sous le seuil
-     AA pour du texte courant. Il ne sert donc jamais à écrire un paragraphe —
+     AA pour du texte courant. Il ne sert donc jamais à écrire un paragraphe -
      seulement des repères, des grands corps et des bordures. Sur fond sombre,
      c'est `gold-light` (8:1) qui prend le relais.
 
@@ -21,20 +21,20 @@
      donne que 4,0:1. `gold-deep` monte à 5,8:1 en restant franchement laiton.
      Les triplets RVB existent pour que Tailwind puisse appliquer une opacité
      (`text-ink/65`) sans dupliquer la couleur. */
-  --c-cream-rgb: 247 245 242; /* fond de page — crème de Chaudrel */
+  --c-cream-rgb: 247 245 242; /* fond de page - crème de Chaudrel */
   --c-shell-rgb: 255 255 255; /* surfaces surélevées : cartes, champs, panneaux */
   --c-sand-rgb: 234 229 222; /* aplats discrets, fond d'image en attente */
   --c-ink-rgb: 26 26 26; /* texte et actions primaires */
   --c-bark-rgb: 28 28 28; /* sections sombres */
   --c-gold-rgb: 140 118 78; /* accent : page active, focus, repères */
-  --c-gold-deep-rgb: 111 93 61; /* fond du bouton devis — 5,8:1 sous le crème */
-  --c-gold-hover-rgb: 122 102 66; /* son survol — 5,1:1, passe encore */
+  --c-gold-deep-rgb: 111 93 61; /* fond du bouton devis - 5,8:1 sous le crème */
+  --c-gold-hover-rgb: 122 102 66; /* son survol - 5,1:1, passe encore */
   --c-gold-light-rgb: 201 174 131; /* le même accent sur fond sombre */
-  /* Vert de validation. Réservé à ce qui est terminé et vérifié — jamais
+  /* Vert de validation. Réservé à ce qui est terminé et vérifié - jamais
      décoratif : s'il apparaît ailleurs que sur un état achevé, il ne veut plus
      rien dire. Désaturé pour tenir à côté du laiton sans le concurrencer.
      #3D6B4E : 5,7:1 sous le crème, et le crème dessus au même rapport.
-     #7FB08D : la même fonction sur fond sombre — 6,9:1 sur le bark. */
+     #7FB08D : la même fonction sur fond sombre - 6,9:1 sur le bark. */
   --c-green-rgb: 61 107 78;
   --c-green-light-rgb: 127 176 141;
 
@@ -52,12 +52,12 @@
   /* ---------- Rayons ----------
      Une seule échelle. Commandes en pilule, surfaces en 24 px.
      Le logo utilise `--r-logo` : un carré aux coins adoucis, ni rond ni vif. */
-  --r-xs: 0.625rem; /* 10 px — cases à cocher, micro-éléments */
-  --r-sm: 0.875rem; /* 14 px — chips compacts */
-  --r-md: 1.125rem; /* 18 px — champs de saisie */
-  --r-lg: 1.5rem; /* 24 px — images, panneaux, accordéon */
-  --r-xl: 2rem; /* 32 px — grands blocs */
-  --r-logo: 0.8125rem; /* 13 px sur 40 px — carré adouci */
+  --r-xs: 0.625rem; /* 10 px - cases à cocher, micro-éléments */
+  --r-sm: 0.875rem; /* 14 px - chips compacts */
+  --r-md: 1.125rem; /* 18 px - champs de saisie */
+  --r-lg: 1.5rem; /* 24 px - images, panneaux, accordéon */
+  --r-xl: 2rem; /* 32 px - grands blocs */
+  --r-logo: 0.8125rem; /* 13 px sur 40 px - carré adouci */
 
   /* ---------- Rythme vertical ----------
      Trois intervalles nommés, et rien entre les deux. Le rythme d'une page
@@ -84,8 +84,8 @@
   --dur-slow: 500ms;
 
   /* ---------- Typographie ----------
-     Deux voix, une seule origine. Marcellus — la serif inscriptionnelle du
-     logotype — porte les grands titres : c'est elle qui donne au site son
+     Deux voix, une seule origine. Marcellus - la serif inscriptionnelle du
+     logotype - porte les grands titres : c'est elle qui donne au site son
      accent architectural et éditorial, et elle relie chaque page au mot-symbole.
      Schibsted Grotesk porte tout le reste : sous-titres, interface, texte,
      repères. Le contraste serif/grotesque EST la hiérarchie. */

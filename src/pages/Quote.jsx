@@ -50,7 +50,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+0-9][0-9\s./-]{7,}$/;
 const POSTAL_RE = /^\d{4}$/;
 
-/* Limites des pièces jointes — à garder dans l'enveloppe de l'endpoint Vercel
+/* Limites des pièces jointes - à garder dans l'enveloppe de l'endpoint Vercel
    (4,5 Mo max sur le corps) : 5 photos/plans, une vidéo courte, 3 Mo au total. */
 const ATTACH = {
   maxFiles: 5, // images + documents
@@ -120,7 +120,7 @@ export default function Quote() {
     if (s === 4) {
       if (!data.budget) e.budget = 'Sélectionnez une fourchette pour avancer.';
       if (!data.timeline) e.timeline = 'Indiquez l’échéance souhaitée.';
-      if (!data.ownerStatus) e.ownerStatus = 'Précisez votre situation — c’est elle qui détermine les autorisations.';
+      if (!data.ownerStatus) e.ownerStatus = 'Précisez votre situation - c’est elle qui détermine les autorisations.';
     }
     if (s === 5) {
       if (data.firstName.trim().length < 2) e.firstName = 'Indiquez votre prénom.';
@@ -240,7 +240,7 @@ export default function Quote() {
           <div>
             <div className="flex items-baseline justify-between">
               <span className="t-label text-ink/65">
-                {String(step).padStart(2, '0')} — {STEPS[step - 1]}
+                {String(step).padStart(2, '0')} - {STEPS[step - 1]}
               </span>
               <span className="t-label text-ink/65">
                 {step} / {STEPS.length}
@@ -370,7 +370,7 @@ export default function Quote() {
                     label="Commune"
                     value={data.commune}
                     onChange={set('commune')}
-                    hint="Facultatif — le code postal suffit parfois."
+                    hint="Facultatif - le code postal suffit parfois."
                     autoComplete="address-level2"
                   />
                 </div>
@@ -650,7 +650,7 @@ function FileUpload({ files, onChange }) {
     <div className="mt-10">
       <span className="t-label text-ink/55">Photos, plan ou vidéo</span>
       <span className="t-small mt-1 block text-ink/50">
-        Facultatif — jusqu’à {ATTACH.maxFiles} photos ou PDF et une courte vidéo ({fmtBytes(ATTACH.total)} au total).
+        Facultatif - jusqu’à {ATTACH.maxFiles} photos ou PDF et une courte vidéo ({fmtBytes(ATTACH.total)} au total).
       </span>
 
       <button

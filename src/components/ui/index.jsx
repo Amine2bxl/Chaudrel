@@ -5,7 +5,7 @@ import { imageAttrs, SIZES as IMG_SIZES } from '@/lib/image';
 import Reveal from '@/lib/reveal';
 
 /* ============================================================
-   Primitives — tout le site est composé de ces briques.
+   Primitives - tout le site est composé de ces briques.
    ============================================================ */
 
 export function Container({ className, children, as: Tag = 'div' }) {
@@ -50,10 +50,10 @@ export function Label({ children, tone = 'dark', className }) {
  * En-tête de section : un titre, et au besoin une phrase dessous.
  *
  * Deux règles tenues sur tout le site :
- * — pas de sur-titre par défaut. Un `label` se justifie une fois toutes les
+ * - pas de sur-titre par défaut. Un `label` se justifie une fois toutes les
  *   trois sections au maximum ; la place de la section dans la page suffit
  *   presque toujours à dire de quoi elle parle.
- * — le texte se met SOUS le titre, pas dans une colonne à droite. Le couple
+ * - le texte se met SOUS le titre, pas dans une colonne à droite. Le couple
  *   « gros titre à gauche / petit paragraphe à droite » est le tic de mise en
  *   page qui fait ressembler toutes les pages entre elles. `align="split"`
  *   reste disponible quand la colonne de droite porte autre chose qu'un
@@ -240,7 +240,7 @@ export function Media({
 
 /**
  * Surface surélevée : coquille claire, arrondi de 24 px, ombre teintée.
- * À n'utiliser que lorsque le contenu est réellement détaché de la page —
+ * À n'utiliser que lorsque le contenu est réellement détaché de la page -
  * un formulaire, un encart de contact. Une liste n'a pas besoin de boîte.
  */
 export function Panel({ className, children, as: Tag = 'div', ...rest }) {
@@ -252,7 +252,7 @@ export function Panel({ className, children, as: Tag = 'div', ...rest }) {
 }
 
 /**
- * Repli — un intitulé, un chevron qui pivote, du contenu qui se déploie.
+ * Repli - un intitulé, un chevron qui pivote, du contenu qui se déploie.
  *
  * Motif repris du `StreakCard` de 21st.dev, réécrit dans notre système : le
  * composant d'origine dépendait de shadcn et d'un `StreakCalendar` absent, et

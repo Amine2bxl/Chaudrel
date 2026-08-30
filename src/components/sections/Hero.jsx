@@ -5,7 +5,7 @@ import { EVENTS, track } from '@/lib/analytics';
 import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
- * Hero — la photo, la promesse, l'action.
+ * Hero - la photo, la promesse, l'action.
  *
  * Aucun chiffre n'est affiché. Les références de ce genre annoncent « 5.9K+
  * projets » ou « +300 clients » ; Chaudrel n'a communiqué aucun chiffre
@@ -36,7 +36,7 @@ export default function Hero() {
       <Container className="pointer-events-none relative z-10 pt-28 lg:pt-32">
         {/* Coupures explicites plutôt qu'une mesure en `ch` : cette unité vaut
             la largeur du zéro et ignore l'interlettrage, largement ouvert sur
-            ces capitales — la ligne cassait une fois de trop. */}
+            ces capitales - la ligne cassait une fois de trop. */}
         <div className="hero-in hero-d1 flex items-start justify-between gap-8">
           <p className="t-label whitespace-nowrap text-cream/75">
             Entreprise de rénovation
@@ -54,7 +54,7 @@ export default function Hero() {
       {/* ---------- Bloc de promesse ---------- */}
       <Container className="relative z-10 mt-auto pb-[calc(66px+2.5rem)] lg:pb-20">
         {/* L'année de fondation, en filigrane derrière la promesse. C'est le
-            geste de la référence — un nombre géant posé derrière le sujet —
+            geste de la référence - un nombre géant posé derrière le sujet -
             mais avec le seul chiffre que Chaudrel ait confirmé. Un compteur
             inventé n'aurait pas tenu à cette taille. L'ancre en haut à gauche
             le décode. */}
@@ -140,7 +140,7 @@ export default function Hero() {
 }
 
 /**
- * Bandeau de preuves — mobile et tablette uniquement. Sur grand écran, les
+ * Bandeau de preuves - mobile et tablette uniquement. Sur grand écran, les
  * mêmes trois faits vivent dans la carte du hero ; les répéter ferait doublon.
  */
 export function ProofBand() {

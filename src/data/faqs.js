@@ -1,15 +1,14 @@
 /**
  * FAQ générale.
  *
- * Les réponses ne s'appuient que sur des informations vérifiées : les métiers
- * annoncés par chaudrelrenovation.be, la zone d'intervention confirmée par
- * Chaudrel, et les deux engagements confirmés (devis gratuit sans engagement,
- * réponse sous 48 h).
+ * Les réponses ne s'appuient que sur des informations vérifiées : les six
+ * métiers annoncés par chaudrelrenovation.be, la zone d'intervention confirmée
+ * par Chaudrel, et les engagements confirmés (devis gratuit sans engagement,
+ * réponse sous 48 h ouvrées, un seul interlocuteur).
  *
- * ⚠️ Aucun prix ni durée de chantier n'est affirmé. La V1 annonçait « 3 à 6
- *    semaines pour une cuisine » et « 2 à 4 mois pour une rénovation
- *    complète » : ces durées n'ont pas été confirmées, elles ne sont donc pas
- *    reprises. Les entrées `pending: true` sont exclues du JSON-LD FAQPage.
+ * ⚠️ Aucun prix ni durée de chantier n'est affirmé. Les durées de la V1
+ * (« 3 à 6 semaines pour une cuisine ») n'ont pas été confirmées et ne sont
+ * pas reprises.
  */
 
 import { BRAND } from '@/data/site';
@@ -17,38 +16,42 @@ import { BRAND } from '@/data/site';
 export const FAQS = [
   {
     q: 'Quels travaux réalisez-vous ?',
-    a: "Six métiers : la rénovation complète, les finitions intérieures (chape, carrelage, parquet, cloisons, plafonnage, peinture), l'aménagement extérieur (terrassement, pavage, terrasses, annexes), la toiture (charpente, couverture, étanchéité, zinguerie), la façade (ravalement, isolation, parement, rejointoiement) et le gros œuvre de piscine.",
+    a: "Six métiers : rénovation complète, finitions intérieures, aménagement extérieur, toiture, façade et gros œuvre de piscine. Le contenu exact de chaque métier est détaillé sur la page Services.",
   },
   {
     q: 'Où intervenez-vous ?',
-    a: `${BRAND.zoneSentence} Notre ancrage historique reste Bruxelles et sa périphérie, mais nous nous déplaçons dans les dix provinces.`,
+    a: `${BRAND.zoneSentence} Bruxelles reste notre ancrage, mais nous nous déplaçons dans les dix provinces.`,
   },
   {
     q: 'Le devis est-il gratuit ?',
-    a: "Oui, gratuit et sans engagement. Vous décrivez votre projet, nous venons voir le lieu, puis nous remettons un devis détaillé poste par poste. Nous répondons à votre demande sous 48 heures.",
+    a: 'Oui, devis gratuit et sans engagement, visite comprise. Vous décrivez votre projet, nous venons voir le lieu, puis vous recevez un devis détaillé poste par poste.',
+  },
+  {
+    q: 'Sous combien de temps répondez-vous ?',
+    a: `${BRAND.promises.responseTime}. Nous convenons ensuite d'un créneau de visite, en général sous quelques jours.`,
   },
   {
     q: 'Comment se déroule un projet ?',
-    a: "En quatre étapes : contact et visite, devis détaillé, chantier, livraison. Un seul interlocuteur suit le chantier du début à la fin.",
+    a: "En quatre étapes : contact et visite, devis détaillé, chantier, puis livraison faite ensemble. Vous savez à tout moment où en sont les travaux.",
   },
   {
-    q: 'Prenez-vous en charge une rénovation complète ?',
-    a: "Oui, du gros œuvre aux finitions, pour un appartement, une maison ou un commerce. Nous coordonnons tous les corps de métier : vous n'avez qu'un seul contact.",
+    q: 'Puis-je habiter chez moi pendant les travaux ?',
+    a: "Souvent oui, selon l'ampleur du chantier. On en parle lors de la visite, et le devis vous le confirme par écrit.",
   },
   {
-    q: 'Quels matériaux utilisez-vous ?',
-    a: "Cela dépend du poste : tuiles ou ardoises en toiture inclinée, EPDM® ou Derbigum® en toiture plate, Gyproc® et ossature Metal Stud® en cloisons, briques de parement, crépi ou cimentage en façade. Nous pouvons fournir les matériaux ou poser les vôtres ; le devis distingue toujours la fourniture de la pose.",
-  },
-  {
-    q: 'Combien de temps durent les travaux ?',
-    a: "La durée dépend de l'ampleur du chantier et de l'état du bâtiment. Nous vous remettons un planning précis avec le devis, et le calendrier est fixé avant le premier jour de travaux.",
+    q: 'Coordonnez-vous les corps de métier ?',
+    a: 'Oui. Vous traitez avec une seule personne, du premier rendez-vous à la remise des clés ; il n’y a rien à coordonner de votre côté.',
   },
   {
     q: 'Qui suit le chantier ?',
-    a: "Un interlocuteur unique, présent sur le chantier. C'est une entreprise familiale : le patron passe sur les chantiers, et vous savez à tout moment où en sont les travaux.",
+    a: "Un interlocuteur unique, présent sur place. C'est une entreprise familiale fondée en 2009, et le patron passe sur les chantiers.",
   },
   {
-    q: 'Travaillez-vous avec des architectes ?',
-    a: "Nous collaborons volontiers avec l'architecte de votre choix. Si votre projet en nécessite un, nous vous le disons dès la visite.",
+    q: 'Fournissez-vous les matériaux ?',
+    a: 'Oui, nous pouvons fournir ou poser les vôtres. Le devis distingue toujours la fourniture de la pose.',
+  },
+  {
+    q: 'Travaillez-vous avec un architecte ?',
+    a: "Volontiers, avec l'architecte de votre choix. Si votre projet en exige un, nous vous le disons dès la visite.",
   },
 ];

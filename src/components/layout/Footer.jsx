@@ -4,14 +4,14 @@ import { useContactDialog } from '@/lib/contactDialog';
 import SocialLinks from '@/components/layout/SocialLinks';
 
 /**
- * Pied de page — une ligne, rien de plus.
+ * Pied de page - une ligne, rien de plus.
  *
  * Il ne répète ni la navigation (présente en haut de chaque écran), ni les
  * coordonnées (dans la fenêtre de contact), ni le devis (le bloc de conversion
  * juste au-dessus ne parle que de ça). Un pied de page qui redit tout est un
  * deuxième site posé sous le premier.
  *
- * Il reste donc : qui édite, où trouver les liens, et les réseaux — renvoyés
+ * Il reste donc : qui édite, où trouver les liens, et les réseaux - renvoyés
  * ici depuis l'ancien rail latéral (supprimé) : le pied de page et la fenêtre
  * de contact sont les seuls endroits où on les cherche sans qu'ils pèsent sur
  * la navigation.
@@ -29,7 +29,7 @@ export default function Footer() {
     <footer className="border-t border-cream/10 bg-bark text-cream">
       <div className="mx-auto w-full max-w-page px-5 pb-[calc(66px+1rem)] pt-5 sm:px-8 lg:px-12 lg:pb-6 lg:pt-6">
         <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
-          <Link to="/" className="flex flex-none items-center gap-2.5" aria-label="Chaudrel — accueil">
+          <Link to="/" className="flex flex-none items-center gap-2.5" aria-label="Chaudrel - accueil">
             <span className="grid h-7 w-7 flex-none place-items-center overflow-hidden rounded-[0.5rem] bg-cream/10">
               <img src={LOGO} alt="" aria-hidden="true" width="28" height="28" className="h-full w-full object-cover" />
             </span>
@@ -53,7 +53,7 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Réseaux — depuis le rail latéral, que le pied de page et la fenêtre
+        {/* Réseaux - depuis le rail latéral, que le pied de page et la fenêtre
             de contact remplacent : une seule ligne, en fin de page. */}
         <div className="mt-5 flex items-center justify-between gap-4 border-t border-cream/10 pt-5">
           <span className="t-small text-cream/40">Suivez les chantiers en cours</span>

@@ -4,12 +4,12 @@ import { TESTIMONIALS, TESTIMONIALS_VALIDATED, GOOGLE_REVIEWS_URL } from '@/data
 import { cn } from '@/lib/utils';
 
 /**
- * Avis clients — présentation éditoriale, sans carte ni étoiles décoratives.
+ * Avis clients - présentation éditoriale, sans carte ni étoiles décoratives.
  *
  * ⚠️ PLACEHOLDER : les avis proviennent de la V1 et ne sont pas vérifiés
  * (`TESTIMONIALS_VALIDATED = false` dans src/data/testimonials.js).
  * La structure est en place ; le contenu doit être remplacé par de vrais avis
- * — idéalement des avis Google — avant la mise en production.
+ * - idéalement des avis Google - avant la mise en production.
  */
 export default function Testimonials({ limit, tone = 'white' }) {
   const items = limit ? TESTIMONIALS.slice(0, limit) : TESTIMONIALS;
@@ -48,7 +48,7 @@ export default function Testimonials({ limit, tone = 'white' }) {
               <Reveal as="figure" key={t.id} delay={120 + i * 90} className="border-t border-ink/12 pt-5">
                 <blockquote className="t-small text-ink/70">« {t.quote} »</blockquote>
                 <figcaption className="t-label mt-4 text-ink/65">
-                  {t.name} — {t.location}
+                  {t.name} - {t.location}
                 </figcaption>
               </Reveal>
             ))}

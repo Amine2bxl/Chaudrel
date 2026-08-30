@@ -21,11 +21,11 @@ Une seule idée, tenue partout : **on montre le travail, pas l'entreprise.**
 
 ---
 
-## 2. Instagram — vitrine principale
+## 2. Instagram - vitrine principale
 
 **Bio (proposition, 150 caractères max)**
 ```
-CHAUDREL — Rénovation à Bruxelles
+CHAUDREL - Rénovation à Bruxelles
 Cuisines · salles de bain · rénovations complètes
 Devis gratuit ↓
 ```
@@ -35,23 +35,23 @@ Devis gratuit ↓
 `Cuisines` · `Salles de bain` · `Avant / Après` · `Chantiers en cours` ·
 `L'équipe` · `Avis` · `Devis`
 
-**Grille de contenu — 4 publications / semaine**
+**Grille de contenu - 4 publications / semaine**
 
 | Jour | Format | Contenu |
 |---|---|---|
-| Lundi | Carrousel | Avant / après d'un chantier livré (3–5 images) |
-| Mercredi | Reel 15–25 s | Un geste technique : pose, découpe, jointoiement |
+| Lundi | Carrousel | Avant / après d'un chantier livré (3-5 images) |
+| Mercredi | Reel 15-25 s | Un geste technique : pose, découpe, jointoiement |
 | Vendredi | Photo | Un détail : matière, finition, angle, lumière |
 | Dimanche | Story / Reel | Chantier en cours, équipe, coulisses |
 
 **Ce qui performe pour la rénovation**
 1. Avant/après (le plus partagé, le plus sauvegardé)
 2. Timelapse d'une pièce transformée
-3. « Ce qu'on trouve derrière un mur » — narratif, très regardé
+3. « Ce qu'on trouve derrière un mur » - narratif, très regardé
 4. Réponse à une question client filmée en 20 s
 5. Livraison de chantier avec le client (avec son accord écrit)
 
-**Règles de production** — un téléphone récent suffit :
+**Règles de production** - un téléphone récent suffit :
 photo avant systématique **avant** de toucher au chantier (sinon l'avant/après est
 perdu à jamais), même angle pour l'après, lumière naturelle, format vertical 4:5 ou 9:16.
 
@@ -60,25 +60,25 @@ perdu à jamais), même angle pour l'après, lumière naturelle, format vertical
 
 ---
 
-## 3. Facebook — proximité locale
+## 3. Facebook - proximité locale
 
 Public différent d'Instagram : plus âgé, plus local, plus décisionnaire sur une
 rénovation complète. C'est le réseau qui convertit le mieux pour ce métier en Belgique.
 
 - **Fréquence** : 2 publications / semaine (reprise des meilleurs contenus Instagram,
   avec un texte plus long et le nom de la commune).
-- **Toujours nommer la commune** : « Rénovation d'une cuisine à Ixelles » — c'est ce
+- **Toujours nommer la commune** : « Rénovation d'une cuisine à Ixelles » - c'est ce
   qui déclenche les partages dans les groupes de quartier.
 - **Groupes locaux** : rejoindre les groupes de quartier (Schaerbeek, Uccle, Ixelles,
-  Woluwe) et répondre aux demandes de recommandations **sans spammer** — une réponse
+  Woluwe) et répondre aux demandes de recommandations **sans spammer** - une réponse
   utile vaut dix publications promotionnelles.
 - **Avis Facebook** : activer les recommandations, demander un avis après chaque chantier.
-- **Publicité** (optionnel, après le meeting) : budget test 150–300 €/mois sur un
+- **Publicité** (optionnel, après le meeting) : budget test 150-300 €/mois sur un
   rayon de 10 km autour de Bruxelles, objectif « messages WhatsApp », créa = avant/après.
 
 ---
 
-## 4. WhatsApp — canal de conversion n°1 sur mobile
+## 4. WhatsApp - canal de conversion n°1 sur mobile
 
 Passer à **WhatsApp Business** (gratuit) pour disposer du profil entreprise,
 des messages automatiques et des étiquettes.
@@ -133,11 +133,11 @@ Ces étiquettes sont le CRM tant qu'il n'y a pas de CRM.
 
 ---
 
-## 5. Linktree — intégré au site
+## 5. Linktree - intégré au site
 
 Plus de service externe : la page **`https://chaudrel.be/liens`** (route `/liens`,
 alias `/link` et `/links`) est le linktree du site. Elle est pensée pour un pouce, sur
-un téléphone, en trois secondes — une carte, des rangées hautes, quatre réseaux
+un téléphone, en trois secondes - une carte, des rangées hautes, quatre réseaux
 en pied. C'est l'adresse à mettre dans les bios Instagram, TikTok et Facebook,
 au lieu de rediriger vers linktr.ee.
 
@@ -151,7 +151,7 @@ Ordre imposé par l'intention : action commerciale d'abord, exploration ensuite.
 7. **Les réseaux** (Instagram, TikTok, Facebook, YouTube)
 
 Ajouter `?utm_source=instagram` (ou `facebook`, `tiktok`) sur les liens des
-profils vers le site pour mesurer l'apport réel — y compris la page `/liens` si
+profils vers le site pour mesurer l'apport réel - y compris la page `/liens` si
 elle est liée depuis un profil.
 
 ---

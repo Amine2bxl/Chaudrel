@@ -1,20 +1,20 @@
 /**
- * Métiers Chaudrel — source unique.
+ * Métiers Chaudrel - source unique.
  *
  * Cette liste vient du site historique chaudrelrenovation.be, page par page :
  * finitions intérieures, aménagement extérieur, toiture, façade, gros œuvre de
  * piscine. Ce sont les métiers que l'entreprise annonce elle-même, avec ses
  * termes et ses marques (Metal Stud®, Gyproc®, EPDM®, Derbigum®, Velux®).
  *
- * La version précédente affichait des services repris de la V1 — électricité,
- * plomberie, menuiserie, cuisine, salle de bain en têtes de chapitre — que le
+ * La version précédente affichait des services repris de la V1 - électricité,
+ * plomberie, menuiserie, cuisine, salle de bain en têtes de chapitre - que le
  * site historique ne présente nulle part comme des métiers. Ces travaux
  * existent bien, mais comme postes à l'intérieur d'un chantier : ils sont
  * revenus dans les `works` là où ils apparaissent réellement.
  *
  * Structure d'un métier :
  *   slug, title, image, excerpt (une phrase), intro (trois lignes maximum)
- *   groups  postes réels, groupés — c'est ce qui permet d'afficher la
+ *   groups  postes réels, groupés - c'est ce qui permet d'afficher la
  *           catégorie d'abord et le détail ensuite, plutôt qu'une liste de
  *           trente lignes d'entrée de jeu
  *   faqs    questions propres au métier
@@ -224,5 +224,5 @@ export const SERVICES = [
 
 export const getService = (slug) => SERVICES.find((s) => s.slug === slug);
 
-/** Tous les postes d'un métier, à plat — pour les listes courtes et le SEO. */
+/** Tous les postes d'un métier, à plat - pour les listes courtes et le SEO. */
 export const serviceItems = (service) => (service.groups ?? []).flatMap((g) => g.items);
