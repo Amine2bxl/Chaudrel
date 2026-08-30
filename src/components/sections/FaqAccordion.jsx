@@ -5,13 +5,12 @@ import { cn } from '@/lib/utils';
 /**
  * Accordéon de questions.
  *
- * Un point d'interrogation discret en première lecture, la question en gros,
- * une croix pour ouvrir. Une seule question ouverte à la fois : `details`
- * ferme les autres nativement. Le texte de réponse entre sous la question
- * (`.faq-a`), et le filet supérieur s'allume en laiton sur l'entrée ouverte.
+ * La question dans la voix du site (serif), le texte en grotesque sous elle.
+ * Une croix stable invite au geste ; quand la question s'ouvre, un trait
+ * laiton entre avec la réponse et signale l'état sans lire le contenu.
  *
- * `tag` est un intitulé de section affiché au-dessus de la question (le métier,
- * par exemple), quand les questions viennent de sources différentes.
+ * `tag` est un intitulé affiché au-dessus de la question (le métier, par
+ * exemple), quand les questions viennent de sources différentes.
  */
 export default function FaqAccordion({ items = [], tone = 'dark', className }) {
   if (!items.length) return null;
@@ -29,47 +28,45 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
             'open:border-gold/60',
             light
               ? 'border-cream/15 bg-cream/[0.04] open:bg-cream/[0.06] hover:border-cream/30'
-              : 'border-ink/[0.08] bg-shell open:bg-shell shadow-soft hover:border-ink/15'
+              : 'border-ink/[0.08] bg-shell open:bg-shell hover:border-ink/15'
           )}
         >
           <summary
             className={cn(
-              'flex cursor-pointer list-none items-start justify-between gap-6 px-6 py-5 sm:px-8 sm:py-6',
+              'flex cursor-pointer list-none items-start justify-between gap-5 px-6 py-5 sm:px-7 sm:py-4',
               light ? 'text-cream' : 'text-ink'
             )}
           >
             <span className="min-w-0">
               {f.tag && (
-                <span className={cn('t-label block pb-1.5', light ? 'text-gold-light' : 'text-gold')}>{f.tag}</span>
+                <span className={cn('t-label block pb-1', light ? 'text-gold-light' : 'text-gold')}>{f.tag}</span>
               )}
-              <span className="t-h3 block text-balance">{f.q}</span>
+              <span className="block font-display text-[1.2rem] leading-snug tracking-[-0.01em] sm:text-[1.3rem]">
+                {f.q}
+              </span>
             </span>
+
             {/* La croix tourne sans jamais disparaître : on sait qu'on peut
                 rabattre. */}
             <span
               className={cn(
-                'mt-0.5 grid h-9 w-9 flex-none place-items-center rounded-full border transition-all duration-300 ease-soft group-open:rotate-45',
+                'mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-full border transition-all duration-300 ease-soft group-open:rotate-45',
                 light
                   ? 'border-cream/20 text-cream/70 group-open:border-gold-light group-open:text-gold-light'
                   : 'border-ink/[0.14] text-ink/60 group-open:border-gold group-open:text-gold'
               )}
               aria-hidden="true"
             >
-              <Plus className="h-[18px] w-[18px]" strokeWidth={1.75} />
+              <Plus className="h-4 w-4" strokeWidth={1.75} />
             </span>
           </summary>
 
-          <div className="px-6 pb-6 sm:px-8 sm:pb-7">
-            {/* Filet laiton qui entre avec la réponse : l'œil comprend que la
-                question est ouverte sans lire le contenu. */}
+          <div className="px-6 pb-6 sm:px-7 sm:pb-6">
             <span
               aria-hidden="true"
-              className={cn(
-                'mb-4 block h-px w-10 transition-colors duration-300',
-                light ? 'bg-gold-light/70' : 'bg-gold/70'
-              )}
+              className={cn('mb-4 block h-px w-9 transition-colors duration-300', light ? 'bg-gold-light/70' : 'bg-gold/70')}
             />
-            <p className={cn('faq-a t-body', light ? 'text-cream/70' : 'text-ink/70')}>{f.a}</p>
+            <p className={cn('faq-a t-body max-w-[62ch]', light ? 'text-cream/70' : 'text-ink/70')}>{f.a}</p>
           </div>
         </Reveal>
       ))}

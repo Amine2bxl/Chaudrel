@@ -1,16 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { BRAND, EMAIL_DISPLAY, LOGO, whatsappUrl } from '@/data/site';
+import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
 import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 import { GroupLabel, Row } from '@/components/layout/ContactList';
 import {
   FacebookIcon,
-  GalleryIcon,
   InstagramIcon,
   MailIcon,
   PhoneIcon,
-  PinIcon,
   QuoteIcon,
   TiktokIcon,
   WhatsappIcon,
@@ -18,14 +16,13 @@ import {
 } from '@/components/ui/BrandIcons';
 
 /**
- * Fenêtre de contact - toutes les coordonnées de Chaudrel, la même carte que
- * la page « Tous nos liens ».
+ * Fenêtre de contact - les coordonnées, rangées dans la langue de la page
+ * « Tous nos liens ».
  *
- * Elle reprend exactement les rangées de la page `/liens` (logo, projet,
- * réalisations, réseaux) pour qu'une fiche de contact dise la même chose
- * partout. Le fond se fige et se voile : `overflow: hidden` sur le corps au
- * moment où elle s'ouvre, flou derrière le panneau. Fermeture par Échap et par
- * le fond, tabulation piégée dans le panneau.
+ * La structure de la fiche est conservée (parler, coordonnées, réseaux) mais
+ * chaque ligne reprend les rangées de la carte de liens : pastille, intitulé,
+ * description, chevron. Le fond se fige et se voile à l'ouverture ; la
+ * fenêtre se ferme par Échap, par le fond, ou par une action interne.
  */
 const SOCIALS = [
   { key: 'instagram', label: 'Instagram', icon: InstagramIcon },
@@ -33,6 +30,15 @@ const SOCIALS = [
   { key: 'facebook', label: 'Facebook', icon: FacebookIcon },
   { key: 'youtube', label: 'YouTube', icon: YoutubeIcon },
 ];
+
+function Detail({ label, children }) {
+  return (
+    <div className="grid grid-cols-[6.5rem_1fr] items-baseline gap-4 border-t border-ink/10 py-3 first:border-t-0 first:pt-0">
+      <dt className="t-label text-ink/55">{label}</dt>
+      <dd className="t-small text-ink/80">{children}</dd>
+    </div>
+  );
+}
 
 export default function ContactDialog() {
   const { open, source, closeDialog } = useContactDialog();
@@ -56,10 +62,7 @@ export default function ContactDialog() {
         return;
       }
       if (e.key !== 'Tab' || !panel) return;
-      // Piège à tabulation : la fenêtre est modale, le focus n'en sort pas.
-      const focusables = panel.querySelectorAll(
-        'a[href], button:not([disabled])'
-      );
+      const focusables = panel.querySelectorAll('a[href], button:not([disabled])');
       if (!focusables.length) return;
       const first = focusables[0];
       const last = focusables[focusables.length - 1];
@@ -82,7 +85,6 @@ export default function ContactDialog() {
 
   if (!open) return null;
 
-  /* Une rangée interne : ferme la fenêtre et trace le geste. */
   const t = (event) => () => {
     closeDialog();
     track(event, { source: `dialog:${source}` });
@@ -105,21 +107,19 @@ export default function ContactDialog() {
         tabIndex={-1}
         className="panel-in relative flex max-h-[92svh] w-full max-w-md flex-col overflow-hidden rounded-2xl bg-cream shadow-lift outline-none"
       >
-        {/* En-tête : le même logotype que la carte de liens, puis un bouton pour
-            fermer. */}
-        <div className="flex items-center justify-between gap-6 px-6 pb-2 pt-6 sm:px-8 sm:pt-8">
-          <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 flex-none place-items-center overflow-hidden rounded-logo bg-shell shadow-soft ring-1 ring-ink/[0.06]">
-              <img src={LOGO} alt="" aria-hidden="true" width="44" height="44" className="h-full w-full object-cover" />
-            </span>
-            <div>
-              <h2 id="contact-dialog-title" className="font-wordmark text-[17px] uppercase leading-none tracking-[0.2em] text-ink">
-                {BRAND.name}
-              </h2>
-              <p className="t-small mt-1 text-ink/55">{BRAND.zoneLong}</p>
-            </div>
+        <div className="flex items-start justify-between gap-6 px-6 pb-2 pt-7 sm:px-8 sm:pt-8">
+          <div>
+            <h2 id="contact-dialog-title" className="t-h2 text-[1.625rem] sm:text-[1.75rem]">
+              Nous joindre
+            </h2>
+            <p className="t-small mt-2 text-ink/60">
+              {BRAND.promises.responseTime}. Pour un chiffrage, passez par la{' '}
+              <Link to="/devis" onClick={() => closeDialog()} className="link-line text-ink">
+                demande de devis
+              </Link>
+              .
+            </p>
           </div>
-
           <button
             type="button"
             onClick={closeDialog}
@@ -132,9 +132,8 @@ export default function ContactDialog() {
           </button>
         </div>
 
-        {/* Corps : les mêmes rangées que la page /liens, dans le même ordre. */}
         <div className="overflow-y-auto px-6 pb-6 pt-2 sm:px-8 sm:pb-8">
-          <GroupLabel>Votre projet</GroupLabel>
+          {/* Les trois gestes immédiats, dans l'ordre : décider, parler, écrire. */}
           <div className="space-y-2.5">
             <Row
               to="/devis"
@@ -145,45 +144,58 @@ export default function ContactDialog() {
               primary
             />
             <Row
+              href={`tel:${BRAND.phones[0].tel}`}
+              icon={PhoneIcon}
+              label="Appeler"
+              hint={BRAND.phones[0].number}
+              onClick={t(EVENTS.PHONE_CLICK)}
+            />
+            <Row
               href={whatsappUrl()}
               icon={WhatsappIcon}
               label="WhatsApp"
               hint="Écrivez-nous, photos bienvenues"
               onClick={t(EVENTS.WHATSAPP_CLICK)}
             />
-            <Row
-              href={`tel:${BRAND.phones[0].tel}`}
-              icon={PhoneIcon}
-              label={`Appeler ${BRAND.phones[0].name}`}
-              hint={BRAND.phones[0].number}
-              onClick={t(EVENTS.PHONE_CLICK)}
-            />
-            <Row
-              href={`mailto:${BRAND.email}`}
-              icon={MailIcon}
-              label="Nous écrire"
-              hint={EMAIL_DISPLAY}
-              onClick={t(EVENTS.EMAIL_CLICK)}
-            />
           </div>
 
-          <GroupLabel>Le travail</GroupLabel>
-          <div className="space-y-2.5">
-            <Row
-              to="/realisations"
-              icon={GalleryIcon}
-              label="Nos réalisations"
-              hint="Chantiers livrés, photos réelles"
-              onClick={closeDialog}
-            />
-            <Row
-              to="/services"
-              icon={PinIcon}
-              label="Nos métiers"
-              hint="Intérieur, extérieur, toiture, façade, piscine"
-              onClick={closeDialog}
-            />
-          </div>
+          <GroupLabel>Coordonnées</GroupLabel>
+          <dl>
+            <Detail label="Téléphones">
+              <ul className="space-y-1">
+                {BRAND.phones.map((p) => (
+                  <li key={p.tel} className="flex items-baseline justify-between gap-4">
+                    <a href={`tel:${p.tel}`} onClick={t(EVENTS.PHONE_CLICK)} className="link-line tabular-nums text-ink">
+                      {p.number}
+                    </a>
+                    <span className="t-label text-ink/45">{p.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </Detail>
+            <Detail label="E-mail">
+              <a href={`mailto:${BRAND.email}`} onClick={t(EVENTS.EMAIL_CLICK)} className="link-line break-all text-ink">
+                {EMAIL_DISPLAY}
+              </a>
+            </Detail>
+            <Detail label="Horaires">
+              <ul className="space-y-1">
+                {BRAND.hours.map((h) => (
+                  <li key={h.days} className="flex items-baseline justify-between gap-4">
+                    <span className="text-ink/70">{h.days}</span>
+                    <span className="tabular-nums text-ink">{h.time}</span>
+                  </li>
+                ))}
+              </ul>
+            </Detail>
+            <Detail label="Adresse">
+              <address className="not-italic text-ink/70">
+                {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city}
+                <br />
+                {BRAND.zoneLong}.
+              </address>
+            </Detail>
+          </dl>
 
           <GroupLabel>Nous suivre</GroupLabel>
           <ul className="flex flex-wrap justify-center gap-2.5">
@@ -196,9 +208,9 @@ export default function ContactDialog() {
                     rel="noopener noreferrer"
                     aria-label={label}
                     onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
-                    className="grid h-[3.25rem] w-[3.25rem] place-items-center rounded-md border border-ink/[0.09] bg-shell text-ink/70 transition-all duration-fast ease-soft hover:border-ink/20 hover:text-ink hover:shadow-soft active:translate-y-px"
+                    className="grid h-11 w-11 place-items-center rounded-full border border-ink/10 text-ink/70 transition-all duration-fast ease-soft hover:border-gold/40 hover:text-gold"
                   >
-                    <Icon width="19" height="19" />
+                    <Icon width="18" height="18" />
                   </a>
                 </li>
               ) : null
@@ -206,14 +218,7 @@ export default function ContactDialog() {
           </ul>
 
           <div className="mt-9 border-t border-ink/10 pt-5 text-center">
-            <address className="t-small not-italic text-ink/65">
-              {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city}
-            </address>
-            <Link
-              to="/"
-              onClick={() => closeDialog()}
-              className="link-line t-label mt-2 inline-flex min-h-[44px] items-center px-2 text-ink"
-            >
+            <Link to="/" onClick={() => closeDialog()} className="link-line t-label inline-flex min-h-[44px] items-center px-2 text-ink">
               Voir le site
             </Link>
           </div>

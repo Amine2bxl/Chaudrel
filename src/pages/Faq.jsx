@@ -5,7 +5,7 @@ import { Container, Section, SectionHeading } from '@/components/ui';
 import { FAQS } from '@/data/faqs';
 import { SERVICES } from '@/data/services';
 
-const serviceFaqs = SERVICES.flatMap((s) => (s.faqs || []).map((f) => ({ ...f, tag: s.title })));
+const serviceFaqs = SERVICES.flatMap((s) => (s.faqs?.[0] ? [{ ...s.faqs[0], tag: s.title }] : []));
 
 export default function Faq() {
   return (

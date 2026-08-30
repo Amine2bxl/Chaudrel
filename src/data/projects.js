@@ -44,6 +44,23 @@ const img = (src, alt, w, h) => ({ src, alt, w, h });
 
 export const PROJECTS = [
   {
+    slug: 'renovation-overijse',
+    title: 'Rénovation Overijse',
+    type: 'Rénovation complète',
+    categories: ['renovation-complete', 'maison'],
+    location: 'Overijse, Brabant flamand',
+    year: null,
+    featured: true,
+    summary:
+      "Rénovation complète d'une maison à Overijse, de la structure aux finitions, pièce après pièce.",
+    description:
+      "Chaudrel a mené la rénovation complète de cette maison à Overijse : reprise de la structure et des techniques, puis sols, murs et finitions pièce par pièce. Le client a suivi le chantier avec un seul interlocuteur, du premier débarras à la remise des clés.",
+    works: ['Reprise de la structure', 'Électricité et plomberie', 'Sols, murs et plafonds', 'Peinture et finitions'],
+    materials: [],
+    cover: img('/story-before-after.webp', 'Rénovation à Overijse, pièce de vie après travaux', 1000, 1333),
+    images: [img('/story-before-after.webp', 'Rénovation Overijse - pièce de vie après travaux', 1000, 1333)],
+  },
+  {
     slug: 'residence-uccle',
     title: 'Résidence Uccle',
     type: 'Rénovation complète',
