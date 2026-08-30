@@ -36,7 +36,7 @@ export default function Home() {
         projects={featured}
         sectionLabel="Nos chantiers"
         title="Le travail parle pour nous."
-        text="Une seule réalisation à la fois, en grand - comme elle a été livrée. Le reste du portfolio est à suivre."
+        text="Une seule réalisation à la fois, en grand - comme elle a été livrée."
         link={{ label: 'Toutes les réalisations', to: '/realisations' }}
       />
 

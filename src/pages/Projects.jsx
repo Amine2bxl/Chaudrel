@@ -22,7 +22,7 @@ export default function Projects() {
     <>
       <PageHero
         title="Des chantiers livrés, pas des images d’archives."
-        intro="Toutes les photos sont prises sur nos chantiers, au moment de la livraison. Filtrez par type de travaux, ou parcourez la sélection."
+        intro="Filtrez par type de travaux, ou parcourez la sélection."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Réalisations' }]}
       />
 

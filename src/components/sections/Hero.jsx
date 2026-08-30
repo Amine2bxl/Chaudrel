@@ -40,8 +40,6 @@ export default function Hero() {
         <div className="hero-in hero-d1 flex items-start justify-between gap-8">
           <p className="t-label whitespace-nowrap text-cream/75">
             Entreprise de rénovation
-            <br />
-            <span className="text-gold-light">depuis {BRAND.founded}</span>
           </p>
           <p className="t-label whitespace-nowrap text-right text-cream/75">
             Bruxelles
@@ -53,18 +51,6 @@ export default function Hero() {
 
       {/* ---------- Bloc de promesse ---------- */}
       <Container className="relative z-10 mt-auto pb-[calc(66px+2.5rem)] lg:pb-20">
-        {/* L'année de fondation, en filigrane derrière la promesse. C'est le
-            geste de la référence - un nombre géant posé derrière le sujet -
-            mais avec le seul chiffre que Chaudrel ait confirmé. Un compteur
-            inventé n'aurait pas tenu à cette taille. L'ancre en haut à gauche
-            le décode. */}
-        <span
-          aria-hidden="true"
-          className="hero-in hero-d2 pointer-events-none absolute bottom-24 right-0 select-none font-display leading-[0.72] text-cream/[0.08] text-[9rem] sm:text-[14rem] lg:bottom-16 lg:text-[19rem]"
-        >
-          {BRAND.founded}
-        </span>
-
         <div className="relative lg:flex lg:items-end lg:justify-between lg:gap-16">
           <div className="lg:max-w-[46ch]">
             <h1 className="hero-in hero-d2 t-h1 max-w-[15ch] text-cream">Du premier plan à la dernière clé.</h1>
@@ -121,14 +107,17 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Carte flottante : trois faits, aucun chiffre inventé. Elle se pose
+          {/* Carte flottante : deux faits, aucun chiffre inventé. Elle se pose
               sur la photo comme dans les références, mais elle porte de
               l'information vérifiable, pas un compteur décoratif. */}
-          <dl className="hero-in hero-d5 mt-10 hidden w-full max-w-xs rounded-lg border border-cream/15 bg-bark/45 p-6 backdrop-blur-md lg:mt-0 lg:block">
+          <dl className="hero-in hero-d5 mt-10 hidden w-full max-w-xs rounded-lg border border-cream/15 bg-bark/50 p-6 backdrop-blur-md lg:mt-0 lg:block">
             {PROOF.map((p, i) => (
-              <div key={p.label} className={i > 0 ? 'mt-5 border-t border-cream/12 pt-5' : ''}>
-                <dt className="t-label text-cream/50">{p.label}</dt>
-                <dd className="mt-1.5 font-display text-[1.375rem] leading-none text-cream">{p.value}</dd>
+              <div key={p.label} className={i > 0 ? 'mt-6 border-t border-cream/12 pt-6' : ''}>
+                <div className="flex items-center gap-2">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 flex-none rounded-full bg-gold-light" />
+                  <dt className="t-label text-cream/55">{p.label}</dt>
+                </div>
+                <dd className="mt-2 font-display text-[1.5rem] leading-none text-cream">{p.value}</dd>
               </div>
             ))}
           </dl>
@@ -147,7 +136,7 @@ export function ProofBand() {
   return (
     <section className="border-b border-ink/10 bg-cream py-10 lg:hidden">
       <Container>
-        <dl className="grid gap-6 sm:grid-cols-3 sm:gap-10">
+        <dl className="grid gap-6 sm:grid-cols-2 sm:gap-10">
           {PROOF.map((p) => (
             <div key={p.label} className="border-t border-ink/15 pt-4">
               <dt className="t-small text-ink/65">{p.label}</dt>

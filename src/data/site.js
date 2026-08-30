@@ -114,13 +114,12 @@ export const MOBILE_NAV = [
 ];
 
 /**
- * Trois preuves, uniquement des faits vérifiables.
+ * Deux faits, uniquement vérifiables.
  * Aucun compteur de chantiers ou de clients tant que Chaudrel n'a pas
  * communiqué de chiffre réel.
  */
 export const PROOF = [
-  { value: `Depuis ${BRAND.founded}`, label: "Entreprise fondée à Bruxelles" },
-  { value: 'Toute la Belgique', label: 'Zone d’intervention' },
+  { value: 'Toute la Belgique', label: "Zone d'intervention confirmée" },
   { value: 'Un interlocuteur', label: 'Du devis à la livraison' },
 ];
 

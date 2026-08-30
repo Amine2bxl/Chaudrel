@@ -230,7 +230,7 @@ export default function Quote() {
     <>
       <PageHero
         title="Cinq questions, deux minutes."
-        intro="Gratuit et sans engagement. Photos, plan ou vidéo ? Joignez-les : elles nous font gagner une visite et un aller-retour."
+        intro="Gratuit et sans engagement. Photos, plan ou vidéo ? Joignez-les."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
       />
 

@@ -8,7 +8,7 @@ export default function Services() {
     <>
       <PageHero
         title="Six métiers, un seul interlocuteur."
-        intro="Nous prenons en charge la rénovation complète comme le poste isolé. Dépliez un métier pour voir ce qu'il recouvre, puis demandez le devis."
+        intro="La rénovation complète comme le poste isolé. Dépliez un métier, puis demandez le devis."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Services' }]}
       />
 

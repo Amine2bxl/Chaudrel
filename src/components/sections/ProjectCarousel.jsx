@@ -60,8 +60,23 @@ export default function ProjectCarousel({
     >
       {link && (
         <div className="mt-10 text-center">
-          <Link to={link.to} className="link-line t-label inline-block pb-1 text-cream">
+          <Link
+            to={link.to}
+            className="link-line t-label group inline-flex items-center gap-1.5 pb-1 text-cream"
+          >
             {link.label}
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 11 11"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5"
+            >
+              <path d="M1.5 9.5 9.5 1.5M3.5 1.5h6v6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </Link>
         </div>
       )}

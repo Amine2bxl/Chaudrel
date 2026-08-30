@@ -3,6 +3,7 @@ import { BRAND, EMAIL_DISPLAY, LOGO, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import Reveal from '@/lib/reveal';
 import { cn } from '@/lib/utils';
+import { GroupLabel, Row } from '@/components/layout/ContactList';
 import {
   FacebookIcon,
   GalleryIcon,
@@ -19,16 +20,9 @@ import {
 /**
  * Page de liens - la destination des bios Instagram, TikTok et Facebook.
  *
- * Elle est pensée pour un pouce, sur un téléphone, en trois secondes : une
- * colonne étroite, des rangées hautes, aucune décision à prendre au-delà du
- * choix de la ligne. Elle garde la barre de navigation pour que le visiteur
- * puisse basculer vers le site, mais rien d'autre ne la parasite.
- *
- * L'ordre suit l'intention : d'abord ce qui rapporte un chantier (devis,
- * appel, WhatsApp), ensuite ce qui rassure (réalisations, services), enfin les
- * réseaux. Un lien de bio n'a pas à être exhaustif, il a à être trié.
- *
- * Aucune donnée nouvelle : tout vient de `BRAND`.
+ * Une carte, pensée pour un pouce : l'ordre suit l'intention, d'abord ce qui
+ * rapporte un chantier (devis, appel, WhatsApp), ensuite ce qui rassure
+ * (réalisations, métiers), enfin les réseaux.
  */
 
 /* Les réseaux, dans l'ordre où Chaudrel les alimente. Une clé absente de
@@ -39,82 +33,6 @@ const SOCIALS = [
   { key: 'facebook', label: 'Facebook', icon: FacebookIcon },
   { key: 'youtube', label: 'YouTube', icon: YoutubeIcon },
 ];
-
-/* Une rangée : icône dans sa pastille, libellé, description, chevron. */
-function Row({ to, href, icon: Icon, label, hint, onClick, primary = false }) {
-  const inner = (
-    <>
-      <span
-        aria-hidden="true"
-        className={cn(
-          'grid h-11 w-11 flex-none place-items-center rounded-full transition-colors duration-fast',
-          primary ? 'bg-cream/20 text-cream' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
-        )}
-      >
-        <Icon width="17" height="17" />
-      </span>
-
-      <span className="min-w-0 flex-1">
-        <span className={cn('block t-label', primary ? 'text-cream' : 'text-ink')}>{label}</span>
-        {hint && (
-          <span className={cn('mt-1 block t-small', primary ? 'text-cream/90' : 'text-ink/55')}>{hint}</span>
-        )}
-      </span>
-
-      <svg
-        width="13"
-        height="13"
-        viewBox="0 0 16 16"
-        aria-hidden="true"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        className={cn(
-          'flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5',
-          primary ? 'text-cream/70' : 'text-ink/35'
-        )}
-      >
-        <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </>
-  );
-
-  const classes = cn(
-    'group flex w-full items-center gap-4 rounded-lg px-4 py-4 text-left transition-all duration-fast ease-soft active:translate-y-px sm:px-5',
-    primary
-      ? 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift'
-      : 'border border-ink/[0.09] bg-shell hover:border-ink/20 hover:shadow-soft'
-  );
-
-  if (to) {
-    return (
-      <Link to={to} onClick={onClick} className={classes}>
-        {inner}
-      </Link>
-    );
-  }
-  return (
-    <a
-      href={href}
-      target={href?.startsWith('http') ? '_blank' : undefined}
-      rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-      onClick={onClick}
-      className={classes}
-    >
-      {inner}
-    </a>
-  );
-}
-
-/** Intertitre de groupe : un mot, un filet. */
-function GroupLabel({ children }) {
-  return (
-    <div className="mb-4 mt-9 flex items-center gap-4 first:mt-0">
-      <span className="t-label flex-none text-ink/65">{children}</span>
-      <span aria-hidden="true" className="h-px flex-1 bg-ink/10" />
-    </div>
-  );
-}
 
 export default function Links() {
   const t = (event, extra) => () => track(event, { source: 'links', ...extra });

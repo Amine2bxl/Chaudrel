@@ -176,24 +176,43 @@ export function Button({ to, href, variant = 'solid', size = 'md', arrow = false
   );
 }
 
-/** Lien texte avec soulignement qui se déploie au survol. */
+/** Lien texte avec soulignement qui se déploie au survol. La flèche est
+    toujours là : un lien discreet doit quand même dire qu'il mène quelque
+    part, et elle se décale au survol. */
 export function TextLink({ to, href, className, children, tone = 'dark', ...rest }) {
   const classes = cn(
-    'link-line tap t-label inline-block pb-1',
+    'link-line tap group t-label inline-flex items-center gap-1.5 pb-1',
     tone === 'light' ? 'text-cream' : 'text-ink',
     className
+  );
+
+  const arrow = (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 11 11"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className="flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5"
+    >
+      <path d="M1.5 9.5 9.5 1.5M3.5 1.5h6v6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 
   if (to) {
     return (
       <Link to={to} className={classes} {...rest}>
         {children}
+        {arrow}
       </Link>
     );
   }
   return (
     <a href={href} className={classes} {...rest}>
       {children}
+      {arrow}
     </a>
   );
 }

@@ -12,7 +12,7 @@ export default function Faq() {
     <>
       <PageHero
         title="Les questions qu’on nous pose."
-        intro="Budget, délais, zone, déroulement du chantier. Une réponse courte, et si elle ne suffit pas, écrivez-nous."
+        intro="Budget, délais, zone, déroulement du chantier. La réponse ne suffit pas ? Écrivez-nous."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'FAQ' }]}
       />
 
