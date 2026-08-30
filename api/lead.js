@@ -208,6 +208,7 @@ export default async function handler(req, res) {
       description: `${lead.description.slice(0, 120)}…`,
     });
     return res.status(503).json({
+      code: 'email_unconfigured',
       // L'état de notre configuration ne regarde pas le visiteur : il a
       // besoin d'un autre chemin, pas d'un diagnostic.
       error: "L'envoi automatique est momentanément indisponible. Appelez-nous ou écrivez sur WhatsApp : votre demande sera traitée de la même façon.",

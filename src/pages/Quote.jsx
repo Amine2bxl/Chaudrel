@@ -46,6 +46,10 @@ const PROVINCE_NAMES = PROVINCES.map((p) => p.name);
 
 const STEPS = ['Projet', 'Description', 'Lieu', 'Calendrier & budget', 'Coordonnées'];
 
+/* Destination du repli « envoyer par e-mail » - provisoire, pour les tests.
+   Passer à BRAND.email en production. */
+const QUOTE_FALLBACK_EMAIL = 'amineazouzi2009@gmail.com';
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+0-9][0-9\s./-]{7,}$/;
 const POSTAL_RE = /^\d{4}$/;
@@ -92,6 +96,7 @@ export default function Quote() {
   const [status, setStatus] = useState('idle');
   const [started, setStarted] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [unconfigured, setUnconfigured] = useState(false);
 
   const set = (key) => (value) => {
     setData((d) => ({ ...d, [key]: value }));
@@ -151,6 +156,7 @@ export default function Quote() {
 
     setStatus('loading');
     setServerError('');
+    setUnconfigured(false);
     track(EVENTS.QUOTE_SUBMIT, { projectType: data.projectType, files: data.files.length });
 
     try {
@@ -163,8 +169,16 @@ export default function Quote() {
           sentAt: new Date().toISOString(),
         }),
       });
+      // Sans en-tête JSON, la réponse ne vient pas de l'endpoint (page de
+      // repli du serveur de dev local, par exemple) : mieux vaut un échec
+      // avoué qu'un « succès » qui n'a rien envoyé.
+      const ct = res.headers.get('content-type') || '';
+      if (!ct.includes('application/json')) {
+        throw new Error("Le serveur de devis n'est pas joignable ici. Utilisez l'envoi par e-mail ci-dessous.");
+      }
+      const body = await res.json().catch(() => ({}));
       if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
+        if (body.code === 'email_unconfigured') setUnconfigured(true);
         throw new Error(body.error || 'L’envoi a échoué.');
       }
       setStatus('success');
@@ -176,6 +190,33 @@ export default function Quote() {
       track(EVENTS.QUOTE_ERROR, { message: err.message });
     }
   };
+
+  /* Repli : la demande prête à partir depuis le client de messagerie du
+     visiteur, pré-remplie. Destination de test (amineazouzi2009@gmail.com) ;
+     passer à BRAND.email en production. */
+  const mailtoHref = useMemo(() => {
+    const lines = [
+      `Type de travaux : ${data.projectType}`,
+      `Type de bien : ${data.propertyType}`,
+      data.surface && `Surface : ${data.surface}`,
+      data.occupied && `Logement occupé pendant les travaux : ${data.occupied}`,
+      `Lieu : ${data.postalCode}${data.province ? `, ${data.province}` : ''}${data.commune ? ` (${data.commune})` : ''}`,
+      data.timeline && `Échéance : ${data.timeline}`,
+      data.budget && `Budget : ${data.budget}`,
+      data.ownerStatus && `Situation : ${data.ownerStatus}`,
+      '',
+      'Le projet :',
+      data.description,
+      data.files.length ? `\nPièces jointes à joindre : ${data.files.length} fichier(s).` : '',
+      '',
+      `Coordonnées : ${data.firstName} ${data.lastName} - ${data.phone} - ${data.email}`,
+    ]
+      .filter((l) => l)
+      .join('\n');
+    return `mailto:${QUOTE_FALLBACK_EMAIL}?subject=${encodeURIComponent(
+      `Demande de devis - ${data.projectType || 'rénovation'}`
+    )}&body=${encodeURIComponent(lines)}`;
+  }, [data]);
 
   const progress = useMemo(() => step / STEPS.length, [step]);
 
@@ -477,19 +518,54 @@ export default function Quote() {
 
             {status === 'error' && (
               <div role="alert" className="mt-8 rounded-md bg-error/[0.07] px-5 py-4">
-                <p className="t-body text-ink">Votre demande n’a pas pu être envoyée.</p>
-                {serverError && <p className="t-small mt-1 text-ink/65">{serverError}</p>}
-                <p className="t-small mt-3 text-ink/65">
-                  Appelez-nous au{' '}
-                  <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
-                    {BRAND.phones[0].number}
-                  </a>{' '}
-                  ou écrivez sur{' '}
-                  <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-ink">
+                <p className="t-body text-ink">Votre demande n’a pas pu être envoyée automatiquement.</p>
+                {serverError && (
+                  <p className="t-small mt-1 text-ink/65">
+                    {unconfigured
+                      ? "Momentanément indisponible : le serveur d'e-mails n'est pas encore branché. Votre demande est remplie ci-dessous, envoyez-la d'un clic."
+                      : serverError}
+                  </p>
+                )}
+
+                <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
+                  <Button
+                    href={mailtoHref}
+                    variant="solid"
+                    onClick={() => track(EVENTS.EMAIL_CLICK, { source: 'quote_fallback' })}
+                  >
+                    Envoyer par e-mail
+                  </Button>
+                  <Button
+                    href={whatsappUrl(`Bonjour Chaudrel, voici ma demande : ${data.projectType} à ${data.postalCode}.`)}
+                    variant="outline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_fallback' })}
+                  >
                     WhatsApp
-                  </a>
-                  .
-                </p>
+                  </Button>
+                  <Button
+                    href={`tel:${BRAND.phones[0].tel}`}
+                    variant="outline"
+                    onClick={() => track(EVENTS.PHONE_CLICK, { source: 'quote_fallback' })}
+                  >
+                    Nous appeler
+                  </Button>
+                </div>
+
+                {!unconfigured && (
+                  <p className="t-small mt-3 text-ink/65">
+                    Appelez-nous au{' '}
+                    <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
+                      {BRAND.phones[0].number}
+                    </a>{' '}
+                    ou écrivez sur{' '}
+                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-ink">
+                      WhatsApp
+                    </a>
+                    .
+                  </p>
+                )}
               </div>
             )}
           </form>
