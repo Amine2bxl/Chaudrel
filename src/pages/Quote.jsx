@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
 import { Button, Container, Section } from '@/components/ui';
 import Reveal from '@/lib/reveal';
@@ -88,15 +88,76 @@ const EMPTY = {
   files: [],
 };
 
+/* ---------- Brouillon de devis ----------
+   Le client peut recharger la page (F5) ou revenir plus tard : ce qu'il a
+   rempli ne doit pas disparaître. Le brouillon se garde dans le navigateur et
+   se restaure à l'arrivée. Les photos peuvent peser lourd : si le stockage est
+   saturé, on ne garde que le texte. */
+const DRAFT_KEY = 'chaudrel:devis:draft';
+
+function loadDraft() {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return null;
+    const v = JSON.parse(raw);
+    if (!v || typeof v !== 'object' || !v.data) return null;
+    return v;
+  } catch {
+    return null;
+  }
+}
+
+function hasDraftContent(d) {
+  return Object.keys(EMPTY).some((k) => {
+    if (k === 'consent') return Boolean(d[k]);
+    if (k === 'files') return (d[k] || []).length > 0;
+    return Boolean(d[k]);
+  });
+}
+
 export default function Quote() {
   const { openDialog } = useContactDialog();
-  const [step, setStep] = useState(1);
-  const [data, setData] = useState(EMPTY);
+  const [draft] = useState(loadDraft);
+  const [step, setStep] = useState(() =>
+    draft && draft.step >= 1 && draft.step <= STEPS.length ? draft.step : 1
+  );
+  const [data, setData] = useState(() => ({ ...EMPTY, ...(draft?.data || {}) }));
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const [started, setStarted] = useState(false);
   const [serverError, setServerError] = useState('');
   const [unconfigured, setUnconfigured] = useState(false);
+
+  /* Sauvegarde différée (400 ms après la dernière frappe) : le brouillon suit
+     le visiteur, F5 ou retour compris. */
+  useEffect(() => {
+    if (status === 'success') return undefined;
+    const id = setTimeout(() => {
+      const payload = { step, data };
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(payload));
+      } catch {
+        // Quota atteint : on garde le texte, on lâche les fichiers.
+        try {
+          localStorage.setItem(DRAFT_KEY, JSON.stringify({ step, data: { ...data, files: [] } }));
+        } catch {
+          /* rien de grave, le brouillon reste en mémoire */
+        }
+      }
+    }, 400);
+    return () => clearTimeout(id);
+  }, [step, data, status]);
+
+  const clearDraft = () => {
+    if (typeof localStorage !== 'undefined') localStorage.removeItem(DRAFT_KEY);
+    setData(EMPTY);
+    setStep(1);
+    setErrors({});
+    track(EVENTS.QUOTE_START, { reset: true });
+  };
+
+  const hasDraft = started || (draft ? hasDraftContent(data) : false);
 
   const set = (key) => (value) => {
     setData((d) => ({ ...d, [key]: value }));
@@ -182,6 +243,7 @@ export default function Quote() {
         throw new Error(body.error || 'L’envoi a échoué.');
       }
       setStatus('success');
+      if (typeof localStorage !== 'undefined') localStorage.removeItem(DRAFT_KEY);
       track(EVENTS.QUOTE_SUCCESS, { projectType: data.projectType });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
@@ -511,6 +573,21 @@ export default function Quote() {
                 </Button>
               )}
             </div>
+
+            {/* Le brouillon se garde d'une visite à l'autre ; une façon de le
+                perdre volontairement reste nécessaire. */}
+            {hasDraft && (
+              <div className="mt-5 flex items-center justify-between gap-4">
+                <span className="t-small text-ink/45">Votre brouillon est conservé.</span>
+                <button
+                  type="button"
+                  onClick={clearDraft}
+                  className="link-line t-label inline-flex items-center gap-1.5 pb-0.5 text-ink/55 transition-colors duration-fast hover:text-ink"
+                >
+                  Tout effacer
+                </button>
+              </div>
+            )}
 
             <p aria-live="polite" className="sr-only">
               {status === 'loading' ? 'Envoi de votre demande en cours' : ''}
