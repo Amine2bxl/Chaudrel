@@ -26,6 +26,7 @@ export default function About() {
             src="/story-before-after.webp"
             alt="Chantier de rénovation mené par l’équipe Chaudrel"
             ratio="aspect-[4/5]"
+            revealFrom="fade"
             className="lg:col-span-5"
           />
 

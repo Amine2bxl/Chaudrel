@@ -86,6 +86,7 @@ export default function Home() {
             src="/story-before-after.webp"
             alt="Intérieur rénové par Chaudrel"
             ratio="aspect-[4/3] lg:aspect-[4/5]"
+            revealFrom="fade"
             className="lg:col-span-5"
           />
 

@@ -226,6 +226,7 @@ export function Media({
   imgClassName,
   priority = false,
   reveal = true,
+  revealFrom = 'veil',
   sizes = IMG_SIZES.half,
   width = 1200,
   height = 900,
@@ -251,7 +252,7 @@ export function Media({
   if (!reveal) return <div className={shell}>{img}</div>;
 
   return (
-    <Reveal from="veil" className={shell}>
+    <Reveal from={revealFrom ?? 'veil'} className={shell}>
       {img}
     </Reveal>
   );

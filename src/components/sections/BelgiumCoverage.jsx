@@ -2,7 +2,38 @@ import { useState } from 'react';
 import Reveal from '@/lib/reveal';
 import { BELGIUM_VIEWBOX, PROVINCES } from '@/data/belgium';
 import { BRAND } from '@/data/site';
+import { PROJECTS } from '@/data/projects';
 import { cn } from '@/lib/utils';
+
+/* Position approximative de chaque chantier sur la carte (coordonnées du
+   viewBox équirectangulaire). La liste s'étend avec PROJECTS. */
+const PINS = {
+  'renovation-overijse': { x: 596, y: 322 },
+  'residence-uccle': { x: 448, y: 318 },
+  'allee-uccle': { x: 436, y: 310 },
+  'cuisine-ixelles': { x: 498, y: 302 },
+  'terrasse-woluwe': { x: 556, y: 274 },
+  'villa-tervuren': { x: 615, y: 258 },
+};
+
+/** Une épingle façon Google Maps : le point posé sur le bulbe, la queue au
+   -dessus. `title` donne le nom du chantier en infobulle native. */
+function Pin({ x, y, title, toneClass }) {
+  return (
+    <g transform={`translate(${x} ${y})`} className={toneClass}>
+      <title>{title}</title>
+      <path
+        d="M0 -9.5 C -2.2 -6.5 -4.4 -3.2 -4.2 -0.4 a 4.6 4.6 0 0 0 9.2 0 C 5 -3.2 2.8 -6.5 0 -9.5 Z"
+        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="1"
+        vectorEffect="non-scaling-stroke"
+        transform="translate(-0.4 2.6) scale(1.15)"
+      />
+      <circle cx="0" cy="-0.15" r="1.9" fill="#fff" />
+    </g>
+  );
+}
 
 /**
  * Zone d'intervention.
@@ -69,6 +100,13 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
               </g>
             );
           })()}
+
+          {/* Les chantiers livrés, en épingles : un chantier réel par point. */}
+          <g className={light ? 'text-gold-light' : 'text-gold'}>
+            {PROJECTS.filter((p) => PINS[p.slug]).map((p) => (
+              <Pin key={p.slug} {...PINS[p.slug]} toneClass={light ? 'text-gold-light' : 'text-gold'} title={`${p.title} - ${p.location}`} />
+            ))}
+          </g>
         </svg>
       </Reveal>
 

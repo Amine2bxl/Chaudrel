@@ -406,28 +406,11 @@ details[open] .faq-a {
   }
 }
 
-/* Le point de lumière qui parcourt la ligne de la frise des étapes : il relie
-   le premier repère au dernier, puis s'arrête là où la livraison se scelle. */
-@keyframes timeline-orb {
-  0% {
-    left: 12.5%;
-    opacity: 0;
-  }
-  8% {
-    opacity: 1;
-  }
-  100% {
-    left: 87.5%;
-    opacity: 1;
-  }
-}
-.timeline-orb {
-  animation: timeline-orb 2000ms var(--ease-soft) 1000ms forwards;
-  box-shadow: 0 0 18px 3px rgb(var(--c-gold-light-rgb) / 0.7);
-}
-@media (prefers-reduced-motion: reduce) {
-  .timeline-orb {
-    animation-duration: 0s;
+/* L'impulsion qui parcourt la ligne de la frise des étapes : une lumière qui
+   avance lentement le long de la courbe et ne se répète qu'au bout de 6 s. */
+@keyframes flow-dash {
+  to {
+    stroke-dashoffset: -600;
   }
 }
 
