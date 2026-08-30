@@ -1,7 +1,7 @@
 /**
  * Contours des provinces belges (source : Eurostat NUTS 2021, niveau 2,
  * projection equirectangulaire corrigée). Utilisé uniquement comme illustration
- * de la zone d'intervention — aucune donnée dynamique, aucun service de carte.
+ * de la zone d'intervention - aucune donnée dynamique, aucun service de carte.
  */
 
 export const BELGIUM_VIEWBOX = `0 0 1000 819`;

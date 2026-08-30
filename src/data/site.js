@@ -11,7 +11,7 @@ export const BRAND = {
   legalName: 'Chaudrel Rénovation',
   tagline: 'Transformer un espace. Créer un lieu.',
   founded: 2009,
-  // Graphie telle que Chaudrel l'écrit — conservée pour les `mailto:` et le
+  // Graphie telle que Chaudrel l'écrit - conservée pour les `mailto:` et le
   // JSON-LD. Voir EMAIL_DISPLAY plus bas pour l'affichage.
   email: 'Info@chaudrel.be',
   vat: 'BE0812283245',
@@ -30,17 +30,17 @@ export const BRAND = {
   // TODO_VALIDATION : confirmer le numéro utilisé pour WhatsApp Business.
   whatsapp: '32477273118',
   /**
-   * ⚠️ TODO_VALIDATION — horaires provisoires, posés pour que la fenêtre de
+   * ⚠️ TODO_VALIDATION - horaires provisoires, posés pour que la fenêtre de
    * contact soit complète. À remplacer par les horaires réels avant mise en
    * ligne (voir docs/VERIFICATION.md). Ne pas publier en l'état.
    */
   hours: [
-    { days: 'Lundi – Vendredi', time: '8h – 18h' },
+    { days: 'Lundi - Vendredi', time: '8h - 18h' },
     { days: 'Samedi', time: 'Sur rendez-vous' },
     { days: 'Dimanche', time: 'Fermé' },
   ],
   /**
-   * Engagements confirmés par Chaudrel — les seuls affichables.
+   * Engagements confirmés par Chaudrel - les seuls affichables.
    * Écartés faute de confirmation : « 150+ projets », « 98 % de satisfaction »,
    * « 5 étoiles Google », « garantie 10 ans toiture ». Ils figurent sur la V1
    * mais nulle part sur chaudrelrenovation.be.
@@ -59,7 +59,7 @@ export const BRAND = {
     'Notre siège est à Schaerbeek. Nos chantiers, eux, ne s’arrêtent pas au ring : Bruxelles, le Brabant wallon, et les dix provinces.',
   zoneShort: 'Belgique',
   // Villes citées dans le SEO local. Le siège est à Bruxelles, l'intervention
-  // couvre le pays — confirmé par Chaudrel comme zone commerciale.
+  // couvre le pays - confirmé par Chaudrel comme zone commerciale.
   areaServed: [
     'Bruxelles',
     'Anvers',
@@ -128,7 +128,7 @@ export const PROOF = [
  * L'adresse telle qu'on l'affiche : en minuscules.
  *
  * Chaudrel l'écrit « Info@… ». À l'écran, la majuscule se lit comme une faute
- * de frappe, et elle n'apparaissait que sur certaines pages — la même adresse
+ * de frappe, et elle n'apparaissait que sur certaines pages - la même adresse
  * s'écrivait de deux façons selon l'endroit. La casse d'une adresse n'a aucun
  * effet chez les fournisseurs courants : seul l'affichage change, le `mailto:`
  * et le JSON-LD gardent la graphie d'origine.

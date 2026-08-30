@@ -18,7 +18,7 @@ function Row({ label, children }) {
 const linkClass = 'link-line font-display text-[1.375rem] leading-none tracking-[-0.01em] text-ink';
 
 /**
- * Fenêtre de contact — toutes les coordonnées de Chaudrel, au même endroit.
+ * Fenêtre de contact - toutes les coordonnées de Chaudrel, au même endroit.
  *
  * Elle s'ouvre depuis n'importe quel appel à contact : barre de navigation,
  * menu mobile, barre d'action, pied de page. Le devis, lui, a sa propre page :

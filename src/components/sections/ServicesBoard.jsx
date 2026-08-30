@@ -7,7 +7,7 @@ import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
 /* Une icône par métier : le geste d'entrée est visuel, le texte vient après,
-   replié. Pas d'icône pour l'aménagement intérieur historique — les six métiers
+   replié. Pas d'icône pour l'aménagement intérieur historique - les six métiers
    annoncés par Chaudrel portent chacun leur symbole. */
 const METIER_ICONS = {
   'renovation-complete': Home,
@@ -19,7 +19,7 @@ const METIER_ICONS = {
 };
 
 /**
- * Les métiers, en menu dépliant — visuel avant tout.
+ * Les métiers, en menu dépliant - visuel avant tout.
  *
  * Replié, une ligne ne montre que son symbole et son nom : on sait d'où vient
  * chaque geste sans lire une phrase. Déplié, elle révèle une photo, une phrase,
@@ -29,6 +29,9 @@ const METIER_ICONS = {
 export default function ServicesBoard({ services = SERVICES, tone = 'dark', className }) {
   const light = tone === 'light';
   const [openSlug, setOpenSlug] = useState(null);
+  /* Les métiers déjà dépliés : leur photo ne se charge la première fois qu'à
+     l'ouverture, puis reste disponible au repli. */
+  const [seen, setSeen] = useState({});
 
   return (
     <div className={cn('', className)}>
@@ -50,7 +53,10 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
                 type="button"
                 aria-expanded={open}
                 aria-controls={contentId}
-                onClick={() => setOpenSlug(open ? null : s.slug)}
+                onClick={() => {
+                  setSeen((v) => (s.slug ? { ...v, [s.slug]: true } : v));
+                  setOpenSlug(open ? null : s.slug);
+                }}
                 className={cn(
                   'group flex w-full items-center gap-5 px-2 py-6 text-left transition-colors duration-300 ease-soft sm:px-4 sm:py-7',
                   light ? 'hover:bg-cream/[0.04]' : 'hover:bg-shell/80'
@@ -109,13 +115,15 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
                         light ? 'bg-cream/[0.05]' : 'bg-sand'
                       )}
                     >
-                      <img
-                        src={s.image}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                        className="aspect-[4/3] h-full w-full object-cover"
-                      />
+                      {(open || seen[s.slug]) && (
+                        <img
+                          src={s.image}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          className="aspect-[4/3] h-full w-full object-cover"
+                        />
+                      )}
                     </div>
 
                     <div className="flex flex-col justify-between gap-6">
@@ -147,7 +155,7 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
                           light ? 'text-cream' : 'text-ink'
                         )}
                       >
-                        {s.title} — en détail
+                        {s.title} - en détail
                         <ArrowUpRight size={14} strokeWidth={1.8} aria-hidden="true" />
                       </Link>
                     </div>

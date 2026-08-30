@@ -3,14 +3,14 @@
  *
  * Quatre, pas sept. Les sept précédentes décrivaient notre organisation
  * interne : « premier contact », « analyse du projet » et « visite » sont trois
- * lignes dans notre agenda, mais un seul moment pour le client — celui où
+ * lignes dans notre agenda, mais un seul moment pour le client - celui où
  * quelqu'un vient voir. Idem pour « planification » et « travaux ». Découper
  * plus fin ne rassure pas, ça dilue : sept titres se survolent, quatre se
  * lisent.
  *
  * Rien n'a été retiré du fond, seulement du découpage.
  *
- * `icon` désigne un symbole de BrandIcons — le repère posé sur la courbe.
+ * `icon` désigne un symbole de BrandIcons - le repère posé sur la courbe.
  */
 export const METHOD = [
   {

@@ -1,7 +1,7 @@
 /**
  * Avis clients.
  *
- * ⚠️ ATTENTION — CONTENU À VALIDER AVANT MISE EN PRODUCTION
+ * ⚠️ ATTENTION - CONTENU À VALIDER AVANT MISE EN PRODUCTION
  * Ces avis proviennent de la V1 du site et n'ont PAS été vérifiés.
  * Chaudrel doit confirmer chaque avis (texte, prénom, projet, date) ou le
  * remplacer par un vrai avis Google. Aucun avis n'a été inventé ici.

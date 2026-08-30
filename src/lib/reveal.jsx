@@ -18,7 +18,7 @@ const VARIANTS = {
  * Chaque <Reveal> créait son propre IntersectionObserver : près de quatre-vingts
  * instances sur la page d'accueil, chacune avec son entrée dans la boucle de
  * calcul du navigateur. Un seul observateur par marge suffit, et les rappels
- * sont retrouvés par une WeakMap — pas de fuite quand un nœud disparaît.
+ * sont retrouvés par une WeakMap - pas de fuite quand un nœud disparaît.
  *
  * Créé à la demande : au prérendu, `IntersectionObserver` n'existe pas et rien
  * ne doit être instancié à l'import.

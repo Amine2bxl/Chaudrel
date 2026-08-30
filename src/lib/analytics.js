@@ -2,7 +2,7 @@
  * Tracking des actions commerciales.
  * Sans outil configuré, `track` est un no-op silencieux : aucun script tiers,
  * aucun cookie, rien à consentir. Brancher GA4 / Plausible plus tard revient à
- * charger le script — les événements ci-dessous partiront automatiquement.
+ * charger le script - les événements ci-dessous partiront automatiquement.
  */
 
 export const EVENTS = {

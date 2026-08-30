@@ -6,14 +6,13 @@ import { cn } from '@/lib/utils';
 /**
  * Les étapes d'un chantier, en frise.
  *
- * Une ligne, quatre repères, qui décrit le parcours sans le dessiner : le
- * chantier avance dans l'ordre, d'un point au suivant, jusqu'à la livraison qui
- * se scelle en vert. Rien de spectaculaire — c'est une promesse de sérieux, et
- * la mise en page se doit d'être aussi sobre que l'engagement.
+ * Sur grand écran : une ligne horizontale et quatre repères numérotés, la
+ * livraison s'y scelle en vert. En dessous (mobile et tablette) : la même
+ * frise tourne à la verticale, un rail à gauche sous les repères.
  *
- * La frise se trace à l'apparition (le trait s'écrit, les repères suivent),
- * puis le dernier repère se scelle : le vert est la seule couleur du site
- * réservée à un état achevé.
+ * Rien de spectaculaire, c'est voulu : le déroulé d'un chantier est une
+ * promesse de sérieux, et la mise en page se veut aussi sobre que
+ * l'engagement. Le trait s'écrit à l'apparition, les repères suivent.
  */
 
 const reducedMotion =
@@ -48,18 +47,76 @@ export default function ProcessTimeline({ steps = METHOD, tone = 'dark', classNa
     return () => io.disconnect();
   }, []);
 
+  /** Le repère : un disque sur la frise, la dernière passe au vert et porte la
+      coche quand tout est arrivé (2 s après le tracé). */
+  const Marker = ({ step, last = false }) => {
+    const done = last && sealed;
+    const Check = ICONS.check;
+    return (
+      <span
+        className={cn(
+          'grid h-9 w-9 place-items-center rounded-full border-2 transition-colors duration-[600ms] ease-soft',
+          done
+            ? light
+              ? 'border-green-light bg-green-light text-bark'
+              : 'border-green bg-green text-cream'
+            : light
+              ? 'border-cream/30 bg-cream text-cream'
+              : 'border-ink/20 bg-cream text-gold'
+        )}
+      >
+        {last && done ? (
+          <Check width={15} height={15} draw />
+        ) : (
+          <span className="t-num text-[0.75rem]">{step.n}</span>
+        )}
+      </span>
+    );
+  };
+
   return (
-    <div ref={ref} className={cn('', className)}>
-      <div className="relative">
-        {/* La frise : horizontale à partir du format tablette, verticale sur
-            téléphone. Elle se dessine au scroll (scaleX) pour ceux qui la
-            voient entrer. */}
+    <div ref={ref} className={className}>
+      {/* ---------- Frise horizontale (ordinateur) ---------- */}
+      <div className="relative hidden lg:block">
         <span
           aria-hidden="true"
-          className={cn(
-            'absolute w-px bg-ink/12 transition-transform duration-[1400ms] ease-soft sm:hidden',
-            light && 'bg-cream/18'
-          )}
+          className={cn('absolute h-px transition-transform duration-[1400ms] ease-soft', light ? 'bg-cream/18' : 'bg-ink/12')}
+          style={{
+            left: 20,
+            right: 20,
+            top: 25,
+            transformOrigin: 'left',
+            transform: drawn ? 'scaleX(1)' : 'scaleX(0)',
+          }}
+        />
+
+        <ol className="relative grid grid-cols-4 gap-x-8">
+          {steps.map((s, i) => (
+            <li
+              key={s.n}
+              className={cn(
+                'relative pt-16 text-center transition-opacity duration-slow',
+                drawn ? 'opacity-100' : 'opacity-0'
+              )}
+              style={{ transitionDelay: `${150 + i * 130}ms` }}
+            >
+              <span className="absolute left-1/2 top-[7px] -translate-x-1/2">
+                <Marker step={s} last={i === steps.length - 1} />
+              </span>
+              <h3 className={cn('t-h3 text-balance', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
+              <p className={cn('t-small mx-auto mt-2 max-w-[24ch]', light ? 'text-cream/65' : 'text-ink/65')}>
+                {s.text}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      {/* ---------- Frise verticale (mobile, tablette) ---------- */}
+      <div className="relative lg:hidden">
+        <span
+          aria-hidden="true"
+          className={cn('absolute w-px transition-transform duration-[1400ms] ease-soft', light ? 'bg-cream/18' : 'bg-ink/12')}
           style={{
             left: 18,
             top: 4,
@@ -68,60 +125,26 @@ export default function ProcessTimeline({ steps = METHOD, tone = 'dark', classNa
             transform: drawn ? 'scaleY(1)' : 'scaleY(0)',
           }}
         />
-        <span
-          aria-hidden="true"
-          className={cn(
-            'absolute hidden h-px bg-ink/12 transition-transform duration-[1400ms] ease-soft lg:left-6 lg:right-6 sm:block',
-            light && 'bg-cream/18'
-          )}
-          style={{
-            left: 24,
-            right: 24,
-            top: 25,
-            transformOrigin: 'left',
-            transform: drawn ? 'scaleX(1)' : 'scaleX(0)',
-          }}
-        />
 
-        <ol className="relative grid gap-y-10 pb-2 sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-4 lg:gap-x-6">
-          {steps.map((s, i) => {
-            const last = i === steps.length - 1;
-            const done = last && sealed;
-            const CheckIcon = ICONS.check;
-
-            return (
-              <li
-                key={s.n}
-                className={cn(
-                  'relative transition-opacity duration-slow pl-14 sm:pl-0 sm:pt-14',
-                  drawn ? 'opacity-100' : 'opacity-0'
-                )}
-                style={{ transitionDelay: `${150 + i * 130}ms` }}
-              >
-                {/* Le repère : un disque sur la frise. Le dernier porte la
-                    coche et se scelle en vert quand la frise est entière. */}
-                <span
-                  className={cn(
-                    'absolute left-0 top-0 grid h-9 w-9 place-items-center rounded-full border-2 transition-colors duration-[600ms] ease-soft sm:top-[7px]',
-                    done
-                      ? light
-                        ? 'border-green-light bg-green-light text-bark'
-                        : 'border-green bg-green text-cream'
-                      : light
-                        ? 'border-cream/30 bg-cream text-cream'
-                        : 'border-ink/20 bg-cream text-gold'
-                  )}
-                >
-                  {last && done ? <CheckIcon width={15} height={15} draw /> : <span className="t-num text-[0.75rem]">{s.n}</span>}
-                </span>
-
-                <div>
-                  <h3 className={cn('t-h3', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
-                  <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
-                </div>
-              </li>
-            );
-          })}
+        <ol className="relative">
+          {steps.map((s, i) => (
+            <li
+              key={s.n}
+              className={cn(
+                'relative flex gap-5 pb-9 transition-opacity duration-slow last:pb-0',
+                drawn ? 'opacity-100' : 'opacity-0'
+              )}
+              style={{ transitionDelay: `${150 + i * 130}ms` }}
+            >
+              <span className="relative z-10 mt-0.5 flex-none">
+                <Marker step={s} last={i === steps.length - 1} />
+              </span>
+              <div>
+                <h3 className={cn('t-h3', light ? 'text-cream' : 'text-ink')}>{s.title}</h3>
+                <p className={cn('t-small mt-2', light ? 'text-cream/65' : 'text-ink/65')}>{s.text}</p>
+              </div>
+            </li>
+          ))}
         </ol>
       </div>
     </div>

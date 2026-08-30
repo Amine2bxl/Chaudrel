@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
  * Zone d'intervention.
  *
  * La carte est une illustration, pas un outil : elle est `aria-hidden` et sans
- * point d'arrêt clavier. Ce sont les noms de provinces qui portent l'interaction —
+ * point d'arrêt clavier. Ce sont les noms de provinces qui portent l'interaction -
  * dix boutons lisibles valent mieux que dix silhouettes à viser à la souris,
  * et cela retire dix arrêts de tabulation du parcours.
  *

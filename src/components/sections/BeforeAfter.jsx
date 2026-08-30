@@ -17,7 +17,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
         <img
           key={src}
           {...imageAttrs(src, SIZES.half)}
-          alt={`${label} — ${showBefore ? 'avant' : 'après'} travaux`}
+          alt={`${label} - ${showBefore ? 'avant' : 'après'} travaux`}
           width="1200"
           height="800"
           loading="lazy"
@@ -28,7 +28,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
         <div
           className="absolute bottom-3 left-3 flex gap-1 rounded-full bg-bark/45 p-1 backdrop-blur-md sm:bottom-4 sm:left-4"
           role="group"
-          aria-label={`Comparer avant et après — ${label}`}
+          aria-label={`Comparer avant et après - ${label}`}
         >
           {[
             { key: 'before', text: 'Avant', active: showBefore },

@@ -17,7 +17,7 @@ function List({ items }) {
       {items.map((it, i) => (
         <li key={i} className="flex gap-3">
           <span className="text-gold" aria-hidden="true">
-            —
+            -
           </span>
           <span>{it}</span>
         </li>
@@ -59,7 +59,7 @@ export default function Legal() {
                   <strong>Date de constitution :</strong> 15 juin 2009
                 </>,
                 <>
-                  <strong>Activité principale (NACE) :</strong> 43.910 — Travaux de couverture
+                  <strong>Activité principale (NACE) :</strong> 43.910 - Travaux de couverture
                 </>,
                 <>
                   <strong>E-mail :</strong>{' '}
@@ -79,7 +79,7 @@ export default function Legal() {
 
           <Block title="2. Hébergeur">
             <p>
-              Le site est hébergé par <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA 91789, USA —{' '}
+              Le site est hébergé par <strong>Vercel Inc.</strong>, 340 S Lemon Ave #4133, Walnut, CA 91789, USA -{' '}
               <a href="https://vercel.com" target="_blank" rel="noopener noreferrer" className="link-line tap text-gold-deep">
                 vercel.com
               </a>
@@ -97,7 +97,7 @@ export default function Legal() {
                   <strong>Zone d&apos;intervention :</strong> toute la Belgique
                 </>,
                 <>
-                  <strong>Assureur responsabilité civile professionnelle :</strong> AXA Belgium — police
+                  <strong>Assureur responsabilité civile professionnelle :</strong> AXA Belgium - police
                   010.330.000.014, couverture Belgique
                 </>,
               ]}
@@ -115,9 +115,9 @@ export default function Legal() {
           <Block title="5. Données officielles (BCE / BNB)">
             <List
               items={[
-                'Banque-Carrefour des Entreprises (BCE) — n° 0812.283.245',
-                'Banque Nationale de Belgique (BNB) — comptes annuels déposés',
-                'Moniteur Belge — publications légales',
+                'Banque-Carrefour des Entreprises (BCE) - n° 0812.283.245',
+                'Banque Nationale de Belgique (BNB) - comptes annuels déposés',
+                'Moniteur Belge - publications légales',
               ]}
             />
           </Block>
@@ -132,7 +132,7 @@ export default function Legal() {
 
           <Block title="7. Responsable du traitement des données">
             <p>
-              Chaudrel Rénovation SRL, {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city} —{' '}
+              Chaudrel Rénovation SRL, {BRAND.address.street}, {BRAND.address.postalCode} {BRAND.address.city} -{' '}
               <a href={`mailto:${BRAND.email}`} className="link-line tap text-gold-deep">
                 {EMAIL_DISPLAY}
               </a>
@@ -188,11 +188,11 @@ export default function Legal() {
               <a href={`mailto:${BRAND.email}`} className="link-line tap text-gold-deep">
                 {EMAIL_DISPLAY}
               </a>{' '}
-              — nous répondons dans un délai d’un mois.
+              - nous répondons dans un délai d’un mois.
             </p>
             <p>
-              En cas de réclamation, vous pouvez saisir l'<strong>Autorité de protection des données</strong> — Rue de la
-              Presse 35, 1000 Bruxelles —{' '}
+              En cas de réclamation, vous pouvez saisir l'<strong>Autorité de protection des données</strong> - Rue de la
+              Presse 35, 1000 Bruxelles -{' '}
               <a
                 href="https://www.autoriteprotectiondonnees.be"
                 target="_blank"

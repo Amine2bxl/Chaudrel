@@ -5,7 +5,7 @@ import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
  * En-tête de page interne : fil d'Ariane, label, H1, une phrase.
- * Sans image par défaut — le vide fait le travail. L'image reste possible
+ * Sans image par défaut - le vide fait le travail. L'image reste possible
  * quand la page a un visuel qui mérite la pleine largeur.
  */
 export default function PageHero({ title, intro, image, breadcrumb = [], aside }) {

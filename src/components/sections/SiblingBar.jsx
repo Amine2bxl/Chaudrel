@@ -2,12 +2,12 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 /**
- * Barre de frères — le précédent et le suivant, nommés.
+ * Barre de frères - le précédent et le suivant, nommés.
  *
  * Une flèche seule oblige à cliquer pour savoir où elle mène. Nommer les deux
  * voisins transforme la navigation en choix : on voit ce qu'on quitte et ce
  * qu'on gagne. Les points au centre disent combien il en reste, ce que deux
- * flèches ne disent jamais — c'est le seul endroit du site où l'on comprend
+ * flèches ne disent jamais - c'est le seul endroit du site où l'on comprend
  * qu'un chantier fait partie d'une série.
  *
  * Elle se colle en bas de la fenêtre : c'est une commande, pas du contenu, et
@@ -26,7 +26,7 @@ export default function SiblingBar({ prev, next, items = [], current, label = '�
       <div className="mx-auto flex w-full max-w-page items-center gap-4 pb-[calc(66px+0.25rem)] lg:pb-0">
         <Side item={prev} dir="prev" />
 
-        {/* Points de position : la série entière d'un coup d'œil. Décoratifs —
+        {/* Points de position : la série entière d'un coup d'œil. Décoratifs -
             les deux liens nommés portent déjà toute la navigation. */}
         {items.length > 1 && (
           <ul aria-hidden="true" className="hidden flex-none items-center gap-2 sm:flex">

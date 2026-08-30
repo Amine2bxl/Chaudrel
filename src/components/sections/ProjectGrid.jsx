@@ -4,7 +4,7 @@ import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
 /**
- * La galerie des chantiers — le juste milieu entre la une immersive (carrousel)
+ * La galerie des chantiers - le juste milieu entre la une immersive (carrousel)
  * et la grille nue.
  *
  * Le premier chantier ouvre en grand, les autres le suivent en colonnes : on

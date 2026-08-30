@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 /* ============================================================
-   CHAUDREL — DESIGN SYSTEM
+   CHAUDREL - DESIGN SYSTEM
    Crème, sable, brun : une seule famille chromatique.
    Schibsted Grotesk : une seule famille typographique.
    Une seule échelle d'arrondis : rien n'est laissé à angle vif.
@@ -103,7 +103,7 @@
   }
 
   /* H3 reste en grotesque : sous les grands titres serif, il structure sans
-     rivaliser — le contraste des deux familles porte la hiérarchie. Un cran
+     rivaliser - le contraste des deux familles porte la hiérarchie. Un cran
      plus haut que le texte courant, et pas seulement par la graisse : à 18 px
      semi-gras contre 17 px normal, les deux rôles se confondaient. */
   .t-h3 {
@@ -324,7 +324,7 @@
 }
 
 /* ============================================================
-   ANIMATIONS — discrètes, courtes, jamais permanentes
+   ANIMATIONS - discrètes, courtes, jamais permanentes
    ============================================================ */
 
 /* Apparition au scroll */
@@ -383,6 +383,27 @@
 }
 .rv-veil.is-visible > * {
   clip-path: inset(0 0 0 0);
+}
+
+/* Entrée de la réponse d'une question (accordéon FAQ) : la question s'ouvre,
+   la réponse glisse sous elle. Native `details`, animation légère. */
+@keyframes faq-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+details[open] .faq-a {
+  animation: faq-in 0.4s var(--ease-soft);
+}
+@media (prefers-reduced-motion: reduce) {
+  details[open] .faq-a {
+    animation: none;
+  }
 }
 
 /* Hero */
@@ -482,5 +503,5 @@
 }
 
 /* Le cadre et le rail sont retirés : le site est en plein écran, sans liseré
-   sable ni borne sur les côtés. (Le rail latéral a déjà été supprimé — les
+   sable ni borne sur les côtés. (Le rail latéral a déjà été supprimé - les
    réseaux vivent au pied de page et dans la fenêtre de contact.) */

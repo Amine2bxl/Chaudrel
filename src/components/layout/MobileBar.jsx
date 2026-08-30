@@ -8,12 +8,12 @@ import { cn } from '@/lib/utils';
 const HIDDEN_ON = new Set(['/devis', '/liens']);
 
 /**
- * Barre d'action mobile — deux gestes, à portée de pouce, et jamais en double.
+ * Barre d'action mobile - deux gestes, à portée de pouce, et jamais en double.
  *
  * Elle s'efface dès qu'un appel à l'action de la page entre dans l'écran :
  * proposer « Devis gratuit » en bas alors que le même bouton est visible au
  * milieu de la page, c'est demander deux fois la même chose et manger de la
- * hauteur pour rien. Les blocs à surveiller se déclarent avec `data-page-cta` —
+ * hauteur pour rien. Les blocs à surveiller se déclarent avec `data-page-cta` -
  * aucune liste à tenir à jour ici.
  *
  * Elle reste basse et n'apparaît qu'après un début de défilement : sur le

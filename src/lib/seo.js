@@ -48,7 +48,7 @@ export const localBusinessLd = () => ({
   ],
   sameAs: Object.values(BRAND.socials),
   // TODO_VALIDATION : horaires provisoires (voir BRAND.hours). Les publier tels
-  // quels enverrait de fausses heures à Google — à confirmer avant mise en ligne.
+  // quels enverrait de fausses heures à Google - à confirmer avant mise en ligne.
   openingHours: BRAND.hours.map((h) => `${h.days} ${h.time}`),
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
@@ -86,7 +86,7 @@ const faqLd = (faqs) => ({
 
 const STATIC = {
   '/': {
-    title: 'Chaudrel — Entreprise de rénovation en Belgique | Devis gratuit',
+    title: 'Chaudrel - Entreprise de rénovation en Belgique | Devis gratuit',
     description:
       "Rénovation complète, cuisine, salle de bain et aménagement intérieur. Un seul interlocuteur du devis à la livraison, partout en Belgique. Devis gratuit et sans engagement.",
     ld: () => [
@@ -101,7 +101,7 @@ const STATIC = {
     ],
   },
   '/realisations': {
-    title: 'Réalisations — Nos chantiers de rénovation | Chaudrel',
+    title: 'Réalisations - Nos chantiers de rénovation | Chaudrel',
     description:
       "Rénovations complètes, cuisines, salles de bain et extérieurs livrés par Chaudrel. Photos de chantiers et comparaisons avant / après.",
     ld: () => [
@@ -133,7 +133,7 @@ const STATIC = {
     ],
   },
   '/methode': {
-    title: 'Notre méthode — Quatre étapes, zéro surprise | Chaudrel',
+    title: 'Notre méthode - Quatre étapes, zéro surprise | Chaudrel',
     description:
       "Du premier contact à la livraison : les quatre étapes d'un chantier Chaudrel.",
     ld: () => [
@@ -144,7 +144,7 @@ const STATIC = {
     ],
   },
   '/a-propos': {
-    title: 'À propos — Chaudrel, entreprise de rénovation belge',
+    title: 'À propos - Chaudrel, entreprise de rénovation belge',
     description:
       "Fondée en 2009 à Bruxelles par Alberto et Matteo, Chaudrel rénove appartements, maisons et commerces partout en Belgique.",
     ld: () => [
@@ -156,7 +156,7 @@ const STATIC = {
     ],
   },
   '/faq': {
-    title: 'FAQ — Vos questions sur la rénovation | Chaudrel',
+    title: 'FAQ - Vos questions sur la rénovation | Chaudrel',
     description:
       "Budget, délais, zone d'intervention, matériaux, déroulement du chantier : les réponses aux questions qu'on nous pose le plus souvent.",
     ld: () => [
@@ -211,7 +211,7 @@ export function metaFor(pathname = '/') {
     if (p) {
       return build({
         path,
-        title: `${p.title} — ${p.type} à ${p.location} | Chaudrel`,
+        title: `${p.title} - ${p.type} à ${p.location} | Chaudrel`,
         description: p.summary,
         image: abs(p.cover.src),
         ld: [
@@ -242,7 +242,7 @@ export function metaFor(pathname = '/') {
     if (s) {
       return build({
         path,
-        title: `${s.title} — ${BRAND.name} Rénovation en Belgique`,
+        title: `${s.title} - ${BRAND.name} Rénovation en Belgique`,
         description: `${s.excerpt} ${s.intro.slice(0, 110)}…`,
         image: abs(s.image),
         ld: [

@@ -3,7 +3,7 @@ import CoverFlowCarousel from '@/components/ui/3-d-coverflow-carousel';
 import { EVENTS, track } from '@/lib/analytics';
 
 /**
- * Les chantiers, en couverture 3D — un projet au centre, ses voisins pivotés
+ * Les chantiers, en couverture 3D - un projet au centre, ses voisins pivotés
  * dans la profondeur.
  *
  * `ProjectCarousel` reste l'unique façon d'afficher des chantiers (accueil,
@@ -12,7 +12,7 @@ import { EVENTS, track } from '@/lib/analytics';
  * carte entière mène à la fiche du chantier.
  *
  * Autoplay volontairement long (6 s) et coupé au survol : une galerie doit se
- * regarder, pas se subir — l'œil a le temps de s'y poser.
+ * regarder, pas se subir - l'œil a le temps de s'y poser.
  */
 export default function ProjectCarousel({
   projects = [],

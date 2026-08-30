@@ -9,7 +9,7 @@ export default function NotFound() {
         intro="Le lien est peut-être ancien, ou recopié en partie."
       />
       <Section tone="cream">
-        {/* Deux issues, pas trois. La troisième — « Devis gratuit » — est déjà
+        {/* Deux issues, pas trois. La troisième - « Devis gratuit » - est déjà
             dans la barre de navigation et dans la barre d'action mobile : la
             répéter ici mettait trois portes de même taille devant quelqu'un qui
             cherchait autre chose. */}
