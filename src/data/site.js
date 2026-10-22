@@ -76,9 +76,9 @@ export const BRAND = {
   ],
   socials: {
     instagram: 'https://www.instagram.com/chaudrel_renovation/',
-    facebook: 'https://www.facebook.com/profile.php?id=61574019493337',
+    facebook: 'https://www.facebook.com/chaudrel_renovation/',
     youtube: 'https://www.youtube.com/@chaudrelrenovations',
-    tiktok: 'https://www.tiktok.com/@chaudrelrenovations',
+    tiktok: 'https://www.tiktok.com/@chaudrel_renovation',
   },
   founders: [
     { name: 'Alberto', role: "Maître d'œuvre" },
