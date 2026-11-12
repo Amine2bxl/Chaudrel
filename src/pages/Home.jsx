@@ -1,6 +1,7 @@
 import ArchitecturalExperience from '@/components/experience/ArchitecturalExperience';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
-import ServicesBoard from '@/components/sections/ServicesBoard';
+import ServicesShowcase from '@/components/sections/ServicesShowcase';
+import Signature from '@/components/sections/Signature';
 import ProcessTimeline from '@/components/sections/ProcessTimeline';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import CTASection from '@/components/sections/CTASection';
@@ -12,18 +13,19 @@ import { BRAND } from '@/data/site';
 const featured = PROJECTS.filter((p) => p.featured);
 
 /**
- * L'accueil répond à quatre questions, dans cet ordre, puis demande le devis :
- *   1. qu'est-ce qu'ils font ?        → hero + trois faits
- *   2. est-ce que c'est bien fait ?   → trois chantiers
- *   3. est-ce qu'ils font mon poste ? → services
- *   4. comment ça se passe ?          → les quatre étapes
- *   → formulaire.
+ * L'accueil est un récit, dans cet ordre :
+ *   1. la maquette 3D      ce que fait Chaudrel, raconté par un bâtiment
+ *   2. les chantiers       la preuve, juste après l'illustration
+ *   3. la signature        qui parle, et quatre faits vérifiables
+ *   4. les métiers         est-ce qu'ils font mon poste ?
+ *   5. la méthode          comment ça se passe
+ *   6. la zone, l'équipe   viennent-ils chez moi, et qui vient ?
+ *   → le devis.
  *
- * Tout ce qui ne répond pas à l'une de ces questions a quitté la page : le
- * comparateur avant/après, la carte de couverture (partie sur la page Contact,
- * où l'on se demande vraiment « viennent-ils chez moi ? »), les avis non
- * vérifiés et la FAQ, qui gardent leurs pages. Une page d'accueil qui montre
- * tout ne montre rien.
+ * Aucun avis non vérifié, aucun compteur inventé : voir docs/VERIFICATION.md.
+ * Le comparateur avant / après reste sur les fiches de chantier : il ne
+ * remontera sur l'accueil que lorsque de vraies paires (même lieu, même
+ * cadrage) auront été fournies.
  */
 export default function Home() {
   return (
@@ -39,15 +41,9 @@ export default function Home() {
         link={{ label: 'Toutes les réalisations', to: '/realisations' }}
       />
 
-      <Section tone="shell">
-        <Container>
-          <SectionHeading
-            title="Une rénovation complète, ou un seul poste."
-            text="Dans les deux cas, c’est nous qui coordonnons les corps de métier."
-          />
-          <ServicesBoard className="mt-block" />
-        </Container>
-      </Section>
+      <Signature />
+
+      <ServicesShowcase />
 
       <Section tone="bark">
         <Container>

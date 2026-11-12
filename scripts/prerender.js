@@ -119,7 +119,7 @@ function applyMeta(template, meta, html) {
 
   // Preload de l'image LCP uniquement sur la home
   if (meta.path !== '/') {
-    out = out.replace(/<link\s+rel="preload"[\s\S]*?\/>/, '');
+    out = out.replace(/\s*<link\s+rel="preload"[\s\S]*?\/>/g, '');
   }
 
   return out.replace(/<div id="root"><\/div>/, `<div id="root" data-ssr>${html}</div>`);

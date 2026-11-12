@@ -164,7 +164,9 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
       draw();
       window.__chaudrelXP = {
         progress,
-        state: () => ({ ...state }),
+        /* Position réellement jouée (le scrub lisse et rattrape `progress`). */
+        played: () => tl?.progress() ?? 0,
+        state: () => pick(state),
         info: () => engine.info(),
         captureAt(p, type, quality) {
           engine.apply(sb.stateAt(frames, p));
