@@ -1,4 +1,5 @@
 @import './styles/tokens.css';
+@import './styles/experience.css';
 
 @tailwind base;
 @tailwind components;
@@ -29,7 +30,12 @@
     font-feature-settings: 'ss01', 'cv05';
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* `clip` plutôt que `hidden` : `hidden` ferait du body un conteneur de
+       défilement, et `position: sticky` (la scène d'accueil) cesserait de
+       coller. Les navigateurs qui ignorent `clip` gardent `hidden` - la scène
+       reste alors en version statique (voir lib/webgl.js). */
     overflow-x: hidden;
+    overflow-x: clip;
   }
 
   *,

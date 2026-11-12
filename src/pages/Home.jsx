@@ -1,4 +1,4 @@
-import Hero, { ProofBand } from '@/components/sections/Hero';
+import ArchitecturalExperience from '@/components/experience/ArchitecturalExperience';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import ServicesBoard from '@/components/sections/ServicesBoard';
 import ProcessTimeline from '@/components/sections/ProcessTimeline';
@@ -28,8 +28,7 @@ const featured = PROJECTS.filter((p) => p.featured);
 export default function Home() {
   return (
     <>
-      <Hero />
-      <ProofBand />
+      <ArchitecturalExperience />
 
       {/* La preuve avant le discours */}
       <ProjectCarousel

@@ -30,7 +30,10 @@ export default function MobileBar() {
     if (HIDDEN_ON.has(pathname)) return undefined;
 
     const visible = new Set();
-    const sync = () => setHidden(visible.size > 0 || window.scrollY < 240);
+    /* Un appel à l'action présent dans l'écran mais rendu invisible (le hero
+       d'accueil s'efface pendant le film au défilement) ne compte pas. */
+    const shown = (el) => (el.checkVisibility ? el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }) : true);
+    const sync = () => setHidden([...visible].some(shown) || window.scrollY < 240);
 
     const observer =
       typeof IntersectionObserver === 'undefined'

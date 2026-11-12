@@ -46,9 +46,8 @@ const PROVINCE_NAMES = PROVINCES.map((p) => p.name);
 
 const STEPS = ['Projet', 'Description', 'Lieu', 'Calendrier & budget', 'Coordonnées'];
 
-/* Destination du repli « envoyer par e-mail » - provisoire, pour les tests.
-   Passer à BRAND.email en production. */
-const QUOTE_FALLBACK_EMAIL = 'amineazouzi2009@gmail.com';
+/* Destination du repli « envoyer par e-mail » : la boîte de l'entreprise. */
+const QUOTE_FALLBACK_EMAIL = BRAND.email;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^[+0-9][0-9\s./-]{7,}$/;
@@ -254,8 +253,7 @@ export default function Quote() {
   };
 
   /* Repli : la demande prête à partir depuis le client de messagerie du
-     visiteur, pré-remplie. Destination de test (amineazouzi2009@gmail.com) ;
-     passer à BRAND.email en production. */
+     visiteur, pré-remplie, à destination de la boîte de l'entreprise. */
   const mailtoHref = useMemo(() => {
     const lines = [
       `Type de travaux : ${data.projectType}`,
