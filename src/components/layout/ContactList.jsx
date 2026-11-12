@@ -27,7 +27,7 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
       <span className="min-w-0 flex-1">
         <span className={cn('block t-label', primary ? 'text-cream' : 'text-ink')}>{label}</span>
         {hint && (
-          <span className={cn('mt-0.5 block t-small', primary ? 'text-cream/90' : 'text-ink/55')}>{hint}</span>
+          <span className={cn('mt-0.5 block t-small', primary ? 'text-cream/90' : 'text-ink/65')}>{hint}</span>
         )}
       </span>
 

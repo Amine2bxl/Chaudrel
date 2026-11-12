@@ -34,7 +34,7 @@ const SOCIALS = [
 function Coord({ label, children }) {
   return (
     <div className="flex items-baseline justify-between gap-4">
-      <dt className="t-label flex-none text-ink/45">{label}</dt>
+      <dt className="t-label flex-none text-ink/65">{label}</dt>
       <dd className="t-small text-right text-ink/80">{children}</dd>
     </div>
   );
@@ -116,7 +116,7 @@ export default function ContactDialog() {
             type="button"
             onClick={closeDialog}
             aria-label="Fermer"
-            className="-mr-1 grid h-10 w-10 flex-none place-items-center rounded-full text-ink/60 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
+            className="-mr-1 grid h-10 w-10 flex-none place-items-center rounded-full text-ink/65 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
           >
             <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M1 1l12 12M13 1L1 13" strokeLinecap="round" />
@@ -182,7 +182,7 @@ export default function ContactDialog() {
             <address className="not-italic text-ink/80">
               {BRAND.address.postalCode} {BRAND.address.city}
               <br />
-              <span className="text-ink/55">{BRAND.zoneLong}</span>
+              <span className="text-ink/65">{BRAND.zoneLong}</span>
             </address>
           </Coord>
         </dl>
@@ -190,7 +190,7 @@ export default function ContactDialog() {
         {/* Réseaux + site. */}
         <div className="border-t border-ink/10 px-5 py-3">
           <div className="flex items-center justify-between">
-            <span className="t-label text-ink/45">Nous suivre</span>
+            <span className="t-label text-ink/65">Nous suivre</span>
             <ul className="flex items-center gap-1.5">
               {SOCIALS.map(({ key, label, icon: Icon }) =>
                 BRAND.socials[key] ? (
@@ -201,7 +201,7 @@ export default function ContactDialog() {
                       rel="noopener noreferrer"
                       aria-label={label}
                       onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
-                      className="grid h-9 w-9 place-items-center rounded-full text-ink/60 transition-all duration-fast ease-soft hover:bg-ink/5 hover:text-gold"
+                      className="grid h-9 w-9 place-items-center rounded-full text-ink/65 transition-all duration-fast ease-soft hover:bg-ink/5 hover:text-gold"
                     >
                       <Icon width="17" height="17" />
                     </a>

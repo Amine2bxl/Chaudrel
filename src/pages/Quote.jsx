@@ -298,7 +298,7 @@ export default function Quote() {
                 { n: '03', title: 'Devis', text: 'Un devis détaillé, poste par poste, dans un délai court.' },
               ].map((s) => (
                 <li key={s.n} className="flex gap-8 border-b border-ink/12 py-6 first:border-t first:mt-5">
-                  <span className="t-num text-2xl text-ink/40">{s.n}</span>
+                  <span className="t-num text-2xl text-ink/65">{s.n}</span>
                   <div>
                     <h2 className="t-h3">{s.title}</h2>
                     <p className="t-small mt-1.5 text-ink/65">{s.text}</p>
@@ -437,7 +437,7 @@ export default function Quote() {
 
             {step === 3 && (
               <Fieldset legend="Où se situe le projet ?" error={errors.province}>
-                <label htmlFor="province" className="t-label text-ink/55">
+                <label htmlFor="province" className="t-label text-ink/65">
                   Province
                 </label>
                 <select
@@ -576,11 +576,11 @@ export default function Quote() {
                 perdre volontairement reste nécessaire. */}
             {hasDraft && (
               <div className="mt-5 flex items-center justify-between gap-4">
-                <span className="t-small text-ink/45">Votre brouillon est conservé.</span>
+                <span className="t-small text-ink/65">Votre brouillon est conservé.</span>
                 <button
                   type="button"
                   onClick={clearDraft}
-                  className="link-line t-label inline-flex items-center gap-1.5 pb-0.5 text-ink/55 transition-colors duration-fast hover:text-ink"
+                  className="link-line t-label inline-flex items-center gap-1.5 pb-0.5 text-ink/65 transition-colors duration-fast hover:text-ink"
                 >
                   Tout effacer
                 </button>
@@ -799,15 +799,15 @@ function FileUpload({ files, onChange }) {
 
   return (
     <div className="mt-10">
-      <span className="t-label text-ink/55">Photos, plan ou vidéo</span>
-      <span className="t-small mt-1 block text-ink/50">
+      <span className="t-label text-ink/65">Photos, plan ou vidéo</span>
+      <span className="t-small mt-1 block text-ink/65">
         Facultatif - jusqu’à {ATTACH.maxFiles} photos ou PDF et une courte vidéo ({fmtBytes(ATTACH.total)} au total).
       </span>
 
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="mt-4 flex w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-ink/20 bg-shell px-6 py-7 text-ink/55 transition-colors duration-fast hover:border-gold hover:text-ink"
+        className="mt-4 flex w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-ink/20 bg-shell px-6 py-7 text-ink/65 transition-colors duration-fast hover:border-gold hover:text-ink"
       >
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
           <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -842,13 +842,13 @@ function FileUpload({ files, onChange }) {
               )}
               <span className="min-w-0 flex-1">
                 <span className="block truncate t-small text-ink">{f.name}</span>
-                <span className="t-small text-ink/50">{fmtBytes(f.size)}</span>
+                <span className="t-small text-ink/65">{fmtBytes(f.size)}</span>
               </span>
               <button
                 type="button"
                 onClick={() => remove(i)}
                 aria-label={`Retirer ${f.name}`}
-                className="grid h-8 w-8 flex-none place-items-center rounded-full text-ink/50 transition-colors duration-fast hover:bg-error/[0.08] hover:text-error"
+                className="grid h-8 w-8 flex-none place-items-center rounded-full text-ink/65 transition-colors duration-fast hover:bg-error/[0.08] hover:text-error"
               >
                 <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M1 1l12 12M13 1L1 13" strokeLinecap="round" />
@@ -912,13 +912,13 @@ function Choice({ name, label, checked, onChange }) {
 function ChoiceGroup({ label, name, options, value, onChange, error, hint }) {
   return (
     <div className={cn(label && 'mt-10')}>
-      {label && <span className="t-label text-ink/55">{label}</span>}
+      {label && <span className="t-label text-ink/65">{label}</span>}
       <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
         {options.map((t) => (
           <Choice key={t} name={name} label={t} checked={value === t} onChange={() => onChange(t)} />
         ))}
       </div>
-      {hint && <p className="t-small mt-3 text-ink/50">{hint}</p>}
+      {hint && <p className="t-small mt-3 text-ink/65">{hint}</p>}
       {error && <FieldError>{error}</FieldError>}
     </div>
   );
@@ -927,7 +927,7 @@ function ChoiceGroup({ label, name, options, value, onChange, error, hint }) {
 function Field({ id, label, value, onChange, error, hint, type = 'text', className, ...rest }) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="t-label text-ink/55">
+      <label htmlFor={id} className="t-label text-ink/65">
         {label}
       </label>
       <input
@@ -942,7 +942,7 @@ function Field({ id, label, value, onChange, error, hint, type = 'text', classNa
         {...rest}
       />
       {hint && !error && (
-        <p id={`${id}-hint`} className="t-small mt-2 text-ink/50">
+        <p id={`${id}-hint`} className="t-small mt-2 text-ink/65">
           {hint}
         </p>
       )}

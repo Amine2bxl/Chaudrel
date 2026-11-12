@@ -53,14 +53,14 @@ export default function ServicesShowcase() {
                   onFocus={() => setActive(i)}
                   className="group flex items-baseline gap-5 py-5 outline-offset-4"
                 >
-                  <span className={cn('t-num w-7 flex-none text-[0.8125rem] transition-colors duration-300', i === active ? 'text-gold' : 'text-ink/35')}>
+                  <span className={cn('t-num w-7 flex-none text-[0.8125rem] transition-colors duration-300', i === active ? 'text-gold-deep' : 'text-ink/65')}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span
                       className={cn(
                         'block font-display text-[clamp(1.5rem,2.3vw,2.125rem)] leading-[1.1] tracking-[-0.012em] transition-colors duration-300',
-                        i === active ? 'text-ink' : 'text-ink/45'
+                        i === active ? 'text-ink' : 'text-ink/50'
                       )}
                     >
                       {s.title}

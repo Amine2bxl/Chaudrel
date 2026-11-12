@@ -304,7 +304,7 @@ export function Disclosure({ title, defaultOpen = false, className, children }) 
           fill="none"
           stroke="currentColor"
           strokeWidth="1.6"
-          className={cn('flex-none text-ink/50 transition-transform duration-300 ease-soft', open && 'rotate-180')}
+          className={cn('flex-none text-ink/65 transition-transform duration-300 ease-soft', open && 'rotate-180')}
         >
           <path d="M2 5l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

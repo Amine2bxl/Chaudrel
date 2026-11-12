@@ -108,7 +108,7 @@
   display: none;
   justify-content: space-between;
   gap: 2rem;
-  color: rgb(var(--c-ink-rgb) / 0.6);
+  color: rgb(var(--c-ink-rgb) / 0.68);
   line-height: 1.5;
   transition: color 0.4s ease;
 }
@@ -119,7 +119,7 @@
     top: 6.5rem;
   }
 }
-.xp-night .xp-corners { color: rgb(var(--c-cream-rgb) / 0.6); }
+.xp-night .xp-corners { color: rgb(var(--c-cream-rgb) / 0.7); }
 
 /* ---------- Promesse, actions, fiche ---------- */
 .xp-hero {
@@ -172,7 +172,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgb(var(--c-ink-rgb) / 0.5);
+  color: rgb(var(--c-ink-rgb) / 0.66);
 }
 .xp-sheet-row dd {
   font-size: 0.8125rem;
@@ -186,7 +186,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgb(var(--c-ink-rgb) / 0.5);
+  color: rgb(var(--c-ink-rgb) / 0.66);
 }
 @media (min-width: 1024px) {
   .xp-disclaimer {
@@ -235,7 +235,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgb(var(--c-ink-rgb) / 0.62);
+  color: rgb(var(--c-ink-rgb) / 0.68);
 }
 .xp-pin span::before {
   content: '';
@@ -298,7 +298,7 @@
   transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 .xp-note a .t-num {
-  color: var(--c-gold);
+  color: rgb(var(--c-gold-deep-rgb));
   letter-spacing: 0.04em;
 }
 @media (hover: hover) {
@@ -355,7 +355,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgb(var(--c-ink-rgb) / 0.38);
+  color: rgb(var(--c-ink-rgb) / 0.64);
   transition: color 0.3s ease;
 }
 .xp-index button::after {
@@ -387,7 +387,7 @@
     transform: none;
   }
 }
-.xp-night .xp-index button { color: rgb(var(--c-cream-rgb) / 0.4); }
+.xp-night .xp-index button { color: rgb(var(--c-cream-rgb) / 0.6); }
 .xp-night .xp-index button[data-active],
 .xp-night .xp-index button:focus-visible { color: var(--c-cream); }
 @media (hover: hover) {
@@ -410,7 +410,7 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgb(var(--c-ink-rgb) / 0.5);
+  color: rgb(var(--c-ink-rgb) / 0.66);
 }
 @media (min-width: 1536px) {
   .xp-live .xp-hint { display: flex; }
@@ -456,10 +456,10 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgb(var(--c-ink-rgb) / 0.6);
+  color: rgb(var(--c-ink-rgb) / 0.68);
 }
 .xp-chapter-label .t-num {
-  color: var(--c-gold);
+  color: rgb(var(--c-gold-deep-rgb));
   letter-spacing: 0.04em;
 }
 .xp-chapter-label i {
@@ -499,7 +499,7 @@
 .xp-static-figure figcaption {
   margin-top: 1rem;
   line-height: 1.5;
-  color: rgb(var(--c-ink-rgb) / 0.55);
+  color: rgb(var(--c-ink-rgb) / 0.66);
 }
 .xp-live .xp-static-figure { display: none; }
 

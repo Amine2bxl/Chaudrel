@@ -117,9 +117,9 @@ function applyMeta(template, meta, html) {
     .join('\n    ');
   out = out.replace('</head>', `    ${ld}\n  </head>`);
 
-  // Preload de l'image LCP uniquement sur la home
+  // Preload de l'image LCP uniquement sur la home (les polices restent partout)
   if (meta.path !== '/') {
-    out = out.replace(/\s*<link\s+rel="preload"[\s\S]*?\/>/g, '');
+    out = out.replace(/\s*<link\s+rel="preload"\s+as="image"[\s\S]*?\/>/g, '');
   }
 
   return out.replace(/<div id="root"><\/div>/, `<div id="root" data-ssr>${html}</div>`);

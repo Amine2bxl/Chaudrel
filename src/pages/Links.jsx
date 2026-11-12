@@ -60,7 +60,7 @@ export default function Links() {
           <h1 className="mt-5 font-wordmark text-[22px] uppercase leading-none tracking-[0.2em] text-ink">
             {BRAND.name}
           </h1>
-          <p className="t-small mt-3 text-ink/60">
+          <p className="t-small mt-3 text-ink/65">
             Entreprise de rénovation · {BRAND.zoneLong}
           </p>
         </Reveal>

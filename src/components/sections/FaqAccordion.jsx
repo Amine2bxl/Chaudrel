@@ -53,7 +53,7 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
                 'mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-full border transition-all duration-300 ease-soft group-open:rotate-45',
                 light
                   ? 'border-cream/20 text-cream/70 group-open:border-gold-light group-open:text-gold-light'
-                  : 'border-ink/[0.14] text-ink/60 group-open:border-gold group-open:text-gold'
+                  : 'border-ink/[0.14] text-ink/65 group-open:border-gold group-open:text-gold'
               )}
               aria-hidden="true"
             >

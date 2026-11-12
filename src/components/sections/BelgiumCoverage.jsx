@@ -77,7 +77,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
         <div className="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
           {REGIONS.map((r) => (
             <div key={r.name}>
-              <h4 className={cn('t-label', light ? 'text-cream/45' : 'text-ink/45')}>{r.name}</h4>
+              <h3 className={cn('t-label', light ? 'text-cream/60' : 'text-ink/65')}>{r.name}</h3>
               <ul className="mt-2">
                 {r.ids.map((id) => {
                   const p = ID_TO_PROVINCE[id];
@@ -113,7 +113,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                                   : 'text-ink'
                                 : light
                                   ? 'text-cream/60 group-hover:text-cream'
-                                  : 'text-ink/60 group-hover:text-ink'
+                                  : 'text-ink/65 group-hover:text-ink'
                             )}
                           >
                             {p.name}

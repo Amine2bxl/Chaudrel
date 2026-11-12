@@ -27,6 +27,7 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
   let tl = null;
   let frames = null;
   let portrait = null;
+  let builtAspect = 0;
   let destroyed = false;
   let dpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1.5 : 2);
   let slow = 0;
@@ -91,6 +92,7 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
     tl?.kill();
     const { w, h } = size();
     portrait = sb.isPortrait(w / h);
+    builtAspect = w / h;
     frames = sb.keyframes(w / h);
     Object.assign(state, pick(frames[0]));
 
@@ -140,7 +142,10 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
   function resize() {
     const { w, h } = size();
     engine?.resize(w, h, dpr);
-    if (sb.isPortrait(w / h) !== portrait) build();
+    /* Le storyboard dépend du format : on le reconstruit quand l'écran change
+       d'orientation, ou de proportions en portrait (tablette redimensionnée). */
+    const a = w / h;
+    if (sb.isPortrait(a) !== portrait || (portrait && Math.abs(a - builtAspect) > 0.02)) build();
     else draw();
   }
 
@@ -150,6 +155,10 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
 
   const onLost = (e) => {
     e.preventDefault();
+    const lost = engine;
+    engine = null;
+    delete window.__chaudrelXP;
+    lost?.dispose();
     onFail?.(new Error('webglcontextlost'));
   };
 
@@ -157,7 +166,12 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
     try {
       const { createEngine } = await import('./scene/engine.js');
       if (destroyed) return;
-      engine = createEngine(els.canvas, { lowPower });
+      const created = await createEngine(els.canvas, { lowPower, quality: window.__XP_HQ ? 'high' : 'auto' });
+      if (destroyed) {
+        created.dispose();
+        return;
+      }
+      engine = created;
       els.canvas.addEventListener('webglcontextlost', onLost);
       const { w, h } = size();
       engine.resize(w, h, dpr);
@@ -177,20 +191,36 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
       };
       onReady?.();
     } catch (err) {
+      engine = null;
       onFail?.(err);
     }
   }
 
-  /* Le moteur attend que la page soit tranquille : l'image de repli est déjà
-     à l'écran, rien ne presse. */
-  const idle = window.requestIdleCallback
-    ? window.requestIdleCallback(startEngine, { timeout: 1500 })
-    : window.setTimeout(startEngine, 200);
+  /* Le moteur démarre au premier signe d'intérêt : un mouvement de souris, un
+     doigt posé, un début de défilement, une touche. D'ici là l'image de repli
+     est à l'écran, au même cadrage - la page se charge sans rien payer pour
+     la 3D, et un visiteur qui repart aussitôt ne la télécharge jamais.
+     Sans geste, il démarre seul au bout de quelques secondes. */
+  const WAKE = ['pointermove', 'pointerdown', 'touchstart', 'wheel', 'scroll', 'keydown'];
+  let woke = false;
+  let timer = 0;
+  function wake() {
+    if (woke) return;
+    woke = true;
+    WAKE.forEach((type) => window.removeEventListener(type, wake));
+    window.clearTimeout(timer);
+    startEngine();
+  }
+  if (window.__XP_HQ || window.scrollY > 4) wake();
+  else {
+    WAKE.forEach((type) => window.addEventListener(type, wake, { passive: true, once: true }));
+    timer = window.setTimeout(wake, 9000);
+  }
 
   return function destroy() {
     destroyed = true;
-    if (window.cancelIdleCallback && window.requestIdleCallback) window.cancelIdleCallback(idle);
-    else window.clearTimeout(idle);
+    WAKE.forEach((type) => window.removeEventListener(type, wake));
+    window.clearTimeout(timer);
     ro.disconnect();
     els.canvas.removeEventListener('webglcontextlost', onLost);
     tl?.scrollTrigger?.kill();

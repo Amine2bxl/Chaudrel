@@ -17,7 +17,7 @@ import { imageAttrs, SIZES } from '@/lib/image';
  */
 export default function PageHero({ title, intro, image, breadcrumb = [], aside, meta }) {
   const hasImage = Boolean(image);
-  const soft = hasImage ? 'text-cream/70' : 'text-ink/60';
+  const soft = hasImage ? 'text-cream/75' : 'text-ink/65';
 
   return (
     <header className={cn('relative isolate overflow-hidden', hasImage ? 'flex min-h-[78svh] flex-col bg-bark text-cream' : 'bg-cream text-ink')}>

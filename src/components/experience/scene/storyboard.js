@@ -47,7 +47,16 @@ export const isPortrait = (aspect) => aspect < 0.8;
    dans la composition sans que la perspective change. */
 const withFrame = (frames) => frames.map((f) => ({ sx: 0, sy: 0, ...f }));
 const SETS = { landscape: withFrame(LANDSCAPE), portrait: withFrame(PORTRAIT) };
-export const keyframes = (aspect) => (isPortrait(aspect) ? SETS.portrait : SETS.landscape);
+
+/* Le jeu « portrait » est réglé pour un téléphone (≈ 9:19). Une tablette tenue
+   debout est plus large : la caméra s'approche d'autant, sinon la maquette
+   flotterait, petite, au milieu de l'écran. */
+export function keyframes(aspect) {
+  if (!isPortrait(aspect)) return SETS.landscape;
+  const k = Math.min(1, Math.max(0.62, 0.47 / aspect));
+  /* La vue éclatée est haute : elle profite moins du rapprochement. */
+  return k === 1 ? SETS.portrait : SETS.portrait.map((f) => ({ ...f, dist: f.dist * (k + (1 - k) * 0.75 * f.explode) }));
+}
 export const STATE_KEYS = ['az', 'el', 'dist', 'tx', 'ty', 'tz', 'sx', 'sy', 'explode', 'wipe', 'dusk'];
 
 /** État à une position donnée - même interpolation que la timeline (lissée). */

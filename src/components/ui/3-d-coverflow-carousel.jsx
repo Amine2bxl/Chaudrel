@@ -190,12 +190,10 @@ export default function CoverFlowCarousel({
             {sectionLabel && (
               <div className="flex items-center justify-center gap-3">
                 <span className="block h-px w-9" style={{ background: 'linear-gradient(90deg, transparent, var(--c-gold-light))' }} />
-                <h3
-                  className="t-label"
-                  style={{ color: 'var(--c-gold-light)' }}
-                >
+                {/* Un repère, pas un titre : il précède le H2 de la section. */}
+                <p className="t-label" style={{ color: 'var(--c-gold-light)' }}>
                   {sectionLabel}
-                </h3>
+                </p>
                 <span className="block h-px w-9" style={{ background: 'linear-gradient(90deg, var(--c-gold-light), transparent)' }} />
               </div>
             )}

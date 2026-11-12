@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 function Spec({ label, children }) {
   return (
     <div className="grid grid-cols-[7rem_1fr] items-baseline gap-4 border-t border-ink/12 py-3.5">
-      <dt className="t-label text-ink/55">{label}</dt>
+      <dt className="t-label text-ink/65">{label}</dt>
       <dd className="t-body text-ink/85">{children}</dd>
     </div>
   );
@@ -60,7 +60,7 @@ export default function Project() {
               {project.materials?.length > 0 && <Spec label="Matériaux">{project.materials.join(' · ')}</Spec>}
               {project.works?.length > 0 && (
                 <div className="border-t border-ink/12 py-4">
-                  <dt className="t-label text-ink/55">Travaux réalisés</dt>
+                  <dt className="t-label text-ink/65">Travaux réalisés</dt>
                   <dd className="mt-3">
                     <ul className="space-y-2">
                       {project.works.map((w) => (

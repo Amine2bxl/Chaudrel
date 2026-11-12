@@ -91,10 +91,11 @@ Le formulaire `/devis` collecte désormais les questions de qualification
 ou PDF et une vidéo courte (3 Mo au total), envoyées en pièces jointes de la
 notification interne.
 
-> ⚠️ **PROVISOIRE (tests)** - tant que `LEAD_TO_EMAIL` n'est pas défini dans
-> Vercel, les demandes partent vers `amineazouzi2009@gmail.com` (destinataire de
-> test dans `api/lead.js`). La confirmation automatique au visiteur part, elle,
-> sur l'adresse saisie dans le formulaire.
+> ℹ️ Depuis la V3, il n'existe plus de destinataire de repli dans `api/lead.js` :
+> sans `LEAD_TO_EMAIL`, l'endpoint répond 503 et le formulaire propose l'e-mail
+> pré-rempli (vers `Info@chaudrel.be`), WhatsApp et le téléphone. **Avant mise en
+> production, vérifier que `LEAD_TO_EMAIL` est défini dans Vercel** - sinon aucune
+> demande n'arrive par e-mail automatique.
 
 Tant que ces variables sont absentes, `/api/lead` répond 503 et le formulaire
 affiche téléphone + WhatsApp en repli : **aucun lead n'est perdu silencieusement**.

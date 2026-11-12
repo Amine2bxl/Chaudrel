@@ -58,7 +58,7 @@ export default function Navbar() {
   const linkClass = ({ isActive }) =>
     cn(
       'relative t-label pb-2 pt-1 transition-colors duration-fast',
-      isActive ? 'text-ink' : 'text-ink/60 hover:text-ink'
+      isActive ? 'text-ink' : 'text-ink/65 hover:text-ink'
     );
 
   return (
@@ -137,7 +137,7 @@ export default function Navbar() {
                     className={({ isActive }) =>
                       cn(
                         'panel-in flex items-center justify-between gap-4 py-4 font-display text-[1.75rem] tracking-[-0.01em]',
-                        isActive ? 'text-ink' : 'text-ink/60'
+                        isActive ? 'text-ink' : 'text-ink/65'
                       )
                     }
                   >

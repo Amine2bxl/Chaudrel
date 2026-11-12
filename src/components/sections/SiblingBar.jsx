@@ -57,7 +57,7 @@ function Side({ item, dir }) {
       to={item.to}
       aria-label={`${before ? 'Précédent' : 'Suivant'} : ${item.title}`}
       className={cn(
-        'group flex min-w-0 flex-1 items-center gap-3 py-4 text-ink/55 transition-colors duration-fast hover:text-ink',
+        'group flex min-w-0 flex-1 items-center gap-3 py-4 text-ink/65 transition-colors duration-fast hover:text-ink',
         before ? 'justify-start' : 'justify-end'
       )}
     >

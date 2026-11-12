@@ -56,7 +56,7 @@ export default function Projects() {
                 </button>
               );
             })}
-            <span className="t-label ml-auto tabular-nums text-ink/50">
+            <span className="t-label ml-auto tabular-nums text-ink/65">
               {String(items.length).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
             </span>
           </div>
@@ -72,7 +72,7 @@ export default function Projects() {
       ) : (
         <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
           <Container>
-            <p className="t-lead text-ink/60">Aucun chantier publié dans cette catégorie pour le moment.</p>
+            <p className="t-lead text-ink/65">Aucun chantier publié dans cette catégorie pour le moment.</p>
             <button
               type="button"
               onClick={() => setFilter('all')}

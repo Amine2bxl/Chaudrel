@@ -69,7 +69,7 @@ export default function Service() {
                 <div className="mt-block space-y-10">
                   {service.groups.map((g, gi) => (
                     <Reveal key={g.title} delay={gi * 90}>
-                      <h2 className="t-label text-ink/55">{g.title}</h2>
+                      <h2 className="t-label text-ink/65">{g.title}</h2>
                       <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-2.5">
                         {g.items.map((item) => (
                           <li key={item} className="t-body flex items-baseline gap-2.5 text-ink/75">

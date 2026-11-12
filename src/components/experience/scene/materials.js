@@ -15,8 +15,8 @@ export const CLAY = new THREE.Color('#d8d0c3');
  * chantier se finit. Le plan est légèrement ondulé pour ne pas lire comme une
  * coupe d'ordinateur, et souligné d'un filet laiton - le trait d'un niveau laser.
  */
-export function createMaterials({ textureSize = 512, anisotropy = 4 } = {}) {
-  const T = createTextures(textureSize);
+export async function createMaterials({ textureSize = 256, anisotropy = 4, pause } = {}) {
+  const T = await createTextures(textureSize, pause);
   Object.values(T).forEach((t) => (t.anisotropy = anisotropy));
 
   const uniforms = {

@@ -4,16 +4,10 @@
  */
 
 export function canUseWebGL() {
-  if (typeof window === 'undefined' || typeof document === 'undefined') return false;
-  try {
-    const c = document.createElement('canvas');
-    const gl = c.getContext('webgl2') || c.getContext('webgl');
-    if (!gl) return false;
-    gl.getExtension('WEBGL_lose_context')?.loseContext();
-    return true;
-  } catch {
-    return false;
-  }
+  /* Simple présence de l'API : créer un contexte pour « tester » coûte cher
+     sur un petit appareil, et le moteur en créera un de toute façon. S'il
+     échoue, la scène revient d'elle-même à sa version statique. */
+  return typeof window !== 'undefined' && Boolean(window.WebGL2RenderingContext || window.WebGLRenderingContext);
 }
 
 /** Économie de données demandée par le visiteur : on ne charge pas la 3D. */

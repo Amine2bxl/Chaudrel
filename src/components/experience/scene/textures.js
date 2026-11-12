@@ -90,12 +90,21 @@ function tex(c, metres, { color = true, aniso = 4 } = {}) {
 const mix = (a, b, t) => a + (b - a) * t;
 const tint = (rgb, k) => [rgb[0] * k, rgb[1] * k, rgb[2] * k];
 
-export function createTextures(size = 512) {
+/* Une valeur aléatoire stable par lame / par dalle, calculée une fois. */
+const perIndex = (seed, n) => Array.from({ length: n }, (_, i) => rng(seed + i)());
+
+/**
+ * `pause` rend la main au navigateur entre deux textures : la génération ne
+ * forme jamais une longue tâche qui figerait le défilement.
+ */
+export async function createTextures(size = 256, pause = async () => {}) {
   const S = size;
 
   /* Pierre / béton clair : grain fin, nuages larges, très léger calepinage. */
-  const nA = fbm(S, 11, 6, 4);
+  const nA = fbm(S, 11, 5, 4);
+  await pause();
   const nB = fbm(S, 23, 4, 32);
+  await pause();
   const stone = paint(S, (x, y, i) => {
     let k = 0.86 + nA[i] * 0.2 + (nB[i] - 0.5) * 0.1;
     const jointY = y % (S / 4) < 1.2 ? 0.9 : 1;
@@ -104,6 +113,7 @@ export function createTextures(size = 512) {
     k *= jointY * jointX;
     return tint([214, 207, 196], k);
   });
+  await pause();
   const stoneBump = paint(S, (x, y, i) => {
     const row = Math.floor(y / (S / 4));
     const joint = y % (S / 4) < 2 || (x + (row % 2) * (S / 4)) % (S / 2) < 2 ? 0.25 : 1;
@@ -122,45 +132,54 @@ export function createTextures(size = 512) {
       }
     return out;
   };
+  const rOak = perIndex(900, 9);
+  const rDeck = perIndex(300, 7);
+  const rPar = perIndex(500, 6);
+  const rSlab = perIndex(700, 80);
+  await pause();
   const gOak = grain(41, 14);
+  await pause();
   const oak = paint(S, (x, y, i) => {
-    const board = Math.floor(x / (S / 8));
-    const br = rng(900 + board)();
+    const br = rOak[Math.floor(x / (S / 8))];
     const gap = x % (S / 8) < 1.5 ? 0.55 : 1;
     const k = (0.78 + gOak[i] * 0.36) * mix(0.9, 1.08, br) * gap;
     return tint([176, 132, 88], k);
   });
+  await pause();
   const oakBump = paint(S, (x, y, i) => {
     const gap = x % (S / 8) < 2.5 ? 0 : 1;
     const v = (0.45 + gOak[i] * 0.5) * gap * 255;
     return [v, v, v];
   });
 
+  await pause();
   const gDark = grain(57, 18);
   const cladding = paint(S, (x, y, i) => {
     const k = 0.75 + gDark[i] * 0.5;
     return tint([52, 49, 46], k);
   });
 
+  await pause();
   const gDeck = grain(71, 10);
   const deck = paint(S, (x, y, i) => {
-    const board = Math.floor(x / (S / 6));
-    const br = rng(300 + board)();
+    const br = rDeck[Math.floor(x / (S / 6))];
     const gap = x % (S / 6) < 2 ? 0.45 : 1;
     const k = (0.8 + gDeck[i] * 0.32) * mix(0.9, 1.06, br) * gap;
     return tint([158, 124, 92], k);
   });
 
+  await pause();
   /* Parquet : lames plus larges, teinte chêne clair. */
   const parquet = paint(S, (x, y, i) => {
     const board = Math.floor(x / (S / 5));
-    const br = rng(500 + board)();
+    const br = rPar[board];
     const gap = x % (S / 5) < 1.2 ? 0.7 : 1;
     const butt = (y + board * 97) % (S / 1.6) < 1.2 ? 0.75 : 1;
     const k = (0.84 + gOak[i] * 0.26) * mix(0.93, 1.05, br) * gap * butt;
     return tint([196, 160, 118], k);
   });
 
+  await pause();
   /* Gravier de toiture, pelouse : mouchetis serré. */
   const nC = fbm(S, 5, 3, 64);
   const gravel = paint(S, (x, y, i) => tint([88, 86, 82], 0.7 + nC[i] * 0.7));
@@ -169,14 +188,16 @@ export function createTextures(size = 512) {
     return tint([112, 114, 92], k);
   });
 
+  await pause();
   /* Dallage : grandes dalles 60 × 60 à joint fin. */
   const paving = paint(S, (x, y, i) => {
     const joint = x % (S / 4) < 1.5 || y % (S / 4) < 1.5 ? 0.86 : 1;
-    const slab = rng(700 + Math.floor(x / (S / 4)) * 13 + Math.floor(y / (S / 4)))();
+    const slab = rSlab[Math.floor(x / (S / 4)) * 13 + Math.floor(y / (S / 4))];
     const k = (0.9 + nA[i] * 0.14) * mix(0.96, 1.03, slab) * joint;
     return tint([201, 195, 185], k);
   });
 
+  await pause();
   const plaster = paint(S, (x, y, i) => tint([240, 236, 229], 0.95 + nB[i] * 0.07));
 
   return {

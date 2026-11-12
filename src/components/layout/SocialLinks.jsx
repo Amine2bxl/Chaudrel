@@ -27,7 +27,7 @@ export default function SocialLinks({ tone = 'dark', source = 'footer', size = '
     size === 'sm' ? 'h-9 w-9' : 'h-10 w-10',
     light
       ? 'border border-cream/20 text-cream/70 hover:border-cream/45 hover:bg-cream/10 hover:text-cream'
-      : 'border border-ink/15 text-ink/60 hover:border-ink/30 hover:bg-ink/5 hover:text-ink',
+      : 'border border-ink/15 text-ink/65 hover:border-ink/30 hover:bg-ink/5 hover:text-ink',
     className
   );
 

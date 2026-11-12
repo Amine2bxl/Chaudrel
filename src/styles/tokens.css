@@ -5,6 +5,24 @@
    Tailwind. Changer une valeur ici la change partout.
    ============================================================ */
 
+/* ---------- Polices ----------
+   Hébergées sur le site (licence OFL) : pas d'appel à un tiers, pas de feuille
+   de style bloquante. `swap` : le texte s'affiche tout de suite. */
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/schibsted-grotesk-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Marcellus';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/marcellus-latin.woff2') format('woff2');
+}
+
 :root {
   /* ---------- Couleur ----------
      Le crème est la couleur principale de Chaudrel : c'est le fond du site,

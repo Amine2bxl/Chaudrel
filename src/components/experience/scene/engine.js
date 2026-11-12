@@ -26,7 +26,10 @@ const EXPLODE = {
   groundFacade: { dy: 1.5, from: 0.26, to: 1, dz: 0 },
 };
 
-export function createEngine(canvas, { lowPower = false } = {}) {
+/* Rend la main au navigateur : l'initialisation est découpée en étapes courtes. */
+const pause = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+export async function createEngine(canvas, { lowPower = false, quality = 'auto' } = {}) {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
@@ -50,6 +53,7 @@ export function createEngine(canvas, { lowPower = false } = {}) {
     o.material?.dispose();
   });
   pmrem.dispose();
+  await pause();
 
   const camera = new THREE.PerspectiveCamera(26, 1, 1, 400);
 
@@ -86,11 +90,14 @@ export function createEngine(canvas, { lowPower = false } = {}) {
   });
 
   /* ---------- Maquette ---------- */
-  const mats = createMaterials({
-    textureSize: lowPower ? 256 : 512,
+  const mats = await createMaterials({
+    textureSize: quality === 'high' ? 512 : 256,
     anisotropy: Math.min(8, renderer.capabilities.getMaxAnisotropy()),
+    pause,
   });
+  await pause();
   const { root, groups } = createBuilding(mats.M);
+  await pause();
   root.add(...lamps);
   scene.add(root);
 
@@ -109,13 +116,31 @@ export function createEngine(canvas, { lowPower = false } = {}) {
 
   let width = 1;
   let height = 1;
+  let ratio = 0;
   let last = null;
   let lastShadowKey = '';
   let disposed = false;
+  let queued = false;
+
+  /* Plusieurs `apply` dans la même tâche (défilement + redimensionnement, par
+     exemple) ne coûtent qu'une image : le rendu part en fin de tâche. */
+  function flush() {
+    queued = false;
+    if (!disposed) renderer.render(scene, camera);
+  }
+  function requestRender() {
+    if (queued) return;
+    queued = true;
+    queueMicrotask(flush);
+  }
 
   function resize(w, h, dpr) {
-    width = Math.max(1, w);
-    height = Math.max(1, h);
+    const nw = Math.max(1, w);
+    const nh = Math.max(1, h);
+    if (nw === width && nh === height && dpr === ratio) return;
+    width = nw;
+    height = nh;
+    ratio = dpr;
     renderer.setPixelRatio(dpr);
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
@@ -134,6 +159,7 @@ export function createEngine(canvas, { lowPower = false } = {}) {
     camera.position.set(s.tx + Math.sin(az) * c * s.dist, s.ty + Math.sin(el) * s.dist, s.tz + Math.cos(az) * c * s.dist);
     camera.lookAt(s.tx, s.ty, s.tz);
     camera.setViewOffset(width, height, -(s.sx || 0) * width, -(s.sy || 0) * height, width, height);
+    camera.updateMatrixWorld();
 
     // Vue éclatée
     for (const name in EXPLODE) {
@@ -171,7 +197,7 @@ export function createEngine(canvas, { lowPower = false } = {}) {
       lastShadowKey = key;
     }
 
-    renderer.render(scene, camera);
+    requestRender();
   }
 
   const v = new THREE.Vector3();
@@ -196,8 +222,17 @@ export function createEngine(canvas, { lowPower = false } = {}) {
   /** Image PNG de l'état courant (fond transparent) - sert aux visuels de repli. */
   function capture(type = 'image/png', quality = 0.92) {
     if (last) apply(last);
+    flush();
     return canvas.toDataURL(type, quality);
   }
 
-  return { apply, resize, project, dispose, capture, renderer, info: () => renderer.info.render };
+  /* Compilation des shaders hors du fil principal quand le pilote le permet
+     (KHR_parallel_shader_compile) : la première image n'est pas une longue tâche. */
+  try {
+    await renderer.compileAsync(scene, camera);
+  } catch {
+    /* compilation synchrone au premier rendu */
+  }
+
+  return { apply, resize, project, dispose, capture, flush, renderer, info: () => renderer.info.render };
 }

@@ -21,8 +21,8 @@ export default function Signature() {
     <section className="bg-cream py-section text-ink">
       <Container>
         <div className="flex items-center justify-between gap-6 border-b border-ink/15 pb-4">
-          <p className="t-label text-ink/60">{BRAND.legalName}</p>
-          <p className="t-label text-right text-ink/60">
+          <p className="t-label text-ink/65">{BRAND.legalName}</p>
+          <p className="t-label text-right text-ink/65">
             {BRAND.address.city} · depuis {BRAND.founded}
           </p>
         </div>
@@ -30,7 +30,7 @@ export default function Signature() {
         <div className="mt-block grid gap-10 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-8">
             <h2 className="t-display max-w-[13ch] text-balance">
-              Transformer un espace. <span className="text-ink/35">Créer un lieu.</span>
+              Transformer un espace. <span className="text-ink/50">Créer un lieu.</span>
             </h2>
           </Reveal>
 
@@ -48,8 +48,8 @@ export default function Signature() {
         <dl className="mt-block grid border-t border-ink/15 sm:grid-cols-2 lg:grid-cols-4">
           {FACTS.map((f, i) => (
             <Reveal key={f.k} delay={i * 70} className="border-b border-ink/15 py-6 sm:pr-8 lg:border-b-0 lg:border-l lg:pl-6 lg:first:border-l-0 lg:first:pl-0">
-              <dt className="flex items-center gap-3 t-label text-ink/55">
-                <span className="t-num tracking-normal text-gold">{String(i + 1).padStart(2, '0')}</span>
+              <dt className="flex items-center gap-3 t-label text-ink/65">
+                <span className="t-num tracking-normal text-gold-deep">{String(i + 1).padStart(2, '0')}</span>
                 {f.k}
               </dt>
               <dd className="mt-4 font-display text-[1.5rem] leading-[1.15] text-ink">{f.v}</dd>

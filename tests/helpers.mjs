@@ -52,6 +52,15 @@ export async function open(browser, path, { viewport = DESKTOP, ...ctxOptions } 
   return { ctx, page, errors, requests };
 }
 
+/**
+ * Le moteur 3D attend un premier geste du visiteur (ou neuf secondes).
+ * On simule ce geste, puis on attend que la scène soit prête.
+ */
+export async function filmReady(page) {
+  await page.evaluate(() => window.dispatchEvent(new Event('pointermove')));
+  await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
+}
+
 /** Amène le film d'accueil à la position `p` (0 → 1) et attend que le scrub rattrape. */
 export async function scrollFilm(page, p) {
   await page.evaluate((v) => {

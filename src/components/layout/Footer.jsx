@@ -48,7 +48,7 @@ export default function Footer() {
             </Link>
           </nav>
 
-          <p className="t-small flex-none text-cream/35">
+          <p className="t-small flex-none text-cream/60">
             © {year} {BRAND.legalName}
           </p>
         </div>
@@ -56,7 +56,7 @@ export default function Footer() {
         {/* Réseaux - depuis le rail latéral, que le pied de page et la fenêtre
             de contact remplacent : une seule ligne, en fin de page. */}
         <div className="mt-5 flex items-center justify-between gap-4 border-t border-cream/10 pt-5">
-          <span className="t-small text-cream/40">Suivez les chantiers en cours</span>
+          <span className="t-small text-cream/60">Suivez les chantiers en cours</span>
           <SocialLinks tone="light" source="footer" />
         </div>
       </div>

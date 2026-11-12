@@ -75,7 +75,7 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
 
                 <span className="min-w-0 flex-1">
                   <span className={cn('t-h3 block', light ? 'text-cream' : 'text-ink')}>{s.title}</span>
-                  <span className={cn('mt-1 block t-small', light ? 'text-cream/55' : 'text-ink/55')}>
+                  <span className={cn('mt-1 block t-small', light ? 'text-cream/55' : 'text-ink/65')}>
                     {s.excerpt}
                   </span>
                 </span>
@@ -87,7 +87,7 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
                     'grid h-10 w-10 flex-none place-items-center rounded-full border transition-all duration-300 ease-soft',
                     light
                       ? 'border-cream/20 text-cream/60 group-hover:border-cream/50 group-hover:text-cream'
-                      : 'border-ink/[0.15] text-ink/60 group-hover:border-gold group-hover:text-gold',
+                      : 'border-ink/[0.15] text-ink/65 group-hover:border-gold group-hover:text-gold',
                     open && 'rotate-180'
                   )}
                 >
@@ -133,7 +133,7 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
                         <dl className="mt-6 space-y-4">
                           {(s.groups ?? []).map((g) => (
                             <div key={g.title}>
-                              <dt className={cn('t-label', light ? 'text-cream/50' : 'text-ink/50')}>{g.title}</dt>
+                              <dt className={cn('t-label', light ? 'text-cream/50' : 'text-ink/65')}>{g.title}</dt>
                               <dd className={cn('mt-2 flex flex-wrap gap-x-5 gap-y-2 t-small', light ? 'text-cream/70' : 'text-ink/70')}>
                                 {g.items.map((item) => (
                                   <span key={item} className="flex items-baseline gap-2">

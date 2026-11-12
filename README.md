@@ -1,4 +1,4 @@
-# Chaudrel — site V2
+# Chaudrel — site V3
 
 Site vitrine, portfolio et outil de génération de demandes de devis pour Chaudrel
 Rénovation (Bruxelles). React 18 + Vite 5 + Tailwind 3, pré-rendu en HTML statique,
@@ -11,7 +11,12 @@ npm install
 npm run dev        # http://localhost:5173
 npm run build      # vite build + pré-rendu de toutes les routes + sitemap
 npm run preview    # sert dist/ (les fonctions /api ne tournent pas ici)
+npm test           # build + 44 tests de bout en bout (navigateur réel, API simulée)
+npm run posters    # régénère les images de repli de la maquette 3D (avec `npm run dev` lancé)
 ```
+
+Les tests utilisent `playwright-core` : `npx playwright-core install chromium` une fois
+sur un poste qui n'a pas encore le navigateur.
 
 Pour tester le formulaire de devis de bout en bout : `vercel dev`.
 
@@ -100,6 +105,34 @@ Animations : `<Reveal>` (`up`, `fade`, `line`, `lineY`, `veil`) applique une cla
 au scroll via IntersectionObserver, tout le reste est en CSS. `prefers-reduced-motion`
 neutralise l'ensemble.
 
+## Maquette 3D de l'accueil
+
+Le hero d'accueil est une maquette architecturale 3D que le défilement pilote
+(`src/components/experience/`). C'est une **illustration**, annoncée comme telle à
+l'écran — pas un chantier de Chaudrel.
+
+| Fichier | Rôle |
+|---|---|
+| `scene/building.js` | la maison, en mètres : murs percés, menuiseries, dalles, intérieur, toiture, extérieurs — répartie en couches (les métiers) |
+| `scene/materials.js`, `scene/textures.js` | matériaux PBR, textures procédurales, passage brut → fini dans le shader |
+| `scene/storyboard.js` | **le film** : images-clés caméra / vue éclatée / finition / crépuscule, en paysage et en portrait |
+| `scene/engine.js` | rendu three.js, lumière, une image par changement d'état (pas de boucle permanente) |
+| `ScrollSequence.js` | timeline GSAP ScrollTrigger (scrub) : maquette et textes sur la même horloge |
+| `ArchitecturalExperience.jsx`, `content.js` | balisage, textes, liens vers les métiers |
+| `src/styles/experience.css` | mise en page statique et « vivante » |
+
+Règles tenues :
+
+- **Tout le texte est dans le HTML prérendu.** La 3D est un enrichissement.
+- **Version statique** sans JS, avec `prefers-reduced-motion`, en économie de données, ou
+  sur un navigateur sans `overflow: clip`. Si WebGL échoue, l'image de la maquette
+  reste à l'écran et le récit continue.
+- **three.js et GSAP ne sont pas dans le bundle principal** : GSAP arrive après le
+  premier rendu, three.js au premier geste du visiteur (souris, doigt, défilement,
+  touche) ou après neuf secondes. D'ici là, l'image de repli — rendue par le même
+  moteur, au même cadrage — tient l'écran.
+- Après toute modification de la maquette ou du storyboard : `npm run posters`.
+
 ## Formulaire de devis
 
 `/devis` → `POST /api/lead`. La page `/contact` envoie au même endpoint avec un
@@ -114,8 +147,9 @@ Variables d'environnement Vercel à configurer :
 | `LEAD_TO_EMAIL` | adresse qui reçoit les demandes |
 | `LEAD_FROM_EMAIL` | expéditeur vérifié chez Resend |
 
-Sans ces variables, l'endpoint répond 503 et le formulaire affiche le téléphone et
-WhatsApp en repli — aucun lead n'est perdu silencieusement.
+Sans ces **trois** variables, l'endpoint répond 503 et le formulaire propose l'e-mail
+pré-rempli, WhatsApp et le téléphone — aucun lead n'est perdu silencieusement, et
+aucune demande ne part vers une boîte par défaut.
 
 ## Analytics
 

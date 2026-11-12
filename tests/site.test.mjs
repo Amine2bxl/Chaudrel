@@ -5,7 +5,7 @@
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { BASE, DESKTOP, PHONE, launch, open, overflowsX, scrollFilm, startServer, stopServer } from './helpers.mjs';
+import { BASE, DESKTOP, PHONE, filmReady, launch, open, overflowsX, scrollFilm, startServer, stopServer } from './helpers.mjs';
 
 let server;
 let browser;
@@ -74,9 +74,21 @@ describe('prérendu et SEO', () => {
 });
 
 describe('film 3D au défilement', () => {
+  it('ne charge le moteur 3D qu’au premier geste du visiteur', async () => {
+    const { ctx, page, requests } = await open(browser, '/');
+    await page.waitForSelector('.xp.xp-live');
+    await page.waitForTimeout(2500);
+    assert.ok(!requests.some((u) => /engine-/.test(u)), 'three.js ne part pas pendant le chargement');
+    assert.ok(await page.locator('.xp-poster img').isVisible(), 'l’image de la maquette tient l’écran');
+    await page.mouse.move(300, 300);
+    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
+    assert.ok(requests.some((u) => /engine-/.test(u)));
+    await ctx.close();
+  });
+
   it('se lance, suit le défilement et revient exactement à son état initial', async () => {
     const { ctx, page, errors } = await open(browser, '/');
-    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
+    await filmReady(page);
     assert.equal(await page.locator('.xp.xp-live.xp-ready').count(), 1);
     assert.ok((await page.evaluate(() => window.__chaudrelXP.info().triangles)) > 1000, 'la maquette est dessinée');
 
@@ -106,7 +118,7 @@ describe('film 3D au défilement', () => {
 
   it('se recompose quand la fenêtre passe en portrait, puis revient', async () => {
     const { ctx, page, errors } = await open(browser, '/');
-    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
+    await filmReady(page);
     const wide = await page.evaluate(() => window.__chaudrelXP.state().dist);
     await page.setViewportSize(PHONE);
     await page.waitForFunction((d) => window.__chaudrelXP.state().dist > d + 20, wide, { timeout: 10000 });
@@ -119,13 +131,14 @@ describe('film 3D au défilement', () => {
 
   it("ne bloque pas la page : on atteint la suite et on revient en arrière d'une route", async () => {
     const { ctx, page } = await open(browser, '/');
-    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
+    await filmReady(page);
     await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
     await page.waitForTimeout(400);
     assert.ok(await page.getByRole('heading', { name: 'Un projet en tête ?' }).isVisible());
     await page.goto(BASE + '/services');
-    await page.goBack();
-    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
+    await page.goBack({ waitUntil: 'load' });
+    await page.waitForSelector('.xp.xp-live');
+    await filmReady(page);
     assert.equal(await page.locator('.xp.xp-live').count(), 1);
     await ctx.close();
   });
@@ -142,8 +155,8 @@ describe('film 3D au défilement', () => {
     await ctx.close();
   });
 
-  it('sans WebGL : version statique', async () => {
-    const { ctx, page } = await open(browser, null);
+  it('WebGL refusé : le récit continue sur l’image, sans cadre vide ni erreur', async () => {
+    const { ctx, page, errors } = await open(browser, null);
     await page.addInitScript(() => {
       const get = HTMLCanvasElement.prototype.getContext;
       HTMLCanvasElement.prototype.getContext = function (type, ...rest) {
@@ -151,15 +164,24 @@ describe('film 3D au défilement', () => {
       };
     });
     await page.goto(BASE + '/', { waitUntil: 'load' });
-    await page.waitForTimeout(2000);
-    assert.equal(await page.locator('.xp-live').count(), 0);
+    await page.waitForSelector('.xp.xp-live');
+    await page.mouse.move(300, 300);
+    await page.waitForTimeout(2500);
+    assert.equal(await page.locator('.xp-ready').count(), 0, 'le canvas ne remplace pas l’image');
+    assert.ok(await page.locator('.xp-poster img').isVisible());
     assert.ok(await page.locator('.xp-h1').isVisible());
+    await page.evaluate(() => {
+      const el = document.querySelector('.xp');
+      window.scrollTo({ top: el.offsetTop + 0.53 * (el.offsetHeight - window.innerHeight), behavior: 'instant' });
+    });
+    await page.locator('[data-chapter="couches"]').waitFor({ state: 'visible', timeout: 10000 });
+    assert.deepEqual(errors.filter((e) => !/WebGL|webgl/.test(e)), []);
     await ctx.close();
   });
 
   it('mobile : la scène vit, la promesse et le devis sont à l’écran', async () => {
     const { ctx, page, errors } = await open(browser, '/', { viewport: PHONE, isMobile: true, hasTouch: true });
-    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
+    await filmReady(page);
     const box = await page.locator('.xp-hero a[href="/devis"]').boundingBox();
     assert.ok(box && box.y + box.height <= PHONE.height, 'le bouton devis tient dans le premier écran');
     assert.ok(box.height >= 44, 'cible tactile suffisante');

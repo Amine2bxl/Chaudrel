@@ -68,9 +68,10 @@ export default function ArchitecturalExperience() {
           {
             chapters: CHAPTERS,
             onReady: () => !cancelled && setReady(true),
-            // Contexte perdu, pilote capricieux : on revient à la version
-            // statique plutôt que de laisser un cadre vide.
-            onFail: () => !cancelled && setLive(false),
+            // WebGL refusé, contexte perdu : l'image de la maquette reprend
+            // l'écran et le récit continue sans la 3D. Jamais de cadre vide,
+            // jamais de page qui change de hauteur sous le doigt.
+            onFail: () => !cancelled && setReady(false),
           }
         );
       })
