@@ -68,7 +68,7 @@ vérifiez les DNS, et repassez à `site@chaudrel.be`.
 |---|---|---|
 | `RESEND_API_KEY` | `re_...` | la clé Resend de l'étape 4 |
 | `LEAD_FROM_EMAIL` | `site@chaudrel.be` (ou `onboarding@resend.dev` faute de domaine) | expéditeur |
-| `LEAD_TO_EMAIL` | `amineazouzi2009@gmail.com` | **destinataire de test** (mettre la vraie boîte en production) |
+| `LEAD_TO_EMAIL` | `info@chaudrel.be` | destinataire des demandes - la boîte de l'entreprise. Pour un test en *Preview*, mettre une boîte de test **uniquement dans l'environnement Preview**, jamais dans le code |
 | `LEAD_BCC_EMAIL` | *(facultatif)* | copie cachée, ex. le second gérant |
 
 > ⚠️ Ces valeurs restent **côté serveur** : elles ne sont jamais envoyées au

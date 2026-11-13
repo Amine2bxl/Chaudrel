@@ -1,5 +1,10 @@
 # Références de direction artistique
 
+> **V6** - la référence principale est désormais raisemybusiness.com ; analyse section par
+> section et correspondances dans `docs/V6-AUDIT-DIRECTION.md` (§02). La 3D décrite
+> ci-dessous (V5) a été retirée.
+
+
 Dossier de références du projet. Chaque entrée dit ce qu'on en retient, et **si elle a
 réellement été consultée** pendant la refonte.
 
@@ -18,7 +23,7 @@ d'œil, depuis la façade jusque dans la maison : les portes s'ouvrent, « Welco
 apparaît, le séjour traverse l'écran et la caméra débouche sur la terrasse et la
 piscine (« Here you won't count the days »). Un seul travelling avant, aucun plan
 de coupe.
-→ Repris dans le film d'accueil : allée, porte pivotante qui s'ouvre au défilement,
+→ (V5, retiré en V6) Repris dans le film d'accueil : allée, porte pivotante qui s'ouvre au défilement,
 entrée, salle à manger, séjour, puis la baie sur le jardin.
 
 **Webloved (« Aurum »)** — la tour, puis l'appartement en coupe sur fond blanc, puis
@@ -27,7 +32,7 @@ entrée, couloir, chambres, salle de bain. Chaque pièce a sa fiche translucide
 (« Oak, bouclé and a field of colour », « Arrive on travertine and walnut »,
 « Travertine, light and water ») avec ses matières, et la visite revient à la vue
 d'ensemble à la fin.
-→ Repris dans `/visite` : déplacement pièce par pièce à hauteur d'œil, fiche de
+→ (V5, retiré en V6) Repris dans `/visite` : déplacement pièce par pièce à hauteur d'œil, fiche de
 pièce (titre, texte, matières), plan pour s'orienter, retour possible à toute pièce.
 La vue en coupe n'est pas reprise : la direction demandée exclut la maquette vue du
 dessus.
@@ -55,5 +60,5 @@ dessus.
 | Outil | État |
 |---|---|
 | Higgsfield | compte accessible, **0 crédit** (plan gratuit) : aucune génération lancée |
-| Blender | non disponible dans l'environnement : la maison est modélisée en code (three.js), textures calculées sur la carte graphique |
+| Blender | non installé dans l'environnement - non utilisé. (La maison 3D de V5, modélisée en three.js, a été retirée en V6.) |
 | Figma | compte accessible en siège « View » : pas de fichier créé |
