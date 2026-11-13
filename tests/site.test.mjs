@@ -181,7 +181,11 @@ describe('visite 3D', () => {
   });
 
   it('on entre, on regarde, on révèle une pièce, on change de pièce et de finition', async () => {
-    const { ctx, page, errors } = await open(browser, '/visite');
+    const { ctx, page, errors, requests } = await open(browser, '/visite');
+    await page.waitForSelector('.visit-live');
+    await page.waitForTimeout(1500);
+    assert.ok(!requests.some((u) => /world-/.test(u)), 'la maison attend un premier geste');
+    await page.mouse.move(400, 300);
     await page.waitForSelector('.visit-ready', { timeout: 300000 });
     await page.getByRole('button', { name: 'Explorer librement' }).click();
     const W = () => window.__chaudrelWorld;

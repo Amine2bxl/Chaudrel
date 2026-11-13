@@ -75,11 +75,23 @@ export default function VisitExperience() {
 
   useEffect(() => {
     if (!live) return undefined;
-    // le moteur se prépare dès que la page est là : la visite est l'objet de la page
-    const id = window.requestIdleCallback ? window.requestIdleCallback(start, { timeout: 600 }) : window.setTimeout(start, 200);
+    /* La maison se construit au premier geste (souris, doigt, défilement,
+       touche) ou après quelques secondes : la page s'affiche et répond tout
+       de suite, l'image d'ouverture tient l'écran pendant la préparation. */
+    const WAKE = ['pointermove', 'pointerdown', 'touchstart', 'wheel', 'scroll', 'keydown'];
+    let done = false;
+    const wake = () => {
+      if (done) return;
+      done = true;
+      WAKE.forEach((t) => window.removeEventListener(t, wake));
+      window.clearTimeout(timer);
+      start();
+    };
+    WAKE.forEach((t) => window.addEventListener(t, wake, { passive: true, once: true }));
+    const timer = window.setTimeout(wake, 9000);
     return () => {
-      if (window.cancelIdleCallback && window.requestIdleCallback) window.cancelIdleCallback(id);
-      else window.clearTimeout(id);
+      WAKE.forEach((t) => window.removeEventListener(t, wake));
+      window.clearTimeout(timer);
     };
   }, [live, start]);
 
