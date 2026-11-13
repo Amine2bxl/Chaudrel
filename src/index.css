@@ -1,15 +1,16 @@
 @import './styles/tokens.css';
+@import './styles/gallery.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ============================================================
-   CHAUDREL - DESIGN SYSTEM
-   Crème, sable, brun : une seule famille chromatique.
-   Schibsted Grotesk : une seule famille typographique.
-   Une seule échelle d'arrondis : rien n'est laissé à angle vif.
-   Les ombres sont teintées dans le brun du fond, jamais noires.
+   CHAUDREL - DESIGN SYSTEM V6
+   Graphite, ivoire, or champagne. Instrument Serif + Manrope.
+   Peu d'arrondi, des filets d'un pixel, beaucoup d'air.
+   Les valeurs sont dans styles/tokens.css ; la doc dans
+   docs/DESIGN-SYSTEM.md.
    ============================================================ */
 
 @layer base {
@@ -17,19 +18,29 @@
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
-    overflow-x: hidden;
+    caret-color: var(--c-gold-deep);
+    accent-color: var(--c-gold-deep);
+    scroll-padding-top: calc(var(--header-h) + 1rem);
   }
 
   body {
     font-family: var(--font-ui);
-    background-color: var(--c-cream);
+    background-color: var(--c-ivory);
     color: var(--c-ink);
-    font-size: 16px;
-    line-height: 1.6;
-    font-feature-settings: 'ss01', 'cv05';
+    font-size: 15px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern', 'liga';
     overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  @media (min-width: 1024px) {
+    body {
+      font-size: 16px;
+    }
   }
 
   *,
@@ -46,22 +57,19 @@
     height: auto;
   }
 
-  /* Les surfaces que le navigateur dessine à notre place appartiennent
-     quand même à la charte : sélection, curseur, anneau de focus. */
   ::selection {
-    background: var(--c-gold);
-    color: var(--c-cream);
-  }
-
-  html {
-    caret-color: var(--c-gold);
-    accent-color: var(--c-gold);
+    background: rgb(var(--c-gold-rgb) / 0.35);
+    color: var(--c-ink);
   }
 
   :focus-visible {
-    outline: 2px solid var(--c-gold);
+    outline: 1.5px solid var(--c-gold-deep);
     outline-offset: 3px;
     border-radius: var(--r-xs);
+  }
+
+  .on-dark :focus-visible {
+    outline-color: var(--c-gold-light);
   }
 
   @supports (-webkit-touch-callout: none) {
@@ -74,223 +82,219 @@
 }
 
 @layer components {
-  /* ---------- Échelle typographique ---------- */
+  /* ---------- Échelle typographique ----------
+     Bureau : titre principal 38-52 px, section 26-34 px, carte 17-22 px,
+     texte 15-16 px, méta 11-13 px, navigation 13 px. Rien au-delà. */
 
-  /* Marcellus n'a qu'une graisse (400). Sa présence tient à la taille et à
-     l'interlettrage serré, jamais au gras. */
-  .t-display {
+  .t-hero {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(2.75rem, 7.6vw, 6rem);
-    line-height: 0.98;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.375rem, 1.6rem + 2.4vw, 3.25rem);
+    line-height: 1.04;
+    letter-spacing: -0.012em;
   }
 
   .t-h1 {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(2.25rem, 5.2vw, 4rem);
-    line-height: 1.02;
-    letter-spacing: -0.018em;
+    font-size: clamp(2.125rem, 1.55rem + 1.9vw, 3rem);
+    line-height: 1.06;
+    letter-spacing: -0.01em;
   }
 
   .t-h2 {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(1.875rem, 3.6vw, 2.875rem);
-    line-height: 1.08;
-    letter-spacing: -0.012em;
+    font-size: clamp(1.625rem, 1.3rem + 1vw, 2.125rem);
+    line-height: 1.12;
+    letter-spacing: -0.006em;
   }
 
-  /* H3 reste en grotesque : sous les grands titres serif, il structure sans
-     rivaliser - le contraste des deux familles porte la hiérarchie. Un cran
-     plus haut que le texte courant, et pas seulement par la graisse : à 18 px
-     semi-gras contre 17 px normal, les deux rôles se confondaient. */
+  /* Titre de carte, en serif. */
   .t-h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.25rem, 1.1rem + 0.4vw, 1.375rem);
+    line-height: 1.2;
+  }
+
+  /* Intitulé d'interface, en grotesque. */
+  .t-h4 {
     font-family: var(--font-ui);
     font-weight: 600;
-    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
-    line-height: 1.28;
-    letter-spacing: -0.015em;
+    font-size: 1.0625rem;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
   }
 
-  /* Phrase d'introduction : plus grande que le texte courant, plus légère
-     qu'un titre. C'est le palier qui manquait entre les deux. */
   .t-lead {
-    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
-    line-height: 1.55;
-    font-weight: 400;
-    letter-spacing: -0.011em;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.62;
+    letter-spacing: -0.005em;
   }
 
   .t-body {
-    font-size: 1.0625rem;
+    font-size: inherit;
     line-height: 1.7;
-    font-weight: 400;
   }
 
   .t-small {
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: 0.8125rem;
+    line-height: 1.55;
   }
 
-  /* Réservé aux repères de navigation (fil d'Ariane, boutons, méta).
-     Ce n'est pas un sur-titre décoratif à poser au-dessus de chaque section. */
+  /* Repères : fil d'Ariane, rubriques du pied de page, intitulés de liste.
+     Petites capitales espacées avec mesure - jamais un titre. */
   .t-label {
-    font-size: 0.6875rem;
-    line-height: 1;
+    font-size: 0.71875rem;
+    line-height: 1.2;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
-  .t-num {
-    font-family: var(--font-ui);
+  .t-meta {
+    font-size: 0.75rem;
+    line-height: 1.4;
     font-weight: 500;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
+    letter-spacing: 0.01em;
   }
 
-  /* ---------- Éléments ---------- */
+  .t-num {
+    font-family: var(--font-display);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* Le mot porteur d'un titre : l'italique d'Instrument Serif, en or.
+     Un seul par titre. */
+  .t-hero em,
+  .t-h1 em,
+  .t-h2 em,
+  .t-h3 em {
+    font-style: italic;
+    color: var(--c-gold-deep);
+  }
+  .on-dark .t-hero em,
+  .on-dark .t-h1 em,
+  .on-dark .t-h2 em,
+  .on-dark .t-h3 em {
+    color: var(--c-gold-light);
+  }
+
+  /* ---------- Repère de section ----------
+     Un filet d'or, deux ou trois mots. Un par section, au plus. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.71875rem;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(var(--c-ink-rgb) / 0.7);
+  }
+  .eyebrow::before {
+    content: '';
+    width: 1.75rem;
+    height: 1px;
+    flex: none;
+    background: var(--c-gold);
+  }
+  .eyebrow-light {
+    color: rgb(var(--c-ivory-rgb) / 0.66);
+  }
+
+  /* ---------- Photographie ----------
+     Photos de chantier prises au téléphone, à des heures différentes. Un
+     étalonnage commun, très léger, les accorde : un peu moins de saturation,
+     un peu plus de densité. Rien n'est retouché ni inventé. */
+  .photo {
+    filter: saturate(0.86) contrast(1.04) brightness(0.99);
+  }
 
   .measure {
-    max-width: 68ch;
+    max-width: 62ch;
   }
 
-  .rule {
-    border: 0;
-    border-top: 1px solid rgb(var(--c-ink-rgb) / 0.14);
+  .hairline {
+    border-color: var(--line);
   }
 
-  .rule-light {
-    border: 0;
-    border-top: 1px solid rgb(255 255 255 / 0.14);
-  }
-
-  /* ---------- Texte clair sur fond sombre ----------
-     Un même réglage ne rend pas pareil dans les deux sens. Sur fond sombre,
-     les contreformes se referment et les fûts paraissent plus fins : il faut
-     un peu plus d'interligne, un peu plus d'interlettrage, et de la couleur
-     plutôt que du gris. `.on-dark` est posé par <Section tone="bark"> ; les
-     titres n'y touchent pas, seul le texte suivi en profite. */
-  .on-dark .t-body,
-  .on-dark .t-lead,
-  .on-dark .t-small {
-    letter-spacing: 0.005em;
-  }
-
-  .on-dark .t-body {
-    line-height: 1.75;
-  }
-
-  .on-dark .t-lead {
-    line-height: 1.6;
-  }
-
-  .on-dark .t-small {
-    line-height: 1.65;
-  }
-
-  /* Les capitales espacées perdent le plus à contraste inversé. */
-  .on-dark .t-label {
-    letter-spacing: 0.16em;
-  }
-
-  /* ---------- Champs de saisie ----------
-     Un champ est une surface, pas une ligne : même arrondi que le reste du
-     site, fond coquille, et un anneau brun au focus plutôt qu'un contour
-     système. `.field-dark` est la même pièce sur fond sombre. */
-
+  /* ---------- Champs de saisie ---------- */
   .field {
     width: 100%;
     border-radius: var(--r-md);
-    border: 1px solid rgb(var(--c-ink-rgb) / 0.12);
-    background-color: var(--c-shell);
-    padding: 0.875rem 1.125rem;
-    font-size: 16px;
+    border: 1px solid rgb(var(--c-ink-rgb) / 0.14);
+    background-color: var(--c-paper);
+    padding: 0.8125rem 1rem;
+    font-size: 15px;
     line-height: 1.5;
     color: var(--c-ink);
     transition:
-      border-color 0.25s ease,
-      box-shadow 0.25s ease,
-      background-color 0.25s ease;
+      border-color var(--dur-fast) ease,
+      box-shadow var(--dur-fast) ease;
   }
-
   .field::placeholder {
     color: rgb(var(--c-ink-rgb) / 0.45);
   }
-
   .field:hover {
-    border-color: rgb(var(--c-ink-rgb) / 0.2);
+    border-color: rgb(var(--c-ink-rgb) / 0.26);
   }
-
   .field:focus {
     outline: none;
-    border-color: var(--c-gold);
-    box-shadow: 0 0 0 3px rgb(var(--c-gold-rgb) / 0.14);
+    border-color: var(--c-gold-deep);
+    box-shadow: 0 0 0 3px rgb(var(--c-gold-rgb) / 0.2);
   }
-
-  .field-error {
-    border-color: var(--c-error);
-  }
-
+  .field-error,
   .field-error:focus {
     border-color: var(--c-error);
+  }
+  .field-error:focus {
     box-shadow: 0 0 0 3px rgb(var(--c-error-rgb) / 0.16);
   }
-
   .field-dark {
-    background-color: rgb(var(--c-cream-rgb) / 0.06);
-    border-color: rgb(var(--c-cream-rgb) / 0.18);
-    color: var(--c-cream);
+    background-color: rgb(var(--c-ivory-rgb) / 0.05);
+    border-color: rgb(var(--c-ivory-rgb) / 0.18);
+    color: var(--c-ivory);
   }
-
   .field-dark::placeholder {
-    color: rgb(var(--c-cream-rgb) / 0.45);
+    color: rgb(var(--c-ivory-rgb) / 0.45);
   }
-
-  .field-dark:hover {
-    border-color: rgb(var(--c-cream-rgb) / 0.3);
-  }
-
   .field-dark:focus {
     border-color: var(--c-gold-light);
     box-shadow: 0 0 0 3px rgb(var(--c-gold-light-rgb) / 0.18);
   }
 
-  .field-dark.field-error {
-    border-color: var(--c-error-light);
-  }
-
-  .field-dark.field-error:focus {
-    box-shadow: 0 0 0 3px rgb(var(--c-error-light-rgb) / 0.2);
-  }
-
+  /* ---------- Liens ---------- */
   .link-line {
     background-image: linear-gradient(currentColor, currentColor);
     background-size: 0% 1px;
     background-position: 0 100%;
     background-repeat: no-repeat;
-    transition: background-size 0.4s var(--ease-soft);
+    transition: background-size 0.5s var(--ease-soft);
   }
-
   .link-line:hover,
   .link-line:focus-visible {
     background-size: 100% 1px;
   }
 
-  /* Zone tactile de 44 px sans déplacer un pixel.
-     Un lien de texte fait 11 à 15 px de haut : c'est la hauteur des lettres,
-     pas celle d'un pouce. Grossir la boîte réglerait la cible mais décrocherait
-     le soulignement, posé sur le bas de la boîte, et casserait le rythme
-     vertical. Le pseudo-élément étend la surface cliquable au-dessus et en
-     dessous du texte, là où il n'y a rien.
-     Réservé aux contrôles alignés horizontalement : deux `.tap` empilés
-     verticalement à moins de 44 px se recouvriraient. */
+  /* Soulignement d'or permanent, qui s'épaissit au survol. */
+  .link-gold {
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--c-gold-rgb) / 0.7);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color var(--dur-fast) ease;
+  }
+  .link-gold:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* Zone tactile de 44 px sans déplacer un pixel. */
   .tap {
     position: relative;
   }
-
   .tap::after {
     content: '';
     position: absolute;
@@ -300,52 +304,40 @@
   }
 }
 
-/* ---------- Scrollbar ---------- */
-
+/* ---------- Barre de défilement ---------- */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--c-cream);
+  background: var(--c-ivory);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(var(--c-gold-rgb) / 0.35);
+  background: rgb(var(--c-ink-rgb) / 0.18);
+  border: 2px solid var(--c-ivory);
   border-radius: 999px;
-}
-@media (max-width: 1023px) {
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  html,
-  body {
-    scrollbar-width: none;
-  }
 }
 
 /* ============================================================
-   ANIMATIONS - discrètes, courtes, jamais permanentes
+   MOUVEMENT
+   Transform, opacité, clip-path. Rien d'autre n'est animé.
    ============================================================ */
 
-/* Apparition au scroll */
+/* Apparition au défilement (lib/reveal.jsx). */
 .rv {
   opacity: 0;
   transition:
-    opacity 0.8s ease-out,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
+    opacity var(--dur-reveal) var(--ease-soft),
+    transform var(--dur-reveal) var(--ease-soft);
 }
 .rv-up {
-  transform: translateY(22px);
-}
-.rv-down {
-  transform: translateY(-18px);
+  transform: translate3d(0, var(--rise), 0);
 }
 .rv-left {
-  transform: translateX(-26px);
+  transform: translate3d(-20px, 0, 0);
 }
 .rv-right {
-  transform: translateX(26px);
+  transform: translate3d(20px, 0, 0);
 }
 .rv-fade {
   transform: none;
@@ -355,109 +347,119 @@
   transform: none;
 }
 
-/* Lignes qui se dessinent */
+/* Filet qui se dessine. */
 .rv-line {
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 1.2s var(--ease-soft);
 }
 .rv-line.is-visible {
   transform: scaleX(1);
 }
-.rv-line-y {
-  transform: scaleY(0);
-  transform-origin: center top;
-  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.rv-line-y.is-visible {
-  transform: scaleY(1);
-}
 
-/* Image révélée par un volet.
-   Le clip porte sur l'enfant, jamais sur l'élément observé : un élément
-   entièrement rogné n'intersecte plus rien, et l'IntersectionObserver ne se
-   déclencherait jamais. */
+/* Photo révélée par un volet, l'image se pose en même temps.
+   Le clip porte sur l'enfant : un élément entièrement rogné n'intersecte
+   plus rien et l'observateur ne se déclencherait jamais. */
 .rv-veil > * {
   clip-path: inset(0 0 100% 0);
-  transition: clip-path 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: clip-path 1.25s var(--ease-glide);
+}
+.rv-veil > * > img,
+.rv-veil > img {
+  transform: scale(1.08);
+  transition: transform 1.6s var(--ease-soft);
 }
 .rv-veil.is-visible > * {
   clip-path: inset(0 0 0 0);
 }
+.rv-veil.is-visible > * > img,
+.rv-veil.is-visible > img {
+  transform: none;
+}
 
-/* Entrée de la réponse d'une question (accordéon FAQ) : la question s'ouvre,
-   la réponse glisse sous elle. Native `details`, animation légère. */
-@keyframes faq-in {
+/* Sans JavaScript, rien ne reste caché. `html.js` est posé par un script en
+   ligne dans index.html avant le premier rendu. */
+html:not(.js) .rv,
+html:not(.js) .rv-line {
+  opacity: 1;
+  transform: none;
+}
+html:not(.js) .rv-veil > *,
+html:not(.js) .rv-veil > * > img {
+  clip-path: none;
+  transform: none;
+}
+
+/* Entrée d'en-tête : jouée en CSS dès le premier rendu, sans attendre le
+   JavaScript, donc sans retarder le plus grand élément affiché (LCP). */
+@keyframes enter-up {
   from {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translate3d(0, 14px, 0);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
-details[open] .faq-a {
-  animation: faq-in 0.4s var(--ease-soft);
-}
-@media (prefers-reduced-motion: reduce) {
-  details[open] .faq-a {
-    animation: none;
-  }
-}
-
-/* Hero */
-@keyframes fade-up {
+@keyframes enter-mask {
   from {
-    opacity: 0;
-    transform: translateY(20px);
+    clip-path: inset(0 0 100% 0);
   }
   to {
-    opacity: 1;
-    transform: none;
+    clip-path: inset(0 0 0 0);
   }
 }
-.hero-in {
-  opacity: 0;
-  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-.hero-d1 {
-  animation-delay: 0.1s;
-}
-.hero-d2 {
-  animation-delay: 0.22s;
-}
-.hero-d3 {
-  animation-delay: 0.34s;
-}
-.hero-d4 {
-  animation-delay: 0.46s;
-}
-.hero-d5 {
-  animation-delay: 0.6s;
-}
-/* Le mot-symbole entre en dernier : la promesse se lit avant la signature. */
-.hero-d6 {
-  animation-delay: 0.72s;
-}
-
-@keyframes slow-zoom {
+@keyframes enter-settle {
   from {
-    transform: scale(1.06);
+    transform: scale(1.08);
   }
   to {
     transform: scale(1);
   }
 }
-.slow-zoom {
-  animation: slow-zoom 2.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+.enter {
+  animation: enter-up 0.9s var(--ease-soft) both;
+}
+.enter-mask {
+  animation: enter-mask 1.3s var(--ease-glide) both;
+}
+.enter-mask > img {
+  animation: enter-settle 2.2s var(--ease-soft) both;
+}
+.d1 {
+  animation-delay: 0.08s;
+}
+.d2 {
+  animation-delay: 0.18s;
+}
+.d3 {
+  animation-delay: 0.28s;
+}
+.d4 {
+  animation-delay: 0.38s;
+}
+.d5 {
+  animation-delay: 0.5s;
 }
 
-/* Menu mobile */
+/* Changement de page (après une navigation interne seulement). */
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+html[data-nav] .page-in {
+  animation: page-in 0.45s var(--ease-soft) both;
+}
+
 @keyframes panel-in {
   from {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translate3d(0, -8px, 0);
   }
   to {
     opacity: 1;
@@ -465,10 +467,9 @@ details[open] .faq-a {
   }
 }
 .panel-in {
-  animation: panel-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: panel-in 0.32s var(--ease-soft) both;
 }
 
-/* Transition d'image (avant/après) */
 @keyframes soft-in {
   from {
     opacity: 0;
@@ -481,27 +482,177 @@ details[open] .faq-a {
   animation: soft-in 0.45s ease-out both;
 }
 
+/* Réponse d'accordéon. */
+@keyframes faq-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+details[open] .faq-a {
+  animation: faq-in 0.4s var(--ease-soft);
+}
+
+/* ---------- Image qui respire au survol ---------- */
+.zoom-media img {
+  transition: transform 1.1s var(--ease-soft);
+}
+.group:hover .zoom-media img,
+.zoom-media:hover img {
+  transform: scale(1.035);
+}
+
+/* ---------- Parallaxe pilotée par le défilement ----------
+   Animation liée à la position de l'élément dans la fenêtre : calculée par le
+   moteur de rendu, hors du fil JavaScript. Les navigateurs qui ne la
+   connaissent pas affichent l'image immobile. */
+@supports (animation-timeline: view()) {
+  @keyframes drift {
+    from {
+      transform: translate3d(0, -5%, 0) scale(1.1);
+    }
+    to {
+      transform: translate3d(0, 5%, 0) scale(1.1);
+    }
+  }
+  .drift > img {
+    animation: drift linear both;
+    animation-timeline: view();
+  }
+}
+
+/* ---------- Bandeau défilant (métiers) ---------- */
+@keyframes marquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 48s linear infinite;
+}
+.marquee-wrap:hover .marquee {
+  animation-play-state: paused;
+}
+
+/* ---------- Comparateur avant / après ----------
+   N'apparaît que pour une paire photographiée du même point de vue. */
+.ba-before {
+  clip-path: inset(0 calc(100% - var(--ba)) 0 0);
+}
+.ba-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--ba);
+  width: 1px;
+  background: var(--c-paper);
+  pointer-events: none;
+}
+.ba-handle > span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--c-paper);
+  color: var(--c-ink);
+  box-shadow: var(--shadow-soft);
+  transform: translate(-50%, -50%);
+}
+.ba-range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.ba-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 2.75rem;
+  height: 100vh;
+}
+.ba-range::-moz-range-thumb {
+  width: 2.75rem;
+  height: 100vh;
+  border: 0;
+}
+.ba:has(.ba-range:focus-visible) .ba-handle > span {
+  outline: 1.5px solid var(--c-gold-deep);
+  outline-offset: 3px;
+}
+
+/* ---------- Rangée à faire glisser ---------- */
+.snap-row {
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.snap-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Mot-symbole du pied de page ---------- */
+.footer-wordmark::before {
+  content: attr(data-word);
+}
+.footer-wordmark {
+  font-family: var(--font-display);
+  font-size: min(19vw, 15rem);
+  line-height: 0.8;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: rgb(var(--c-ivory-rgb) / 0.08);
+  user-select: none;
+}
+
+/* ============================================================
+   MOUVEMENT RÉDUIT
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
   .rv,
   .rv-line,
-  .rv-line-y,
-  .hero-in {
+  .enter,
+  .page-in {
     opacity: 1 !important;
     transform: none !important;
   }
-  .rv-veil > * {
+  .rv-veil > *,
+  .rv-veil > * > img,
+  .enter-mask,
+  .enter-mask > img {
     clip-path: none !important;
+    transform: none !important;
+  }
+  .marquee {
+    animation: none !important;
+    transform: none !important;
+  }
+  .drift > img {
+    animation: none !important;
+    transform: none !important;
   }
 }
-
-/* Le cadre et le rail sont retirés : le site est en plein écran, sans liseré
-   sable ni borne sur les côtés. (Le rail latéral a déjà été supprimé - les
-   réseaux vivent au pied de page et dans la fenêtre de contact.) */

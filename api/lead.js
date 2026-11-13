@@ -8,18 +8,13 @@
  *   LEAD_BCC_EMAIL    optionnel - copie cachée (le second gérant, par exemple)
  *   LEAD_FROM_EMAIL   expéditeur vérifié chez Resend (ex. site@chaudrel.be)
  *
- * ⚠️ PROVISOIRE - tant que `LEAD_TO_EMAIL` n'est pas défini, la destination de
- *    test envoy@… reçoit les demandes (adresse d'Amine) pour vérifier que
- *    l'envoi et les pièces jointes fonctionnent. À retirer dès la mise en
- *    production réelle.
- *
  * À chaque demande :
  *   1. une notification complète part à l'équipe (LEAD_TO_EMAIL ± LEAD_BCC_EMAIL),
  *      avec les photos/plans/vidéo reçus en pièces jointes ;
  *   2. un e-mail de confirmation part automatiquement au visiteur, avec le
  *      récapitulatif de sa demande et la suite.
  *
- * Tant que RESEND et LEAD_FROM ne sont pas configurés, l'endpoint répond 503
+ * Tant que RESEND, LEAD_FROM et LEAD_TO ne sont pas configurés, l'endpoint répond 503
  * avec un message explicite : le formulaire affiche alors le téléphone et
  * WhatsApp en repli. Aucun lead n'est perdu silencieusement.
  */
@@ -39,8 +34,6 @@ const ATTACH = {
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const DOC_TYPES = ['application/pdf'];
 
-/* ⚠️ PROVISOIRE (tests) - voir en-tête. */
-const TEST_DESTINATION = 'amineazouzi2009@gmail.com';
 
 /* Limitation de débit best-effort (mémoire de l'instance). */
 const hits = new Map();
@@ -201,7 +194,7 @@ export default async function handler(req, res) {
   }
 
   const { RESEND_API_KEY, LEAD_TO_EMAIL, LEAD_BCC_EMAIL, LEAD_FROM_EMAIL } = process.env;
-  if (!RESEND_API_KEY || !LEAD_FROM_EMAIL) {
+  if (!RESEND_API_KEY || !LEAD_FROM_EMAIL || !LEAD_TO_EMAIL) {
     console.error('[lead] Envoi non configuré - lead reçu mais non transmis:', {
       ...lead,
       files: attachments.length,
@@ -215,9 +208,10 @@ export default async function handler(req, res) {
     });
   }
 
-  /* ⚠️ PROVISOIRE (tests) : destination de repli tant que LEAD_TO_EMAIL n'est
-     pas défini dans Vercel. */
-  const destination = LEAD_TO_EMAIL || TEST_DESTINATION;
+  // Aucune destination de repli : sans LEAD_TO_EMAIL, la demande est refusée
+  // plus haut (503) et le visiteur est renvoyé vers le téléphone / WhatsApp.
+  // Une boîte de test silencieuse ferait croire à un devis reçu.
+  const destination = LEAD_TO_EMAIL;
   const where = [
     `Province : ${lead.province || 'non précisée'}`,
     `Code postal : ${lead.postalCode}`,

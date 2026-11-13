@@ -13,7 +13,7 @@
  * revenus dans les `works` là où ils apparaissent réellement.
  *
  * Structure d'un métier :
- *   slug, title, image, excerpt (une phrase), intro (trois lignes maximum)
+ *   slug, title, image { src, alt, w, h } | null, excerpt (une phrase), intro (trois lignes maximum)
  *   groups  postes réels, groupés - c'est ce qui permet d'afficher la
  *           catégorie d'abord et le détail ensuite, plutôt qu'une liste de
  *           trente lignes d'entrée de jeu
@@ -28,7 +28,7 @@ export const SERVICES = [
   {
     slug: 'renovation-complete',
     title: 'Rénovation complète',
-    image: '/photos/pf-1.webp',
+    image: { src: '/photos/pf-4.webp', alt: 'Maison en brique, toiture neuve et volume enduit au rez-de-chaussée', w: 1400, h: 933 },
     excerpt: 'Tout le chantier, un seul interlocuteur.',
     intro:
       "Nous prenons en charge la rénovation entière d'un appartement, d'une maison ou d'un commerce : gros œuvre, techniques, finitions, livraison. Vous parlez à une seule personne, du premier rendez-vous aux clés en main.",
@@ -57,12 +57,14 @@ export const SERVICES = [
         a: "Selon l'ampleur du chantier. Nous en parlons lors de la visite et l'indiquons dans le devis.",
       },
     ],
-    projectTags: ['renovation-complete'],
+    projectTags: ['gros-oeuvre', 'toiture', 'facade'],
   },
   {
     slug: 'finitions-interieures',
     title: 'Finitions intérieures',
-    image: '/photos/svc-cuisine.webp',
+    // TODO_PHOTO : aucune photo d'intérieur fournie. La page s'affiche sans
+    // image plutôt qu'avec une photo de façade qui ne montrerait pas le métier.
+    image: null,
     excerpt: 'Le parachèvement, du sol au plafond.',
     intro:
       "C'est le métier d'origine de Chaudrel : tout ce qui vient après le gros œuvre et qui décide de l'allure finale d'une pièce. Sols, cloisons, plafonnage, peinture.",
@@ -97,12 +99,12 @@ export const SERVICES = [
         a: "Nous pouvons les fournir ou poser les vôtres. Le devis distingue toujours la fourniture de la pose.",
       },
     ],
-    projectTags: ['renovation-complete', 'appartement', 'maison'],
+    projectTags: [],
   },
   {
     slug: 'amenagement-exterieur',
     title: 'Aménagement extérieur',
-    image: '/photos/svc-jardin.webp',
+    image: { src: '/photos/abords-allee.webp', alt: 'Allée neuve en asphalte menant aux garages d’une maison en brique', w: 1000, h: 1333 },
     excerpt: 'Du terrassement à la terrasse finie.',
     intro:
       "Nous préparons le terrain, posons les revêtements et montons les structures : allées, terrasses, annexes. Le support est repris avant la pose, c'est ce qui fait tenir un extérieur dans le temps.",
@@ -133,12 +135,12 @@ export const SERVICES = [
         a: "Oui. Selon son état, nous la démolissons et reprenons le support avant de poser le nouveau revêtement.",
       },
     ],
-    projectTags: ['maison'],
+    projectTags: ['exterieur'],
   },
   {
     slug: 'toiture',
     title: 'Toiture',
-    image: '/photos/svc-toiture.webp',
+    image: { src: '/photos/svc-toiture.webp', alt: 'Bâtiment en brique grise sous toiture sombre', w: 1200, h: 900 },
     excerpt: 'Charpente, couverture, étanchéité, zinguerie.',
     intro:
       "Toitures inclinées et plates, en rénovation comme en construction. Nous reprenons la charpente, la couverture, l'isolation et l'évacuation des eaux.",
@@ -168,12 +170,12 @@ export const SERVICES = [
         a: "Oui, comme les réfections complètes. Nous passons voir la toiture avant de chiffrer quoi que ce soit.",
       },
     ],
-    projectTags: ['maison'],
+    projectTags: ['toiture'],
   },
   {
     slug: 'facade',
     title: 'Façade',
-    image: '/photos/pf-2.webp',
+    image: { src: '/photos/svc-piscine.webp', alt: 'Façade enduite grise, châssis anthracite et porte de garage', w: 1200, h: 900 },
     excerpt: 'Création, ravalement, isolation par l’extérieur.',
     intro:
       "La façade protège le bâtiment autant qu'elle le montre. Nous la créons, la ravalons, l'isolons et reprenons les joints.",
@@ -193,12 +195,14 @@ export const SERVICES = [
         a: "Oui, elle modifie l'épaisseur des murs et le parement. Nous en parlons avant, avec les options possibles.",
       },
     ],
-    projectTags: ['maison'],
+    projectTags: ['facade', 'menuiseries'],
   },
   {
     slug: 'piscine',
     title: 'Piscine',
-    image: '/photos/svc-piscine.webp',
+    // TODO_PHOTO : aucune photo de piscine fournie (l'ancien fichier
+    // `svc-piscine.webp` montre une façade). Page sans image en attendant.
+    image: null,
     excerpt: 'Le gros œuvre, du terrassement aux finitions.',
     intro:
       "Nous réalisons la partie construction d'une piscine : creuser, maçonner, étanchéifier, finir les contours. Une piscine tient d'abord à son gros œuvre.",
@@ -218,7 +222,7 @@ export const SERVICES = [
         a: "Nous prenons en charge le gros œuvre et les finitions. Pour la filtration et le traitement de l'eau, nous travaillons avec un spécialiste.",
       },
     ],
-    projectTags: ['maison'],
+    projectTags: [],
   },
 ];
 

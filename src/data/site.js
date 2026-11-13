@@ -27,8 +27,9 @@ export const BRAND = {
     { name: 'Alberto', number: '+32 477 27 31 18', tel: '+32477273118' },
     { name: 'Matteo', number: '+32 493 97 25 17', tel: '+32493972517' },
   ],
-  // TODO_VALIDATION : confirmer le numéro utilisé pour WhatsApp Business.
-  whatsapp: '32477273118',
+  // Numéro WhatsApp publié par Chaudrel sur son Linktree (linktr.ee/chaudrel,
+  // vérifié en V6) : celui de Matteo.
+  whatsapp: '32493972517',
   /**
    * ⚠️ TODO_VALIDATION - horaires provisoires, posés pour que la fenêtre de
    * contact soit complète. À remplacer par les horaires réels avant mise en
@@ -74,12 +75,23 @@ export const BRAND = {
     'Wavre',
     'Arlon',
   ],
+  /**
+   * Profils vérifiés en V6 :
+   *  - Instagram et Facebook : liens publiés par Chaudrel sur linktr.ee/chaudrel.
+   *    L'ancienne adresse Facebook (`facebook.com/chaudrel_renovation`) ne peut
+   *    pas exister - Facebook refuse le tiret bas dans un nom de page.
+   *  - TikTok : le compte `@chaudrel_renovation` existe (« Chaudrel Rénovation »).
+   *    La graphie `@chaudrelrenovations` de docs/RESEAUX-SOCIAUX.md n'existe pas.
+   *  - YouTube : `@chaudrelrenovations` renvoie 404. Retiré tant que Chaudrel
+   *    n'a pas communiqué l'adresse de sa chaîne.
+   */
   socials: {
     instagram: 'https://www.instagram.com/chaudrel_renovation/',
-    facebook: 'https://www.facebook.com/chaudrel_renovation/',
-    youtube: 'https://www.youtube.com/@chaudrelrenovations',
+    facebook: 'https://www.facebook.com/profile.php?id=61574019493337',
     tiktok: 'https://www.tiktok.com/@chaudrel_renovation',
   },
+  /** Page Linktree existante de Chaudrel (vérifiée en V6). */
+  linktree: 'https://linktr.ee/chaudrel',
   founders: [
     { name: 'Alberto', role: "Maître d'œuvre" },
     { name: 'Matteo', role: 'Design & relation client' },
@@ -93,18 +105,16 @@ export const whatsappUrl = (
 ) => `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(message)}`;
 
 /**
- * Quatre entrées, pas une de plus.
- * Un visiteur vient voir le travail, comprendre ce que Chaudrel prend en
- * charge, savoir comment ça se passe, puis appeler. « À propos » et « FAQ »
- * restent accessibles depuis l'accueil et le pied de page : ce sont des pages
- * qu'on consulte, pas des étapes du parcours.
+ * Navigation principale : ce qu'on vient voir (les chantiers), ce que
+ * Chaudrel prend en charge, comment ça se passe, qui c'est. Le logo ramène à
+ * l'accueil ; « Contact » ouvre la fenêtre de coordonnées ; la FAQ et les
+ * mentions vivent au pied de page.
  */
 export const NAV = [
-  { label: 'Accueil', to: '/' },
-  { label: 'Services', to: '/services' },
   { label: 'Réalisations', to: '/realisations' },
+  { label: 'Services', to: '/services' },
+  { label: 'Méthode', to: '/methode' },
   { label: 'À propos', to: '/a-propos' },
-  { label: 'FAQ', to: '/faq' },
 ];
 
 export const MOBILE_NAV = [

@@ -7,10 +7,8 @@ const rgb = (name) => `rgb(var(--c-${name}-rgb) / <alpha-value>)`;
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
-  /* Sur un écran tactile, un `:hover` reste collé après le tap : la carte
-     touchée garde son état de survol jusqu'au tap suivant, ailleurs. Ce drapeau
-     enferme toutes les variantes `hover:` dans `@media (hover: hover)`, donc
-     l'effet n'existe que là où un curseur existe. */
+  /* Sur écran tactile, un `:hover` reste collé après le tap. Ce drapeau
+     enferme les variantes `hover:` dans `@media (hover: hover)`. */
   future: {
     hoverOnlyWhenSupported: true,
   },
@@ -18,28 +16,26 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // Une seule famille d'interface. La hiérarchie tient à la graisse et à
-        // l'échelle, pas à un deuxième caractère. `wordmark` ne sert qu'au
-        // logotype Chaudrel.
         sans: ['var(--font-ui)'],
-        display: ['var(--font-ui)'],
+        display: ['var(--font-display)'],
         wordmark: ['var(--font-wordmark)'],
       },
       colors: {
-        cream: rgb('cream'),
-        shell: rgb('shell'),
-        sand: rgb('sand'),
+        graphite: rgb('graphite'),
+        charcoal: rgb('charcoal'),
+        ivory: rgb('ivory'),
+        paper: rgb('paper'),
+        stone: rgb('stone'),
         ink: rgb('ink'),
-        bark: rgb('bark'),
         gold: {
           DEFAULT: rgb('gold'),
           deep: rgb('gold-deep'),
-          hover: rgb('gold-hover'),
           light: rgb('gold-light'),
+          ink: rgb('gold-ink'),
         },
-        green: {
-          DEFAULT: rgb('green'),
-          light: rgb('green-light'),
+        success: {
+          DEFAULT: rgb('success'),
+          light: rgb('success-light'),
         },
         error: {
           DEFAULT: rgb('error'),
@@ -48,12 +44,12 @@ export default {
       },
       borderRadius: {
         xs: 'var(--r-xs)',
+        img: 'var(--r-img)',
         sm: 'var(--r-sm)',
         DEFAULT: 'var(--r-md)',
         md: 'var(--r-md)',
         lg: 'var(--r-lg)',
-        xl: 'var(--r-xl)',
-        logo: 'var(--r-logo)',
+        panel: 'var(--r-panel)',
       },
       boxShadow: {
         soft: 'var(--shadow-soft)',
@@ -63,18 +59,22 @@ export default {
         section: 'var(--space-section)',
         block: 'var(--space-block)',
         group: 'var(--space-group)',
+        gutter: 'var(--gutter)',
+        header: 'var(--header-h)',
       },
       maxWidth: {
-        page: '1320px',
-        prose: '68ch',
+        page: 'var(--page-max)',
+        prose: '64ch',
       },
       transitionTimingFunction: {
         soft: 'var(--ease-soft)',
+        glide: 'var(--ease-glide)',
       },
       transitionDuration: {
         fast: 'var(--dur-fast)',
         DEFAULT: 'var(--dur)',
         slow: 'var(--dur-slow)',
+        reveal: 'var(--dur-reveal)',
       },
     },
   },

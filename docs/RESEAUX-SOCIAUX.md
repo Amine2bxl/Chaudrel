@@ -1,8 +1,15 @@
 # Réseaux sociaux, WhatsApp & Linktree
 
+> **Vérifié en V6 (novembre 2026)** - le compte TikTok est `@chaudrel_renovation`
+> (« Chaudrel Rénovation ») ; `@chaudrelrenovations` n'existe pas. Le Linktree existant
+> est `linktr.ee/chaudrel` : il publie Instagram `chaudrel_renovation`, la page Facebook
+> `facebook.com/profile.php?id=61574019493337` et WhatsApp sur le +32 493 97 25 17.
+> Il pointe encore vers `chaudrel.vercel.app` : à remplacer par `https://chaudrel.be/liens`.
+> Aucune chaîne YouTube trouvée (`@chaudrelrenovations` renvoie 404) : retirée du site.
+
 Comptes existants (repris du site) :
 Instagram `@chaudrel_renovation` · Facebook (page) · YouTube `@chaudrelrenovations` ·
-TikTok `@chaudrelrenovations` · WhatsApp · Linktree.
+TikTok `@chaudrel_renovation` · WhatsApp · Linktree.
 
 ⚠️ L'audience, la fréquence de publication actuelle et les performances de ces
 comptes n'ont pas pu être vérifiées depuis le repository. Les objectifs ci-dessous

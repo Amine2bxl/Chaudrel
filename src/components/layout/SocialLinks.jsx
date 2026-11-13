@@ -26,17 +26,16 @@ export default function SocialLinks({ tone = 'dark', source = 'footer', size = '
     'grid place-items-center rounded-full transition-all duration-fast ease-soft',
     size === 'sm' ? 'h-9 w-9' : 'h-10 w-10',
     light
-      ? 'border border-cream/20 text-cream/70 hover:border-cream/45 hover:bg-cream/10 hover:text-cream'
-      : 'border border-ink/15 text-ink/60 hover:border-ink/30 hover:bg-ink/5 hover:text-ink',
+      ? 'border border-ivory/20 text-ivory/75 hover:border-gold hover:bg-gold hover:text-graphite'
+      : 'border border-ink/15 text-ink/65 hover:border-ink/30 hover:bg-ink/5 hover:text-ink',
     className
   );
 
   return (
     <ul className="flex items-center gap-2.5">
-      {NETWORKS.map(({ id, label, url, Icon }) => (
+      {NETWORKS.filter((n) => n.url).map(({ id, label, url, Icon }) => (
         <li key={id}>
-          {url && (
-            <a
+          <a
               href={url}
               aria-label={label}
               title={label}
@@ -47,7 +46,6 @@ export default function SocialLinks({ tone = 'dark', source = 'footer', size = '
             >
               <Icon width={17} height={17} />
             </a>
-          )}
         </li>
       ))}
     </ul>

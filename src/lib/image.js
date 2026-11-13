@@ -12,16 +12,16 @@ import VARIANTS from '@/data/image-variants.json';
  * C'est lui qui permet au navigateur de choisir : sans lui il suppose la
  * pleine largeur de l'écran et télécharge trop grand à chaque fois.
  */
-export function imageAttrs(src, sizes) {
+export function imageAttrs(src, sizes, width) {
   const widths = VARIANTS[src];
   if (!widths?.length) return { src };
 
   const base = src.replace(/\.webp$/, '');
-  return {
-    src,
-    srcSet: widths.map((w) => `${base}-${w}.webp ${w}w`).join(', '),
-    sizes,
-  };
+  const set = widths.map((w) => `${base}-${w}.webp ${w}w`);
+  // L'original fait partie du choix : sans lui, un écran large plafonnerait à
+  // la plus grande variante alors qu'une meilleure définition existe.
+  if (width && width > widths[widths.length - 1]) set.push(`${src} ${width}w`);
+  return { src, srcSet: set.join(', '), sizes };
 }
 
 /* Largeurs d'affichage des dispositions récurrentes du site. Les garder ici
@@ -36,4 +36,8 @@ export const SIZES = {
   card: '(min-width: 1024px) 30vw, (min-width: 640px) 46vw, 100vw',
   /** Plateau du carrousel de chantiers. */
   stage: '(min-width: 1024px) 64vw, (min-width: 640px) 76vw, 100vw',
+  /** Diapositive du carrousel de réalisations. */
+  slide: '(min-width: 1024px) 34vw, (min-width: 640px) 56vw, 84vw',
+  /** Gros plan de matière. */
+  detail: '(min-width: 1024px) 22vw, (min-width: 640px) 40vw, 70vw',
 };

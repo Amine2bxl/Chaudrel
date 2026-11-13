@@ -12,7 +12,6 @@ import {
   QuoteIcon,
   TiktokIcon,
   WhatsappIcon,
-  YoutubeIcon,
 } from '@/components/ui/BrandIcons';
 
 /**
@@ -27,14 +26,13 @@ const SOCIALS = [
   { key: 'instagram', label: 'Instagram', icon: InstagramIcon },
   { key: 'tiktok', label: 'TikTok', icon: TiktokIcon },
   { key: 'facebook', label: 'Facebook', icon: FacebookIcon },
-  { key: 'youtube', label: 'YouTube', icon: YoutubeIcon },
 ];
 
 /** Une ligne de coordonnées : intitulé discret, valeur cliquable. */
 function Coord({ label, children }) {
   return (
     <div className="flex items-baseline justify-between gap-4">
-      <dt className="t-label flex-none text-ink/45">{label}</dt>
+      <dt className="t-label flex-none text-ink/65">{label}</dt>
       <dd className="t-small text-right text-ink/80">{children}</dd>
     </div>
   );
@@ -96,7 +94,7 @@ export default function ContactDialog() {
         type="button"
         aria-label="Fermer"
         onClick={closeDialog}
-        className="absolute inset-0 cursor-default bg-bark/60 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-graphite/60 backdrop-blur-sm"
       />
 
       <div
@@ -105,18 +103,18 @@ export default function ContactDialog() {
         aria-modal="true"
         aria-labelledby="contact-dialog-title"
         tabIndex={-1}
-        className="panel-in relative w-full max-w-sm overflow-hidden rounded-2xl bg-cream shadow-lift outline-none"
+        className="panel-in relative w-full max-w-sm overflow-hidden rounded-lg bg-ivory shadow-lift outline-none"
       >
         {/* En-tête : un titre, une croix. Rien d'autre. */}
         <div className="flex items-center justify-between gap-4 px-5 pb-2 pt-5">
-          <h2 id="contact-dialog-title" className="t-h2 text-[1.4rem]">
+          <h2 id="contact-dialog-title" className="t-h3">
             Nous joindre
           </h2>
           <button
             type="button"
             onClick={closeDialog}
             aria-label="Fermer"
-            className="-mr-1 grid h-10 w-10 flex-none place-items-center rounded-full text-ink/60 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
+            className="-mr-1 grid h-10 w-10 flex-none place-items-center rounded-full text-ink/65 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
           >
             <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M1 1l12 12M13 1L1 13" strokeLinecap="round" />
@@ -169,20 +167,13 @@ export default function ContactDialog() {
               {EMAIL_DISPLAY}
             </a>
           </Coord>
-          <Coord label="Horaires">
-            <span className="inline-block text-left">
-              {BRAND.hours.map((h) => (
-                <span key={h.days} className="block tabular-nums">
-                  {h.days} · {h.time}
-                </span>
-              ))}
-            </span>
-          </Coord>
+          {/* Horaires : affichés seulement une fois confirmés par Chaudrel
+              (BRAND.hours est encore provisoire - voir data/site.js). */}
           <Coord label="Adresse">
             <address className="not-italic text-ink/80">
               {BRAND.address.postalCode} {BRAND.address.city}
               <br />
-              <span className="text-ink/55">{BRAND.zoneLong}</span>
+              <span className="text-ink/65">{BRAND.zoneLong}</span>
             </address>
           </Coord>
         </dl>
@@ -190,7 +181,7 @@ export default function ContactDialog() {
         {/* Réseaux + site. */}
         <div className="border-t border-ink/10 px-5 py-3">
           <div className="flex items-center justify-between">
-            <span className="t-label text-ink/45">Nous suivre</span>
+            <span className="t-label text-ink/65">Nous suivre</span>
             <ul className="flex items-center gap-1.5">
               {SOCIALS.map(({ key, label, icon: Icon }) =>
                 BRAND.socials[key] ? (
@@ -201,7 +192,7 @@ export default function ContactDialog() {
                       rel="noopener noreferrer"
                       aria-label={label}
                       onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
-                      className="grid h-9 w-9 place-items-center rounded-full text-ink/60 transition-all duration-fast ease-soft hover:bg-ink/5 hover:text-gold"
+                      className="grid h-9 w-9 place-items-center rounded-full text-ink/65 transition-all duration-fast ease-soft hover:bg-ink/5 hover:text-gold-deep"
                     >
                       <Icon width="17" height="17" />
                     </a>

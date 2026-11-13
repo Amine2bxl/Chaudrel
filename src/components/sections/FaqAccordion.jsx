@@ -1,74 +1,56 @@
-import { Plus } from 'lucide-react';
-import Reveal from '@/lib/reveal';
 import { cn } from '@/lib/utils';
 
 /**
- * Accordéon de questions.
- *
- * La question dans la voix du site (serif), le texte en grotesque sous elle.
- * Une croix stable invite au geste ; quand la question s'ouvre, un trait
- * laiton entre avec la réponse et signale l'état sans lire le contenu.
- *
- * `tag` est un intitulé affiché au-dessus de la question (le métier, par
- * exemple), quand les questions viennent de sources différentes.
+ * Accordéon de questions : `<details>` natif - lisible et utilisable sans
+ * JavaScript, annoncé correctement par les lecteurs d'écran. Une ligne par
+ * question, compacte ; la réponse glisse sous la question.
  */
-export default function FaqAccordion({ items = [], tone = 'dark', className }) {
-  if (!items.length) return null;
+export default function FaqAccordion({ items = [], tone = 'dark', className, headingLevel = 'h3' }) {
   const light = tone === 'light';
-
+  const H = headingLevel;
   return (
-    <div className={cn('space-y-3', className)}>
+    <div className={cn('space-y-2.5', className)}>
       {items.map((f, i) => (
-        <Reveal
-          as="details"
-          key={f.q + String(i)}
-          delay={Math.min(i, 6) * 60}
+        <details
+          key={f.q}
           className={cn(
-            'group overflow-hidden rounded-lg border transition-colors duration-300 ease-soft',
-            'open:border-gold/60',
+            'group rounded-lg border transition-colors duration-fast',
             light
-              ? 'border-cream/15 bg-cream/[0.04] open:bg-cream/[0.06] hover:border-cream/30'
-              : 'border-ink/[0.08] bg-shell open:bg-shell hover:border-ink/15'
+              ? 'border-ivory/12 bg-ivory/[0.03] open:bg-ivory/[0.06] hover:border-ivory/25'
+              : 'border-ink/[0.08] bg-paper hover:border-ink/20 open:border-ink/15'
           )}
+          {...(i === 0 && f.open ? { open: true } : {})}
         >
-          <summary
-            className={cn(
-              'flex cursor-pointer list-none items-start justify-between gap-5 px-6 py-5 sm:px-7 sm:py-4',
-              light ? 'text-cream' : 'text-ink'
-            )}
-          >
-            <span className="min-w-0">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-5 px-5 py-4 sm:px-6 sm:py-5 [&::-webkit-details-marker]:hidden">
+            <span>
               {f.tag && (
-                <span className={cn('t-label block pb-1', light ? 'text-gold-light' : 'text-gold')}>{f.tag}</span>
+                <span className={cn('t-label mb-1.5 block', light ? 'text-gold' : 'text-gold-ink')}>{f.tag}</span>
               )}
-              <span className="block font-display text-[1.2rem] leading-snug tracking-[-0.01em] sm:text-[1.3rem]">
-                {f.q}
-              </span>
+              <H className={cn('text-[15.5px] font-semibold leading-snug', light ? 'text-ivory' : 'text-ink')}>{f.q}</H>
             </span>
-
-            {/* La croix tourne sans jamais disparaître : on sait qu'on peut
-                rabattre. */}
             <span
-              className={cn(
-                'mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-full border transition-all duration-300 ease-soft group-open:rotate-45',
-                light
-                  ? 'border-cream/20 text-cream/70 group-open:border-gold-light group-open:text-gold-light'
-                  : 'border-ink/[0.14] text-ink/60 group-open:border-gold group-open:text-gold'
-              )}
               aria-hidden="true"
+              className={cn(
+                'grid h-9 w-9 flex-none place-items-center rounded-full border transition-[transform,background-color,border-color,color] duration-300 ease-soft group-open:rotate-45',
+                light
+                  ? 'border-ivory/25 text-ivory group-open:border-gold group-open:bg-gold group-open:text-graphite'
+                  : 'border-ink/15 text-ink group-open:border-graphite group-open:bg-graphite group-open:text-ivory'
+              )}
             >
-              <Plus className="h-4 w-4" strokeWidth={1.75} />
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4">
+                <path d="M6 1v10M1 6h10" strokeLinecap="round" />
+              </svg>
             </span>
           </summary>
-
-          <div className="px-6 pb-6 sm:px-7 sm:pb-6">
-            <span
-              aria-hidden="true"
-              className={cn('mb-4 block h-px w-9 transition-colors duration-300', light ? 'bg-gold-light/70' : 'bg-gold/70')}
-            />
-            <p className={cn('faq-a t-body max-w-[62ch]', light ? 'text-cream/70' : 'text-ink/70')}>{f.a}</p>
-          </div>
-        </Reveal>
+          <p
+            className={cn(
+              'faq-a px-5 pb-5 text-[14.5px] leading-relaxed sm:px-6 sm:pb-6 max-w-[64ch]',
+              light ? 'text-ivory/70' : 'text-ink/70'
+            )}
+          >
+            {f.a}
+          </p>
+        </details>
       ))}
     </div>
   );

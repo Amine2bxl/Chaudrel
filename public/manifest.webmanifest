@@ -1,15 +1,15 @@
 {
   "name": "Chaudrel Rénovation",
   "short_name": "Chaudrel",
-  "description": "Rénovation complète, cuisine, salle de bain et aménagement intérieur à Bruxelles et en périphérie.",
+  "description": "Rénovation complète, façade, toiture, finitions et extérieurs, partout en Belgique.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F4F0E8",
-  "theme_color": "#1B1512",
+  "background_color": "#F4F1EA",
+  "theme_color": "#151615",
   "categories": ["business", "lifestyle"],
   "icons": [
     {

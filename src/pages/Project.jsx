@@ -1,136 +1,219 @@
+import { useEffect } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import BeforeAfter from '@/components/sections/BeforeAfter';
-import SiblingBar from '@/components/sections/SiblingBar';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Media, Section, SectionHeading } from '@/components/ui';
+import { Container, Media, RoundArrow, Section, Tag } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import { PROJECTS, getProject, projectSiblings } from '@/data/projects';
-import { EVENTS, track } from '@/lib/analytics';
+import { SIZES } from '@/lib/image';
 import { cn } from '@/lib/utils';
+import { EVENTS, track } from '@/lib/analytics';
+import { LEGACY_SLUGS, getProject, projectSiblings, projectsForTags } from '@/data/projects';
+import { SERVICES } from '@/data/services';
 
-/** Une ligne de la fiche technique : intitulé à gauche, valeur en regard. */
-function Spec({ label, children }) {
+function Facts({ project }) {
+  const rows = [
+    ['Nature', project.type],
+    project.location && ['Lieu', project.location],
+    project.year && ['Année', project.year],
+    ['État sur les photos', project.status === 'en cours' ? 'En cours de chantier' : 'Travaux terminés'],
+  ].filter(Boolean);
   return (
-    <div className="grid grid-cols-[7rem_1fr] items-baseline gap-4 border-t border-ink/12 py-3.5">
-      <dt className="t-label text-ink/55">{label}</dt>
-      <dd className="t-body text-ink/85">{children}</dd>
-    </div>
+    <dl className="divide-y divide-ink/10 border-y border-ink/10 text-[14px]">
+      {rows.map(([k, v]) => (
+        <div key={k} className="flex justify-between gap-6 py-3.5">
+          <dt className="text-ink/65">{k}</dt>
+          <dd className="text-right">{v}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 
-/** Navigation éditoriale : le chantier précédent et le suivant, par leur nom. */
-
+/**
+ * Fiche d'un dossier : photo d'ouverture, description factuelle, travaux
+ * visibles, galerie, avant/après s'il existe une paire du même point de vue,
+ * dossiers liés, puis le précédent et le suivant.
+ */
 export default function Project() {
   const { slug } = useParams();
   const project = getProject(slug);
 
-  if (!project) return <Navigate to="/realisations" replace />;
+  useEffect(() => {
+    if (project) track(EVENTS.PROJECT_VIEW, { slug: project.slug });
+  }, [project]);
+
+  if (!project) {
+    const moved = LEGACY_SLUGS[slug];
+    return <Navigate to={moved ? `/realisations/${moved}` : '/realisations'} replace />;
+  }
 
   const { prev, next } = projectSiblings(project.slug);
-  // La galerie ne répète pas la photo déjà montrée en en-tête : on ne montre
-  // pas deux fois la même image sur une même page.
   const gallery = (project.images ?? []).filter((im) => im.src !== project.cover.src);
+  const related = projectsForTags(project.categories, 2, project.slug);
+  const services = SERVICES.filter((s) => s.projectTags.some((t) => project.categories.includes(t)));
 
   return (
     <>
       <PageHero
-        title={project.title}
-        intro={project.summary}
-        image={project.cover.src}
         breadcrumb={[
           { label: 'Accueil', to: '/' },
           { label: 'Réalisations', to: '/realisations' },
           { label: project.title },
         ]}
+        title={project.title}
+        intro={project.summary}
+        image={project.cover}
+        meta={
+          <div className="flex flex-wrap gap-2">
+            <Tag>{project.type}</Tag>
+            {project.status === 'en cours' && <Tag>En cours de chantier</Tag>}
+            <Tag>
+              {project.images.length} photo{project.images.length > 1 ? 's' : ''}
+            </Tag>
+          </div>
+        }
       />
 
-      {/* Contexte : le récit à gauche, la fiche technique en regard à droite. */}
-      <Section tone="cream">
-        <Container>
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-            <Reveal className="lg:col-span-7">
-              <p className="t-lead measure text-ink/75">{project.description}</p>
-            </Reveal>
-
-            <Reveal delay={120} as="dl" className="lg:col-span-4 lg:col-start-9">
-              <Spec label="Lieu">{project.location}</Spec>
-              <Spec label="Nature">{project.type}</Spec>
-              {project.year && <Spec label="Livraison">{project.year}</Spec>}
-              {project.materials?.length > 0 && <Spec label="Matériaux">{project.materials.join(' · ')}</Spec>}
-              {project.works?.length > 0 && (
-                <div className="border-t border-ink/12 py-4">
-                  <dt className="t-label text-ink/55">Travaux réalisés</dt>
-                  <dd className="mt-3">
-                    <ul className="space-y-2">
-                      {project.works.map((w) => (
-                        <li key={w} className="t-small flex gap-2.5 text-ink/75">
-                          <span aria-hidden="true" className="mt-[7px] h-1 w-1 flex-none rounded-full bg-gold" />
-                          {w}
-                        </li>
-                      ))}
-                    </ul>
-                  </dd>
-                </div>
-              )}
-            </Reveal>
-          </div>
-
-          {/* Avant / après, quand la comparaison existe : elle prime sur la
-              galerie car c'est la preuve la plus forte. */}
-          {project.beforeAfter && (
-            <div className="mt-block">
-              <SectionHeading title="Le même espace, avant et après." />
-              <div className="mt-10 max-w-4xl">
-                <BeforeAfter
-                  before={project.beforeAfter.before}
-                  after={project.beforeAfter.after}
-                  label={project.title}
-                  ratio="aspect-[16/10]"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Galerie : les vues complémentaires, quand il y en a. La première
-              en grand, les suivantes en appui. */}
-          {gallery.length > 0 && (
-            <div className="mt-block">
-              <SectionHeading title="Sur le chantier." />
-              <div className="mt-10 grid gap-8 lg:grid-cols-12">
-                {gallery.map((im, i) => (
-                  <Media
-                    key={im.src}
-                    src={im.src}
-                    alt={im.alt}
-                    ratio={i === 0 ? 'aspect-[16/10]' : 'aspect-[4/5]'}
-                    className={i === 0 ? 'lg:col-span-12' : 'lg:col-span-6'}
-                    priority={i === 0}
-                  />
+      <Section className="pt-section">
+        <Container className="grid gap-12 lg:grid-cols-12">
+          <Reveal className="lg:col-span-6">
+            <p className="eyebrow">Le dossier</p>
+            <p className="t-lead mt-6 max-w-[56ch] text-ink/80">{project.description}</p>
+          </Reveal>
+          <Reveal delay={100} className="space-y-10 lg:col-span-5 lg:col-start-8">
+            <Facts project={project} />
+            <div>
+              <h2 className="t-label text-ink/65">Travaux visibles sur les photos</h2>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {project.works.map((w) => (
+                  <li key={w}>
+                    <Tag>{w}</Tag>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
-          )}
-
+            {project.materials?.length > 0 && (
+              <div>
+                <h2 className="t-label text-ink/65">Matériaux</h2>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {project.materials.map((m) => (
+                    <li key={m}>
+                      <Tag>{m}</Tag>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {services.length > 0 && (
+              <p className="text-[14px] text-ink/70">
+                Métier{services.length > 1 ? 's' : ''} :{' '}
+                {services.map((s, i) => (
+                  <span key={s.slug}>
+                    {i > 0 && ', '}
+                    <Link to={`/services/${s.slug}`} className="link-gold text-ink">
+                      {s.title}
+                    </Link>
+                  </span>
+                ))}
+              </p>
+            )}
+          </Reveal>
         </Container>
       </Section>
 
-      {/* La navigation entre chantiers quitte le corps de page pour se coller
-          en bas : c'est une commande permanente, pas un paragraphe qu'on
-          dépasse en défilant. */}
-      <SiblingBar
-        label="Chantier"
-        current={project.slug}
-        items={PROJECTS}
-        prev={prev && { to: `/realisations/${prev.slug}`, title: prev.title }}
-        next={next && { to: `/realisations/${next.slug}`, title: next.title }}
-      />
+      {project.beforeAfter && (
+        <Section tone="paper">
+          <Container>
+            <h2 className="t-h2">Avant, après.</h2>
+            <div className="mt-block">
+              <BeforeAfter before={project.beforeAfter.before} after={project.beforeAfter.after} />
+            </div>
+          </Container>
+        </Section>
+      )}
 
-      <CTASection
-        title="Vous avez un projet similaire ?"
-        text="Cinq questions, deux minutes. Nous revenons vers vous, puis nous convenons d’une visite sur place."
-        source="project_detail"
-      />
+      {gallery.length > 0 && (
+        <Section className="pt-0">
+          <Container>
+            <h2 className="t-label text-ink/65">Galerie · {gallery.length + 1} photos</h2>
+            <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:gap-10">
+              {gallery.map((im, i) => {
+                const wide = gallery.length % 2 === 1 && i === 0;
+                return (
+                  <li key={im.src} className={cn(wide && 'sm:col-span-2')}>
+                    <figure>
+                      <Media
+                        src={im.src}
+                        alt={im.alt}
+                        width={im.w}
+                        height={im.h}
+                        ratio={wide ? 'aspect-[16/9]' : 'aspect-[4/3]'}
+                        sizes={wide ? SIZES.full : SIZES.half}
+                      />
+                      <figcaption className="mt-3 text-[12.5px] text-ink/65">{im.alt}</figcaption>
+                    </figure>
+                  </li>
+                );
+              })}
+            </ul>
+          </Container>
+        </Section>
+      )}
+
+      {related.length > 0 && (
+        <Section tone="paper">
+          <Container>
+            <h2 className="t-h2">Dossiers voisins</h2>
+            <ul className="mt-block grid gap-10 sm:grid-cols-2">
+              {related.map((p) => (
+                <li key={p.slug}>
+                  <Link to={`/realisations/${p.slug}`} className="group grid grid-cols-[7rem_1fr_auto] items-center gap-5 sm:grid-cols-[9rem_1fr_auto]">
+                    <Media
+                      src={p.cover.src}
+                      alt=""
+                      width={p.cover.w}
+                      height={p.cover.h}
+                      ratio="aspect-[4/5]"
+                      sizes="10rem"
+                      reveal={false}
+                      zoom
+                    />
+                    <div>
+                      <p className="t-label text-ink/60">{p.type}</p>
+                      <h3 className="t-h3 mt-2">{p.title}</h3>
+                    </div>
+                    <RoundArrow />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </Section>
+      )}
+
+      <nav aria-label="Dossier précédent ou suivant" className="border-y border-ink/12">
+        <Container className="grid grid-cols-2 divide-x divide-ink/12">
+          {[prev, next].map((p, i) =>
+            p ? (
+              <Link
+                key={p.slug}
+                to={`/realisations/${p.slug}`}
+                className={cn('group py-8 sm:py-10', i === 0 ? 'pr-4 sm:pr-8' : 'pl-4 text-right sm:pl-8')}
+              >
+                <span className="t-label text-ink/60">{i === 0 ? '← Précédent' : 'Suivant →'}</span>
+                <span className="t-h3 mt-3 block transition-colors duration-fast group-hover:text-gold-deep">
+                  {p.title}
+                </span>
+              </Link>
+            ) : (
+              <span key={i} />
+            )
+          )}
+        </Container>
+      </nav>
+
+      <CTASection source="projet" />
     </>
   );
 }

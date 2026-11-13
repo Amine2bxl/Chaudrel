@@ -1,77 +1,74 @@
+import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Container } from '@/components/ui';
+import { imageAttrs } from '@/lib/image';
 import { cn } from '@/lib/utils';
-import { imageAttrs, SIZES } from '@/lib/image';
+import { Container } from '@/components/ui';
 
 /**
- * En-tête de page interne : fil d'Ariane, label, H1, une phrase.
- * Sans image par défaut - le vide fait le travail. L'image reste possible
- * quand la page a un visuel qui mérite la pleine largeur.
+ * En-tête des pages intérieures.
+ * Fil d'Ariane en petites capitales, titre en serif, introduction.
+ * `image` : photo d'ouverture à droite (bureau) ou sous le titre (téléphone).
+ * `aside` : contenu libre dans la colonne de droite quand il n'y a pas d'image.
+ * Entrées jouées en CSS dès le premier rendu (voir index.css, `.enter`).
  */
-export default function PageHero({ title, intro, image, breadcrumb = [], aside }) {
-  const hasImage = Boolean(image);
-
+export default function PageHero({ title, intro, image, breadcrumb = [], aside, meta, label, className }) {
+  const twoCols = Boolean(image || aside);
   return (
-    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-bark' : 'bg-cream')}>
-      {hasImage && (
-        <>
-          <img
-            {...imageAttrs(image, SIZES.full)}
-            alt=""
-            aria-hidden="true"
-            width="1920"
-            height="1080"
-            fetchpriority="high"
-            decoding="sync"
-            className="absolute inset-0 -z-10 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 -z-10 bg-bark/70" aria-hidden="true" />
-        </>
-      )}
-
-      <Container className={cn('pb-12 pt-24 lg:pb-16 lg:pt-32', hasImage && 'pb-16 lg:pb-24')}>
+    <header className={cn('pb-block pt-[calc(var(--header-h)+1.75rem)] lg:pt-[calc(var(--header-h)+3rem)]', className)}>
+      <Container>
         {breadcrumb.length > 0 && (
-          <nav aria-label="Fil d'Ariane" className="mb-8">
-            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-cream/65' : 'text-ink/65')}>
-              {breadcrumb.map((b, i) => (
-                <li key={b.to || b.label} className="flex items-center gap-2">
-                  {i > 0 && <span aria-hidden="true">/</span>}
-                  {b.to ? (
-                    <Link to={b.to} className="tap transition-colors hover:text-gold">
-                      {b.label}
-                    </Link>
-                  ) : (
-                    <span aria-current="page" className={hasImage ? 'text-cream/70' : 'text-ink/65'}>
-                      {b.label}
-                    </span>
+          <nav aria-label="Fil d'Ariane" className="enter">
+            <ol className="t-label flex flex-wrap items-center gap-x-2.5 gap-y-1 text-ink/60">
+              {breadcrumb.map((c, i) => (
+                <Fragment key={c.label}>
+                  {i > 0 && (
+                    <li aria-hidden="true" className="text-gold">
+                      /
+                    </li>
                   )}
-                </li>
+                  <li>
+                    {c.to ? (
+                      <Link to={c.to} className="link-line tap hover:text-ink">
+                        {c.label}
+                      </Link>
+                    ) : (
+                      <span aria-current="page" className="text-ink">
+                        {c.label}
+                      </span>
+                    )}
+                  </li>
+                </Fragment>
               ))}
             </ol>
           </nav>
         )}
 
-        {/* La colonne de droite n'existe que si elle porte autre chose qu'un
-            paragraphe : sinon le texte se lit sous le titre, à la bonne
-            largeur de lecture. */}
-        <div className={cn(aside && 'lg:grid lg:grid-cols-12 lg:gap-12')}>
-          <div className={cn(aside && 'lg:col-span-7')}>
-            {/* `ch` se calcule sur la police de l'élément : la largeur se pose
-                donc sur le titre, jamais sur le conteneur. */}
-            <h1 className={cn('t-h1 max-w-[16ch] text-balance', hasImage ? 'text-cream' : 'text-ink')}>{title}</h1>
+        <div className={cn('mt-10 lg:mt-14', twoCols && 'grid gap-12 lg:grid-cols-12 lg:items-end lg:gap-12')}>
+          <div className={cn(twoCols && 'lg:col-span-6')}>
+            {label && <p className="eyebrow enter mb-6">{label}</p>}
+            <h1 className="t-h1 enter d1 max-w-[18ch] text-balance">{title}</h1>
+            {intro && <p className="t-lead enter d2 mt-6 max-w-[52ch] text-ink/70">{intro}</p>}
+            {meta && <div className="enter d3 mt-8">{meta}</div>}
           </div>
 
-          {(intro || aside) && (
-            <div
-              className={cn(
-                'mt-6',
-                aside && 'lg:col-span-5 lg:mt-0 lg:self-end',
-                hasImage ? 'text-cream/65' : 'text-ink/65'
-              )}
-            >
-              {intro && <p className="t-lead measure">{intro}</p>}
-              {aside}
-            </div>
+          {image ? (
+            <figure className="lg:col-span-6">
+              <div className="enter-mask aspect-[4/3] overflow-hidden rounded-img bg-stone lg:aspect-[5/4]">
+                <img
+                  {...imageAttrs(image.src, '(min-width: 1024px) 46vw, 100vw', image.w)}
+                  alt={image.alt}
+                  width={image.w}
+                  height={image.h}
+                  fetchpriority="high"
+                  decoding="async"
+                  style={image.position ? { objectPosition: image.position } : undefined}
+                  className="photo h-full w-full object-cover"
+                />
+              </div>
+              {image.caption && <figcaption className="mt-3 text-[12px] text-ink/65">{image.caption}</figcaption>}
+            </figure>
+          ) : (
+            aside && <div className="enter d3 lg:col-span-5 lg:col-start-8">{aside}</div>
           )}
         </div>
       </Container>
