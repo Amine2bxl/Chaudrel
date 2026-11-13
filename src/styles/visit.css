@@ -185,6 +185,7 @@
   overflow-x: auto; scrollbar-width: none; list-style: none; margin: 0;
 }
 .visit-rail::-webkit-scrollbar { display: none; }
+.visit-rail li { flex: none; }
 .visit-rail button {
   flex: none; white-space: nowrap;
   padding: .6rem .95rem; border-radius: 999px;

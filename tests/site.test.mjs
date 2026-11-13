@@ -31,7 +31,8 @@ describe('prérendu et SEO', () => {
     const html = readFileSync('dist/index.html', 'utf8');
     assert.match(html, /<h1[^>]*>Du premier plan à la <em>dernière clé\.<\/em><\/h1>/);
     assert.equal((html.match(/<h1[\s>]/g) || []).length, 1, 'un seul H1');
-    assert.match(html, /Un chantier se lit <em>couche par couche\.<\/em>/, 'chapitres dans le HTML');
+    assert.match(html, /Ici, le chantier <em>commence\.<\/em>/, 'chapitres dans le HTML');
+    assert.match(html, /href="\/visite"/, 'lien vers la visite');
     for (const verb of ['Imaginer', 'Concevoir', 'Préparer', 'Rénover', 'Transformer', 'Révéler']) assert.ok(html.includes(verb), `le fil de l'histoire : ${verb}`);
     assert.match(html, /<link rel="canonical" href="https:\/\/chaudrel\.be\/"/);
     assert.match(html, /application\/ld\+json/);
