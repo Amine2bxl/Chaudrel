@@ -1,132 +1,150 @@
 /* ============================================================
-   CHAUDREL - JETONS DE THÈME
-   Source unique de vérité. Rien n'est codé en dur ailleurs :
-   tailwind.config.js lit ces variables, les composants lisent
-   Tailwind. Changer une valeur ici la change partout.
+   CHAUDREL - JETONS DU DESIGN SYSTEM (V6)
+   Quiet luxury × éditorial architectural × savoir-faire.
+   Toute valeur de thème vit ici ; Tailwind ne fait que l'exposer
+   (voir tailwind.config.js) et docs/DESIGN-SYSTEM.md l'explique.
    ============================================================ */
 
-/* ---------- Polices ----------
-   Hébergées sur le site (licence OFL) : pas d'appel à un tiers, pas de feuille
-   de style bloquante. `swap` : le texte s'affiche tout de suite. */
+/* Polices hébergées sur le site : aucune requête tierce, CSP `font-src 'self'`.
+   Sous-ensemble latin de Google Fonts (accents français, œ, guillemets,
+   espaces fines, tiret insécable compris). */
 @font-face {
-  font-family: 'Schibsted Grotesk';
+  font-family: 'Manrope';
   font-style: normal;
-  font-weight: 400 600;
+  font-weight: 400 700;
   font-display: swap;
-  src: url('/fonts/schibsted-grotesk-latin.woff2') format('woff2');
+  src: url('/fonts/manrope-latin.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Marcellus';
+  font-family: 'Instrument Serif';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/marcellus-latin.woff2') format('woff2');
+  src: url('/fonts/instrument-serif-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/instrument-serif-italic-latin.woff2') format('woff2');
+}
+
+/* Repli métrique : pendant le chargement, Georgia et Arial sont recalées sur
+   les proportions des deux familles. Le texte ne saute pas quand la vraie
+   police arrive (CLS). */
+@font-face {
+  font-family: 'Instrument Serif Fallback';
+  src: local('Georgia'), local('Times New Roman');
+  size-adjust: 88%;
+  ascent-override: 100%;
+  descent-override: 26%;
+}
+@font-face {
+  font-family: 'Manrope Fallback';
+  src: local('Arial'), local('Helvetica');
+  size-adjust: 104%;
+  ascent-override: 102%;
+  descent-override: 29%;
 }
 
 :root {
   /* ---------- Couleur ----------
-     Le crème est la couleur principale de Chaudrel : c'est le fond du site,
-     la barre de navigation, les surfaces. Le graphite porte le texte et les
-     actions. L'or de laiton n'est qu'un accent : page active, focus, repères.
+     Deux pôles - graphite et ivoire - et un seul accent : l'or champagne,
+     rare et métallique. Aucun vert, aucun brun boueux, aucun dégradé décoratif.
 
-     ⚠️ #8C764E donne 4,0:1 sur le crème et 3,9:1 sur le sombre : sous le seuil
-     AA pour du texte courant. Il ne sert donc jamais à écrire un paragraphe -
-     seulement des repères, des grands corps et des bordures. Sur fond sombre,
-     c'est `gold-light` (8:1) qui prend le relais.
+     Contrastes (WCAG 2.2) :
+       graphite sur ivoire ........ 16,1:1  texte courant
+       ink/70 sur ivoire ........... 6,3:1  texte secondaire (jamais sous /65)
+       gold-ink sur ivoire ......... 5,3:1  petits repères dorés sur fond clair
+       gold-deep sur ivoire ........ 3,9:1  grands titres (≥ 24 px) et bordures
+       gold sur graphite ........... 6,7:1  repères et texte sur fond sombre
+       gold-light sur graphite ..... 9,6:1
+       ivory/60 sur graphite ....... 6,4:1  texte secondaire sur fond sombre
+     Le champagne (#B79A65) ne fait que 2,4:1 sur l'ivoire : il n'y écrit
+     jamais, il y dessine (filets, puces, soulignés). */
+  --c-graphite-rgb: 21 22 21; /* #151615 - fond sombre, texte principal */
+  --c-charcoal-rgb: 32 33 31; /* #20211F - surfaces sur fond sombre */
+  --c-ivory-rgb: 244 241 234; /* #F4F1EA - fond de page */
+  --c-paper-rgb: 251 250 247; /* #FBFAF7 - surfaces claires surélevées */
+  --c-stone-rgb: 231 226 215; /* #E7E2D7 - aplats, image en attente */
+  --c-ink-rgb: 21 22 21; /* texte = graphite */
+  --c-gold-rgb: 183 154 101; /* #B79A65 - or champagne */
+  --c-gold-deep-rgb: 145 116 71; /* #917447 - or profond */
+  --c-gold-light-rgb: 209 186 141; /* #D1BA8D - or clair */
+  --c-gold-ink-rgb: 118 96 60; /* #76603C - or lisible en petit corps sur ivoire */
 
-     Le bouton « Devis gratuit » est en laiton, comme demandé, mais dans la
-     nuance `gold-deep` : son libellé fait 11 px, et du crème sur #8C764E ne
-     donne que 4,0:1. `gold-deep` monte à 5,8:1 en restant franchement laiton.
-     Les triplets RVB existent pour que Tailwind puisse appliquer une opacité
-     (`text-ink/65`) sans dupliquer la couleur. */
-  --c-cream-rgb: 247 245 242; /* fond de page - crème de Chaudrel */
-  --c-shell-rgb: 255 255 255; /* surfaces surélevées : cartes, champs, panneaux */
-  --c-sand-rgb: 234 229 222; /* aplats discrets, fond d'image en attente */
-  --c-ink-rgb: 22 28 25; /* texte et actions primaires - noir tirant sur le vert */
-  /* Vert sapin : le ton sombre de la marque. Avec le laiton et le crème, c'est
-     le trio de toute la charte - horlogerie plus que chantier. Il remplace le
-     charbon neutre : une seule valeur ici, et toutes les sections sombres, le
-     crépuscule de la maquette 3D et le pied de page suivent. */
-  --c-bark-rgb: 22 36 30; /* sections sombres - #16241E */
-  --c-moss-rgb: 34 53 44; /* le même vert, un cran plus clair : halo, surfaces sur fond sombre */
-  --c-gold-rgb: 140 118 78; /* accent : page active, focus, repères */
-  --c-gold-deep-rgb: 111 93 61; /* fond du bouton devis - 5,8:1 sous le crème */
-  --c-gold-hover-rgb: 122 102 66; /* son survol - 5,1:1, passe encore */
-  --c-gold-light-rgb: 201 174 131; /* le même accent sur fond sombre */
-  /* Vert de validation. Réservé à ce qui est terminé et vérifié - jamais
-     décoratif : s'il apparaît ailleurs que sur un état achevé, il ne veut plus
-     rien dire. Désaturé pour tenir à côté du laiton sans le concurrencer.
-     #3D6B4E : 5,7:1 sous le crème, et le crème dessus au même rapport.
-     #7FB08D : la même fonction sur fond sombre - 6,9:1 sur le bark. */
-  --c-green-rgb: 61 107 78;
-  --c-green-light-rgb: 127 176 141;
-
+  /* États. La validation n'a pas de vert : elle prend l'or lisible et une
+     coche. L'erreur reste une terre cuite sourde. */
+  --c-success-rgb: 118 96 60;
+  --c-success-light-rgb: 209 186 141;
   --c-error-rgb: 154 59 35;
   --c-error-light-rgb: 232 145 122;
 
-  --c-cream: rgb(var(--c-cream-rgb));
-  --c-shell: rgb(var(--c-shell-rgb));
+  --c-graphite: rgb(var(--c-graphite-rgb));
+  --c-charcoal: rgb(var(--c-charcoal-rgb));
+  --c-ivory: rgb(var(--c-ivory-rgb));
+  --c-paper: rgb(var(--c-paper-rgb));
+  --c-stone: rgb(var(--c-stone-rgb));
   --c-ink: rgb(var(--c-ink-rgb));
   --c-gold: rgb(var(--c-gold-rgb));
+  --c-gold-deep: rgb(var(--c-gold-deep-rgb));
   --c-gold-light: rgb(var(--c-gold-light-rgb));
+  --c-gold-ink: rgb(var(--c-gold-ink-rgb));
   --c-error: rgb(var(--c-error-rgb));
   --c-error-light: rgb(var(--c-error-light-rgb));
 
-  /* ---------- Rayons ----------
-     Une seule échelle. Commandes en pilule, surfaces en 24 px.
-     Le logo utilise `--r-logo` : un carré aux coins adoucis, ni rond ni vif. */
-  --r-xs: 0.625rem; /* 10 px - cases à cocher, micro-éléments */
-  --r-sm: 0.875rem; /* 14 px - chips compacts */
-  --r-md: 1.125rem; /* 18 px - champs de saisie */
-  --r-lg: 1.5rem; /* 24 px - images, panneaux, accordéon */
-  --r-xl: 2rem; /* 32 px - grands blocs */
-  --r-logo: 0.8125rem; /* 13 px sur 40 px - carré adouci */
+  /* Filets : une épaisseur (1 px), deux intensités. */
+  --line: rgb(var(--c-ink-rgb) / 0.12);
+  --line-strong: rgb(var(--c-ink-rgb) / 0.22);
+  --line-dark: rgb(var(--c-ivory-rgb) / 0.12);
 
-  /* ---------- Formes ----------
-     Deux gestes, et seulement deux, donnent sa silhouette au site :
-       feuille  un cadre photo dont UN angle s'ouvre en grand arc - le rappel
-                d'une voûte, d'une baie cintrée ;
-       nappe    une section sombre qui remonte sur la précédente, coins hauts
-                arrondis, comme une feuille de plan posée sur une autre.
-     Tout le reste garde l'échelle d'arrondis ci-dessus. */
-  --r-arc: clamp(4.5rem, 13vw, 11rem);
-  --r-sheet: clamp(1.75rem, 4.5vw, 3.5rem);
+  /* ---------- Rayons ----------
+     Peu d'arrondi : la photographie et les panneaux restent presque droits,
+     seules les commandes sont en pilule. Les grands panneaux sombres
+     (réalisations, appel final, pied de page) portent le seul grand rayon. */
+  --r-xs: 3px; /* cases à cocher, repères */
+  --r-img: 4px; /* photographies */
+  --r-sm: 8px; /* petites surfaces */
+  --r-md: 12px; /* champs de saisie */
+  --r-lg: 18px; /* panneaux clairs */
+  --r-panel: clamp(20px, 2.2vw, 32px); /* grands panneaux sombres */
+
+  /* ---------- Gabarit ---------- */
+  --page-max: 1320px;
+  --gutter: clamp(1rem, 4vw, 3rem); /* 16 px au téléphone, 48 px au bureau */
+  --header-h: 72px;
 
   /* ---------- Rythme vertical ----------
-     Trois intervalles nommés, et rien entre les deux. Le rythme d'une page
-     tient au contraste entre le serré et le large : cinq valeurs différentes
-     pour séparer deux blocs ne créent pas de nuance, elles effacent la
-     cadence. Les micro-écarts internes à un composant (intitulé → valeur)
-     restent libres, ils ne portent pas la structure.
+     Trois intervalles nommés, rien entre les deux.
        section  d'une section à l'autre
-       block    d'un titre à son contenu, d'un bloc majeur au suivant
-       group    d'un groupe apparenté au suivant, à l'intérieur d'un bloc */
-  --space-section: clamp(4.5rem, 8vw, 8.5rem);
-  --space-block: clamp(2.5rem, 4.5vw, 4.5rem);
-  --space-group: clamp(1.75rem, 2.5vw, 2.5rem);
+       block    d'un titre à son contenu
+       group    d'un groupe au suivant à l'intérieur d'un bloc */
+  --space-section: clamp(4.5rem, 9vw, 8.5rem);
+  --space-block: clamp(2.25rem, 4vw, 4rem);
+  --space-group: clamp(1.5rem, 2.4vw, 2.25rem);
 
   /* ---------- Élévation ----------
-     Toujours un décalage vertical et un flou, teintés dans le brun du fond. */
-  --shadow-soft: 0 1px 2px rgb(var(--c-ink-rgb) / 0.04), 0 10px 28px -14px rgb(var(--c-ink-rgb) / 0.2);
-  --shadow-lift: 0 2px 4px rgb(var(--c-ink-rgb) / 0.05), 0 26px 50px -22px rgb(var(--c-ink-rgb) / 0.3);
+     Rare. Une ombre longue et douce, teintée graphite, jamais noire. */
+  --shadow-soft: 0 1px 2px rgb(var(--c-ink-rgb) / 0.04), 0 18px 40px -24px rgb(var(--c-ink-rgb) / 0.28);
+  --shadow-lift: 0 2px 6px rgb(var(--c-ink-rgb) / 0.05), 0 36px 70px -34px rgb(var(--c-ink-rgb) / 0.42);
 
   /* ---------- Mouvement ----------
-     Une seule courbe, quatre durées. Voir docs/DESIGN-SYSTEM.md, « Grammaire
-     du mouvement » : qui bouge, de combien, et pourquoi. */
-  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 200ms; /* retour immédiat : survol, focus, bascule */
-  --dur: 300ms; /* changement d'état d'un composant */
-  --dur-slow: 500ms; /* panneau, barre, menu */
-  --dur-reveal: 900ms; /* apparition au défilement : texte, filet, photo */
-  --rise: 22px; /* course d'une apparition - jamais plus */
+     Une courbe d'arrivée, une de traversée. Transform et opacité seulement :
+     tout reste sur le compositeur, à 60 comme à 120 images/seconde. */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1); /* arrivée : rapide puis posée */
+  --ease-glide: cubic-bezier(0.65, 0, 0.35, 1); /* traversée : volets, marquee */
+  --dur-fast: 180ms; /* survol, focus */
+  --dur: 320ms; /* changement d'état */
+  --dur-slow: 560ms; /* panneau, menu */
+  --dur-reveal: 1000ms; /* apparition au défilement */
+  --rise: 18px; /* course d'une apparition */
 
   /* ---------- Typographie ----------
-     Deux voix, une seule origine. Marcellus - la serif inscriptionnelle du
-     logotype - porte les grands titres : c'est elle qui donne au site son
-     accent architectural et éditorial, et elle relie chaque page au mot-symbole.
-     Schibsted Grotesk porte tout le reste : sous-titres, interface, texte,
-     repères. Le contraste serif/grotesque EST la hiérarchie. */
-  --font-ui: 'Schibsted Grotesk', system-ui, sans-serif;
-  --font-display: 'Marcellus', 'Schibsted Grotesk', Georgia, serif;
-  --font-wordmark: 'Marcellus', 'Schibsted Grotesk', serif;
+     Instrument Serif pour les titres : une serif de presse, fine, avec un
+     italique qui porte l'accent. Manrope pour tout le reste : interface,
+     texte, repères. Tailles plafonnées - le luxe tient à l'espace, pas au corps. */
+  --font-ui: 'Manrope', 'Manrope Fallback', system-ui, sans-serif;
+  --font-display: 'Instrument Serif', 'Instrument Serif Fallback', Georgia, serif;
+  --font-wordmark: var(--font-display);
 }

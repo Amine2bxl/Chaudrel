@@ -4,8 +4,9 @@
  */
 import { after, before, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
-import { BASE, DESKTOP, PHONE, filmReady, launch, open, overflowsX, scrollFilm, startServer, stopServer } from './helpers.mjs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { BASE, PHONE, launch, open, overflowsX, startServer, stopServer } from './helpers.mjs';
+import { PROJECTS, LEGACY_SLUGS } from '../src/data/projects.js';
 
 let server;
 let browser;
@@ -20,36 +21,55 @@ after(async () => {
 });
 
 const ROUTES = [...readFileSync('dist/sitemap.xml', 'utf8').matchAll(/<loc>https:\/\/chaudrel\.be([^<]*)<\/loc>/g)].map((m) => m[1] || '/');
+const htmlOf = (route) => readFileSync(route === '/' ? 'dist/index.html' : `dist${route}/index.html`, 'utf8');
 
 describe('prérendu et SEO', () => {
   it('le sitemap liste les pages indexables', () => {
     assert.ok(ROUTES.length >= 15, `seulement ${ROUTES.length} routes`);
     assert.ok(ROUTES.includes('/'));
+    assert.ok(!ROUTES.includes('/visite'), 'plus de visite 3D');
   });
 
   it("l'accueil est lisible sans JavaScript", () => {
-    const html = readFileSync('dist/index.html', 'utf8');
-    assert.match(html, /<h1[^>]*>Du premier plan à la <em>dernière clé\.<\/em><\/h1>/);
+    const html = htmlOf('/');
+    assert.match(html, /<h1[^>]*>Transformer un espace, <em>créer un lieu\.<\/em><\/h1>/);
     assert.equal((html.match(/<h1[\s>]/g) || []).length, 1, 'un seul H1');
-    assert.match(html, /Ici, le chantier <em>commence\.<\/em>/, 'chapitres dans le HTML');
-    assert.match(html, /href="\/visite"/, 'lien vers la visite');
-    for (const verb of ['Imaginer', 'Concevoir', 'Préparer', 'Rénover', 'Transformer', 'Révéler']) assert.ok(html.includes(verb), `le fil de l'histoire : ${verb}`);
+    // Les apparitions au défilement ne cachent rien sans JavaScript : la
+    // classe `js` n'est posée que par le script en ligne.
+    assert.match(html, /<script>document\.documentElement\.classList\.add\('js'\)<\/script>/);
+    assert.doesNotMatch(html, /<html[^>]*class="[^"]*\bjs\b/);
     assert.match(html, /<link rel="canonical" href="https:\/\/chaudrel\.be\/"/);
     assert.match(html, /application\/ld\+json/);
     assert.match(html, /href="\/devis"/);
-    assert.doesNotMatch(html, /<canvas[^>]*>[^<]/, 'le canvas ne porte aucun contenu');
+    for (const p of PROJECTS.filter((x) => x.featured)) assert.ok(html.includes(`/realisations/${p.slug}`), p.slug);
+  });
+
+  it('aucune 3D, aucune image de synthèse, aucune photo de banque', () => {
+    const assets = readdirSync('dist/assets');
+    assert.ok(!assets.some((f) => /three|world|webgl|gsap/i.test(f)), assets.join(', '));
+    for (const route of ROUTES) {
+      const html = htmlOf(route);
+      assert.doesNotMatch(html, /<canvas/, `canvas sur ${route}`);
+      assert.doesNotMatch(html, /\/photos\/hero\.webp|unsplash|pexels/i, `image de banque sur ${route}`);
+    }
+  });
+
+  it('la CSP autorise le script en ligne par son empreinte, rien d’autre', () => {
+    const csp = JSON.parse(readFileSync('vercel.json', 'utf8'))
+      .headers.flatMap((h) => h.headers)
+      .find((h) => h.key === 'Content-Security-Policy').value;
+    assert.match(csp, /script-src 'self' 'sha256-[A-Za-z0-9+/=]+';/);
+    assert.doesNotMatch(csp, /script-src[^;]*'unsafe-inline'/);
   });
 
   for (const route of ROUTES) {
-    it(`${route} : 200, un H1, titre, canonical, aucune erreur`, async () => {
+    it(`${route} : un H1, titre, canonical, aucune erreur`, async () => {
       /* Le HTML prérendu de la route, lu tel qu'il sera servi : `vite preview`
-         renvoie l'accueil pour une route sans slash final (repli SPA), ce qui
-         ferait passer ces contrôles à vide. Vercel (`cleanUrls`) sert ce fichier. */
-      const html = readFileSync(route === '/' ? 'dist/index.html' : `dist${route}/index.html`, 'utf8');
+         renvoie l'accueil pour une route sans slash final (repli SPA). */
+      const html = htmlOf(route);
       assert.equal((html.match(/<h1[\s>]/g) || []).length, 1, 'un seul H1 dans le HTML prérendu');
       assert.ok(html.includes(`<link rel="canonical" href="https://chaudrel.be${route}"`), 'canonical de la route');
       assert.match(html, /<title>[^<]{10,}<\/title>/);
-      // Les mentions légales n'ont pas de données structurées - les autres pages, si.
       if (!route.startsWith('/legal')) assert.match(html, /application\/ld\+json/);
       if (route !== '/') assert.doesNotMatch(html, /rel="preload" as="image"/, 'pas de préchargement d’image hors accueil');
 
@@ -58,8 +78,16 @@ describe('prérendu et SEO', () => {
       await page.waitForSelector('h1');
       assert.equal(await page.locator('h1').count(), 1);
       await page.waitForTimeout(300);
+      // Aucune erreur - y compris d'hydratation : le HTML prérendu est repris tel quel.
       assert.deepEqual(errors, []);
       assert.equal(await overflowsX(page), false, 'pas de débordement horizontal (bureau)');
+      // Aucune image cassée
+      const broken = await page.evaluate(async () => {
+        const imgs = [...document.images];
+        await Promise.all(imgs.map((i) => (i.loading === 'lazy' ? null : i.decode().catch(() => null))));
+        return imgs.filter((i) => i.complete && i.loading !== 'lazy' && i.naturalWidth === 0).map((i) => i.src);
+      });
+      assert.deepEqual(broken, []);
       await ctx.close();
     });
   }
@@ -81,155 +109,42 @@ describe('prérendu et SEO', () => {
   });
 });
 
-describe('film d’entrée au défilement', () => {
-  it('ne charge le monde 3D qu’au premier geste du visiteur', async () => {
-    const { ctx, page, requests } = await open(browser, '/');
-    await page.waitForSelector('.xp.xp-live');
-    await page.waitForTimeout(2500);
-    assert.ok(!requests.some((u) => /world-/.test(u)), 'three.js ne part pas pendant le chargement');
-    assert.ok(await page.locator('.xp-poster img').isVisible(), 'l’image d’ouverture tient l’écran');
-    await page.mouse.move(300, 300);
-    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 300000 });
-    assert.ok(requests.some((u) => /world-/.test(u)));
+describe('réalisations : des photos réelles, décrites fidèlement', () => {
+  it('chaque photo existe sur le disque et porte une description', () => {
+    for (const p of PROJECTS) {
+      for (const im of [p.cover, ...p.images]) {
+        assert.ok(existsSync(`public${im.src}`), im.src);
+        assert.ok(im.alt && im.alt.length >= 15, `alt trop court : ${im.src}`);
+        assert.ok(im.w > 0 && im.h > 0);
+      }
+      // Rien d'affiché qui n'ait été confirmé
+      assert.equal(p.location, null, `${p.slug} : lieu non confirmé`);
+      assert.equal(p.year, null, `${p.slug} : année non confirmée`);
+    }
+  });
+
+  it('les anciennes adresses mènent au bon dossier (301 + routeur)', async () => {
+    const redirects = JSON.parse(readFileSync('vercel.json', 'utf8')).redirects;
+    for (const [from, to] of Object.entries(LEGACY_SLUGS)) {
+      assert.ok(
+        redirects.some((r) => r.source === `/realisations/${from}` && r.destination === `/realisations/${to}` && r.permanent),
+        from
+      );
+    }
+    const { ctx, page } = await open(browser, '/realisations/cuisine-ixelles');
+    await page.waitForURL('**/realisations/toitures-et-volumes');
+    assert.match(await page.locator('h1').innerText(), /Toitures et volumes/);
     await ctx.close();
   });
 
-  it('on entre dans la maison, le séjour se transforme, et tout revient en remontant', async () => {
-    const { ctx, page, errors } = await open(browser, '/');
-    await filmReady(page);
-    assert.equal(await page.locator('.xp.xp-live.xp-ready').count(), 1);
-    const start = await page.evaluate(() => window.__chaudrelXP.state());
-    assert.ok(start.z < -10, 'on commence dans l’allée, devant la maison');
-    assert.ok(await page.locator('.xp-hero').isVisible());
-
-    await scrollFilm(page, 0.4);
-    const hall = await page.evaluate(() => window.__chaudrelXP.state());
-    assert.ok(hall.z > 1 && hall.z < 5.5 && hall.y < 2, 'la caméra est entrée, à hauteur d’œil');
-    assert.ok(await page.locator('[data-chapter="concevoir"]').isVisible());
-    assert.ok(!(await page.locator('.xp-hero').isVisible()), 'la promesse s’efface');
-
-    await scrollFilm(page, 0.56);
-    assert.equal(await page.evaluate(() => window.__chaudrelXP.state().living), 0, 'le séjour est en chantier');
-    await scrollFilm(page, 0.72);
-    const mid = await page.evaluate(() => window.__chaudrelXP.state().living);
-    assert.ok(mid > 0.2 && mid < 0.8, `transformation en cours (${mid})`);
-    await scrollFilm(page, 1);
-    assert.equal(await page.evaluate(() => window.__chaudrelXP.state().living), 1);
-    assert.ok(await page.getByRole('link', { name: 'Visiter la maison' }).isVisible());
-
-    await scrollFilm(page, 0);
-    const back = await page.evaluate(() => window.__chaudrelXP.state());
-    for (const k of ['x', 'z', 'yaw', 'pitch']) assert.ok(Math.abs(back[k] - start[k]) < 1e-3, `${k} ne revient pas`);
-    assert.equal(back.living, 0, 'le séjour redevient chantier');
-    assert.ok(await page.locator('.xp-hero').isVisible());
-    assert.deepEqual(errors, []);
-    await ctx.close();
-  });
-
-  it('mouvement réduit : version statique, aucun module 3D chargé', async () => {
-    const { ctx, page, requests, errors } = await open(browser, '/', { reducedMotion: 'reduce' });
-    await page.waitForSelector('h1');
-    await page.waitForTimeout(2500);
-    assert.equal(await page.locator('.xp-live').count(), 0);
-    assert.ok(await page.locator('.xp-poster img').isVisible());
-    assert.ok(await page.locator('[data-chapter="renover"]').isVisible(), 'chapitres en lecture normale');
-    assert.ok(!requests.some((u) => /world-|ScrollTrigger-/.test(u)), 'ni three ni GSAP téléchargés');
-    assert.deepEqual(errors, []);
-    await ctx.close();
-  });
-
-  it('WebGL refusé : le récit continue sur l’image, sans cadre vide ni erreur', async () => {
-    const { ctx, page, errors } = await open(browser, null);
-    await page.addInitScript(() => {
-      const get = HTMLCanvasElement.prototype.getContext;
-      HTMLCanvasElement.prototype.getContext = function (type, ...rest) {
-        return /webgl/.test(type) ? null : get.call(this, type, ...rest);
-      };
-    });
-    await page.goto(BASE + '/', { waitUntil: 'load' });
-    await page.waitForSelector('.xp.xp-live');
-    await page.mouse.move(300, 300);
-    await page.waitForTimeout(2500);
-    assert.equal(await page.locator('.xp-ready').count(), 0, 'le canvas ne remplace pas l’image');
-    assert.ok(await page.locator('.xp-poster img').isVisible());
-    await page.evaluate(() => {
-      const el = document.querySelector('.xp');
-      window.scrollTo({ top: el.offsetTop + 0.68 * (el.offsetHeight - window.innerHeight), behavior: 'instant' });
-    });
-    await page.locator('[data-chapter="renover"]').waitFor({ state: 'visible', timeout: 10000 });
-    assert.deepEqual(errors.filter((e) => !/WebGL|webgl/.test(e)), []);
-    await ctx.close();
-  });
-
-  it('mobile : la promesse et le devis tiennent dans le premier écran', async () => {
-    const { ctx, page, errors } = await open(browser, '/', { viewport: PHONE, isMobile: true, hasTouch: true });
-    await page.waitForSelector('.xp.xp-live');
-    const box = await page.locator('.xp-hero a[href="/devis"]').boundingBox();
-    assert.ok(box && box.y + box.height <= PHONE.height, 'le bouton devis tient dans le premier écran');
-    assert.ok(box.height >= 44, 'cible tactile suffisante');
-    assert.deepEqual(errors, []);
-    await ctx.close();
-  });
-});
-
-describe('visite 3D', () => {
-  it('prérendue : titre, pièces et mention « maison d’étude » sans JavaScript', () => {
-    const html = readFileSync('dist/visite/index.html', 'utf8');
-    assert.match(html, /<h1[^>]*>Entrez\. <em>Tout est à visiter\.<\/em><\/h1>/);
-    for (const room of ['Entrée', 'Cuisine', 'Séjour', 'Suite parentale', 'Salle de bain']) assert.ok(html.includes(room), room);
-    assert.match(html, /pas un chantier Chaudrel/);
-  });
-
-  it('on entre, on regarde, on révèle une pièce, on change de pièce et de finition', async () => {
-    const { ctx, page, errors, requests } = await open(browser, '/visite');
-    await page.waitForSelector('.visit-live');
-    await page.waitForTimeout(1500);
-    assert.ok(!requests.some((u) => /world-/.test(u)), 'la maison attend un premier geste');
-    await page.mouse.move(400, 300);
-    await page.waitForSelector('.visit-ready', { timeout: 300000 });
-    await page.getByRole('button', { name: 'Explorer librement' }).click();
-    const W = () => window.__chaudrelWorld;
-    await page.waitForFunction(() => window.__chaudrelWorld.current === 'hall' && !window.__chaudrelWorld.moving, null, { timeout: 120000 });
-    assert.ok((await page.evaluate(() => window.__chaudrelWorld.view.y)) < 2, 'à hauteur d’œil');
-    assert.equal(await page.evaluate(() => window.__chaudrelWorld.roomState('hall')), 0, 'l’entrée est en chantier');
-
-    // regarder : glisser sur l'image
-    const yaw0 = await page.evaluate(() => window.__chaudrelWorld.view.yaw);
-    const r = await page.locator('.visit-stage').boundingBox();
-    await page.mouse.move(r.x + r.width * 0.6, r.y + r.height * 0.4);
-    await page.mouse.down();
-    await page.mouse.move(r.x + r.width * 0.4, r.y + r.height * 0.4, { steps: 6 });
-    await page.mouse.up();
-    assert.notEqual(await page.evaluate(() => window.__chaudrelWorld.view.yaw), yaw0, 'le regard tourne');
-    assert.equal(await page.evaluate(() => window.__chaudrelWorld.current), 'hall', 'glisser ne déplace pas');
-
-    // révéler : le bouton ne déplace pas la caméra
-    await page.getByRole('button', { name: 'Révéler la rénovation' }).click();
-    await page.waitForFunction(() => window.__chaudrelWorld.roomState('hall') === 1, null, { timeout: 120000 });
-    assert.equal(await page.evaluate(() => window.__chaudrelWorld.current), 'hall');
-    assert.ok(await page.getByRole('group', { name: 'Avant ou après travaux' }).isVisible());
-
-    // changer de pièce par le bandeau : passage par les portes jusqu'à l'étage
-    await page.locator('.visit-rail').getByRole('button', { name: 'Salle de bain' }).click();
-    await page.waitForFunction(() => window.__chaudrelWorld.current === 'bain' && !window.__chaudrelWorld.moving, null, { timeout: 180000 });
-    assert.ok((await page.evaluate(() => window.__chaudrelWorld.view.y)) > 4, 'on est monté à l’étage');
-    assert.match(await page.locator('.visit-card-title').innerText(), /Pierre, lumière et eau/);
-
-    // finition
-    await page.getByRole('button', { name: 'Béton & laiton' }).click();
-    await page.waitForFunction(() => window.__chaudrelWorld.style === 'beton-laiton', null, { timeout: 120000 });
-    assert.deepEqual(errors, []);
-    await ctx.close();
-  });
-
-  it('mouvement réduit : la page reste une description complète, sans 3D', async () => {
-    const { ctx, page, requests } = await open(browser, '/visite', { reducedMotion: 'reduce' });
-    await page.waitForSelector('h1');
-    await page.waitForTimeout(2000);
-    assert.equal(await page.locator('.visit-live').count(), 0);
-    assert.ok(await page.getByRole('link', { name: 'Parcourir les pièces' }).isVisible());
-    assert.ok(!requests.some((u) => /world-/.test(u)));
-    assert.equal(await page.locator('.visit-rooms-list li').count(), 9);
+  it('filtres du portfolio : un état pressé, une liste filtrée', async () => {
+    const { ctx, page } = await open(browser, '/realisations');
+    const cards = page.locator('main ul > li a[href^="/realisations/"]');
+    assert.equal(await cards.count(), PROJECTS.length);
+    await page.getByRole('button', { name: 'Toiture' }).click();
+    assert.equal(await page.getByRole('button', { name: 'Toiture' }).getAttribute('aria-pressed'), 'true');
+    const expected = PROJECTS.filter((p) => p.categories.includes('toiture')).length;
+    await page.waitForFunction((n) => document.querySelectorAll('main ul > li a[href^="/realisations/"]').length === n, expected);
     await ctx.close();
   });
 });
@@ -238,7 +153,7 @@ describe('navigation', () => {
   it('menu mobile : ouvre, mène à une page, se referme', async () => {
     const { ctx, page } = await open(browser, '/services', { viewport: PHONE, isMobile: true, hasTouch: true });
     await page.getByRole('button', { name: 'Ouvrir le menu' }).click();
-    await page.getByRole('navigation', { name: 'Navigation mobile' }).getByRole('link', { name: 'Réalisations' }).click();
+    await page.getByRole('navigation', { name: 'Navigation mobile' }).getByRole('link', { name: /Réalisations/ }).click();
     await page.waitForURL('**/realisations');
     assert.equal(await page.getByRole('navigation', { name: 'Navigation mobile' }).count(), 0);
     await ctx.close();
@@ -250,6 +165,7 @@ describe('navigation', () => {
     const dialog = page.getByRole('dialog');
     await dialog.waitFor();
     assert.ok(await dialog.locator('a[href^="tel:"]').first().isVisible());
+    assert.doesNotMatch(await dialog.innerText(), /Horaires/, 'horaires non validés, non affichés');
     await page.keyboard.press('Escape');
     await dialog.waitFor({ state: 'detached' });
     await ctx.close();
@@ -263,22 +179,23 @@ describe('navigation', () => {
     await ctx.close();
   });
 
-  it('galerie des chantiers : clavier, compteur, et chaque titre mène à sa fiche', async () => {
-    const { ctx, page, errors } = await open(browser, '/realisations');
-    const track = page.locator('.gallery-track');
+  it('carrousel des réalisations : clavier, compteur, flèches, lien vers la fiche', async () => {
+    const { ctx, page, errors } = await open(browser, '/', { reducedMotion: 'reduce' });
+    const carousel = page.locator('section[aria-roledescription="carrousel"]');
+    const track = carousel.locator('.rc-track');
     await track.scrollIntoViewIfNeeded();
-    const counter = page.locator('.gallery [aria-live="polite"]');
-    assert.match(await counter.innerText(), /^01 \/ 06/);
+    const counter = carousel.locator('[aria-live="polite"]');
+    const total = String(PROJECTS.filter((p) => p.featured).length).padStart(2, '0');
+    assert.equal((await counter.innerText()).replace(/\s+/g, ' '), `01 / ${total}`);
     await track.focus();
     await page.keyboard.press('ArrowRight');
-    await page.waitForFunction(() => /^02/.test(document.querySelector('.gallery [aria-live]').innerText), null, { timeout: 5000 });
-    assert.equal(await page.locator('.gallery-slide[data-active]').count(), 1);
-    // Les photos gardent leurs proportions d'origine : aucune n'est étirée
-    const ratios = await page.locator('.gallery-frame img').evaluateAll((imgs) =>
-      imgs.map((i) => [i.getAttribute('width') / i.getAttribute('height'), getComputedStyle(i).objectFit])
-    );
-    for (const [r, fit] of ratios) assert.ok(r > 0.5 && r < 2 && fit === 'cover');
-    await page.locator('.gallery-slide[data-active] .gallery-title a').click();
+    await page.waitForFunction(() => /^02/.test(document.querySelector('section[aria-roledescription="carrousel"] [aria-live]').innerText));
+    await carousel.getByRole('button', { name: 'Réalisation suivante' }).click();
+    await page.waitForFunction(() => /^03/.test(document.querySelector('section[aria-roledescription="carrousel"] [aria-live]').innerText));
+    // Les photos gardent leurs proportions : recadrées, jamais étirées
+    const fits = await track.locator('img').evaluateAll((imgs) => imgs.map((i) => getComputedStyle(i).objectFit));
+    assert.ok(fits.every((f) => f === 'cover'));
+    await track.locator('.rc-slide').nth(2).locator('a').click();
     await page.waitForURL('**/realisations/*');
     assert.equal(await page.locator('h1').count(), 1);
     assert.deepEqual(errors, []);
@@ -287,43 +204,43 @@ describe('navigation', () => {
 
   it('page services : six métiers, chacun avec son lien', async () => {
     const { ctx, page } = await open(browser, '/services');
-    const links = await page.locator('main h2 a[href^="/services/"]').evaluateAll((a) => a.map((x) => x.getAttribute('href')));
+    const links = await page.locator('main ol a[href^="/services/"]').evaluateAll((a) => a.map((x) => x.getAttribute('href')));
     assert.equal(links.length, 6);
     assert.equal(new Set(links).size, 6);
     await ctx.close();
   });
 
-  it('une même identité partout : fil de l’histoire, mot-symbole, barre qui se resserre', async () => {
+  it('une même identité partout : polices, palette, en-tête qui se pose au défilement', async () => {
     const { ctx, page } = await open(browser, '/services/toiture');
-    // Le cartouche de l'en-tête et le pied de page portent le même temps du récit
-    assert.match(await page.locator('main header').first().innerText(), /04\s*Rénover/i);
-    assert.equal(await page.locator('footer [aria-current="step"]').innerText().then((t) => t.replace(/\s+/g, ' ').trim().toLowerCase()), '04 rénover');
+    const look = () =>
+      page.evaluate(() => ({
+        h1: getComputedStyle(document.querySelector('h1')).fontFamily,
+        body: getComputedStyle(document.body).fontFamily,
+        bg: getComputedStyle(document.body).backgroundColor,
+      }));
+    const a = await look();
+    assert.match(a.h1, /Instrument Serif/);
+    assert.match(a.body, /Manrope/);
+    assert.equal(a.bg, 'rgb(244, 241, 234)');
     assert.equal(await page.locator('.footer-wordmark').count(), 1);
-    // Mêmes polices sur toutes les pages
-    const fonts = async () => page.evaluate(() => [getComputedStyle(document.querySelector('h1')).fontFamily, getComputedStyle(document.body).fontFamily]);
-    const a = await fonts();
     const bar = page.locator('header.fixed > div').first();
-    const wide = (await bar.boundingBox()).width;
+    const bg = () => bar.evaluate((el) => getComputedStyle(el).backgroundColor);
+    const before = await bg();
     await page.evaluate(() => window.scrollTo({ top: 600, behavior: 'instant' }));
     await page.waitForTimeout(800);
-    assert.ok((await bar.boundingBox()).width < wide, 'la barre se resserre au défilement');
+    assert.notEqual(await bg(), before, 'l’en-tête prend son voile au défilement');
     await page.goto(BASE + '/devis');
-    assert.deepEqual(await fonts(), a);
+    assert.deepEqual(await look(), a);
     await ctx.close();
   });
 
-  it('comparateur avant / après : pilotable au clavier', async () => {
-    const { ctx, page } = await open(browser, '/realisations/cuisine-ixelles');
-    const range = page.locator('.ba-range');
-    await range.scrollIntoViewIfNeeded();
-    await range.focus();
-    const read = () => page.locator('.ba').evaluate((el) => el.style.getPropertyValue('--ba'));
-    assert.equal(await read(), '50%');
-    await page.keyboard.press('ArrowRight');
-    await page.keyboard.press('ArrowRight');
-    assert.equal(await read(), '52%');
-    await page.keyboard.press('Home');
-    assert.equal(await read(), '0%');
+  it('réseaux : seulement des profils vérifiés', async () => {
+    const { ctx, page } = await open(browser, '/liens');
+    const hrefs = await page.locator('a[href^="http"]').evaluateAll((a) => a.map((x) => x.href));
+    assert.ok(hrefs.some((h) => h.includes('instagram.com/chaudrel_renovation')));
+    assert.ok(hrefs.some((h) => h.includes('tiktok.com/@chaudrel_renovation')));
+    assert.ok(hrefs.some((h) => h.includes('facebook.com/profile.php?id=61574019493337')));
+    assert.ok(!hrefs.some((h) => /youtube\.com|facebook\.com\/chaudrel_renovation/.test(h)));
     await ctx.close();
   });
 });

@@ -14,7 +14,6 @@ import {
   QuoteIcon,
   TiktokIcon,
   WhatsappIcon,
-  YoutubeIcon,
 } from '@/components/ui/BrandIcons';
 
 /**
@@ -31,45 +30,56 @@ const SOCIALS = [
   { key: 'instagram', label: 'Instagram', icon: InstagramIcon },
   { key: 'tiktok', label: 'TikTok', icon: TiktokIcon },
   { key: 'facebook', label: 'Facebook', icon: FacebookIcon },
-  { key: 'youtube', label: 'YouTube', icon: YoutubeIcon },
 ];
 
 export default function Links() {
   const t = (event, extra) => () => track(event, { source: 'links', ...extra });
 
   return (
-    <div className="relative isolate overflow-hidden bg-cream">
-      {/* Halo derrière l'en-tête : sans lui, une colonne de cartes blanches sur
-          un aplat crème n'a aucun point de départ - le regard entre par le
-          milieu. Un seul dégradé, très bas en opacité ; il ne se voit pas, il
-          se sent. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[26rem]"
-        style={{
-          background:
-            'radial-gradient(60% 100% at 50% 0%, rgb(var(--c-gold-rgb) / 0.10) 0%, rgb(var(--c-gold-rgb) / 0) 70%)',
-        }}
-      />
+    <div className="relative isolate overflow-hidden bg-ivory">
       {/* pt = hauteur de la barre flottante ; pb = barre d'action mobile. */}
       <div className="mx-auto w-full max-w-lg px-5 pb-[calc(66px+3rem)] pt-28 sm:px-6 lg:pb-24 lg:pt-36">
         <Reveal className="text-center">
-          <span className="mx-auto grid h-16 w-16 place-items-center overflow-hidden rounded-logo bg-shell shadow-lift ring-1 ring-ink/[0.06]">
+          <span className="mx-auto grid h-16 w-16 place-items-center overflow-hidden rounded-full bg-paper shadow-lift ring-1 ring-ink/[0.06]">
             <img src={LOGO} alt="" aria-hidden="true" width="64" height="64" className="h-full w-full object-cover" />
           </span>
-          <h1 className="mt-5 font-wordmark text-[22px] uppercase leading-none tracking-[0.2em] text-ink">
-            {BRAND.name}
-          </h1>
+          <h1 className="mt-5 font-display text-[40px] leading-none text-ink">{BRAND.name}</h1>
+          <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-ink/70">Rénovation</p>
           <p className="t-small mt-3 text-ink/65">
             Entreprise de rénovation · {BRAND.zoneLong}
           </p>
         </Reveal>
 
-        <Reveal delay={100} className="mt-10">
+        {/* Trois vraies photos de chantier : la première chose que cherche
+            quelqu'un qui arrive depuis Instagram ou TikTok. */}
+        <Reveal delay={60} className="mt-8">
+          <Link to="/realisations" className="group grid grid-cols-3 gap-2" aria-label="Voir nos réalisations">
+            {[
+              ['/photos/facade-garages.webp', '62% 50%'],
+              ['/photos/pf-2.webp', '50% 50%'],
+              ['/photos/abords-allee.webp', '50% 60%'],
+            ].map(([src, pos]) => (
+              <span key={src} className="aspect-[4/5] overflow-hidden rounded-img bg-stone">
+                <img
+                  src={src.replace('.webp', '-480.webp')}
+                  alt=""
+                  width="480"
+                  height="600"
+                  loading="lazy"
+                  decoding="async"
+                  style={{ objectPosition: pos }}
+                  className="photo h-full w-full object-cover transition-transform duration-slow ease-soft group-hover:scale-[1.03]"
+                />
+              </span>
+            ))}
+          </Link>
+        </Reveal>
+
+        <Reveal delay={100} className="mt-8">
           {/* La colonne de liens vit dans une carte : c'est la lecture « link
               tree » attendue d'une bio - une seule carte, un geste par ligne,
               pas de page derrière. */}
-          <div className="rounded-2xl bg-shell p-5 shadow-lift ring-1 ring-ink/[0.05] sm:p-8">
+          <div className="rounded-lg border border-ink/[0.08] bg-paper p-5 sm:p-8">
             <GroupLabel>Votre projet</GroupLabel>
           <div className="space-y-2.5">
             <Row
@@ -105,8 +115,8 @@ export default function Links() {
 
           <GroupLabel>Le travail</GroupLabel>
           <div className="space-y-2.5">
-            <Row to="/realisations" icon={GalleryIcon} label="Nos réalisations" hint="Chantiers livrés, photos réelles" />
-            <Row to="/services" icon={PinIcon} label="Nos métiers" hint="Intérieur, extérieur, toiture, façade, piscine" />
+            <Row to="/realisations" icon={GalleryIcon} label="Nos réalisations" hint="Photos réelles de nos chantiers" />
+            <Row to="/services" icon={PinIcon} label="Nos métiers" hint="Rénovation, façade, toiture, finitions, extérieurs" />
           </div>
 
           <GroupLabel>Nous suivre</GroupLabel>
@@ -124,7 +134,7 @@ export default function Links() {
                     rel="noopener noreferrer"
                     aria-label={label}
                     onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
-                    className="grid h-[3.25rem] w-[3.25rem] place-items-center rounded-md border border-ink/[0.09] bg-shell text-ink/70 transition-all duration-fast ease-soft hover:border-ink/20 hover:text-ink hover:shadow-soft active:translate-y-px"
+                    className="grid h-[3.25rem] w-[3.25rem] place-items-center rounded-full border border-ink/[0.12] bg-paper text-ink/70 transition-colors duration-fast ease-soft hover:border-graphite hover:bg-graphite hover:text-ivory"
                   >
                     <Icon width="19" height="19" />
                   </a>
@@ -146,7 +156,7 @@ export default function Links() {
               rate. Le trait reste collé au mot, la zone déborde autour. */}
           <Link
             to="/"
-            className="link-line t-label mt-3 inline-flex min-h-[44px] items-center px-2 text-ink"
+            className="link-line mt-3 inline-flex min-h-[44px] items-center px-2 text-[13.5px] font-semibold text-ink"
           >
             Voir le site
           </Link>

@@ -1,149 +1,67 @@
 /* ============================================================
-   GALERIE DES CHANTIERS - une cimaise
-   Photos accrochées à la même hauteur, chacune dans ses
-   proportions d'origine. Défilement natif, aimanté.
+   CARROUSEL DE RÉALISATIONS
+   Défilement natif, aimanté : le doigt, la molette, le pavé
+   tactile et le clavier font ce qu'ils font partout. Le script
+   n'ajoute que les flèches, le compteur et le glisser à la souris.
    ============================================================ */
 
-.gallery {
-  --gh: clamp(18rem, 58svh, 38rem); /* hauteur d'accrochage */
-  --gpad: max(1.25rem, calc((100vw - 1320px) / 2 + 3rem));
-  padding-block: var(--space-section);
-  overflow: hidden;
-}
-@media (min-width: 640px) and (max-width: 1415px) {
-  .gallery { --gpad: 2rem; }
-}
-@media (min-width: 1024px) and (max-width: 1415px) {
-  .gallery { --gpad: 3rem; }
-}
-
-.gallery-track {
+.rc-track {
+  --rc-pad: max(var(--gutter), calc((100vw - var(--page-max)) / 2 + var(--gutter)));
   display: flex;
-  gap: clamp(1rem, 2.4vw, 2.25rem);
-  margin: var(--space-block) 0 var(--space-group);
-  padding: 0 var(--gpad);
+  gap: clamp(0.875rem, 1.8vw, 1.75rem);
+  padding: 0.25rem var(--rc-pad) 0.5rem;
+  margin: 0;
   list-style: none;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
-  scroll-padding-left: var(--gpad);
+  scroll-padding-left: var(--rc-pad);
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   cursor: grab;
-  outline-offset: -4px;
 }
-.gallery-track::-webkit-scrollbar { display: none; }
-.gallery-track[data-dragging] {
-  cursor: grabbing;
+.rc-track::-webkit-scrollbar {
+  display: none;
+}
+.rc-track.is-dragging {
   scroll-snap-type: none;
+  cursor: grabbing;
   user-select: none;
 }
+.rc-track.is-dragging a {
+  pointer-events: none;
+}
+.rc-track:focus-visible {
+  outline-offset: -2px;
+}
 
-.gallery-slide {
+.rc-slide {
   flex: none;
-  width: min(calc(var(--gh) * var(--ar)), 84vw);
+  width: min(82vw, 25rem);
   scroll-snap-align: start;
 }
-
-/* Les photos voisines s'estompent ; leurs légendes restent lisibles (le
-   contraste du texte ne dépend jamais de l'état d'une photo). */
-.gallery-slide .gallery-frame {
-  opacity: 0.45;
-  transition: opacity var(--dur-slow) var(--ease-soft);
-}
-.gallery-slide[data-active] .gallery-frame { opacity: 1; }
-@media (hover: hover) {
-  .gallery-slide:hover .gallery-frame { opacity: 1; }
+@media (min-width: 1024px) {
+  .rc-slide {
+    width: clamp(20rem, 29vw, 26.5rem);
+  }
 }
 
-.gallery-frame {
-  height: var(--gh);
+/* Barre d'avancement : un filet, rempli d'or. */
+.rc-progress {
+  position: relative;
+  height: 1px;
+  background: rgb(var(--c-ivory-rgb) / 0.14);
   overflow: hidden;
-  border-radius: var(--r-lg);
-  background: rgb(var(--c-moss-rgb));
 }
-.gallery-frame a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  cursor: inherit;
-}
-.gallery-frame img {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  /* Parallaxe : la photo glisse un peu moins vite que son cadre. */
-  transform: translate3d(calc(var(--p, 0) * -3.5%), 0, 0) scale(1.08);
-  transition: transform 0.9s var(--ease-soft);
-  will-change: transform;
-}
-@media (hover: hover) {
-  .gallery-slide:hover .gallery-frame img {
-    transform: translate3d(calc(var(--p, 0) * -3.5%), 0, 0) scale(1.11);
-  }
+.rc-progress > span {
+  position: absolute;
+  inset: 0;
+  background: var(--c-gold);
+  transform-origin: left center;
+  transition: transform 0.6s var(--ease-soft);
 }
 
-.gallery-caption {
-  padding-top: 1.25rem;
-  transform: translateY(0.5rem);
-  transition: transform var(--dur-slow) var(--ease-soft);
-}
-.gallery-slide[data-active] .gallery-caption { transform: none; }
-.gallery-title {
-  margin-top: 0.75rem;
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
-  line-height: 1.08;
-  letter-spacing: -0.012em;
-}
-.gallery-title a {
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1px;
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  transition: background-size 0.5s var(--ease-soft);
-}
-.gallery-title a:hover,
-.gallery-title a:focus-visible { background-size: 100% 1px; }
-
-.gallery-nav {
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid rgb(var(--c-cream-rgb) / 0.25);
-  border-radius: 50%;
-  color: var(--c-cream);
-  transition:
-    border-color var(--dur) var(--ease-soft),
-    background-color var(--dur) var(--ease-soft),
-    opacity var(--dur) var(--ease-soft);
-}
-.gallery-nav:disabled { opacity: 0.3; }
-@media (hover: hover) {
-  .gallery-nav:not(:disabled):hover {
-    border-color: rgb(var(--c-cream-rgb) / 0.6);
-    background: rgb(var(--c-cream-rgb) / 0.08);
-  }
-}
-
-.gallery-progress {
-  flex: 1;
-  max-width: 22rem;
-  height: 1px;
-  background: rgb(var(--c-cream-rgb) / 0.18);
-}
-.gallery-progress span {
-  display: block;
-  height: 1px;
-  background: var(--c-gold-light);
-  transform: scaleX(0.04);
-  transform-origin: left;
-  transition: transform 0.4s var(--ease-soft);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .gallery-frame img { transform: none !important; }
-  .gallery-caption { transform: none; }
+/* Sur fond clair (pages réalisations / services) */
+.rc-light .rc-progress {
+  background: rgb(var(--c-ink-rgb) / 0.12);
 }

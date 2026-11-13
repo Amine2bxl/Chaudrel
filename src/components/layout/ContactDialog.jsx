@@ -12,7 +12,6 @@ import {
   QuoteIcon,
   TiktokIcon,
   WhatsappIcon,
-  YoutubeIcon,
 } from '@/components/ui/BrandIcons';
 
 /**
@@ -27,7 +26,6 @@ const SOCIALS = [
   { key: 'instagram', label: 'Instagram', icon: InstagramIcon },
   { key: 'tiktok', label: 'TikTok', icon: TiktokIcon },
   { key: 'facebook', label: 'Facebook', icon: FacebookIcon },
-  { key: 'youtube', label: 'YouTube', icon: YoutubeIcon },
 ];
 
 /** Une ligne de coordonnées : intitulé discret, valeur cliquable. */
@@ -96,7 +94,7 @@ export default function ContactDialog() {
         type="button"
         aria-label="Fermer"
         onClick={closeDialog}
-        className="absolute inset-0 cursor-default bg-bark/60 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-graphite/60 backdrop-blur-sm"
       />
 
       <div
@@ -105,11 +103,11 @@ export default function ContactDialog() {
         aria-modal="true"
         aria-labelledby="contact-dialog-title"
         tabIndex={-1}
-        className="panel-in relative w-full max-w-sm overflow-hidden rounded-2xl bg-cream shadow-lift outline-none"
+        className="panel-in relative w-full max-w-sm overflow-hidden rounded-lg bg-ivory shadow-lift outline-none"
       >
         {/* En-tête : un titre, une croix. Rien d'autre. */}
         <div className="flex items-center justify-between gap-4 px-5 pb-2 pt-5">
-          <h2 id="contact-dialog-title" className="t-h2 text-[1.4rem]">
+          <h2 id="contact-dialog-title" className="t-h3">
             Nous joindre
           </h2>
           <button
@@ -169,15 +167,8 @@ export default function ContactDialog() {
               {EMAIL_DISPLAY}
             </a>
           </Coord>
-          <Coord label="Horaires">
-            <span className="inline-block text-left">
-              {BRAND.hours.map((h) => (
-                <span key={h.days} className="block tabular-nums">
-                  {h.days} · {h.time}
-                </span>
-              ))}
-            </span>
-          </Coord>
+          {/* Horaires : affichés seulement une fois confirmés par Chaudrel
+              (BRAND.hours est encore provisoire - voir data/site.js). */}
           <Coord label="Adresse">
             <address className="not-italic text-ink/80">
               {BRAND.address.postalCode} {BRAND.address.city}
@@ -201,7 +192,7 @@ export default function ContactDialog() {
                       rel="noopener noreferrer"
                       aria-label={label}
                       onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
-                      className="grid h-9 w-9 place-items-center rounded-full text-ink/65 transition-all duration-fast ease-soft hover:bg-ink/5 hover:text-gold"
+                      className="grid h-9 w-9 place-items-center rounded-full text-ink/65 transition-all duration-fast ease-soft hover:bg-ink/5 hover:text-gold-deep"
                     >
                       <Icon width="17" height="17" />
                     </a>

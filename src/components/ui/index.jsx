@@ -5,32 +5,46 @@ import { imageAttrs, SIZES as IMG_SIZES } from '@/lib/image';
 import Reveal from '@/lib/reveal';
 
 /* ============================================================
-   Primitives - tout le site est composé de ces briques.
+   Primitives V6 - tout le site est composé de ces briques.
+   Voir docs/DESIGN-SYSTEM.md pour les règles d'usage.
    ============================================================ */
 
-export function Container({ className, children, as: Tag = 'div' }) {
-  return <Tag className={cn('mx-auto w-full max-w-page px-5 sm:px-8 lg:px-12', className)}>{children}</Tag>;
+export function Container({ className, children, as: Tag = 'div', ...rest }) {
+  return (
+    <Tag className={cn('mx-auto w-full max-w-page px-gutter', className)} {...rest}>
+      {children}
+    </Tag>
+  );
 }
 
 const TONES = {
-  cream: 'bg-cream text-ink',
-  white: 'bg-shell text-ink', // « white » historique : coquille, jamais blanc pur
-  shell: 'bg-shell text-ink',
-  sand: 'bg-sand text-ink',
-  // `on-dark` déclenche la compensation typographique du texte clair.
-  bark: 'bg-bark text-cream on-dark',
+  ivory: 'bg-ivory text-ink',
+  paper: 'bg-paper text-ink',
+  stone: 'bg-stone text-ink',
+  graphite: 'bg-graphite text-ivory on-dark',
+  charcoal: 'bg-charcoal text-ivory on-dark',
 };
 
-/**
- * `sheet` : la section remonte sur la précédente, coins hauts arrondis - la
- * « nappe » du design system. À poser sur une section sombre qui suit une
- * section claire (ou l'inverse), jamais entre deux sections du même ton.
- */
-export function Section({ id, tone = 'cream', sheet = false, className, children, ...rest }) {
+export function Section({ id, tone = 'ivory', className, children, ...rest }) {
   return (
-    <section id={id} className={cn('py-section', TONES[tone], sheet && 'sheet', className)} {...rest}>
+    <section id={id} className={cn('py-section', TONES[tone], className)} {...rest}>
       {children}
     </section>
+  );
+}
+
+/**
+ * Grand panneau sombre, coins arrondis, posé dans la page avec une marge
+ * latérale : le geste des réalisations, de l'appel final et du pied de page.
+ */
+export function DarkPanel({ as: Tag = 'div', className, children, ...rest }) {
+  return (
+    <Tag
+      className={cn('on-dark mx-auto max-w-[1440px] rounded-panel bg-graphite text-ivory', className)}
+      {...rest}
+    >
+      {children}
+    </Tag>
   );
 }
 
@@ -40,70 +54,58 @@ export function Rule({ tone = 'dark', className, delay = 0 }) {
     <Reveal
       from="line"
       delay={delay}
-      className={cn('h-px w-full', tone === 'light' ? 'bg-cream/20' : 'bg-ink/15', className)}
+      className={cn('h-px w-full', tone === 'light' ? 'bg-ivory/15' : 'bg-ink/12', className)}
     />
   );
 }
 
-export function Label({ children, tone = 'dark', className }) {
+export function Label({ children, tone = 'dark', className, as: Tag = 'span' }) {
   return (
-    <span className={cn('t-label', tone === 'light' ? 'text-cream/65' : 'text-ink/65', className)}>{children}</span>
+    <Tag className={cn('t-label', tone === 'light' ? 'text-ivory/60' : 'text-ink/65', className)}>{children}</Tag>
   );
 }
 
-/**
- * Repère de section : une pastille, un point de laiton, deux ou trois mots.
- * Il dit dans quel chapitre on se trouve - et il est le même partout, de
- * l'accueil au formulaire. Un par section au maximum, jamais deux empilés.
- */
+/** Repère de section : un filet d'or et deux ou trois mots. */
 export function Eyebrow({ children, tone = 'dark', className, as: Tag = 'p' }) {
-  return (
-    <Tag className={cn('eyebrow', tone === 'light' && 'eyebrow-light', className)}>
-      <span aria-hidden="true" />
-      {children}
-    </Tag>
-  );
+  return <Tag className={cn('eyebrow', tone === 'light' && 'eyebrow-light', className)}>{children}</Tag>;
 }
 
 /**
- * En-tête de section : un titre, et au besoin une phrase dessous.
- *
- * Deux règles tenues sur tout le site :
- * - pas de sur-titre par défaut. Un `label` se justifie une fois toutes les
- *   trois sections au maximum ; la place de la section dans la page suffit
- *   presque toujours à dire de quoi elle parle.
- * - le texte se met SOUS le titre, pas dans une colonne à droite. Le couple
- *   « gros titre à gauche / petit paragraphe à droite » est le tic de mise en
- *   page qui fait ressembler toutes les pages entre elles. `align="split"`
- *   reste disponible quand la colonne de droite porte autre chose qu'un
- *   paragraphe de remplissage.
+ * En-tête de section. `label` : repère au-dessus du titre. `align="split"` :
+ * titre à gauche, texte et action à droite (bureau seulement).
+ * Un mot du titre peut être mis en valeur avec <em> : italique et or.
  */
-export function SectionHeading({ label, title, text, tone = 'dark', align = 'stack', className, children }) {
+export function SectionHeading({
+  label,
+  title,
+  text,
+  tone = 'dark',
+  align = 'stack',
+  as: Heading = 'h2',
+  className,
+  titleClassName,
+  children,
+}) {
   const light = tone === 'light';
   const split = align === 'split';
-
   return (
-    <div className={cn(split && 'lg:grid lg:grid-cols-12 lg:gap-10', className)}>
+    <div className={cn(split && 'lg:grid lg:grid-cols-12 lg:items-end lg:gap-12', className)}>
       <Reveal className={cn(split && 'lg:col-span-7')}>
         {label && (
-          <Eyebrow tone={tone} className="mb-6">
+          <Eyebrow tone={tone} className="mb-5">
             {label}
           </Eyebrow>
         )}
-        {/* La largeur se pose sur le titre : `ch` se calcule sur la police de
-            l'élément, pas sur celle du conteneur. Un mot peut être mis en
-            valeur avec <em> : il prend le laiton, pas l'italique. */}
-        <h2 className={cn('t-h2 max-w-[18ch] text-balance', light ? 'text-cream' : 'text-ink')}>{title}</h2>
+        <Heading
+          className={cn('t-h2 max-w-[22ch] text-balance', light ? 'text-ivory' : 'text-ink', titleClassName)}
+        >
+          {title}
+        </Heading>
       </Reveal>
-
       {(text || children) && (
         <Reveal
-          delay={120}
-          className={cn(
-            'mt-5',
-            split && 'lg:col-span-5 lg:mt-0 lg:self-end',
-            light ? 'text-cream/70' : 'text-ink/65'
-          )}
+          delay={100}
+          className={cn('mt-5', split && 'lg:col-span-5 lg:mt-0', light ? 'text-ivory/70' : 'text-ink/70')}
         >
           {text && <p className="t-lead measure">{text}</p>}
           {children}
@@ -114,72 +116,77 @@ export function SectionHeading({ label, title, text, tone = 'dark', align = 'sta
 }
 
 /* ---------- Boutons ----------
-   Règle de forme du site, tenue partout :
-     · commandes (boutons, chips, pastilles) → pilule
-     · médias et panneaux                    → 24 px
-     · champs de saisie                      → 18 px
-
-   Le crème est la couleur du site ; le graphite est celle des actions. Le brun
-   ne sert qu'à signaler : page active, focus, repères. Une action primaire en
-   brun ferait du brun la couleur dominante, ce qu'il n'est pas. */
-
+   Pilules, en bas de casse, Manrope semi-gras. Le graphite est la couleur
+   des actions sur fond clair ; l'or champagne celle de l'action principale
+   sur fond sombre. */
 const VARIANTS = {
-  // Le devis est l'action de la marque : il porte le laiton.
-  solid: 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift',
-  solidLight: 'bg-cream text-ink shadow-soft hover:bg-shell hover:shadow-lift',
-  outline: 'border border-ink/15 bg-shell/70 text-ink hover:border-ink/30 hover:bg-shell hover:shadow-soft',
-  outlineLight: 'border border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/10',
+  solid: 'bg-graphite text-ivory hover:bg-charcoal',
+  gold: 'bg-gold text-graphite hover:bg-gold-light',
+  light: 'bg-ivory text-graphite hover:bg-paper',
+  outline: 'border border-ink/20 text-ink hover:border-ink/60',
+  outlineLight: 'border border-ivory/25 text-ivory hover:border-ivory/70',
 };
 
 const SIZES = {
-  sm: 'px-5 py-3 text-[11px]',
-  md: 'px-7 py-4 text-[11px]',
-  lg: 'px-9 py-[1.15rem] text-[12px]',
+  sm: 'h-10 px-5 text-[13px]',
+  md: 'h-12 px-6 text-[13.5px]',
+  lg: 'h-14 px-7 text-[14px]',
 };
 
-/* Pastille de flèche logée dans la pilule. Elle donne la direction et se
-   décale au survol. Décorative : le libellé dit déjà où l'on va. */
 const ARROW_TONE = {
-  solid: 'bg-cream/20 text-cream',
-  solidLight: 'bg-ink/10 text-ink',
-  outline: 'bg-ink/[0.07] text-ink',
-  outlineLight: 'bg-cream/15 text-cream',
+  solid: 'bg-ivory/12 text-ivory',
+  gold: 'bg-graphite/10 text-graphite',
+  light: 'bg-graphite/[0.07] text-graphite',
+  outline: 'bg-ink/[0.06] text-ink',
+  outlineLight: 'bg-ivory/10 text-ivory',
 };
+
+export function Arrow({ className, size = 11 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 11 11"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+    >
+      <path d="M1.5 9.5 9.5 1.5M3.5 1.5h6v6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 function ArrowChip({ variant }) {
   return (
     <span
       aria-hidden="true"
       className={cn(
-        '-mr-3 ml-1 grid h-7 w-7 flex-none place-items-center rounded-full',
-        'transition-transform duration-300 ease-soft group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5',
+        '-mr-3 ml-1 grid h-8 w-8 flex-none place-items-center rounded-full',
+        'transition-transform duration-slow ease-soft group-hover/btn:rotate-45',
         ARROW_TONE[variant]
       )}
     >
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <path d="M1.5 9.5 9.5 1.5M3.5 1.5h6v6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      <Arrow />
     </span>
   );
 }
 
 export function Button({ to, href, variant = 'solid', size = 'md', arrow = false, className, children, ...rest }) {
   const classes = cn(
-    'group/btn inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full font-semibold uppercase tracking-[0.14em]',
-    'transition-[background-color,box-shadow,transform,border-color] duration-300 ease-soft',
-    'active:translate-y-px',
+    'group/btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-semibold tracking-[0.005em]',
+    'transition-[background-color,border-color,color,transform] duration-300 ease-soft active:scale-[0.98]',
     VARIANTS[variant],
     SIZES[size],
     className
   );
-
   const content = (
     <>
       {children}
       {arrow && <ArrowChip variant={variant} />}
     </>
   );
-
   if (to) {
     return (
       <Link to={to} className={classes} {...rest}>
@@ -201,31 +208,35 @@ export function Button({ to, href, variant = 'solid', size = 'md', arrow = false
   );
 }
 
-/** Lien texte avec soulignement qui se déploie au survol. La flèche est
-    toujours là : un lien discreet doit quand même dire qu'il mène quelque
-    part, et elle se décale au survol. */
+/** Bouton rond à flèche : l'action d'une carte. Décoratif si la carte est un lien. */
+export function RoundArrow({ tone = 'dark', className }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'grid h-11 w-11 flex-none place-items-center rounded-full border transition-[background-color,border-color,color,transform] duration-slow ease-soft',
+        tone === 'light'
+          ? 'border-ivory/25 text-ivory group-hover:border-gold group-hover:bg-gold group-hover:text-graphite'
+          : 'border-ink/20 text-ink group-hover:border-graphite group-hover:bg-graphite group-hover:text-ivory',
+        'group-hover:rotate-45',
+        className
+      )}
+    >
+      <Arrow size={12} />
+    </span>
+  );
+}
+
+/** Lien texte avec flèche, souligné qui se déploie au survol. */
 export function TextLink({ to, href, className, children, tone = 'dark', ...rest }) {
   const classes = cn(
-    'link-line tap group t-label inline-flex items-center gap-1.5 pb-1',
-    tone === 'light' ? 'text-cream' : 'text-ink',
+    'link-line tap group inline-flex items-center gap-2 pb-0.5 text-[13.5px] font-semibold',
+    tone === 'light' ? 'text-ivory' : 'text-ink',
     className
   );
-
   const arrow = (
-    <svg
-      width="11"
-      height="11"
-      viewBox="0 0 11 11"
-      aria-hidden="true"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      className="flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5"
-    >
-      <path d="M1.5 9.5 9.5 1.5M3.5 1.5h6v6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+    <Arrow className="flex-none transition-transform duration-fast ease-soft group-hover:rotate-45" />
   );
-
   if (to) {
     return (
       <Link to={to} className={classes} {...rest}>
@@ -242,118 +253,110 @@ export function TextLink({ to, href, className, children, tone = 'dark', ...rest
   );
 }
 
-const SHAPES = {
-  // Cadre courant : 24 px aux quatre angles.
-  frame: 'rounded-lg',
-  // « Feuille » : un angle s'ouvre en grand arc (voir tokens.css, Formes).
-  leaf: 'rounded-lg rounded-tr-arc',
-  leafLeft: 'rounded-lg rounded-tl-arc',
-  leafDown: 'rounded-lg rounded-bl-arc',
-};
+/** Étiquette en pilule : nature des travaux, statut. */
+export function Tag({ children, tone = 'dark', className }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex h-7 items-center rounded-full border px-3 text-[11.5px] font-medium',
+        tone === 'light' ? 'border-ivory/20 text-ivory/80' : 'border-ink/15 text-ink/75',
+        className
+      )}
+    >
+      {children}
+    </span>
+  );
+}
 
 /**
- * Image au ratio contrôlé, révélée par un volet au scroll.
- * `shape` choisit la silhouette du cadre ; `photo` (par défaut) applique
- * l'étalonnage commun à toutes les photographies du site.
+ * Photographie au ratio contrôlé, révélée par un volet au défilement.
+ * `drift` : légère parallaxe pilotée par le défilement (CSS seul).
  */
 export function Media({
   src,
   alt,
   ratio = 'aspect-[4/5]',
-  shape = 'frame',
   className,
   imgClassName,
   priority = false,
   reveal = true,
-  revealFrom = 'veil',
+  drift = false,
+  zoom = false,
   sizes = IMG_SIZES.half,
   width = 1200,
   height = 900,
+  position,
 }) {
   const img = (
     <img
-      {...imageAttrs(src, sizes)}
+      {...imageAttrs(src, sizes, width)}
       alt={alt}
-      // Dimensions déclarées : le navigateur réserve la place avant que la
-      // photo arrive. Sans elles, le texte qui suit saute au chargement.
-      // Le cadre impose déjà son rapport ; ces valeurs ne servent qu'au calcul.
       width={width}
       height={height}
       loading={priority ? 'eager' : 'lazy'}
       decoding={priority ? 'sync' : 'async'}
       fetchpriority={priority ? 'high' : undefined}
+      style={position ? { objectPosition: position } : undefined}
       className={cn('photo h-full w-full object-cover', imgClassName)}
     />
   );
-
-  const shell = cn('overflow-hidden bg-sand', SHAPES[shape] || SHAPES.frame, ratio, className);
-
-  if (!reveal) return <div className={shell}>{img}</div>;
-
+  const frame = cn('relative overflow-hidden rounded-img bg-stone', drift && 'drift', zoom && 'zoom-media');
+  if (!reveal) return <div className={cn(frame, ratio, className)}>{img}</div>;
   return (
-    <Reveal from={revealFrom ?? 'veil'} className={shell}>
-      {img}
+    <Reveal from="veil" className={cn(ratio, className)}>
+      <div className={cn(frame, 'h-full w-full')}>{img}</div>
     </Reveal>
   );
 }
 
-/**
- * Surface surélevée : coquille claire, arrondi de 24 px, ombre teintée.
- * À n'utiliser que lorsque le contenu est réellement détaché de la page -
- * un formulaire, un encart de contact. Une liste n'a pas besoin de boîte.
- */
+/** Surface claire surélevée : formulaire, encart. */
 export function Panel({ className, children, as: Tag = 'div', ...rest }) {
   return (
-    <Tag className={cn('rounded-lg border border-ink/[0.07] bg-shell shadow-soft', className)} {...rest}>
+    <Tag className={cn('rounded-lg border border-ink/[0.08] bg-paper', className)} {...rest}>
       {children}
     </Tag>
   );
 }
 
-/**
- * Repli - un intitulé, un chevron qui pivote, du contenu qui se déploie.
- *
- * Motif repris du `StreakCard` de 21st.dev, réécrit dans notre système : le
- * composant d'origine dépendait de shadcn et d'un `StreakCalendar` absent, et
- * apportait ses propres jetons (`bg-card`, `text-primary`) en parallèle des
- * nôtres. Seule la mécanique était utile.
- *
- * `aria-expanded` + `aria-controls` : un lecteur d'écran annonce l'état et
- * trouve la zone pilotée.
- */
+/** Repli : un intitulé, un signe plus qui pivote, du contenu qui se déploie. */
 export function Disclosure({ title, defaultOpen = false, className, children }) {
   const [open, setOpen] = useState(defaultOpen);
   const contentId = useId();
-
   return (
-    <div className={cn('overflow-hidden rounded-lg border border-ink/[0.09] bg-shell', className)}>
+    <div className={cn('border-b border-ink/12', className)}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls={contentId}
-        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors duration-fast hover:bg-cream/60"
+        className="flex w-full items-center justify-between gap-4 py-5 text-left"
       >
-        <span className="t-h3">{title}</span>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          className={cn('flex-none text-ink/65 transition-transform duration-300 ease-soft', open && 'rotate-180')}
-        >
-          <path d="M2 5l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <span className="t-h4">{title}</span>
+        <PlusIcon open={open} />
       </button>
-
       {open && (
-        <div id={contentId} className="border-t border-ink/[0.09] px-5 py-5">
+        <div id={contentId} className="faq-a pb-6">
           {children}
         </div>
       )}
     </div>
+  );
+}
+
+export function PlusIcon({ open, tone = 'dark' }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'grid h-9 w-9 flex-none place-items-center rounded-full border transition-[transform,background-color,border-color] duration-300 ease-soft',
+        tone === 'light' ? 'border-ivory/25' : 'border-ink/15',
+        open && 'rotate-45',
+        open && (tone === 'light' ? 'border-gold bg-gold text-graphite' : 'border-graphite bg-graphite text-ivory')
+      )}
+    >
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4">
+        <path d="M6 1v10M1 6h10" strokeLinecap="round" />
+      </svg>
+    </span>
   );
 }

@@ -1,49 +1,36 @@
 # Chaudrel Rénovation
 
-> Entreprise de rénovation à Bruxelles et en périphérie, fondée en 2009.
-> Rénovation complète, cuisine, salle de bain, aménagement intérieur.
-> Devis gratuit et sans engagement.
+> Entreprise de rénovation fondée en 2009, basée à Schaerbeek (Bruxelles),
+> active dans toute la Belgique. Un seul interlocuteur du devis à la livraison.
+> Devis gratuit et sans engagement, réponse sous 48 h.
 
-## Services
-- Rénovation complète (clé en main, coordination de tous les corps de métier)
-- Cuisine (conception, plan de travail, rangements sur mesure, travaux techniques)
-- Salle de bain (étanchéité, carrelage, douche à l'italienne, sanitaires)
-- Peinture intérieure
-- Électricité
-- Plomberie
-- Sols & revêtements (carrelage, pierre naturelle, parquet)
-- Menuiserie sur mesure
-- Aménagement intérieur (cloisons, ouvertures, éclairage)
+## Métiers
+- Rénovation complète (gros œuvre, techniques, finitions, coordination des corps de métier)
+- Finitions intérieures (chape, carrelage, parquet, cloisons, plafonnage, peinture)
+- Aménagement extérieur (terrassement, pavage, allées, terrasses, annexes, carports)
+- Toiture (charpente, couverture, étanchéité, zinguerie, fenêtres de toit)
+- Façade (création, ravalement, isolation, parement, crépi, rejointoiement)
+- Piscine (gros œuvre : terrassement, maçonnerie, étanchéité, contours)
 
-## Zone d'intervention
-Bruxelles et périphérie : Schaerbeek, Uccle, Ixelles, Woluwe-Saint-Pierre,
-Woluwe-Saint-Lambert, Etterbeek, Waterloo, Tervuren, La Hulpe, Rixensart.
+## Réalisations
+Photographies réelles de chantiers, regroupées par nature de travaux :
+https://chaudrel.be/realisations
 
 ## Méthode
-1. Votre projet — premier contact
-2. Visite sur place
-3. Devis détaillé
-4. Réalisation des travaux
-5. Livraison
+1. Contact et visite sur place
+2. Devis détaillé, poste par poste
+3. Chantier, dates et ordre des travaux fixés à l'avance
+4. Livraison, visite de fin de chantier avec le client
 
 ## Contact
 - Téléphone : +32 477 27 31 18 (Alberto), +32 493 97 25 17 (Matteo)
-- E-mail : Info@chaudrel.be
+- E-mail : info@chaudrel.be
 - Adresse : Rue Henri Stacquet 49-51, 1030 Schaerbeek, Belgique
 - Demande de devis : https://chaudrel.be/devis
-- WhatsApp : https://wa.me/32477273118
+- WhatsApp : https://wa.me/32493972517
+- Liens : https://chaudrel.be/liens
 
 ## Entreprise
 - Chaudrel Rénovation SRL
 - TVA : BE 0812.283.245
-- Fondée en 2009 par Alberto (maître d'œuvre) et Matteo (design & relation client)
-
-## Pages
-- Accueil : https://chaudrel.be/
-- Réalisations : https://chaudrel.be/realisations
-- Services : https://chaudrel.be/services
-- Notre méthode : https://chaudrel.be/methode
-- À propos : https://chaudrel.be/a-propos
-- FAQ : https://chaudrel.be/faq
-- Demander un devis : https://chaudrel.be/devis
-- Mentions légales : https://chaudrel.be/legal/politique-mentions
+- Fondée en 2009 ; associés : Alberto (maître d'œuvre) et Matteo (design & relation client)

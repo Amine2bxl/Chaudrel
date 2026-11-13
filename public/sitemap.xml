@@ -19,12 +19,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/visite</loc>
-    <lastmod>2026-11-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://chaudrel.be/methode</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
@@ -55,37 +49,37 @@
     <priority>0.2</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/realisations/renovation-overijse</loc>
+    <loc>https://chaudrel.be/realisations/facades-enduites</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/realisations/residence-uccle</loc>
+    <loc>https://chaudrel.be/realisations/chassis-et-volets</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/realisations/cuisine-ixelles</loc>
+    <loc>https://chaudrel.be/realisations/portes-d-entree</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/realisations/villa-tervuren</loc>
+    <loc>https://chaudrel.be/realisations/extensions-baies-vitrees</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/realisations/terrasse-woluwe</loc>
+    <loc>https://chaudrel.be/realisations/toitures-et-volumes</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://chaudrel.be/realisations/allee-uccle</loc>
+    <loc>https://chaudrel.be/realisations/abords-et-garages</loc>
     <lastmod>2026-11-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

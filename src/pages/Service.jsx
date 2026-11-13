@@ -1,139 +1,151 @@
+import { useEffect } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
-import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import FaqAccordion from '@/components/sections/FaqAccordion';
 import CTASection from '@/components/sections/CTASection';
-import { Button, Container, Section, SectionHeading } from '@/components/ui';
+import { Container, Media, RoundArrow, Section, Tag } from '@/components/ui';
 import Reveal from '@/lib/reveal';
+import { SIZES } from '@/lib/image';
+import { EVENTS, track } from '@/lib/analytics';
 import { SERVICES, getService } from '@/data/services';
 import { projectsForTags } from '@/data/projects';
-import { BRAND } from '@/data/site';
+import { cn } from '@/lib/utils';
 
 /**
- * Anciens métiers de la V1 vers les métiers réels.
- *
- * La V1 découpait l'offre par pièce et par corps de métier (cuisine, salle de
- * bain, électricité…) ; le site historique la découpe par métier de chantier.
- * Ces URL ont pu être indexées ou partagées : elles pointent vers le métier qui
- * couvre réellement ces travaux, plutôt que de renvoyer tout le monde sur
- * l'index.
+ * Fiche métier : ce que comprend le métier (postes groupés), les dossiers
+ * photo qui s'y rattachent, les questions propres au métier, les autres
+ * métiers. Pas de photo d'ouverture quand aucune vraie photo ne montre ce
+ * métier (finitions intérieures, piscine) - plutôt un en-tête typographique.
  */
-const LEGACY_SLUGS = {
-  cuisine: 'finitions-interieures',
-  'salle-de-bain': 'finitions-interieures',
-  peinture: 'finitions-interieures',
-  'sols-et-revetements': 'finitions-interieures',
-  menuiserie: 'finitions-interieures',
-  'amenagement-interieur': 'finitions-interieures',
-  electricite: 'renovation-complete',
-  plomberie: 'renovation-complete',
-  jardin: 'amenagement-exterieur',
-  nettoyage: 'renovation-complete',
-};
-
 export default function Service() {
   const { slug } = useParams();
   const service = getService(slug);
 
-  if (!service) {
-    const moved = LEGACY_SLUGS[slug];
-    return <Navigate to={moved ? `/services/${moved}` : '/services'} replace />;
-  }
+  useEffect(() => {
+    if (service) track(EVENTS.SERVICE_VIEW, { slug: service.slug });
+  }, [service]);
 
-  const related = projectsForTags(service.projectTags || [], 3);
+  if (!service) return <Navigate to="/services" replace />;
+
+  const index = SERVICES.indexOf(service);
+  const related = projectsForTags(service.projectTags, 3);
   const others = SERVICES.filter((s) => s.slug !== service.slug);
 
   return (
     <>
       <PageHero
-        title={service.title}
-        intro={service.excerpt}
-        image={service.image}
         breadcrumb={[
           { label: 'Accueil', to: '/' },
           { label: 'Services', to: '/services' },
           { label: service.title },
         ]}
+        label={`Métier ${String(index + 1).padStart(2, '0')} / ${String(SERVICES.length).padStart(2, '0')}`}
+        title={service.title}
+        intro={service.intro}
+        image={service.image ?? undefined}
+        aside={
+          !service.image && (
+            <p className="font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] italic leading-snug text-gold-deep">
+              {service.excerpt}
+            </p>
+          )
+        }
       />
 
-      <Section tone="cream">
+      <Section className="pt-section">
         <Container>
-          <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-7">
-              <p className="t-h3 measure text-ink">{service.intro}</p>
-
-              {/* Les postes sont groupés par nature plutôt qu'alignés en une
-                  liste numérotée : trente lignes d'affilée ne se lisent pas, et
-                  la numérotation laissait croire à un ordre d'exécution. */}
-              {service.groups?.length > 0 && (
-                <div className="mt-block space-y-10">
-                  {service.groups.map((g, gi) => (
-                    <Reveal key={g.title} delay={gi * 90}>
-                      <h2 className="t-label text-ink/65">{g.title}</h2>
-                      <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-2.5">
-                        {g.items.map((item) => (
-                          <li key={item} className="t-body flex items-baseline gap-2.5 text-ink/75">
-                            <span aria-hidden="true" className="h-1 w-1 flex-none rounded-full bg-gold" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </Reveal>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <aside className="lg:col-span-4 lg:col-start-9">
-              <div data-page-cta className="border-t border-ink/12 pt-6">
-                <span className="t-label text-ink/65">Devis gratuit</span>
-                <p className="t-body mt-4 text-ink/65">
-                  Décrivez votre projet {service.title.toLowerCase()}. Nous organisons une visite et vous remettons une
-                  proposition détaillée, sans engagement.
-                </p>
-                <Button to="/devis" variant="solid" className="mt-7 w-full">
-                  Devis gratuit
-                </Button>
-                <p className="t-small mt-5 text-ink/65">{BRAND.zoneLong}.</p>
-              </div>
-
-              <nav aria-label="Autres services" className="mt-12">
-                <span className="t-label text-ink/65">Autres services</span>
-                <ul className="mt-5 space-y-2.5">
-                  {others.map((s) => (
-                    <li key={s.slug}>
-                      <Link to={`/services/${s.slug}`} className="link-line t-small text-ink/65 hover:text-ink">
-                        {s.title}
-                      </Link>
+          <h2 className="t-h2">Ce que comprend le métier</h2>
+          <div
+            className={cn(
+              'mt-block grid gap-px overflow-hidden rounded-lg border border-ink/[0.08] bg-ink/[0.08] md:grid-cols-2',
+              service.groups.length >= 3 && 'lg:grid-cols-3'
+            )}
+          >
+            {service.groups.map((g, i) => (
+              <Reveal key={g.title} delay={i * 70} className="bg-paper p-6 sm:p-8">
+                <span className="t-num text-[15px] text-gold-ink">{String(i + 1).padStart(2, '0')}</span>
+                <h3 className="t-h3 mt-6">{g.title}</h3>
+                <ul className="mt-5 space-y-2.5 text-[14.5px] text-ink/75">
+                  {g.items.map((it) => (
+                    <li key={it} className="flex gap-3">
+                      <span aria-hidden="true" className="mt-[0.7em] h-px w-3 flex-none bg-gold" />
+                      {it}
                     </li>
                   ))}
                 </ul>
-              </nav>
-            </aside>
+              </Reveal>
+            ))}
           </div>
         </Container>
       </Section>
 
       {related.length > 0 && (
-        <ProjectCarousel
-          sheet
-          projects={related}
-          sectionLabel="Sur le chantier"
-          title="Des chantiers de ce type."
-          text="Les mêmes gestes, déjà appliqués."
-        />
-      )}
-
-      {service.faqs?.length > 0 && (
-        <Section tone="cream">
+        <Section tone="paper">
           <Container>
-            <SectionHeading title={`Questions sur ${service.title.toLowerCase()}.`} />
-            <FaqAccordion items={service.faqs} className="mt-12" />
+            <h2 className="t-h2">Sur nos chantiers</h2>
+            <ul className="mt-block grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+              {related.map((p) => (
+                <li key={p.slug}>
+                  <Link to={`/realisations/${p.slug}`} className="group block">
+                    <Media
+                      src={p.cover.src}
+                      alt={p.cover.alt}
+                      width={p.cover.w}
+                      height={p.cover.h}
+                      ratio="aspect-[4/5]"
+                      sizes={SIZES.card}
+                      zoom
+                    />
+                    <div className="mt-5 flex items-start justify-between gap-5">
+                      <div>
+                        <Tag>{p.type}</Tag>
+                        <h3 className="t-h3 mt-3">{p.title}</h3>
+                      </div>
+                      <RoundArrow />
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </Container>
         </Section>
       )}
 
-      <CTASection source={`service_${service.slug}`} />
+      {service.faqs?.length > 0 && (
+        <Section>
+          <Container className="grid gap-10 lg:grid-cols-12">
+            <h2 className="t-h2 lg:col-span-4">Questions fréquentes</h2>
+            <FaqAccordion items={service.faqs} className="lg:col-span-8" />
+          </Container>
+        </Section>
+      )}
+
+      <Section tone="paper" className="py-block">
+        <Container>
+          <h2 className="t-label text-ink/65">Autres métiers</h2>
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {others.map((s) => (
+              <li key={s.slug}>
+                <Link
+                  to={`/services/${s.slug}`}
+                  className="inline-flex h-10 items-center rounded-full border border-ink/15 px-4 text-[13px] font-medium text-ink/80 transition-colors duration-fast hover:border-graphite hover:bg-graphite hover:text-ivory"
+                >
+                  {s.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Section>
+
+      <CTASection
+        title={
+          <>
+            {service.title} : <em>parlons de votre projet.</em>
+          </>
+        }
+        source={`service_${service.slug}`}
+      />
     </>
   );
 }

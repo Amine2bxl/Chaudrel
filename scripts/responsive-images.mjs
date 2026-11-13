@@ -20,11 +20,28 @@ const dir = resolve(process.cwd(), 'public/photos');
 /* Trois paliers couvrent le parc : téléphone, tablette / demi-écran, écran
    large. Un quatrième n'apporterait que des octets à générer. */
 const WIDTHS = [480, 800, 1200];
+/* Une variante se reconnaît à son suffixe de largeur - et seulement à lui :
+   `pf-2.webp` est une photo, pas la variante « 2 px » de `pf`. */
+const VARIANT = new RegExp(`-(${WIDTHS.join('|')})$`);
 
 /** Largeur d'une image, en pixels. */
 function widthOf(file) {
-  const out = execFileSync('sips', ['-g', 'pixelWidth', file], { encoding: 'utf8' });
-  return Number(out.match(/pixelWidth:\s*(\d+)/)?.[1] ?? 0);
+  // ImageMagick (Linux, CI, macOS via Homebrew), sinon `sips` (macOS).
+  try {
+    return Number(execFileSync('identify', ['-format', '%w', file], { encoding: 'utf8' }));
+  } catch {
+    const out = execFileSync('sips', ['-g', 'pixelWidth', file], { encoding: 'utf8' });
+    return Number(out.match(/pixelWidth:\s*(\d+)/)?.[1] ?? 0);
+  }
+}
+
+/** Réduit `source` à `w` pixels de large : cwebp s'il est là, ImageMagick sinon. */
+function resize(source, w, out) {
+  try {
+    execFileSync('cwebp', ['-q', '80', '-resize', String(w), '0', source, '-o', out], { stdio: 'ignore' });
+  } catch {
+    execFileSync('convert', [source, '-resize', `${w}x`, '-quality', '80', '-strip', out], { stdio: 'ignore' });
+  }
 }
 
 let made = 0;
@@ -35,7 +52,7 @@ const manifest = {};
 for (const name of readdirSync(dir)) {
   const { ext, name: base } = parse(name);
   // On ne repart jamais d'une variante : elle a déjà perdu des pixels.
-  if (ext !== '.webp' || /-\d+$/.test(base)) continue;
+  if (ext !== '.webp' || VARIANT.test(base)) continue;
 
   const source = join(dir, name);
   const sourceTime = statSync(source).mtimeMs;
@@ -54,7 +71,7 @@ for (const name of readdirSync(dir)) {
     // -q 80 : le palier au-delà duquel l'œil ne distingue plus rien sur une
     // photo de chantier, et en deçà duquel les aplats se marbrent.
     try {
-      execFileSync('cwebp', ['-q', '80', '-resize', String(w), '0', source, '-o', out], { stdio: 'ignore' });
+      resize(source, w, out);
       made += 1;
     } catch (err) {
       // Un encodeur absent ou cassé ne doit pas faire échouer le build : on
@@ -69,7 +86,7 @@ for (const name of readdirSync(dir)) {
    téléphone de quelqu'un — c'est pire que pas de `srcset` du tout. */
 for (const name of readdirSync(dir)) {
   const { ext, name: base } = parse(name);
-  if (ext !== '.webp' || /-\d+$/.test(base)) continue;
+  if (ext !== '.webp' || VARIANT.test(base)) continue;
   const widths = WIDTHS.filter((w) => existsSync(join(dir, `${base}-${w}.webp`)));
   if (widths.length) manifest[`/photos/${base}.webp`] = widths;
 }
@@ -82,5 +99,5 @@ writeFileSync(
 console.log(`[images] ${made} variantes générées, ${kept} déjà à jour, ${Object.keys(manifest).length} photos dans le manifeste`);
 if (failed) {
   console.warn(`[images] encodeur indisponible — ${failed}`);
-  console.warn('[images] réparer avec : brew reinstall webp libtiff');
+  console.warn('[images] installer cwebp ou ImageMagick (brew install webp imagemagick)');
 }

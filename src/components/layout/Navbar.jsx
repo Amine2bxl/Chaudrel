@@ -1,44 +1,48 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { BRAND, LOGO, NAV } from '@/data/site';
+import { BRAND, LOGO, NAV, EMAIL_DISPLAY } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { useContactDialog } from '@/lib/contactDialog';
 import { Button } from '@/components/ui';
 
-/** Deux lignes qui deviennent une croix - pas d'icône importée. */
 function MenuIcon({ open }) {
-  const bar = 'block h-px w-6 bg-ink transition-all duration-fast ease-soft';
+  const bar = 'block h-px w-5 bg-current transition-transform duration-300 ease-soft';
   return (
-    <span className="relative flex h-6 w-6 flex-col items-center justify-center gap-[6px]">
-      <span className={cn(bar, open && 'translate-y-[3.5px] rotate-45')} />
-      <span className={cn(bar, open && '-translate-y-[3.5px] -rotate-45')} />
+    <span className="relative flex h-5 w-5 flex-col items-center justify-center gap-[5px]">
+      <span className={cn(bar, open && 'translate-y-[3px] rotate-45')} />
+      <span className={cn(bar, open && '-translate-y-[3px] -rotate-45')} />
     </span>
   );
 }
 
-/** Logotype : carré aux coins adoucis, jamais rond, jamais à angle vif. */
-function Wordmark() {
+export function Wordmark({ tone = 'dark', className }) {
   return (
-    <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel - accueil">
-      <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-logo bg-shell shadow-soft">
+    <Link to="/" className={cn('flex items-center gap-3', className)} aria-label="Chaudrel Rénovation - accueil">
+      <span className="grid h-10 w-10 flex-none place-items-center overflow-hidden rounded-full bg-white ring-1 ring-ink/10">
         <img src={LOGO} alt="" aria-hidden="true" width="40" height="40" className="h-full w-full object-cover" />
       </span>
-      <span className="font-wordmark text-[19px] uppercase leading-none tracking-[0.2em] text-ink sm:text-[21px]">
-        {BRAND.name}
+      <span className="flex flex-col leading-none">
+        <span className={cn('font-display text-[22px] leading-none', tone === 'light' ? 'text-ivory' : 'text-ink')}>
+          {BRAND.name}
+        </span>{' '}
+        <span
+          className={cn(
+            'mt-1 text-[9.5px] font-semibold uppercase tracking-[0.2em]',
+            tone === 'light' ? 'text-ivory/65' : 'text-ink/70'
+          )}
+        >
+          Rénovation
+        </span>
       </span>
     </Link>
   );
 }
 
 /**
- * Une seule barre de navigation pour tout le site.
- *
- * Elle ne change pas d'apparence selon la page : la version posée - capsule
- * crème, ombre teintée - est la seule. Un visiteur qui passe de l'accueil à une
- * page intérieure ne doit pas avoir l'impression de changer de site, et la
- * page où il se trouve doit se lire sans réfléchir : c'est le rôle du point
- * brun sous l'onglet actif.
+ * En-tête : le mot-symbole à gauche, la navigation dans une capsule au centre,
+ * l'action à droite. Transparent en haut de page, posé sur un voile ivoire
+ * dès qu'on défile. Au téléphone, un panneau graphite plein écran.
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -48,11 +52,8 @@ export default function Navbar() {
 
   useEffect(() => setOpen(false), [pathname]);
 
-  /* La barre se resserre dès qu'on quitte le haut de la page : large et
-     presque transparente au repos, compacte et posée ensuite. Même objet,
-     deux tenues - jamais deux barres. */
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 24);
+    const on = () => setScrolled(window.scrollY > 16);
     on();
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
@@ -60,125 +61,134 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
+    const onKey = (e) => e.key === 'Escape' && setOpen(false);
+    window.addEventListener('keydown', onKey);
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
     };
   }, [open]);
 
   const linkClass = ({ isActive }) =>
     cn(
-      'relative t-label pb-2 pt-1 transition-colors duration-fast',
-      isActive ? 'text-ink' : 'text-ink/65 hover:text-ink'
+      'relative rounded-full px-4 py-2 text-[13px] font-medium transition-colors duration-fast',
+      isActive ? 'bg-graphite text-ivory' : 'text-ink/75 hover:text-ink'
     );
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <a
         href="#main"
-        className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-cream"
+        className="sr-only text-[13px] font-semibold focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-graphite focus:px-5 focus:py-3 focus:text-ivory"
       >
         Aller au contenu
       </a>
 
       <div
         className={cn(
-          'mx-auto flex w-[calc(100%-1.25rem)] items-center justify-between rounded-full px-4 backdrop-blur-md',
-          'transition-[max-width,padding,margin,background-color,box-shadow] duration-slow ease-soft sm:px-5 lg:px-6',
-          scrolled || open
-            ? 'my-2 max-w-[1120px] bg-cream/95 py-2 shadow-soft sm:my-2.5'
-            : 'my-2.5 max-w-[1320px] bg-cream/75 py-2.5 shadow-none sm:my-3.5 lg:py-3'
+          'transition-[background-color,border-color,backdrop-filter] duration-slow ease-soft',
+          'border-b',
+          scrolled && !open ? 'border-ink/[0.07] bg-ivory/85 backdrop-blur-xl' : 'border-transparent bg-transparent'
         )}
       >
-        <Wordmark />
+        <div className="mx-auto flex h-header w-full max-w-page items-center justify-between gap-6 px-gutter">
+          <Wordmark tone={open ? 'light' : 'dark'} className="relative z-10" />
 
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Navigation principale">
-          {NAV.map((item) => (
-            <NavLink key={item.to} to={item.to} end={item.to === '/'} className={linkClass}>
-              {({ isActive }) => (
-                <>
-                  {item.label}
-                  {/* Repère de page courante : un point, pas une couleur de
-                      texte - il reste lisible pour qui distingue mal les
-                      teintes, et il ne coûte rien à l'œil. */}
-                  <span
-                    aria-hidden="true"
-                    className={cn(
-                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-gold transition-opacity duration-fast',
-                      isActive ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
-                </>
-              )}
-            </NavLink>
-          ))}
+          <nav
+            className="hidden items-center gap-1 rounded-full border border-ink/[0.08] bg-paper/80 p-1 backdrop-blur lg:flex"
+            aria-label="Navigation principale"
+          >
+            {NAV.map((item) => (
+              <NavLink key={item.to} to={item.to} className={linkClass}>
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
 
-          {/* « Contact » n'est pas une page : il ouvre la fenêtre qui porte
-              toutes les coordonnées - appeler, WhatsApp, e-mail, horaires,
-              adresse. Même écriture que les liens voisins. */}
-          <button type="button" onClick={() => openDialog('navbar')} className="relative t-label pb-2 pt-1 text-ink/65 transition-colors duration-fast hover:text-ink">
-            Contact
+          <div className="hidden items-center gap-5 lg:flex">
+            <button
+              type="button"
+              onClick={() => openDialog('navbar')}
+              className="link-line tap text-[13px] font-medium text-ink/75 hover:text-ink"
+            >
+              Contact
+            </button>
+            <Button to="/devis" size="sm" arrow onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
+              Demander un devis
+            </Button>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+            className={cn(
+              'relative z-10 grid h-11 w-11 place-items-center rounded-full border transition-colors duration-fast lg:hidden',
+              open ? 'border-ivory/25 text-ivory' : 'border-ink/15 bg-paper/70 text-ink backdrop-blur'
+            )}
+          >
+            <MenuIcon open={open} />
           </button>
-
-          <Button to="/devis" size="sm" arrow onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
-            Demander un devis
-          </Button>
-        </nav>
-
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
-          className="grid h-11 w-11 place-items-center rounded-full transition-colors duration-fast hover:bg-ink/5 lg:hidden"
-        >
-          <MenuIcon open={open} />
-        </button>
+        </div>
       </div>
 
       {open && (
-        <div className="mx-auto w-full max-w-[1240px] px-2.5 lg:hidden">
-          <nav className="panel-in overflow-hidden rounded-xl bg-cream p-5 shadow-lift sm:p-6" aria-label="Navigation mobile">
-            <ul className="divide-y divide-ink/10">
-              {NAV.map((item, i) => (
-                <li key={item.to}>
+        <div id="mobile-menu" className="on-dark fixed inset-0 z-0 flex flex-col bg-graphite text-ivory lg:hidden">
+          <nav
+            className="mx-auto flex w-full max-w-page flex-1 flex-col px-gutter pb-8 pt-[calc(var(--header-h)+1.5rem)]"
+            aria-label="Navigation mobile"
+          >
+            <ul className="border-t border-ivory/10">
+              {[{ label: 'Accueil', to: '/' }, ...NAV, { label: 'Questions fréquentes', to: '/faq' }].map((item, i) => (
+                <li key={item.to} className="border-b border-ivory/10">
                   <NavLink
                     to={item.to}
                     end={item.to === '/'}
-                    style={{ animationDelay: `${i * 35}ms` }}
+                    style={{ animationDelay: `${60 + i * 40}ms` }}
                     className={({ isActive }) =>
                       cn(
-                        'panel-in flex items-center justify-between gap-4 py-4 font-display text-[1.75rem] tracking-[-0.01em]',
-                        isActive ? 'text-ink' : 'text-ink/65'
+                        'panel-in flex items-baseline justify-between gap-4 py-4 font-display text-[30px] leading-tight',
+                        isActive ? 'text-gold-light' : 'text-ivory'
                       )
                     }
                   >
-                    {({ isActive }) => (
-                      <>
-                        {item.label}
-                        {isActive && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />}
-                      </>
-                    )}
+                    {item.label}
+                    <span className="text-[12px] font-sans text-ivory/40">{String(i + 1).padStart(2, '0')}</span>
                   </NavLink>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-7 flex flex-col gap-3">
-              <Button to="/devis" arrow onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
+            <div className="mt-auto space-y-6 pt-10">
+              <Button
+                to="/devis"
+                variant="gold"
+                size="lg"
+                arrow
+                className="w-full"
+                onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_menu' })}
+              >
                 Demander un devis
               </Button>
-              <Button variant="outline" onClick={() => openDialog('menu')}>
-                Contact
-              </Button>
+              <div className="grid grid-cols-2 gap-4 text-[13px]">
+                {BRAND.phones.map((p) => (
+                  <a
+                    key={p.tel}
+                    href={`tel:${p.tel}`}
+                    onClick={() => track(EVENTS.PHONE_CLICK, { source: 'mobile_menu', who: p.name })}
+                    className="text-ivory/75"
+                  >
+                    <span className="block text-ivory/45">{p.name}</span>
+                    {p.number}
+                  </a>
+                ))}
+              </div>
+              <a href={`mailto:${BRAND.email}`} className="block text-[13px] text-ivory/75">
+                {EMAIL_DISPLAY}
+              </a>
             </div>
-
-            <a
-              href={`tel:${BRAND.phones[0].tel}`}
-              onClick={() => track(EVENTS.PHONE_CLICK, { source: 'menu' })}
-              className="t-small mt-6 block tabular-nums text-ink/65"
-            >
-              {BRAND.phones[0].number}
-            </a>
           </nav>
         </div>
       )}

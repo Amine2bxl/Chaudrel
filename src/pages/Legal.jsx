@@ -40,7 +40,7 @@ export default function Legal() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Mentions légales' }]}
       />
 
-      <Section tone="cream">
+      <Section tone="ivory">
         <Container className="max-w-3xl">
           <Block title="1. Éditeur du site">
             <List
@@ -223,7 +223,7 @@ export default function Legal() {
           <Block title="14. Crédits">
             <List
               items={[
-                'Typographies : Schibsted Grotesk · Marcellus (licence OFL, hébergées sur ce site)',
+                'Typographies : Instrument Serif · Manrope (licence OFL, hébergées sur ce site)',
                 'Photographies : Chaudrel Rénovation',
                 'Icônes : Lucide',
               ]}

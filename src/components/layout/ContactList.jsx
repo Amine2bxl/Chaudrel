@@ -18,16 +18,16 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
         className={cn(
           'grid flex-none place-items-center rounded-full transition-colors duration-fast',
           compact ? 'h-10 w-10' : 'h-11 w-11',
-          primary ? 'bg-cream/20 text-cream' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
+          primary ? 'bg-ivory/20 text-ivory' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
         )}
       >
         <Icon width={compact ? 16 : 17} height={compact ? 16 : 17} />
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className={cn('block t-label', primary ? 'text-cream' : 'text-ink')}>{label}</span>
+        <span className={cn('block t-label', primary ? 'text-ivory' : 'text-ink')}>{label}</span>
         {hint && (
-          <span className={cn('mt-0.5 block t-small', primary ? 'text-cream/90' : 'text-ink/65')}>{hint}</span>
+          <span className={cn('mt-0.5 block t-small', primary ? 'text-ivory/90' : 'text-ink/65')}>{hint}</span>
         )}
       </span>
 
@@ -41,7 +41,7 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
         strokeWidth="1.6"
         className={cn(
           'flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5',
-          primary ? 'text-cream/70' : 'text-ink/35'
+          primary ? 'text-ivory/70' : 'text-ink/35'
         )}
       >
         <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -50,11 +50,11 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
   );
 
   const classes = cn(
-    'group flex w-full items-center gap-3.5 rounded-lg text-left transition-all duration-fast ease-soft active:translate-y-px',
+    'group flex w-full items-center gap-3.5 rounded-md text-left transition-[background-color,border-color] duration-fast ease-soft active:scale-[0.99]',
     compact ? 'px-4 py-3' : 'px-5 py-4',
     primary
-      ? 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift'
-      : 'border border-ink/[0.09] bg-shell hover:border-ink/20 hover:shadow-soft',
+      ? 'bg-graphite text-ivory hover:bg-charcoal'
+      : 'border border-ink/[0.1] bg-paper hover:border-ink/30',
     className
   );
 

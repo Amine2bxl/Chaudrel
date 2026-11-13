@@ -13,6 +13,41 @@
       ],
       "destination": "https://chaudrel.be/:path*",
       "permanent": true
+    },
+    {
+      "source": "/realisations/renovation-overijse",
+      "destination": "/realisations/abords-et-garages",
+      "permanent": true
+    },
+    {
+      "source": "/realisations/residence-uccle",
+      "destination": "/realisations/chassis-et-volets",
+      "permanent": true
+    },
+    {
+      "source": "/realisations/cuisine-ixelles",
+      "destination": "/realisations/toitures-et-volumes",
+      "permanent": true
+    },
+    {
+      "source": "/realisations/villa-tervuren",
+      "destination": "/realisations/chassis-et-volets",
+      "permanent": true
+    },
+    {
+      "source": "/realisations/terrasse-woluwe",
+      "destination": "/realisations/portes-d-entree",
+      "permanent": true
+    },
+    {
+      "source": "/realisations/allee-uccle",
+      "destination": "/realisations/abords-et-garages",
+      "permanent": true
+    },
+    {
+      "source": "/visite",
+      "destination": "/realisations",
+      "permanent": false
     }
   ],
   "headers": [
@@ -37,7 +72,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' 'sha256-Du+OJKJSbdUgz5nrHeWWINvez6XKDDU/tyj/5c2uvwo='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
         }
       ]
     },

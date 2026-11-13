@@ -15,7 +15,6 @@ import Method from '@/pages/Method';
 import About from '@/pages/About';
 import Faq from '@/pages/Faq';
 import Quote from '@/pages/Quote';
-import Visit from '@/pages/Visit';
 import Links from '@/pages/Links';
 import Legal from '@/pages/Legal';
 import NotFound from '@/pages/NotFound';
@@ -46,7 +45,7 @@ export default function App() {
   const { pathname } = useLocation();
   return (
     <ContactDialogProvider>
-      <div className="min-h-screen bg-cream">
+      <div className="min-h-screen bg-ivory">
         <Seo />
         <RouteChange />
         <Navbar />
@@ -61,7 +60,6 @@ export default function App() {
             <Route path="/a-propos" element={<About />} />
             <Route path="/faq" element={<Faq />} />
             <Route path="/devis" element={<Quote />} />
-            <Route path="/visite" element={<Visit />} />
             {/* Page de liens, destination des bios réseaux. `/link` est
                 l'adresse courte qu'on écrit dans un profil ; elle redirige vers
                 l'URL française du site, qui reste la seule canonique. */}

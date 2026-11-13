@@ -20,7 +20,9 @@ const HIDDEN_ON = new Set(['/devis', '/liens']);
  * premier écran, le hero porte déjà ses propres boutons.
  */
 export default function MobileBar() {
-  const { pathname } = useLocation();
+  // Sans la barre oblique finale : `/devis/` et `/devis` sont la même page.
+  const { pathname: raw } = useLocation();
+  const pathname = raw.length > 1 ? raw.replace(/\/+$/, '') : raw;
   const { openDialog } = useContactDialog();
   const [hidden, setHidden] = useState(true);
 
@@ -31,7 +33,7 @@ export default function MobileBar() {
 
     const visible = new Set();
     /* Un appel à l'action présent dans l'écran mais rendu invisible (le hero
-       d'accueil s'efface pendant le film au défilement) ne compte pas. */
+       masqué) ne compte pas. */
     const shown = (el) => (el.checkVisibility ? el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true }) : true);
     const sync = () => setHidden([...visible].some(shown) || window.scrollY < 240);
 
@@ -82,7 +84,7 @@ export default function MobileBar() {
         to="/devis"
         tabIndex={hidden ? -1 : undefined}
         onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
-        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-cream/20 bg-gold-deep text-cream shadow-lift active:translate-y-px"
+        className="flex min-h-[52px] flex-[1.4] items-center justify-center rounded-full bg-graphite text-[14px] font-semibold text-ivory shadow-lift active:scale-[0.98]"
       >
         Demander un devis
       </Link>
@@ -90,7 +92,7 @@ export default function MobileBar() {
         type="button"
         tabIndex={hidden ? -1 : undefined}
         onClick={() => openDialog('mobile_bar')}
-        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-ink/12 bg-shell text-ink shadow-soft active:translate-y-px"
+        className="flex min-h-[52px] flex-1 items-center justify-center rounded-full border border-ink/12 bg-paper/95 text-[14px] font-semibold text-ink shadow-soft backdrop-blur active:scale-[0.98]"
       >
         Contact
       </button>

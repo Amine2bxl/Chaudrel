@@ -33,14 +33,14 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[3/2
 
   return (
     <figure className={cn('group', className)}>
-      <div className={cn('ba relative overflow-hidden rounded-lg bg-sand', ratio)} style={{ '--ba': `${pos}%` }}>
+      <div className={cn('ba relative overflow-hidden rounded-lg bg-stone', ratio)} style={{ '--ba': `${pos}%` }}>
         {photo(after, 'après')}
         <div className="ba-before absolute inset-0">{photo(before, 'avant')}</div>
 
-        <span className="t-label pointer-events-none absolute left-3 top-3 rounded-full bg-bark/55 px-3 py-2 text-cream backdrop-blur-sm sm:left-4 sm:top-4">
+        <span className="t-label pointer-events-none absolute left-3 top-3 rounded-full bg-graphite/55 px-3 py-2 text-ivory backdrop-blur-sm sm:left-4 sm:top-4">
           Avant
         </span>
-        <span className="t-label pointer-events-none absolute right-3 top-3 rounded-full bg-cream/85 px-3 py-2 text-ink backdrop-blur-sm sm:right-4 sm:top-4">
+        <span className="t-label pointer-events-none absolute right-3 top-3 rounded-full bg-ivory/85 px-3 py-2 text-ink backdrop-blur-sm sm:right-4 sm:top-4">
           Après
         </span>
 
@@ -68,7 +68,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[3/2
         />
       </div>
 
-      <figcaption className={cn('t-small mt-4 border-t pt-3', light ? 'border-cream/15 text-cream/65' : 'border-ink/10 text-ink/65')}>
+      <figcaption className={cn('t-small mt-4 border-t pt-3', light ? 'border-ivory/15 text-ivory/65' : 'border-ink/10 text-ink/65')}>
         {label}
       </figcaption>
     </figure>

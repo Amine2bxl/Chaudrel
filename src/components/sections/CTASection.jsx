@@ -1,97 +1,99 @@
-import { Button, Container } from '@/components/ui';
-import Reveal from '@/lib/reveal';
-import { useContactDialog } from '@/lib/contactDialog';
+import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
-import { BRAND, EMAIL_DISPLAY } from '@/data/site';
-import { cn } from '@/lib/utils';
+import { useContactDialog } from '@/lib/contactDialog';
+import Reveal from '@/lib/reveal';
+import { Button, Container, DarkPanel, Eyebrow } from '@/components/ui';
 
 /**
- * Bande de conversion en fin de page.
- *
- * Une composition de page de garde : un cartouche (les deux engagements
- * confirmés), un très grand titre, l'action, puis les coordonnées directes
- * alignées sous un filet. Tout ce qu'il faut pour agir tient dans l'écran :
- * chiffrer, appeler l'un ou l'autre, écrire.
+ * Appel final - le dernier panneau graphite avant le pied de page.
+ * `data-page-cta` : la barre mobile s'efface quand ce bloc est à l'écran.
  */
 export default function CTASection({
+  label = 'Votre projet',
   title = (
     <>
-      Donnons vie à <em>votre projet.</em>
+      Parlons de <em>votre chantier.</em>
     </>
   ),
-  text = 'Cinq questions, deux minutes. Nous organisons une visite et vous remettons un devis détaillé, gratuitement.',
-  source = 'cta',
-  // La bande remonte en « nappe » sur la section claire qui la précède.
-  // À couper (`sheet={false}`) quand elle suit une section déjà sombre.
-  sheet = true,
+  text = 'Décrivez votre projet en quelques minutes. Nous revenons vers vous pour convenir d’une visite sur place, avant tout chiffrage.',
+  source = 'cta_band',
 }) {
   const { openDialog } = useContactDialog();
-
   return (
-    <section data-page-cta data-cta-band className={cn('on-dark bg-bark pt-section text-cream', sheet ? 'sheet' : 'border-t border-cream/10')}>
-      <Container>
-        <div className="flex items-center justify-between gap-6 border-b border-cream/15 pb-4">
-          <p className="t-label text-cream/60">{BRAND.promises.quote}</p>
-          <p className="t-label text-right text-cream/60">{BRAND.promises.responseTime}</p>
-        </div>
-
-        <div className="grid gap-10 py-block lg:grid-cols-12 lg:items-end lg:gap-16">
+    <div className="px-2 pb-2 pt-section sm:px-3 sm:pb-3" data-cta-band>
+      <DarkPanel as="section" aria-label="Demander un devis" className="relative overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-24 -top-24 h-[28rem] w-[28rem] rounded-full border border-gold/15"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-8 -top-8 h-[20rem] w-[20rem] rounded-full border border-gold/10"
+        />
+        <Container className="relative grid gap-12 py-section lg:grid-cols-12 lg:items-end">
           <Reveal className="lg:col-span-7">
-            <h2 className="t-display max-w-[11ch] text-balance">{title}</h2>
-          </Reveal>
-
-          <Reveal delay={120} className="lg:col-span-5">
-            <p className="t-lead max-w-[44ch] text-cream/70">{text}</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button
-                to="/devis"
-                variant="solidLight"
-                size="lg"
-                arrow
-                className="w-full justify-center sm:w-auto"
-                onClick={() => track(EVENTS.QUOTE_CTA, { source })}
-              >
+            <Eyebrow tone="light">{label}</Eyebrow>
+            <h2 className="t-hero mt-6 max-w-[16ch] text-balance text-ivory">{title}</h2>
+            <p className="t-lead mt-6 max-w-[46ch] text-ivory/65">{text}</p>
+            <div className="mt-10 flex flex-wrap gap-3" data-page-cta>
+              <Button to="/devis" variant="gold" size="lg" arrow onClick={() => track(EVENTS.QUOTE_CTA, { source })}>
                 Demander un devis
               </Button>
-              {/* Un seul appel secondaire : la fenêtre porte tous les canaux
-                  plutôt que d'en imposer un. */}
-              <Button variant="outlineLight" size="lg" className="w-full justify-center sm:w-auto" onClick={() => openDialog(source)}>
-                Parlons de votre rénovation
+              <Button variant="outlineLight" size="lg" onClick={() => openDialog(source)}>
+                Nous contacter
               </Button>
             </div>
           </Reveal>
-        </div>
 
-        {/* ---------- Coordonnées directes ---------- */}
-        <dl className="grid border-t border-cream/15 sm:grid-cols-3">
-          {BRAND.phones.map((p) => (
-            <div key={p.tel} className="border-b border-cream/10 py-5 sm:border-b-0 sm:border-r sm:pr-6 sm:[&:not(:first-child)]:pl-6">
-              <dt className="t-label text-cream/50">{p.name}</dt>
-              <dd className="mt-2.5">
-                <a
-                  href={`tel:${p.tel}`}
-                  onClick={() => track(EVENTS.PHONE_CLICK, { source })}
-                  className="link-line font-display text-[1.375rem] tabular-nums leading-none text-cream"
-                >
-                  {p.number}
-                </a>
-              </dd>
-            </div>
-          ))}
-          <div className="py-5 sm:pl-6">
-            <dt className="t-label text-cream/50">E-mail</dt>
-            <dd className="mt-2.5">
-              <a
-                href={`mailto:${BRAND.email}`}
-                onClick={() => track(EVENTS.EMAIL_CLICK, { source })}
-                className="link-line break-all font-display text-[1.375rem] leading-none text-cream"
-              >
-                {EMAIL_DISPLAY}
-              </a>
-            </dd>
-          </div>
-        </dl>
-      </Container>
-    </section>
+          <Reveal delay={120} className="lg:col-span-4 lg:col-start-9">
+            <dl className="divide-y divide-ivory/10 border-y border-ivory/10 text-[14px]">
+              {BRAND.phones.map((p) => (
+                <div key={p.tel} className="flex items-center justify-between gap-4 py-4">
+                  <dt className="text-ivory/55">{p.name}</dt>
+                  <dd>
+                    <a
+                      href={`tel:${p.tel}`}
+                      onClick={() => track(EVENTS.PHONE_CLICK, { source, who: p.name })}
+                      className="link-line text-ivory"
+                    >
+                      {p.number}
+                    </a>
+                  </dd>
+                </div>
+              ))}
+              <div className="flex items-center justify-between gap-4 py-4">
+                <dt className="text-ivory/55">WhatsApp</dt>
+                <dd>
+                  <a
+                    href={whatsappUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => track(EVENTS.WHATSAPP_CLICK, { source })}
+                    className="link-line text-ivory"
+                  >
+                    Écrire un message
+                  </a>
+                </dd>
+              </div>
+              <div className="flex items-center justify-between gap-4 py-4">
+                <dt className="text-ivory/55">E-mail</dt>
+                <dd>
+                  <a
+                    href={`mailto:${BRAND.email}`}
+                    onClick={() => track(EVENTS.EMAIL_CLICK, { source })}
+                    className="link-line text-ivory"
+                  >
+                    {EMAIL_DISPLAY}
+                  </a>
+                </dd>
+              </div>
+            </dl>
+            <p className="mt-5 text-[12.5px] text-ivory/55">
+              {BRAND.promises.quote} · {BRAND.promises.responseTime}
+            </p>
+          </Reveal>
+        </Container>
+      </DarkPanel>
+    </div>
   );
 }

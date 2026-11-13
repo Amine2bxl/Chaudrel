@@ -117,11 +117,20 @@ function hasDraftContent(d) {
 
 export default function Quote() {
   const { openDialog } = useContactDialog();
-  const [draft] = useState(loadDraft);
-  const [step, setStep] = useState(() =>
-    draft && draft.step >= 1 && draft.step <= STEPS.length ? draft.step : 1
-  );
-  const [data, setData] = useState(() => ({ ...EMPTY, ...(draft?.data || {}) }));
+  /* Le brouillon est relu APRÈS le premier rendu : la page arrive prérendue
+     (formulaire vide) et React reprend ce HTML tel quel. Le lire pendant le
+     rendu donnerait un premier affichage différent du HTML - une erreur
+     d'hydratation. */
+  const [draft, setDraft] = useState(null);
+  const [step, setStep] = useState(1);
+  const [data, setData] = useState(EMPTY);
+  useEffect(() => {
+    const saved = loadDraft();
+    if (!saved) return;
+    setDraft(saved);
+    if (saved.step >= 1 && saved.step <= STEPS.length) setStep(saved.step);
+    setData({ ...EMPTY, ...(saved.data || {}) });
+  }, []);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const [started, setStarted] = useState(false);
@@ -284,11 +293,15 @@ export default function Quote() {
     return (
       <>
         <PageHero
-          title="C’est noté. Merci."
+          title={
+            <>
+              C’est noté. <em>Merci.</em>
+            </>
+          }
           intro="Votre demande et ses fichiers viennent de partir. Vous recevez un e-mail de confirmation, puis nous convenons d’une visite et préparons votre devis."
           breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
         />
-        <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+        <Section tone="ivory" className="pt-0 md:pt-0 lg:pt-0">
           <Container className="max-w-[46rem]">
             <ol>
               <span className="t-label text-ink/65">La suite</span>
@@ -330,13 +343,76 @@ export default function Quote() {
   return (
     <>
       <PageHero
-        title="Cinq questions, deux minutes."
+        label="Devis gratuit et sans engagement"
+        title={
+          <>
+            Cinq questions, <em>deux minutes.</em>
+          </>
+        }
         intro="Gratuit et sans engagement. Photos, plan ou vidéo ? Joignez-les."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
       />
 
-      <Section tone="cream" className="pt-0 pb-16 md:pt-0 lg:pt-0">
-        <Container className="max-w-[46rem]">
+      <Section className="pt-0">
+        <Container className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* Colonne de gauche (bureau) : le parcours, l'étape en cours, et
+              les autres moyens de nous joindre. Au téléphone, seule la barre
+              de progression reste - le formulaire passe en premier. */}
+          <aside className="hidden lg:col-span-4 lg:block">
+            <div className="sticky top-[calc(var(--header-h)+2rem)]">
+              <p className="t-label text-ink/65">Votre demande</p>
+              <ol className="mt-5 divide-y divide-ink/10 border-y border-ink/10">
+                {STEPS.map((label, i) => {
+                  const n = i + 1;
+                  const state = n < step ? 'done' : n === step ? 'current' : 'next';
+                  return (
+                    <li
+                      key={label}
+                      aria-current={state === 'current' ? 'step' : undefined}
+                      className={cn(
+                        'flex items-center gap-4 py-3.5 text-[14px] transition-colors duration-300',
+                        state === 'current' ? 'text-ink' : state === 'done' ? 'text-ink/70' : 'text-ink/45'
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          'grid h-7 w-7 flex-none place-items-center rounded-full border text-[11px] font-semibold',
+                          state === 'current' && 'border-graphite bg-graphite text-ivory',
+                          state === 'done' && 'border-gold bg-gold text-graphite',
+                          state === 'next' && 'border-ink/15'
+                        )}
+                      >
+                        {state === 'done' ? '✓' : n}
+                      </span>
+                      {label}
+                    </li>
+                  );
+                })}
+              </ol>
+              <div className="mt-8 rounded-lg border border-ink/[0.08] bg-paper p-6">
+                <p className="t-h3">Plutôt de vive voix ?</p>
+                <ul className="mt-4 space-y-2 text-[14px]">
+                  {BRAND.phones.map((p) => (
+                    <li key={p.tel} className="flex justify-between gap-4">
+                      <span className="text-ink/65">{p.name}</span>
+                      <a
+                        href={`tel:${p.tel}`}
+                        onClick={() => track(EVENTS.PHONE_CLICK, { source: 'quote_aside', who: p.name })}
+                        className="link-gold"
+                      >
+                        {p.number}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+                <p className="t-small mt-4 text-ink/65">
+                  {BRAND.promises.quote}. {BRAND.promises.responseTime}.
+                </p>
+              </div>
+            </div>
+          </aside>
+
+          <div className="lg:col-span-8">
           {/* Progression */}
           <div>
             <div className="flex items-baseline justify-between">
@@ -348,7 +424,7 @@ export default function Quote() {
               </span>
             </div>
             <div
-              className="mt-4 h-1 w-full overflow-hidden rounded-full bg-ink/[0.09]"
+              className="mt-4 h-px w-full overflow-hidden bg-ink/[0.12]"
               role="progressbar"
               aria-valuenow={step}
               aria-valuemin={1}
@@ -356,7 +432,7 @@ export default function Quote() {
               aria-label="Progression du formulaire"
             >
               <div
-                className="h-full origin-left rounded-full bg-gold transition-transform duration-700 ease-soft"
+                className="h-full origin-left bg-gold-deep transition-transform duration-700 ease-soft"
                 style={{ transform: `scaleX(${progress})` }}
               />
             </div>
@@ -415,7 +491,7 @@ export default function Quote() {
                   value={data.description}
                   onChange={(e) => set('description')(e.target.value)}
                   aria-invalid={Boolean(errors.description)}
-                  placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
+                  placeholder="Ex. : maison des années 30 à Schaerbeek, façade à ravaler et toiture à vérifier, disponible à partir de septembre."
                   className="field mt-4"
                 />
 
@@ -678,6 +754,7 @@ export default function Quote() {
               </button>
             </div>
           </div>
+          </div>
         </Container>
       </Section>
     </>
@@ -807,7 +884,7 @@ function FileUpload({ files, onChange }) {
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="mt-4 flex w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-ink/20 bg-shell px-6 py-7 text-ink/65 transition-colors duration-fast hover:border-gold hover:text-ink"
+        className="mt-4 flex w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-ink/20 bg-paper px-6 py-7 text-ink/65 transition-colors duration-fast hover:border-gold hover:text-ink"
       >
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
           <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -829,7 +906,7 @@ function FileUpload({ files, onChange }) {
       {files.length > 0 && (
         <ul className="mt-4 space-y-2">
           {files.map((f, i) => (
-            <li key={`${f.name}-${i}`} className="flex items-center gap-3 rounded-md border border-ink/10 bg-shell px-3 py-2">
+            <li key={`${f.name}-${i}`} className="flex items-center gap-3 rounded-md border border-ink/10 bg-paper px-3 py-2">
               {f.kind === 'image' && (
                 <img src={`data:${f.type};base64,${f.data}`} alt="" className="h-10 w-10 flex-none rounded-xs object-cover" />
               )}
@@ -891,7 +968,7 @@ function Choice({ name, label, checked, onChange }) {
         'flex cursor-pointer items-center gap-4 rounded-md border px-5 py-4 transition-all duration-300 ease-soft',
         checked
           ? 'border-gold bg-gold/[0.06] text-ink shadow-soft'
-          : 'border-ink/[0.12] bg-shell text-ink/70 hover:border-ink/25 hover:text-ink'
+          : 'border-ink/[0.12] bg-paper text-ink/70 hover:border-ink/25 hover:text-ink'
       )}
     >
       <input type="radio" name={name} checked={checked} onChange={onChange} className="sr-only" />
@@ -899,10 +976,10 @@ function Choice({ name, label, checked, onChange }) {
         aria-hidden="true"
         className={cn(
           'grid h-[18px] w-[18px] flex-shrink-0 place-items-center rounded-full border transition-colors duration-300',
-          checked ? 'border-gold bg-gold' : 'border-ink/25 bg-shell'
+          checked ? 'border-gold bg-gold' : 'border-ink/25 bg-paper'
         )}
       >
-        {checked && <span className="block h-1.5 w-1.5 rounded-full bg-cream" />}
+        {checked && <span className="block h-1.5 w-1.5 rounded-full bg-ivory" />}
       </span>
       <span className="t-body">{label}</span>
     </label>

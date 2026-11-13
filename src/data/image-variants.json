@@ -1,1 +1,77 @@
-{}
+{
+  "/photos/abords-allee.webp": [
+    480,
+    800
+  ],
+  "/photos/ba-allee-apres.webp": [
+    480,
+    800
+  ],
+  "/photos/ba-allee-avant.webp": [
+    480,
+    800
+  ],
+  "/photos/ba-cuisine-apres.webp": [
+    480,
+    800
+  ],
+  "/photos/ba-cuisine-avant.webp": [
+    480,
+    800
+  ],
+  "/photos/ba-terrasse-apres.webp": [
+    480,
+    800
+  ],
+  "/photos/ba-terrasse-avant.webp": [
+    480,
+    800
+  ],
+  "/photos/facade-garages.webp": [
+    480,
+    800,
+    1200
+  ],
+  "/photos/pf-1.webp": [
+    480,
+    800,
+    1200
+  ],
+  "/photos/pf-2.webp": [
+    480,
+    800
+  ],
+  "/photos/pf-3.webp": [
+    480,
+    800
+  ],
+  "/photos/pf-4.webp": [
+    480,
+    800,
+    1200
+  ],
+  "/photos/svc-cuisine.webp": [
+    480,
+    800
+  ],
+  "/photos/svc-jardin.webp": [
+    480,
+    800
+  ],
+  "/photos/svc-nettoyage.webp": [
+    480,
+    800
+  ],
+  "/photos/svc-piscine.webp": [
+    480,
+    800
+  ],
+  "/photos/svc-salle-de-bain.webp": [
+    480,
+    800
+  ],
+  "/photos/svc-toiture.webp": [
+    480,
+    800
+  ]
+}

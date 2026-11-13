@@ -27,8 +27,9 @@ export const BRAND = {
     { name: 'Alberto', number: '+32 477 27 31 18', tel: '+32477273118' },
     { name: 'Matteo', number: '+32 493 97 25 17', tel: '+32493972517' },
   ],
-  // TODO_VALIDATION : confirmer le numéro utilisé pour WhatsApp Business.
-  whatsapp: '32477273118',
+  // Numéro WhatsApp publié par Chaudrel sur son Linktree (linktr.ee/chaudrel,
+  // vérifié en V6) : celui de Matteo.
+  whatsapp: '32493972517',
   /**
    * ⚠️ TODO_VALIDATION - horaires provisoires, posés pour que la fenêtre de
    * contact soit complète. À remplacer par les horaires réels avant mise en
@@ -74,12 +75,23 @@ export const BRAND = {
     'Wavre',
     'Arlon',
   ],
+  /**
+   * Profils vérifiés en V6 :
+   *  - Instagram et Facebook : liens publiés par Chaudrel sur linktr.ee/chaudrel.
+   *    L'ancienne adresse Facebook (`facebook.com/chaudrel_renovation`) ne peut
+   *    pas exister - Facebook refuse le tiret bas dans un nom de page.
+   *  - TikTok : le compte `@chaudrel_renovation` existe (« Chaudrel Rénovation »).
+   *    La graphie `@chaudrelrenovations` de docs/RESEAUX-SOCIAUX.md n'existe pas.
+   *  - YouTube : `@chaudrelrenovations` renvoie 404. Retiré tant que Chaudrel
+   *    n'a pas communiqué l'adresse de sa chaîne.
+   */
   socials: {
     instagram: 'https://www.instagram.com/chaudrel_renovation/',
-    facebook: 'https://www.facebook.com/chaudrel_renovation/',
-    youtube: 'https://www.youtube.com/@chaudrelrenovations',
+    facebook: 'https://www.facebook.com/profile.php?id=61574019493337',
     tiktok: 'https://www.tiktok.com/@chaudrel_renovation',
   },
+  /** Page Linktree existante de Chaudrel (vérifiée en V6). */
+  linktree: 'https://linktr.ee/chaudrel',
   founders: [
     { name: 'Alberto', role: "Maître d'œuvre" },
     { name: 'Matteo', role: 'Design & relation client' },
@@ -99,7 +111,6 @@ export const whatsappUrl = (
  * mentions vivent au pied de page.
  */
 export const NAV = [
-  { label: 'Visite 3D', to: '/visite' },
   { label: 'Réalisations', to: '/realisations' },
   { label: 'Services', to: '/services' },
   { label: 'Méthode', to: '/methode' },

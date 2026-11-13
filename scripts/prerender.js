@@ -36,7 +36,9 @@ import { StaticRouter } from 'react-router-dom/server';
 import App from ${JSON.stringify(resolve(root, 'src/App.jsx'))};
 import { allRoutes, metaFor } from ${JSON.stringify(resolve(root, 'src/lib/seo.js'))};
 
-const out = allRoutes().map((path) => ({
+// '/404' ne correspond à aucune route : c'est la page « introuvable » du site,
+// écrite dans dist/404.html - le fichier que Vercel sert pour toute adresse inconnue.
+const out = [...allRoutes(), '/404'].map((path) => ({
   path,
   meta: metaFor(path),
   html: renderToString(React.createElement(StaticRouter, { location: path }, React.createElement(App))),
@@ -122,7 +124,7 @@ function applyMeta(template, meta, html) {
     out = out.replace(/\s*<link\s+rel="preload"\s+as="image"[\s\S]*?\/>/g, '');
   }
 
-  return out.replace(/<div id="root"><\/div>/, `<div id="root" data-ssr>${html}</div>`);
+  return out.replace(/<div id="root"><\/div>/, `<div id="root" data-ssr="${meta.path}">${html}</div>`);
 }
 
 function writeSitemap(routes) {
@@ -150,16 +152,21 @@ function main() {
   for (const page of pages) {
     const html = applyMeta(template, page.meta, page.html);
     const outPath =
-      page.path === '/' ? indexPath : resolve(distDir, `${page.path.replace(/^\//, '')}/index.html`);
+      page.path === '/'
+        ? indexPath
+        : page.path === '/404'
+          ? resolve(distDir, '404.html')
+          : resolve(distDir, `${page.path.replace(/^\//, '')}/index.html`);
     mkdirSync(dirname(outPath), { recursive: true });
-    writeFileSync(outPath, html);
+    // La page introuvable n'a pas d'adresse propre : pas de canonical.
+    writeFileSync(outPath, page.path === '/404' ? html.replace(/\s*<link rel="canonical"[^>]*>/, '') : html);
   }
 
   console.log(`[prerender] OK — ${pages.length} pages générées`);
   // Une URL `noindex` dans le sitemap est une consigne contradictoire : le
   // sitemap la propose à l'indexation, la balise la refuse. Search Console la
   // remonte en avertissement. On ne liste donc que les pages indexables.
-  writeSitemap(pages.filter((p) => !p.meta.robots.includes('noindex')).map((p) => p.path));
+  writeSitemap(pages.filter((p) => p.path !== '/404' && !p.meta.robots.includes('noindex')).map((p) => p.path));
 }
 
 main();

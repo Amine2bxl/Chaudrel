@@ -21,7 +21,7 @@ export const localBusinessLd = () => ({
   name: BRAND.legalName,
   alternateName: BRAND.name,
   description:
-    "Entreprise de rénovation basée à Bruxelles, active dans toute la Belgique. Rénovation complète, cuisine, salle de bain, peinture, électricité, plomberie, sols, menuiserie et aménagement intérieur.",
+    "Entreprise de rénovation basée à Schaerbeek (Bruxelles), active dans toute la Belgique : rénovation complète, finitions intérieures, façade, toiture, aménagement extérieur et gros œuvre de piscine.",
   url: `${SITE_URL}/`,
   logo: `${SITE_URL}/chaudrel-logo.jpg`,
   image: DEFAULT_OG,
@@ -88,7 +88,7 @@ const STATIC = {
   '/': {
     title: 'Chaudrel - Entreprise de rénovation en Belgique | Devis gratuit',
     description:
-      "Rénovation complète, cuisine, salle de bain et aménagement intérieur. Un seul interlocuteur du devis à la livraison, partout en Belgique. Devis gratuit et sans engagement.",
+      "Rénovation complète, façade, toiture, finitions intérieures et aménagement extérieur. Un seul interlocuteur du devis à la livraison, partout en Belgique. Devis gratuit et sans engagement.",
     ld: () => [
       localBusinessLd(),
       {
@@ -103,7 +103,7 @@ const STATIC = {
   '/realisations': {
     title: 'Réalisations - Nos chantiers de rénovation | Chaudrel',
     description:
-      "Rénovations complètes, cuisines, salles de bain et extérieurs livrés par Chaudrel. Photos de chantiers et comparaisons avant / après.",
+      "Façades, châssis et portes, extensions, toitures et abords : les chantiers Chaudrel en photographies réelles.",
     ld: () => [
       breadcrumbLd([
         { name: 'Accueil', path: '/' },
@@ -124,23 +124,11 @@ const STATIC = {
   '/services': {
     title: 'Services de rénovation en Belgique | Chaudrel',
     description:
-      "Rénovation complète, cuisine, salle de bain, peinture, électricité, plomberie, sols, menuiserie et aménagement intérieur. Un interlocuteur unique, devis gratuit.",
+      "Nos métiers : rénovation complète, finitions intérieures, façade, toiture, aménagement extérieur et gros œuvre de piscine. Un interlocuteur unique, devis gratuit.",
     ld: () => [
       breadcrumbLd([
         { name: 'Accueil', path: '/' },
         { name: 'Services', path: '/services' },
-      ]),
-    ],
-  },
-  '/visite': {
-    title: 'Visite 3D - entrez dans une maison rénovée | Chaudrel',
-    description:
-      "Parcourez de l'intérieur une maison d'étude rénovée : entrée en travertin, cuisine en marbre, séjour, chambres, salle de bain. Chaque pièce passe du chantier au résultat fini.",
-    ld: () => [
-      localBusinessLd(),
-      breadcrumbLd([
-        { name: 'Accueil', path: '/' },
-        { name: 'Visite 3D', path: '/visite' },
       ]),
     ],
   },
@@ -223,7 +211,7 @@ export function metaFor(pathname = '/') {
     if (p) {
       return build({
         path,
-        title: `${p.title} - ${p.type} à ${p.location} | Chaudrel`,
+        title: `${p.title} - ${p.location ? `${p.type} à ${p.location}` : 'Réalisations'} | Chaudrel`,
         description: p.summary,
         image: abs(p.cover.src),
         ld: [
@@ -239,7 +227,7 @@ export function metaFor(pathname = '/') {
             description: p.description,
             image: p.images.map((im) => abs(im.src)),
             about: p.type,
-            locationCreated: { '@type': 'Place', name: p.location },
+            ...(p.location ? { locationCreated: { '@type': 'Place', name: p.location } } : {}),
             ...(p.year ? { dateCreated: String(p.year) } : {}),
             creator: { '@id': `${SITE_URL}/#business` },
           },
@@ -256,7 +244,7 @@ export function metaFor(pathname = '/') {
         path,
         title: `${s.title} - ${BRAND.name} Rénovation en Belgique`,
         description: `${s.excerpt} ${s.intro.slice(0, 110)}…`,
-        image: abs(s.image),
+        image: s.image ? abs(s.image.src) : undefined,
         ld: [
           breadcrumbLd([
             { name: 'Accueil', path: '/' },

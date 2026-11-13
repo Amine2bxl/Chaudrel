@@ -3,12 +3,10 @@ import { cn } from '@/lib/utils';
 
 const VARIANTS = {
   up: 'rv rv-up',
-  down: 'rv rv-down',
   left: 'rv rv-left',
   right: 'rv rv-right',
   fade: 'rv rv-fade',
   line: 'rv-line',
-  lineY: 'rv-line-y',
   veil: 'rv-veil',
 };
 
@@ -46,7 +44,8 @@ function getObserver(margin) {
 /**
  * Apparition au scroll, sans dépendance externe.
  * `from` choisit le type d'animation : translation, ligne qui se dessine
- * (line / lineY) ou image révélée par un volet (veil).
+ * (line) ou image révélée par un volet (veil). Sans JavaScript, le CSS
+ * (`html:not(.js)`) laisse tout visible.
  * Les préférences `prefers-reduced-motion` sont gérées en CSS.
  */
 export default function Reveal({
