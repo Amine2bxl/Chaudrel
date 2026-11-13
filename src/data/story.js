@@ -27,6 +27,7 @@ export const storyStep = (id) => STORY.find((s) => s.id === id);
  */
 export const PAGE_STEP = {
   '/devis': 'imaginer',
+  '/visite': 'transformer',
   '/a-propos': 'concevoir',
   '/methode': 'preparer',
   '/faq': 'preparer',

@@ -11,7 +11,7 @@ npm install
 npm run dev        # http://localhost:5173
 npm run build      # vite build + pré-rendu de toutes les routes + sitemap
 npm run preview    # sert dist/ (les fonctions /api ne tournent pas ici)
-npm test           # build + 47 tests de bout en bout (navigateur réel, API simulée)
+npm test           # build + tests de bout en bout (navigateur réel, API simulée)
 npm run posters    # régénère les images de repli de la maquette 3D (avec `npm run dev` lancé)
 ```
 
@@ -105,38 +105,34 @@ Animations : `<Reveal>` (`up`, `fade`, `line`, `lineY`, `veil`) applique une cla
 au scroll via IntersectionObserver, tout le reste est en CSS. `prefers-reduced-motion`
 neutralise l'ensemble.
 
-## Maquette 3D de l'accueil
+## La maison d'étude (3D)
 
-Le hero d'accueil est une maquette architecturale 3D que le défilement pilote
-(`src/components/experience/`). C'est une **illustration**, annoncée comme telle à
+Une maison de deux niveaux qu'on visite **de l'intérieur, à hauteur d'œil**
+(`src/components/visit/`). C'est un environnement conceptuel, annoncé comme tel à
 l'écran — pas un chantier de Chaudrel.
 
 | Fichier | Rôle |
 |---|---|
-| `scene/building.js` | la maison, en mètres : murs percés, menuiseries, dalles, intérieur, toiture, extérieurs — répartie en couches (les métiers) |
-| `scene/atelier.js` | ce qui l'entoure sur le plan de travail : plans dessinés d'après les cotes de la maquette, échantillons de matières |
-| `scene/materials.js`, `scene/textures.js` | matériaux PBR, textures procédurales, passage brut → fini dans le shader |
-| `scene/storyboard.js` | **le film**, en six temps (Imaginer → Révéler) : images-clés caméra / tracé / vue éclatée / finition / crépuscule, en paysage et en portrait |
-| `scene/engine.js` | rendu three.js, lumière, une image par changement d'état (pas de boucle permanente) |
-| `ScrollSequence.js` | timeline GSAP ScrollTrigger (scrub) : maquette, textes et étiquettes sur la même horloge |
-| `ArchitecturalExperience.jsx`, `content.jsx` | balisage, textes, liens vers les métiers |
-| `src/styles/experience.css` | mise en page statique et « vivante » |
-
-Le design system (couleurs, formes, mouvement, photographie) est décrit dans
-`docs/DESIGN-SYSTEM.md` ; les références de direction artistique et leur état de
-consultation dans `docs/REFERENCES.md`.
+| `world/layout.js` | **le plan** : niveaux, pièces, ouvertures, escalier, points de vue et leurs liaisons, visite guidée |
+| `world/build.js` | murs percés (deux demi-épaisseurs, une par pièce), sols, plafonds, menuiseries, escalier, façades, jardin |
+| `world/furnish.js` | mobilier, équipements, plantes ; accessoires de chantier pour l'état « avant » |
+| `world/styles.js` | matières et trois finitions (données seules, sans three.js) |
+| `world/surfaces.js` | textures calculées sur la carte graphique (travertin, marbre, point de Hongrie, noyer, enduit, brique, chape…) |
+| `world/materials.js` | matériaux PBR ; front de transformation chantier → fini, par pièce |
+| `world/world.js` | rendu, lumière (soleil, lumière du ciel par les baies, sondes d'environnement, occlusion ambiante), déplacements, marche libre, collisions |
+| `store.js` | un seul monde pour tout le site : l'accueil et `/visite` se le passent |
+| `VisitExperience.jsx` | la page `/visite` : pastilles, fiche de pièce, plan, visite guidée, finitions |
+| `components/experience/` | le film d'accueil : de l'allée au séjour, piloté par le défilement (GSAP ScrollTrigger) |
 
 Règles tenues :
 
-- **Tout le texte est dans le HTML prérendu.** La 3D est un enrichissement.
-- **Version statique** sans JS, avec `prefers-reduced-motion`, en économie de données, ou
-  sur un navigateur sans `overflow: clip`. Si WebGL échoue, l'image de la maquette
-  reste à l'écran et le récit continue.
-- **three.js et GSAP ne sont pas dans le bundle principal** : GSAP arrive après le
-  premier rendu, three.js au premier geste du visiteur (souris, doigt, défilement,
-  touche) ou après neuf secondes. D'ici là, l'image de repli — rendue par le même
-  moteur, au même cadrage — tient l'écran.
-- Après toute modification de la maquette ou du storyboard : `npm run posters`.
+- **Tout le texte est dans le HTML prérendu** (accueil et `/visite`). La 3D est un enrichissement.
+- **Version statique** sans JS, avec `prefers-reduced-motion`, en économie de données ou
+  sans WebGL : images d'ouverture et description complète des pièces.
+- **three.js n'est pas dans le paquet principal.** Sur l'accueil, le monde se construit au
+  premier geste du visiteur ; sur `/visite`, dès que la page est calme.
+- **Rien n'est rendu tant que rien ne bouge** ; la définition baisse si une image coûte trop cher.
+- Après une modification de la maison ou du film : `npm run posters`.
 
 ## Formulaire de devis
 

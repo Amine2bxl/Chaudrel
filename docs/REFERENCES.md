@@ -7,14 +7,30 @@ réellement été consultée** pendant la refonte.
 
 | # | Référence | Lien | État |
 |---|---|---|---|
-| 01 | Elypt Web Design (TikTok) | https://www.tiktok.com/@elyptwebdesign/video/7648388525255183649 | **Non visionnée** |
-| 02 | Webloved (TikTok) | https://www.tiktok.com/@webloved/video/7705918935475997974 | **Non visionnée** |
+| 01 | Elypt Web Design (TikTok) | https://www.tiktok.com/@elyptwebdesign/video/7648388525255183649 | **Visionnée** (fichier MP4 fourni, 10,8 s) |
+| 02 | Webloved (TikTok) | https://www.tiktok.com/@webloved/video/7705918935475997974 | **Visionnée** (fichier MP4 fourni, 35,3 s) |
 
-Ces deux vidéos n'ont pas pu être ouvertes depuis l'environnement de développement
-(`www.tiktok.com` hors des domaines autorisés ; et même autorisé, seule la légende d'une
-page TikTok est lisible, pas la vidéo). **Rien de ce qui est dans le site n'en est donc
-tiré.** Pour les intégrer : déposer dans la conversation les fichiers vidéo ou quelques
-captures d'écran, puis ajuster la séquence 3D (`scene/storyboard.js`) en conséquence.
+Les pages TikTok elles-mêmes restent hors des domaines autorisés de l'environnement ;
+les deux vidéos ont été étudiées image par image à partir des fichiers MP4 fournis.
+
+**Elypt (« Vellora Estates »)** — le défilement fait avancer la caméra, à hauteur
+d'œil, depuis la façade jusque dans la maison : les portes s'ouvrent, « Welcome »
+apparaît, le séjour traverse l'écran et la caméra débouche sur la terrasse et la
+piscine (« Here you won't count the days »). Un seul travelling avant, aucun plan
+de coupe.
+→ Repris dans le film d'accueil : allée, porte pivotante qui s'ouvre au défilement,
+entrée, salle à manger, séjour, puis la baie sur le jardin.
+
+**Webloved (« Aurum »)** — la tour, puis l'appartement en coupe sur fond blanc, puis
+une plongée à hauteur d'œil dans chaque pièce : séjour, salle à manger, cuisine,
+entrée, couloir, chambres, salle de bain. Chaque pièce a sa fiche translucide
+(« Oak, bouclé and a field of colour », « Arrive on travertine and walnut »,
+« Travertine, light and water ») avec ses matières, et la visite revient à la vue
+d'ensemble à la fin.
+→ Repris dans `/visite` : déplacement pièce par pièce à hauteur d'œil, fiche de
+pièce (titre, texte, matières), plan pour s'orienter, retour possible à toute pièce.
+La vue en coupe n'est pas reprise : la direction demandée exclut la maquette vue du
+dessus.
 
 ## Références image
 
@@ -39,5 +55,5 @@ captures d'écran, puis ajuster la séquence 3D (`scene/storyboard.js`) en cons�
 | Outil | État |
 |---|---|
 | Higgsfield | compte accessible, **0 crédit** (plan gratuit) : aucune génération lancée |
-| Blender | non disponible dans l'environnement : la maquette est générée en code (three.js) |
+| Blender | non disponible dans l'environnement : la maison est modélisée en code (three.js), textures calculées sur la carte graphique |
 | Figma | compte accessible en siège « View » : pas de fichier créé |

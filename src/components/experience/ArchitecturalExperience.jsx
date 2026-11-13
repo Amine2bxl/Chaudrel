@@ -1,28 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui';
 import { BRAND, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { canUseWebGL, prefersSavedData, supportsStickyStage } from '@/lib/webgl';
 import useReducedMotion from '@/hooks/useMotionPreferences';
 import { cn } from '@/lib/utils';
-import { CHAPTERS, INDEX, MATERIALS, MATERIALS_WINDOW, NOTES, NOTES_WINDOW, SHEET } from './content';
+import { CHAPTERS, INDEX, SHEET } from './content';
 
 /**
- * Hero d'accueil : une maquette 3D que le défilement fait vivre.
+ * Hero d'accueil : on entre dans la maison d'étude, à hauteur d'œil.
  *
  * Deux modes, un seul balisage :
- *
  *   statique  (prérendu, sans JS, sans WebGL, mouvement réduit, économie de
- *             données) - l'image de la maquette, la promesse, les actions,
- *             puis les quatre chapitres en lecture normale.
+ *             données) - l'image d'ouverture, la promesse, les actions, puis
+ *             les six temps en lecture normale ;
  *   vivant    la section devient une piste haute ; la scène reste collée à
- *             l'écran et le défilement pilote caméra, vue éclatée et finition.
+ *             l'écran et le défilement fait avancer la caméra.
  *
- * Tout le texte est dans le DOM dans les deux cas : la 3D est un
- * enrichissement, jamais le seul porteur d'une information. Le canvas est
- * décoratif (`aria-hidden`) ; la maquette est annoncée comme une illustration,
- * pas comme un chantier de Chaudrel.
+ * Tout le texte est dans le DOM dans les deux cas. La maison est annoncée
+ * comme une maquette d'étude, pas comme un chantier de Chaudrel.
  */
 export default function ArchitecturalExperience() {
   const reduced = useReducedMotion();
@@ -31,13 +27,11 @@ export default function ArchitecturalExperience() {
 
   const root = useRef(null);
   const stage = useRef(null);
-  const canvas = useRef(null);
+  const host = useRef(null);
   const wordmark = useRef(null);
   const hero = useRef(null);
   const hint = useRef(null);
-  const pin = useRef(null);
-  const notesBox = useRef(null);
-  const matsBox = useRef(null);
+  const index = useRef(null);
 
   useEffect(() => {
     setLive(!reduced && !prefersSavedData() && supportsStickyStage() && canUseWebGL());
@@ -48,32 +42,25 @@ export default function ArchitecturalExperience() {
     let cancelled = false;
     let destroy = null;
     const el = root.current;
-
     import('./ScrollSequence.js')
       .then(({ mountSequence }) => {
         if (cancelled) return null;
         return mountSequence(
           {
             root: el,
-            stage: stage.current,
-            canvas: canvas.current,
+            host: host.current,
             wordmark: wordmark.current,
             hero: hero.current,
             hint: hint.current,
-            pin: pin.current,
+            indexBox: index.current,
             chapters: [...el.querySelectorAll('[data-chapter]')],
             index: [...el.querySelectorAll('[data-at]')],
           },
           {
             chapters: CHAPTERS,
-            overlays: [
-              { box: matsBox.current, items: [...matsBox.current.querySelectorAll('[data-anchor]')], ...MATERIALS_WINDOW },
-              { box: notesBox.current, items: [...notesBox.current.querySelectorAll('[data-anchor]')], ...NOTES_WINDOW },
-            ],
             onReady: () => !cancelled && setReady(true),
-            // WebGL refusé, contexte perdu : l'image de la maquette reprend
-            // l'écran et le récit continue sans la 3D. Jamais de cadre vide,
-            // jamais de page qui change de hauteur sous le doigt.
+            // WebGL refusé, contexte perdu : l'image d'ouverture reste à
+            // l'écran et le récit continue sans la 3D.
             onFail: () => !cancelled && setReady(false),
           }
         );
@@ -83,7 +70,6 @@ export default function ArchitecturalExperience() {
         else destroy = fn;
       })
       .catch(() => !cancelled && setLive(false));
-
     return () => {
       cancelled = true;
       destroy?.();
@@ -91,7 +77,6 @@ export default function ArchitecturalExperience() {
     };
   }, [live]);
 
-  /** Amène le défilement à une position du film (index, annotations au clavier). */
   const goTo = (p) => {
     const el = root.current;
     if (!el) return;
@@ -103,30 +88,26 @@ export default function ArchitecturalExperience() {
     <section ref={root} className={cn('xp', live && 'xp-live', ready && 'xp-ready')} aria-label="Chaudrel, entreprise de rénovation">
       <div ref={stage} className="xp-stage">
         <div className="xp-frame">
-          <div className="xp-dusk" aria-hidden="true" />
+          {/* Image d'ouverture : visible tout de suite, remplacée par la 3D
+              quand elle a dessiné sa première image (même cadrage). */}
+          <picture className="xp-poster">
+            <source media="(max-aspect-ratio: 4/5)" srcSet="/experience/entree-portrait.webp" width="1080" height="1620" />
+            <img
+              src="/experience/entree.webp"
+              alt="Maquette 3D d’une maison contemporaine vue depuis l’allée - illustration, pas un chantier Chaudrel"
+              width="2400"
+              height="1350"
+              fetchpriority="high"
+              decoding="sync"
+            />
+          </picture>
+          <div ref={host} className="xp-canvas" aria-hidden="true" />
+          <div className="xp-fade" aria-hidden="true" />
 
           <p ref={wordmark} className="xp-wordmark" aria-hidden="true">
             Chaudrel<span className="text-gold">.</span>
           </p>
 
-          {/* Image de repli : visible tout de suite, remplacée par le canvas
-              quand il a dessiné sa première image (même cadrage). */}
-          <picture className="xp-poster">
-            <source media="(max-aspect-ratio: 4/5)" srcSet="/experience/maquette-portrait.webp" width="1080" height="1620" />
-            <img
-              src="/experience/maquette.webp"
-              alt="Maquette 3D d’une maison contemporaine à deux niveaux - illustration, pas un chantier Chaudrel"
-              width="2400"
-              height="1200"
-              fetchpriority="high"
-              decoding="sync"
-            />
-          </picture>
-          <canvas ref={canvas} className="xp-canvas" aria-hidden="true" />
-          {/* Écran en hauteur : un voile assoit le texte sous la maquette. */}
-          <div className="xp-scrim" aria-hidden="true" />
-
-          {/* ---------- Repères de coin ---------- */}
           <div className="xp-corners">
             <p className="t-label">Entreprise de rénovation</p>
             <p className="t-label text-right">
@@ -142,7 +123,7 @@ export default function ArchitecturalExperience() {
               <h1 className="xp-h1">
                 Du premier plan à la <em>dernière clé.</em>
               </h1>
-              <p className="t-lead mt-4 max-w-[40ch] text-ink/65">
+              <p className="t-lead mt-4 max-w-[40ch] text-ink/70">
                 Rénovation complète, finitions, toiture, façade et extérieurs. Un seul interlocuteur, du devis à la remise
                 des clés, partout en Belgique.
               </p>
@@ -175,7 +156,6 @@ export default function ArchitecturalExperience() {
               </div>
             </div>
 
-            {/* Fiche : des faits, alignés comme un cartouche de plan. */}
             <dl className="xp-sheet">
               {SHEET.map(([k, v]) => (
                 <div key={k} className="xp-sheet-row">
@@ -188,37 +168,8 @@ export default function ArchitecturalExperience() {
             <p className="xp-disclaimer">Maquette d’étude · illustration 3D</p>
           </div>
 
-          {/* Repère posé sur la maquette (suit la caméra). */}
-          <p ref={pin} className="xp-pin" aria-hidden="true">
-            <i />
-            <span>Maquette d’étude</span>
-          </p>
-
-          {/* ---------- Étiquettes des échantillons ---------- */}
-          <ul ref={matsBox} className="xp-notes xp-tags" aria-label="Matières présentées">
-            {MATERIALS.map((m) => (
-              <li key={m.key} data-anchor={m.key} className="xp-tag">
-                <i aria-hidden="true" />
-                <span>{m.label}</span>
-              </li>
-            ))}
-          </ul>
-
-          {/* ---------- Annotations de la vue éclatée ---------- */}
-          <ul ref={notesBox} className="xp-notes" aria-label="Les métiers de Chaudrel, couche par couche">
-            {NOTES.map((n) => (
-              <li key={n.key} data-anchor={n.key} className={cn('xp-note', n.side === 'left' && 'xp-note-left')}>
-                <i aria-hidden="true" />
-                <Link to={n.to} onFocus={() => goTo(NOTES_WINDOW.focus)}>
-                  <span className="t-num">{n.n}</span>
-                  {n.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
           {/* ---------- Index du film ---------- */}
-          <ol className="xp-index" aria-label="Étapes de la présentation">
+          <ol ref={index} className="xp-index" aria-label="Étapes de la présentation">
             {INDEX.map((s) => (
               <li key={s.n}>
                 <button type="button" data-at={s.at} onClick={() => goTo(s.at)} tabIndex={live ? 0 : -1}>
@@ -230,7 +181,7 @@ export default function ArchitecturalExperience() {
           </ol>
 
           <p ref={hint} className="xp-hint" aria-hidden="true">
-            Faites défiler
+            Faites défiler pour entrer
             <i />
           </p>
         </div>
@@ -248,8 +199,11 @@ export default function ArchitecturalExperience() {
               <p className="xp-chapter-text">{c.text}</p>
               {c.id === 'reveler' && (
                 <div className="xp-chapter-cta">
-                  <Button to="/realisations" variant={live ? 'solidLight' : 'outline'} arrow>
-                    Voir les réalisations
+                  <Button to="/visite" arrow>
+                    Visiter la maison
+                  </Button>
+                  <Button to="/realisations" variant="outline">
+                    Nos chantiers
                   </Button>
                 </div>
               )}
@@ -257,16 +211,8 @@ export default function ArchitecturalExperience() {
           ))}
         </ol>
 
-        {/* Version statique : la maquette terminée, en image. */}
         <figure className="xp-static-figure">
-          <img
-            src="/experience/maquette-finie.webp"
-            alt="Maquette 3D de la maison terminée, éclairée de l’intérieur à la tombée du jour"
-            width="2400"
-            height="1200"
-            loading="lazy"
-            decoding="async"
-          />
+          <img src="/experience/sejour.webp" alt="Maquette 3D : le séjour terminé, vue sur le jardin" width="2400" height="1350" loading="lazy" decoding="async" />
           <figcaption className="t-label">Maquette d’étude · illustration 3D, pas un chantier Chaudrel</figcaption>
         </figure>
       </div>

@@ -132,6 +132,18 @@ const STATIC = {
       ]),
     ],
   },
+  '/visite': {
+    title: 'Visite 3D - entrez dans une maison rénovée | Chaudrel',
+    description:
+      "Parcourez de l'intérieur une maison d'étude rénovée : entrée en travertin, cuisine en marbre, séjour, chambres, salle de bain. Chaque pièce passe du chantier au résultat fini.",
+    ld: () => [
+      localBusinessLd(),
+      breadcrumbLd([
+        { name: 'Accueil', path: '/' },
+        { name: 'Visite 3D', path: '/visite' },
+      ]),
+    ],
+  },
   '/methode': {
     title: 'Notre méthode - Quatre étapes, zéro surprise | Chaudrel',
     description:

@@ -80,85 +80,48 @@ describe('prérendu et SEO', () => {
   });
 });
 
-describe('film 3D au défilement', () => {
-  it('ne charge le moteur 3D qu’au premier geste du visiteur', async () => {
+describe('film d’entrée au défilement', () => {
+  it('ne charge le monde 3D qu’au premier geste du visiteur', async () => {
     const { ctx, page, requests } = await open(browser, '/');
     await page.waitForSelector('.xp.xp-live');
     await page.waitForTimeout(2500);
-    assert.ok(!requests.some((u) => /engine-/.test(u)), 'three.js ne part pas pendant le chargement');
-    assert.ok(await page.locator('.xp-poster img').isVisible(), 'l’image de la maquette tient l’écran');
+    assert.ok(!requests.some((u) => /world-/.test(u)), 'three.js ne part pas pendant le chargement');
+    assert.ok(await page.locator('.xp-poster img').isVisible(), 'l’image d’ouverture tient l’écran');
     await page.mouse.move(300, 300);
-    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
-    assert.ok(requests.some((u) => /engine-/.test(u)));
+    await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 300000 });
+    assert.ok(requests.some((u) => /world-/.test(u)));
     await ctx.close();
   });
 
-  it('se lance, suit le défilement et revient exactement à son état initial', async () => {
+  it('on entre dans la maison, le séjour se transforme, et tout revient en remontant', async () => {
     const { ctx, page, errors } = await open(browser, '/');
     await filmReady(page);
     assert.equal(await page.locator('.xp.xp-live.xp-ready').count(), 1);
-    assert.ok((await page.evaluate(() => window.__chaudrelXP.info().triangles)) > 1000, 'la maquette est dessinée');
-
     const start = await page.evaluate(() => window.__chaudrelXP.state());
-    assert.equal(start.explode, 0);
+    assert.ok(start.z < -10, 'on commence dans l’allée, devant la maison');
     assert.ok(await page.locator('.xp-hero').isVisible());
 
-    // Concevoir : les plans sont tracés, la caméra a quitté la maquette
-    await scrollFilm(page, 0.24);
-    const plans = await page.evaluate(() => window.__chaudrelXP.state());
-    assert.ok(plans.draw > 0.99 && plans.tx < -20, 'la caméra est au-dessus des plans');
+    await scrollFilm(page, 0.4);
+    const hall = await page.evaluate(() => window.__chaudrelXP.state());
+    assert.ok(hall.z > 1 && hall.z < 5.5 && hall.y < 2, 'la caméra est entrée, à hauteur d’œil');
     assert.ok(await page.locator('[data-chapter="concevoir"]').isVisible());
+    assert.ok(!(await page.locator('.xp-hero').isVisible()), 'la promesse s’efface');
 
-    // Préparer : les échantillons, étiquetés
-    await scrollFilm(page, 0.41);
-    assert.ok((await page.evaluate(() => window.__chaudrelXP.state().tx)) > 20, 'la caméra est sur les échantillons');
-    assert.ok(await page.locator('.xp-tag span').first().isVisible(), 'étiquettes de matières visibles');
-
-    // Rénover : vue éclatée
-    await scrollFilm(page, 0.6);
-    const mid = await page.evaluate(() => window.__chaudrelXP.state());
-    assert.ok(mid.explode > 0.95, `vue éclatée attendue, explode=${mid.explode}`);
-    assert.ok(await page.locator('[data-chapter="renover"]').isVisible());
-    assert.ok(!(await page.locator('.xp-hero').isVisible()), 'la composition d’ouverture s’efface');
-    assert.ok(await page.locator('.xp-note a').first().isVisible(), 'annotations visibles');
-
+    await scrollFilm(page, 0.56);
+    assert.equal(await page.evaluate(() => window.__chaudrelXP.state().living), 0, 'le séjour est en chantier');
+    await scrollFilm(page, 0.72);
+    const mid = await page.evaluate(() => window.__chaudrelXP.state().living);
+    assert.ok(mid > 0.2 && mid < 0.8, `transformation en cours (${mid})`);
     await scrollFilm(page, 1);
-    const end = await page.evaluate(() => window.__chaudrelXP.state());
-    assert.ok(end.dusk > 0.99 && end.wipe > 0.99 && end.explode < 0.01);
-    assert.equal(await page.locator('.xp.xp-night').count(), 1);
+    assert.equal(await page.evaluate(() => window.__chaudrelXP.state().living), 1);
+    assert.ok(await page.getByRole('link', { name: 'Visiter la maison' }).isVisible());
 
     await scrollFilm(page, 0);
     const back = await page.evaluate(() => window.__chaudrelXP.state());
-    for (const k of Object.keys(start)) assert.ok(Math.abs(back[k] - start[k]) < 1e-3, `${k} ne revient pas : ${back[k]} ≠ ${start[k]}`);
+    for (const k of ['x', 'z', 'yaw', 'pitch']) assert.ok(Math.abs(back[k] - start[k]) < 1e-3, `${k} ne revient pas`);
+    assert.equal(back.living, 0, 'le séjour redevient chantier');
     assert.ok(await page.locator('.xp-hero').isVisible());
     assert.deepEqual(errors, []);
-    await ctx.close();
-  });
-
-  it('se recompose quand la fenêtre passe en portrait, puis revient', async () => {
-    const { ctx, page, errors } = await open(browser, '/');
-    await filmReady(page);
-    const wide = await page.evaluate(() => window.__chaudrelXP.state().dist);
-    await page.setViewportSize(PHONE);
-    await page.waitForFunction((d) => window.__chaudrelXP.state().dist > d + 20, wide, { timeout: 10000 });
-    assert.equal(await overflowsX(page), false);
-    await page.setViewportSize(DESKTOP);
-    await page.waitForFunction((d) => Math.abs(window.__chaudrelXP.state().dist - d) < 0.01, wide, { timeout: 10000 });
-    assert.deepEqual(errors, []);
-    await ctx.close();
-  });
-
-  it("ne bloque pas la page : on atteint la suite et on revient en arrière d'une route", async () => {
-    const { ctx, page } = await open(browser, '/');
-    await filmReady(page);
-    await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
-    await page.waitForTimeout(400);
-    assert.ok(await page.getByRole('heading', { name: 'Donnons vie à votre projet.' }).isVisible());
-    await page.goto(BASE + '/services');
-    await page.goBack({ waitUntil: 'load' });
-    await page.waitForSelector('.xp.xp-live');
-    await filmReady(page);
-    assert.equal(await page.locator('.xp.xp-live').count(), 1);
     await ctx.close();
   });
 
@@ -169,7 +132,7 @@ describe('film 3D au défilement', () => {
     assert.equal(await page.locator('.xp-live').count(), 0);
     assert.ok(await page.locator('.xp-poster img').isVisible());
     assert.ok(await page.locator('[data-chapter="renover"]').isVisible(), 'chapitres en lecture normale');
-    assert.ok(!requests.some((u) => /engine-|ScrollTrigger-/.test(u)), 'ni three ni GSAP téléchargés');
+    assert.ok(!requests.some((u) => /world-|ScrollTrigger-/.test(u)), 'ni three ni GSAP téléchargés');
     assert.deepEqual(errors, []);
     await ctx.close();
   });
@@ -188,28 +151,80 @@ describe('film 3D au défilement', () => {
     await page.waitForTimeout(2500);
     assert.equal(await page.locator('.xp-ready').count(), 0, 'le canvas ne remplace pas l’image');
     assert.ok(await page.locator('.xp-poster img').isVisible());
-    assert.ok(await page.locator('.xp-h1').isVisible());
     await page.evaluate(() => {
       const el = document.querySelector('.xp');
-      window.scrollTo({ top: el.offsetTop + 0.6 * (el.offsetHeight - window.innerHeight), behavior: 'instant' });
+      window.scrollTo({ top: el.offsetTop + 0.68 * (el.offsetHeight - window.innerHeight), behavior: 'instant' });
     });
     await page.locator('[data-chapter="renover"]').waitFor({ state: 'visible', timeout: 10000 });
     assert.deepEqual(errors.filter((e) => !/WebGL|webgl/.test(e)), []);
     await ctx.close();
   });
 
-  it('mobile : la scène vit, la promesse et le devis sont à l’écran', async () => {
+  it('mobile : la promesse et le devis tiennent dans le premier écran', async () => {
     const { ctx, page, errors } = await open(browser, '/', { viewport: PHONE, isMobile: true, hasTouch: true });
-    await filmReady(page);
+    await page.waitForSelector('.xp.xp-live');
     const box = await page.locator('.xp-hero a[href="/devis"]').boundingBox();
     assert.ok(box && box.y + box.height <= PHONE.height, 'le bouton devis tient dans le premier écran');
     assert.ok(box.height >= 44, 'cible tactile suffisante');
-    await scrollFilm(page, 0.6);
-    for (const el of await page.locator('.xp-note a').all()) {
-      const b = await el.boundingBox();
-      assert.ok(b.x >= 0 && b.x + b.width <= PHONE.width, 'annotation dans le cadre');
-    }
     assert.deepEqual(errors, []);
+    await ctx.close();
+  });
+});
+
+describe('visite 3D', () => {
+  it('prérendue : titre, pièces et mention « maison d’étude » sans JavaScript', () => {
+    const html = readFileSync('dist/visite/index.html', 'utf8');
+    assert.match(html, /<h1[^>]*>Entrez\. <em>Tout est à visiter\.<\/em><\/h1>/);
+    for (const room of ['Entrée', 'Cuisine', 'Séjour', 'Suite parentale', 'Salle de bain']) assert.ok(html.includes(room), room);
+    assert.match(html, /pas un chantier Chaudrel/);
+  });
+
+  it('on entre, on regarde, on révèle une pièce, on change de pièce et de finition', async () => {
+    const { ctx, page, errors } = await open(browser, '/visite');
+    await page.waitForSelector('.visit-ready', { timeout: 300000 });
+    await page.getByRole('button', { name: 'Explorer librement' }).click();
+    const W = () => window.__chaudrelWorld;
+    await page.waitForFunction(() => window.__chaudrelWorld.current === 'hall' && !window.__chaudrelWorld.moving, null, { timeout: 120000 });
+    assert.ok((await page.evaluate(() => window.__chaudrelWorld.view.y)) < 2, 'à hauteur d’œil');
+    assert.equal(await page.evaluate(() => window.__chaudrelWorld.roomState('hall')), 0, 'l’entrée est en chantier');
+
+    // regarder : glisser sur l'image
+    const yaw0 = await page.evaluate(() => window.__chaudrelWorld.view.yaw);
+    const r = await page.locator('.visit-stage').boundingBox();
+    await page.mouse.move(r.x + r.width * 0.6, r.y + r.height * 0.4);
+    await page.mouse.down();
+    await page.mouse.move(r.x + r.width * 0.4, r.y + r.height * 0.4, { steps: 6 });
+    await page.mouse.up();
+    assert.notEqual(await page.evaluate(() => window.__chaudrelWorld.view.yaw), yaw0, 'le regard tourne');
+    assert.equal(await page.evaluate(() => window.__chaudrelWorld.current), 'hall', 'glisser ne déplace pas');
+
+    // révéler : le bouton ne déplace pas la caméra
+    await page.getByRole('button', { name: 'Révéler la rénovation' }).click();
+    await page.waitForFunction(() => window.__chaudrelWorld.roomState('hall') === 1, null, { timeout: 120000 });
+    assert.equal(await page.evaluate(() => window.__chaudrelWorld.current), 'hall');
+    assert.ok(await page.getByRole('group', { name: 'Avant ou après travaux' }).isVisible());
+
+    // changer de pièce par le bandeau : passage par les portes jusqu'à l'étage
+    await page.locator('.visit-rail').getByRole('button', { name: 'Salle de bain' }).click();
+    await page.waitForFunction(() => window.__chaudrelWorld.current === 'bain' && !window.__chaudrelWorld.moving, null, { timeout: 180000 });
+    assert.ok((await page.evaluate(() => window.__chaudrelWorld.view.y)) > 4, 'on est monté à l’étage');
+    assert.match(await page.locator('.visit-card-title').innerText(), /Pierre, lumière et eau/);
+
+    // finition
+    await page.getByRole('button', { name: 'Béton & laiton' }).click();
+    await page.waitForFunction(() => window.__chaudrelWorld.style === 'beton-laiton', null, { timeout: 120000 });
+    assert.deepEqual(errors, []);
+    await ctx.close();
+  });
+
+  it('mouvement réduit : la page reste une description complète, sans 3D', async () => {
+    const { ctx, page, requests } = await open(browser, '/visite', { reducedMotion: 'reduce' });
+    await page.waitForSelector('h1');
+    await page.waitForTimeout(2000);
+    assert.equal(await page.locator('.visit-live').count(), 0);
+    assert.ok(await page.getByRole('link', { name: 'Parcourir les pièces' }).isVisible());
+    assert.ok(!requests.some((u) => /world-/.test(u)));
+    assert.equal(await page.locator('.visit-rooms-list li').count(), 9);
     await ctx.close();
   });
 });

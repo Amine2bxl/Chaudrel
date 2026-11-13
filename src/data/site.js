@@ -99,6 +99,7 @@ export const whatsappUrl = (
  * mentions vivent au pied de page.
  */
 export const NAV = [
+  { label: 'Visite 3D', to: '/visite' },
   { label: 'Réalisations', to: '/realisations' },
   { label: 'Services', to: '/services' },
   { label: 'Méthode', to: '/methode' },

@@ -44,13 +44,24 @@
   min-height: 0;
 }
 
-/* ---------- Fond crépuscule ---------- */
-.xp-dusk {
+/* ---------- Fondu vers la page ----------
+   L'image monte du crème de la page : le texte se lit sur le crème, la
+   maison occupe le reste de l'écran. */
+.xp-fade {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  background: radial-gradient(120% 85% at 50% 62%, rgb(var(--c-moss-rgb)) 0%, rgb(var(--c-bark-rgb)) 72%);
-  opacity: var(--xp-dusk);
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgb(var(--c-cream-rgb) / .97) 0%, rgb(var(--c-cream-rgb) / .82) 14%, rgb(var(--c-cream-rgb) / 0) 36%),
+    linear-gradient(to bottom, rgb(var(--c-cream-rgb) / .5) 0%, rgb(var(--c-cream-rgb) / 0) 16%);
+}
+@media (max-aspect-ratio: 4/5) {
+  .xp-fade {
+    background:
+      linear-gradient(to top, var(--c-cream) 0%, var(--c-cream) 30%, rgb(var(--c-cream-rgb) / 0) 58%),
+      linear-gradient(to bottom, rgb(var(--c-cream-rgb) / .55) 0%, rgb(var(--c-cream-rgb) / 0) 16%);
+  }
 }
 
 /* ---------- Mot-symbole monumental ---------- */
@@ -58,12 +69,13 @@
   position: absolute;
   z-index: 1;
   inset-inline: 0;
-  top: clamp(6rem, 12.5svh, 8.5rem);
+  top: clamp(5.25rem, 11svh, 7.5rem);
+  z-index: 4;
   margin: 0;
   text-align: center;
   white-space: nowrap;
   font-family: var(--font-display);
-  font-size: min(15.6vw, 33svh);
+  font-size: min(15.6vw, 30svh);
   line-height: 0.8;
   letter-spacing: -0.012em;
   text-transform: uppercase;
@@ -73,7 +85,7 @@
 }
 .xp-night .xp-wordmark { color: var(--c-cream); }
 
-/* ---------- Maquette : image de repli + canvas ---------- */
+/* ---------- Scène : image de repli + monde 3D ---------- */
 .xp-poster,
 .xp-canvas {
   position: absolute;
@@ -89,49 +101,18 @@
   object-fit: cover;
   object-position: center;
 }
-.xp-canvas {
-  display: none;
-  opacity: 0;
-}
+.xp-canvas { display: none; opacity: 0; }
+.xp-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .xp-live .xp-canvas { display: block; }
 .xp-live .xp-poster,
 .xp-live .xp-canvas { transition: opacity 0.7s ease-out; }
 .xp-ready .xp-canvas { opacity: 1; }
 .xp-ready .xp-poster { opacity: 0; }
 
-/* ---------- Voile de lecture (portrait) ----------
-   Sur un écran en hauteur, le texte occupe le bas et la scène le haut. Le
-   voile fond la scène dans la page là où le texte commence : rien de ce qui
-   traîne sur le plan de travail ne passe derrière une phrase. */
-.xp-scrim {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-.xp-scrim::before,
-.xp-scrim::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-}
-.xp-scrim::before {
-  background: linear-gradient(to bottom, rgb(var(--c-cream-rgb) / 0) 47%, var(--c-cream) 60%);
-  opacity: calc(1 - var(--xp-dusk));
-}
-.xp-scrim::after {
-  background: linear-gradient(to bottom, rgb(var(--c-bark-rgb) / 0) 47%, rgb(var(--c-bark-rgb)) 60%);
-  opacity: var(--xp-dusk);
-}
-@media (max-aspect-ratio: 4/5) {
-  .xp-live .xp-scrim { display: block; }
-}
-
 /* ---------- Repères de coin ---------- */
 .xp-corners {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   inset-inline: var(--xp-pad);
   top: 5.75rem;
   display: none;
@@ -153,7 +134,7 @@
 /* ---------- Promesse, actions, fiche ---------- */
 .xp-hero {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   inset-inline: var(--xp-pad);
   bottom: 1.5rem;
   display: flex;
@@ -230,173 +211,15 @@
   .xp-live .xp-disclaimer { display: none; }
 }
 
-/* ---------- Repère posé sur la maquette ---------- */
-.xp-pin {
-  position: absolute;
-  z-index: 3;
-  top: 0;
-  left: 0;
-  margin: 0;
-  display: none;
-  pointer-events: none;
-}
-@media (min-width: 1024px) {
-  .xp-ready .xp-pin { display: block; }
-}
-.xp-pin i,
-.xp-note i {
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--c-cream);
-  box-shadow: 0 0 0 1px rgb(var(--c-ink-rgb) / 0.55), 0 0 0 6px rgb(var(--c-cream-rgb) / 0.35);
-}
-.xp-pin span {
-  position: absolute;
-  left: 4.25rem;
-  top: 0;
-  transform: translateY(-50%);
-  white-space: nowrap;
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgb(var(--c-ink-rgb) / 0.68);
-}
-.xp-pin span::before {
-  content: '';
-  position: absolute;
-  right: calc(100% + 0.6rem);
-  top: 50%;
-  width: 3.1rem;
-  height: 1px;
-  background: rgb(var(--c-ink-rgb) / 0.45);
-}
-
-/* ---------- Annotations de la vue éclatée ---------- */
-.xp-notes {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  pointer-events: none;
-  visibility: hidden;
-}
-.xp-ready .xp-notes { display: block; }
-.xp-note {
-  position: absolute;
-  top: 0;
-  left: 0;
-  will-change: transform;
-}
-.xp-note::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 8px;
-  width: var(--xp-lead, 3.5rem);
-  height: 1px;
-  background: rgb(var(--c-ink-rgb) / 0.4);
-}
-.xp-note a {
-  position: absolute;
-  left: calc(var(--xp-lead, 3.5rem) + 14px);
-  top: 0;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.6rem 0.9rem;
-  border: 1px solid rgb(var(--c-ink-rgb) / 0.16);
-  border-radius: 999px;
-  background: rgb(var(--c-cream-rgb) / 0.86);
-  backdrop-filter: blur(6px);
-  white-space: nowrap;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--c-ink);
-  pointer-events: auto;
-  transition: background-color 0.25s ease, border-color 0.25s ease;
-}
-.xp-note a .t-num {
-  color: rgb(var(--c-gold-deep-rgb));
-  letter-spacing: 0.04em;
-}
-@media (hover: hover) {
-  .xp-note a:hover {
-    background: var(--c-shell);
-    border-color: rgb(var(--c-ink-rgb) / 0.4);
-  }
-}
-.xp-note-left::before {
-  left: auto;
-  right: 8px;
-}
-.xp-note-left a {
-  left: auto;
-  right: calc(var(--xp-lead, 3.5rem) + 14px);
-}
-@media (max-width: 1023px) {
-  .xp-note::before,
-  .xp-note i { display: none; }
-  .xp-note a,
-  .xp-note-left a {
-    left: 0;
-    right: auto;
-    transform: translate(-50%, -50%);
-    padding: 0.45rem 0.7rem;
-    font-size: 0.625rem;
-    letter-spacing: 0.1em;
-  }
-}
-
-/* Étiquettes de matières : un point, un mot. Pas de lien, pas de cadre. */
-.xp-tag {
-  position: absolute;
-  top: 0;
-  left: 0;
-  will-change: transform;
-}
-.xp-tag i {
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--c-cream);
-  box-shadow: 0 0 0 1px rgb(var(--c-ink-rgb) / 0.6);
-}
-.xp-tag span {
-  position: absolute;
-  left: 0;
-  top: -2.1rem;
-  transform: translateX(-50%);
-  padding: 0.4rem 0.65rem;
-  border-radius: 999px;
-  background: rgb(var(--c-cream-rgb) / 0.88);
-  backdrop-filter: blur(6px);
-  white-space: nowrap;
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--c-ink);
-}
-
 /* ---------- Index du film ---------- */
 .xp-index {
   display: none;
   position: absolute;
-  z-index: 3;
+  z-index: 4;
+  padding: .5rem .9rem;
+  border-radius: var(--r-md);
+  background: rgb(var(--c-cream-rgb) / .72);
+  backdrop-filter: blur(8px);
   right: var(--xp-pad);
   top: 50%;
   transform: translateY(-50%);
@@ -461,7 +284,7 @@
 .xp-hint {
   display: none;
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   left: 50%;
   bottom: 1.25rem;
   transform: translateX(-50%);
@@ -475,7 +298,7 @@
   text-transform: uppercase;
   color: rgb(var(--c-ink-rgb) / 0.66);
 }
-@media (min-width: 1536px) {
+@media (min-width: 1280px) {
   .xp-live .xp-hint { display: flex; }
 }
 .xp-hint i {
@@ -546,7 +369,7 @@
   line-height: 1.6;
   color: rgb(var(--c-ink-rgb) / 0.66);
 }
-.xp-chapter-cta { margin-top: 1.5rem; }
+.xp-chapter-cta { margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: .6rem; }
 
 .xp-static-figure {
   margin: 0 auto;
@@ -570,7 +393,7 @@
 .xp-live .xp-chapters {
   position: absolute;
   inset: 0;
-  z-index: 4;
+  z-index: 5;
   display: block;
   max-width: none;
   padding: 0;

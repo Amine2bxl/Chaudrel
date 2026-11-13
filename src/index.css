@@ -1,6 +1,7 @@
 @import './styles/tokens.css';
 @import './styles/experience.css';
 @import './styles/gallery.css';
+@import './styles/visit.css';
 
 @tailwind base;
 @tailwind components;

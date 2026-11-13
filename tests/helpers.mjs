@@ -42,6 +42,10 @@ export const PHONE = { width: 390, height: 844 };
 /** Ouvre une page et collecte les erreurs console / exceptions. */
 export async function open(browser, path, { viewport = DESKTOP, ...ctxOptions } = {}) {
   const ctx = await browser.newContext({ viewport, ...ctxOptions });
+  // monde 3D en qualité réduite : le rendu logiciel de la CI reste rapide
+  await ctx.addInitScript(() => {
+    window.__XP_LOW = true;
+  });
   const page = await ctx.newPage();
   const errors = [];
   const requests = [];
@@ -58,7 +62,7 @@ export async function open(browser, path, { viewport = DESKTOP, ...ctxOptions } 
  */
 export async function filmReady(page) {
   await page.evaluate(() => window.dispatchEvent(new Event('pointermove')));
-  await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 60000 });
+  await page.waitForFunction(() => window.__chaudrelXP, null, { timeout: 300000 });
 }
 
 /** Amène le film d'accueil à la position `p` (0 → 1) et attend que le scrub rattrape. */
@@ -67,7 +71,7 @@ export async function scrollFilm(page, p) {
     const el = document.querySelector('.xp');
     window.scrollTo({ top: el.offsetTop + v * (el.offsetHeight - window.innerHeight), behavior: 'instant' });
   }, p);
-  await page.waitForFunction((v) => Math.abs(window.__chaudrelXP.played() - v) < 0.0005, p, { timeout: 60000 });
+  await page.waitForFunction((v) => Math.abs(window.__chaudrelXP.played() - v) < 0.0005, p, { timeout: 120000 });
   await page.waitForTimeout(150);
 }
 

@@ -130,8 +130,18 @@ Une courbe (`--ease-soft`), quatre durées, une course (`--rise`, 22 px).
 - `prefers-reduced-motion` : tout est affiché, rien ne bouge, la 3D cède la place à ses
   images.
 
-## 8. La maquette 3D
+## 8. La maison d'étude
 
-Un seul espace — la maquette sur le plan de travail de l'atelier, les plans à gauche,
-les échantillons de matières à droite — parcouru sans coupe par une seule caméra.
-Storyboard : `src/components/experience/scene/storyboard.js`. Détail technique : README.
+Une maison qu'on visite de l'intérieur, à hauteur d'œil (1,62 m) : pas de maquette vue
+du dessus, pas de caméra qui tourne autour d'un objet.
+
+- **Accueil** : un seul travelling avant, de l'allée au séjour ; la porte pivote, le séjour
+  passe du chantier au fini sous le défilement.
+- **`/visite`** : neuf pièces, plusieurs chemins (le cellier boucle l'entrée et la cuisine,
+  la terrasse boucle le séjour et la salle à manger), un escalier vers l'étage.
+- **Avant / après** : chaque pièce s'ouvre en chantier (brique, chape, plaques de plâtre,
+  bâches, projecteur). La finition gagne la pièce depuis la place du visiteur, soulignée
+  d'un filet de laiton ; le mobilier apparaît derrière le front.
+- **Finitions** : trois styles (travertin & chêne, marbre & noyer, béton & laiton) sur la
+  même géométrie.
+- **Mention obligatoire** à l'écran : « maison d'étude », jamais présentée comme un chantier.
