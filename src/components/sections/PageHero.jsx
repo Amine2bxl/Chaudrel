@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Container } from '@/components/ui';
 import { BRAND } from '@/data/site';
+import { stepForPath } from '@/data/story';
 import { cn } from '@/lib/utils';
 import { imageAttrs, SIZES } from '@/lib/image';
 
@@ -17,6 +18,7 @@ import { imageAttrs, SIZES } from '@/lib/image';
  */
 export default function PageHero({ title, intro, image, breadcrumb = [], aside, meta }) {
   const hasImage = Boolean(image);
+  const step = stepForPath(useLocation().pathname);
   const soft = hasImage ? 'text-cream/75' : 'text-ink/65';
 
   return (
@@ -67,7 +69,18 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside, 
           ) : (
             <span />
           )}
-          <p className={cn('t-label hidden whitespace-nowrap text-right sm:block', soft)}>{meta || `${BRAND.legalName} · ${BRAND.address.city}`}</p>
+          {/* Le temps de l'histoire que porte cette page (voir data/story.js). */}
+          <p className={cn('t-label hidden items-center gap-2.5 whitespace-nowrap text-right sm:flex', soft)}>
+            {meta ||
+              (step ? (
+                <>
+                  <span className={cn('t-num tracking-normal', hasImage ? 'text-gold-light' : 'text-gold-deep')}>{step.n}</span>
+                  {step.verb}
+                </>
+              ) : (
+                `${BRAND.legalName} · ${BRAND.address.city}`
+              ))}
+          </p>
         </div>
 
         {/* ---------- Titre ---------- */}

@@ -21,9 +21,14 @@ const TONES = {
   bark: 'bg-bark text-cream on-dark',
 };
 
-export function Section({ id, tone = 'cream', className, children, ...rest }) {
+/**
+ * `sheet` : la section remonte sur la précédente, coins hauts arrondis - la
+ * « nappe » du design system. À poser sur une section sombre qui suit une
+ * section claire (ou l'inverse), jamais entre deux sections du même ton.
+ */
+export function Section({ id, tone = 'cream', sheet = false, className, children, ...rest }) {
   return (
-    <section id={id} className={cn('py-section', TONES[tone], className)} {...rest}>
+    <section id={id} className={cn('py-section', TONES[tone], sheet && 'sheet', className)} {...rest}>
       {children}
     </section>
   );
@@ -47,6 +52,20 @@ export function Label({ children, tone = 'dark', className }) {
 }
 
 /**
+ * Repère de section : une pastille, un point de laiton, deux ou trois mots.
+ * Il dit dans quel chapitre on se trouve - et il est le même partout, de
+ * l'accueil au formulaire. Un par section au maximum, jamais deux empilés.
+ */
+export function Eyebrow({ children, tone = 'dark', className, as: Tag = 'p' }) {
+  return (
+    <Tag className={cn('eyebrow', tone === 'light' && 'eyebrow-light', className)}>
+      <span aria-hidden="true" />
+      {children}
+    </Tag>
+  );
+}
+
+/**
  * En-tête de section : un titre, et au besoin une phrase dessous.
  *
  * Deux règles tenues sur tout le site :
@@ -59,15 +78,21 @@ export function Label({ children, tone = 'dark', className }) {
  *   reste disponible quand la colonne de droite porte autre chose qu'un
  *   paragraphe de remplissage.
  */
-export function SectionHeading({ title, text, tone = 'dark', align = 'stack', className, children }) {
+export function SectionHeading({ label, title, text, tone = 'dark', align = 'stack', className, children }) {
   const light = tone === 'light';
   const split = align === 'split';
 
   return (
     <div className={cn(split && 'lg:grid lg:grid-cols-12 lg:gap-10', className)}>
       <Reveal className={cn(split && 'lg:col-span-7')}>
+        {label && (
+          <Eyebrow tone={tone} className="mb-6">
+            {label}
+          </Eyebrow>
+        )}
         {/* La largeur se pose sur le titre : `ch` se calcule sur la police de
-            l'élément, pas sur celle du conteneur. */}
+            l'élément, pas sur celle du conteneur. Un mot peut être mis en
+            valeur avec <em> : il prend le laiton, pas l'italique. */}
         <h2 className={cn('t-h2 max-w-[18ch] text-balance', light ? 'text-cream' : 'text-ink')}>{title}</h2>
       </Reveal>
 
@@ -77,7 +102,7 @@ export function SectionHeading({ title, text, tone = 'dark', align = 'stack', cl
           className={cn(
             'mt-5',
             split && 'lg:col-span-5 lg:mt-0 lg:self-end',
-            light ? 'text-cream/60' : 'text-ink/65'
+            light ? 'text-cream/70' : 'text-ink/65'
           )}
         >
           {text && <p className="t-lead measure">{text}</p>}
@@ -217,11 +242,25 @@ export function TextLink({ to, href, className, children, tone = 'dark', ...rest
   );
 }
 
-/** Image au ratio contrôlé, révélée par un volet au scroll. */
+const SHAPES = {
+  // Cadre courant : 24 px aux quatre angles.
+  frame: 'rounded-lg',
+  // « Feuille » : un angle s'ouvre en grand arc (voir tokens.css, Formes).
+  leaf: 'rounded-lg rounded-tr-arc',
+  leafLeft: 'rounded-lg rounded-tl-arc',
+  leafDown: 'rounded-lg rounded-bl-arc',
+};
+
+/**
+ * Image au ratio contrôlé, révélée par un volet au scroll.
+ * `shape` choisit la silhouette du cadre ; `photo` (par défaut) applique
+ * l'étalonnage commun à toutes les photographies du site.
+ */
 export function Media({
   src,
   alt,
   ratio = 'aspect-[4/5]',
+  shape = 'frame',
   className,
   imgClassName,
   priority = false,
@@ -243,11 +282,11 @@ export function Media({
       loading={priority ? 'eager' : 'lazy'}
       decoding={priority ? 'sync' : 'async'}
       fetchpriority={priority ? 'high' : undefined}
-      className={cn('h-full w-full object-cover', imgClassName)}
+      className={cn('photo h-full w-full object-cover', imgClassName)}
     />
   );
 
-  const shell = cn('overflow-hidden rounded-lg bg-sand', ratio, className);
+  const shell = cn('overflow-hidden bg-sand', SHAPES[shape] || SHAPES.frame, ratio, className);
 
   if (!reveal) return <div className={shell}>{img}</div>;
 

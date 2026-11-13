@@ -49,7 +49,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: radial-gradient(120% 85% at 50% 62%, #2b2723 0%, rgb(var(--c-bark-rgb)) 72%);
+  background: radial-gradient(120% 85% at 50% 62%, rgb(var(--c-moss-rgb)) 0%, rgb(var(--c-bark-rgb)) 72%);
   opacity: var(--xp-dusk);
 }
 
@@ -98,6 +98,35 @@
 .xp-live .xp-canvas { transition: opacity 0.7s ease-out; }
 .xp-ready .xp-canvas { opacity: 1; }
 .xp-ready .xp-poster { opacity: 0; }
+
+/* ---------- Voile de lecture (portrait) ----------
+   Sur un écran en hauteur, le texte occupe le bas et la scène le haut. Le
+   voile fond la scène dans la page là où le texte commence : rien de ce qui
+   traîne sur le plan de travail ne passe derrière une phrase. */
+.xp-scrim {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.xp-scrim::before,
+.xp-scrim::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.xp-scrim::before {
+  background: linear-gradient(to bottom, rgb(var(--c-cream-rgb) / 0) 47%, var(--c-cream) 60%);
+  opacity: calc(1 - var(--xp-dusk));
+}
+.xp-scrim::after {
+  background: linear-gradient(to bottom, rgb(var(--c-bark-rgb) / 0) 47%, rgb(var(--c-bark-rgb)) 60%);
+  opacity: var(--xp-dusk);
+}
+@media (max-aspect-ratio: 4/5) {
+  .xp-live .xp-scrim { display: block; }
+}
 
 /* ---------- Repères de coin ---------- */
 .xp-corners {
@@ -329,6 +358,40 @@
   }
 }
 
+/* Étiquettes de matières : un point, un mot. Pas de lien, pas de cadre. */
+.xp-tag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+.xp-tag i {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-cream);
+  box-shadow: 0 0 0 1px rgb(var(--c-ink-rgb) / 0.6);
+}
+.xp-tag span {
+  position: absolute;
+  left: 0;
+  top: -2.1rem;
+  transform: translateX(-50%);
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  background: rgb(var(--c-cream-rgb) / 0.88);
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-ink);
+}
+
 /* ---------- Index du film ---------- */
 .xp-index {
   display: none;
@@ -442,7 +505,7 @@
   .xp-chapters { grid-template-columns: repeat(2, 1fr); }
 }
 @media (min-width: 1200px) {
-  .xp-chapters { grid-template-columns: repeat(4, 1fr); }
+  .xp-chapters { grid-template-columns: repeat(5, 1fr); }
 }
 .xp-chapter {
   border-top: 1px solid rgb(var(--c-ink-rgb) / 0.16);

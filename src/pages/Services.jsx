@@ -1,24 +1,23 @@
 import PageHero from '@/components/sections/PageHero';
-import ServicesBoard from '@/components/sections/ServicesBoard';
+import ServicesEditorial from '@/components/sections/ServicesEditorial';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Section } from '@/components/ui';
 
 export default function Services() {
   return (
     <>
       <PageHero
-        title="Six métiers, un seul interlocuteur."
-        intro="La rénovation complète comme le poste isolé. Dépliez un métier, puis demandez le devis."
+        title={
+          <>
+            Six métiers, <em>un seul interlocuteur.</em>
+          </>
+        }
+        intro="La rénovation complète comme le poste isolé. Chaque métier a sa page : ce qu’il couvre, comment nous intervenons, et les chantiers qui le montrent."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Services' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
-        <Container>
-          <ServicesBoard />
-        </Container>
-      </Section>
+      <ServicesEditorial />
 
-      <CTASection source="services" />
+      <CTASection source="services" sheet />
     </>
   );
 }

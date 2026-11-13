@@ -18,7 +18,7 @@ const FACTS = [
  */
 export default function Signature() {
   return (
-    <section className="bg-cream py-section text-ink">
+    <section className="sheet bg-cream py-section text-ink">
       <Container>
         <div className="flex items-center justify-between gap-6 border-b border-ink/15 pb-4">
           <p className="t-label text-ink/65">{BRAND.legalName}</p>
@@ -30,7 +30,7 @@ export default function Signature() {
         <div className="mt-block grid gap-10 lg:grid-cols-12 lg:gap-16">
           <Reveal className="lg:col-span-8">
             <h2 className="t-display max-w-[13ch] text-balance">
-              Transformer un espace. <span className="text-ink/50">Créer un lieu.</span>
+              Transformer un espace. <em>Créer un lieu.</em>
             </h2>
           </Reveal>
 

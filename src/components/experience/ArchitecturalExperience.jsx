@@ -6,7 +6,7 @@ import { EVENTS, track } from '@/lib/analytics';
 import { canUseWebGL, prefersSavedData, supportsStickyStage } from '@/lib/webgl';
 import useReducedMotion from '@/hooks/useMotionPreferences';
 import { cn } from '@/lib/utils';
-import { CHAPTERS, INDEX, NOTES, SHEET } from './content';
+import { CHAPTERS, INDEX, MATERIALS, MATERIALS_WINDOW, NOTES, NOTES_WINDOW, SHEET } from './content';
 
 /**
  * Hero d'accueil : une maquette 3D que le défilement fait vivre.
@@ -37,6 +37,7 @@ export default function ArchitecturalExperience() {
   const hint = useRef(null);
   const pin = useRef(null);
   const notesBox = useRef(null);
+  const matsBox = useRef(null);
 
   useEffect(() => {
     setLive(!reduced && !prefersSavedData() && supportsStickyStage() && canUseWebGL());
@@ -60,13 +61,15 @@ export default function ArchitecturalExperience() {
             hero: hero.current,
             hint: hint.current,
             pin: pin.current,
-            notesBox: notesBox.current,
-            notes: [...el.querySelectorAll('[data-anchor]')],
             chapters: [...el.querySelectorAll('[data-chapter]')],
             index: [...el.querySelectorAll('[data-at]')],
           },
           {
             chapters: CHAPTERS,
+            overlays: [
+              { box: matsBox.current, items: [...matsBox.current.querySelectorAll('[data-anchor]')], ...MATERIALS_WINDOW },
+              { box: notesBox.current, items: [...notesBox.current.querySelectorAll('[data-anchor]')], ...NOTES_WINDOW },
+            ],
             onReady: () => !cancelled && setReady(true),
             // WebGL refusé, contexte perdu : l'image de la maquette reprend
             // l'écran et le récit continue sans la 3D. Jamais de cadre vide,
@@ -120,6 +123,8 @@ export default function ArchitecturalExperience() {
             />
           </picture>
           <canvas ref={canvas} className="xp-canvas" aria-hidden="true" />
+          {/* Écran en hauteur : un voile assoit le texte sous la maquette. */}
+          <div className="xp-scrim" aria-hidden="true" />
 
           {/* ---------- Repères de coin ---------- */}
           <div className="xp-corners">
@@ -134,14 +139,16 @@ export default function ArchitecturalExperience() {
           {/* ---------- Promesse et actions ---------- */}
           <div ref={hero} className="xp-hero">
             <div className="xp-hero-copy">
-              <h1 className="xp-h1">Du premier plan à la dernière clé.</h1>
+              <h1 className="xp-h1">
+                Du premier plan à la <em>dernière clé.</em>
+              </h1>
               <p className="t-lead mt-4 max-w-[40ch] text-ink/65">
                 Rénovation complète, finitions, toiture, façade et extérieurs. Un seul interlocuteur, du devis à la remise
                 des clés, partout en Belgique.
               </p>
               <div data-page-cta className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
                 <Button to="/devis" size="lg" arrow className="w-full justify-center sm:w-auto" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'hero' })}>
-                  Devis gratuit
+                  Demander un devis
                 </Button>
                 <div className="flex gap-2.5">
                   <Button
@@ -187,12 +194,22 @@ export default function ArchitecturalExperience() {
             <span>Maquette d’étude</span>
           </p>
 
+          {/* ---------- Étiquettes des échantillons ---------- */}
+          <ul ref={matsBox} className="xp-notes xp-tags" aria-label="Matières présentées">
+            {MATERIALS.map((m) => (
+              <li key={m.key} data-anchor={m.key} className="xp-tag">
+                <i aria-hidden="true" />
+                <span>{m.label}</span>
+              </li>
+            ))}
+          </ul>
+
           {/* ---------- Annotations de la vue éclatée ---------- */}
           <ul ref={notesBox} className="xp-notes" aria-label="Les métiers de Chaudrel, couche par couche">
             {NOTES.map((n) => (
               <li key={n.key} data-anchor={n.key} className={cn('xp-note', n.side === 'left' && 'xp-note-left')}>
                 <i aria-hidden="true" />
-                <Link to={n.to} onFocus={() => goTo(0.53)}>
+                <Link to={n.to} onFocus={() => goTo(NOTES_WINDOW.focus)}>
                   <span className="t-num">{n.n}</span>
                   {n.label}
                 </Link>
@@ -225,11 +242,11 @@ export default function ArchitecturalExperience() {
               <p className="xp-chapter-label">
                 <span className="t-num">{c.n}</span>
                 <i aria-hidden="true" />
-                {c.label}
+                {c.verb}
               </p>
               <h2 className="xp-chapter-title">{c.title}</h2>
               <p className="xp-chapter-text">{c.text}</p>
-              {c.id === 'resultat' && (
+              {c.id === 'reveler' && (
                 <div className="xp-chapter-cta">
                   <Button to="/realisations" variant={live ? 'solidLight' : 'outline'} arrow>
                     Voir les réalisations

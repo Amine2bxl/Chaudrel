@@ -3,6 +3,7 @@ import Reveal from '@/lib/reveal';
 import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 import { BRAND, EMAIL_DISPLAY } from '@/data/site';
+import { cn } from '@/lib/utils';
 
 /**
  * Bande de conversion en fin de page.
@@ -13,14 +14,21 @@ import { BRAND, EMAIL_DISPLAY } from '@/data/site';
  * chiffrer, appeler l'un ou l'autre, écrire.
  */
 export default function CTASection({
-  title = 'Un projet en tête ?',
+  title = (
+    <>
+      Donnons vie à <em>votre projet.</em>
+    </>
+  ),
   text = 'Cinq questions, deux minutes. Nous organisons une visite et vous remettons un devis détaillé, gratuitement.',
   source = 'cta',
+  // La bande remonte en « nappe » sur la section claire qui la précède.
+  // À couper (`sheet={false}`) quand elle suit une section déjà sombre.
+  sheet = true,
 }) {
   const { openDialog } = useContactDialog();
 
   return (
-    <section data-page-cta className="on-dark border-t border-cream/10 bg-bark pt-section text-cream">
+    <section data-page-cta data-cta-band className={cn('on-dark bg-bark pt-section text-cream', sheet ? 'sheet' : 'border-t border-cream/10')}>
       <Container>
         <div className="flex items-center justify-between gap-6 border-b border-cream/15 pb-4">
           <p className="t-label text-cream/60">{BRAND.promises.quote}</p>
@@ -43,12 +51,12 @@ export default function CTASection({
                 className="w-full justify-center sm:w-auto"
                 onClick={() => track(EVENTS.QUOTE_CTA, { source })}
               >
-                Devis gratuit
+                Demander un devis
               </Button>
               {/* Un seul appel secondaire : la fenêtre porte tous les canaux
                   plutôt que d'en imposer un. */}
               <Button variant="outlineLight" size="lg" className="w-full justify-center sm:w-auto" onClick={() => openDialog(source)}>
-                Nous joindre
+                Parlons de votre rénovation
               </Button>
             </div>
           </Reveal>

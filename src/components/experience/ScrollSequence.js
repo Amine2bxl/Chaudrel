@@ -13,7 +13,7 @@ import { isLowPower } from '@/lib/webgl';
  *
  * Module impératif, chargé à la demande. Retourne une fonction de nettoyage.
  */
-export async function mountSequence(els, { chapters, onReady, onFail, onStep }) {
+export async function mountSequence(els, { chapters, overlays = [], onReady, onFail, onStep }) {
   const [{ gsap }, { ScrollTrigger }, sb] = await Promise.all([
     import('gsap'),
     import('gsap/ScrollTrigger'),
@@ -37,19 +37,23 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
   const size = () => ({ w: els.stage.clientWidth || 1, h: els.stage.clientHeight || 1 });
   const progress = () => tl?.scrollTrigger?.progress ?? 0;
 
+  /* Étiquettes accrochées à la scène (métiers de la vue éclatée, matières des
+     échantillons) : chaque groupe n'est recalculé que dans sa fenêtre. */
   function placeAnchors() {
     const p = progress();
     if (els.pin && p < 0.2) {
       const a = engine.project('hero');
       els.pin.style.transform = `translate3d(${a.x.toFixed(1)}px, ${a.y.toFixed(1)}px, 0)`;
     }
-    if (p > 0.38 && p < 0.7) {
-      /* Écran étroit : l'étiquette est centrée sur son point, et retenue
-         dans le cadre pour ne jamais sortir de l'écran. */
-      const w = els.stage.clientWidth;
-      const narrow = w < 1024;
-      for (const el of els.notes) {
+    const w = els.stage.clientWidth;
+    const narrow = w < 1024;
+    for (const o of overlays) {
+      if (p < o.at - 0.06 || p > o.until + 0.06) continue;
+      for (const el of o.items) {
         const a = engine.project(el.dataset.anchor);
+        if (!a) continue;
+        /* Écran étroit : l'étiquette est centrée sur son point, et retenue
+           dans le cadre pour ne jamais sortir de l'écran. */
         const x = narrow ? Math.min(w - 68, Math.max(68, a.x)) : a.x;
         el.style.transform = `translate3d(${x.toFixed(1)}px, ${a.y.toFixed(1)}px, 0)`;
       }
@@ -79,7 +83,7 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
   function setStep(p) {
     let i = 0;
     els.index.forEach((el, n) => {
-      if (p >= Number(el.dataset.at) - 0.13) i = n;
+      if (p >= Number(el.dataset.at) - 0.09) i = n;
     });
     if (i === step) return;
     step = i;
@@ -117,10 +121,10 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
     }
 
     // Composition d'ouverture
-    tl.to(els.hero, { autoAlpha: 0, y: -28, duration: 0.07, ease: 'power1.in' }, 0.05);
+    tl.to(els.hero, { autoAlpha: 0, y: -28, duration: 0.06, ease: 'power1.in' }, 0.04);
     tl.to(els.hint, { autoAlpha: 0, duration: 0.03 }, 0.01);
-    tl.to(els.pin, { autoAlpha: 0, duration: 0.05 }, 0.05);
-    tl.to(els.wordmark, { yPercent: -10, opacity: 0.1, duration: 0.2, ease: 'sine.inOut' }, 0.06);
+    tl.to(els.pin, { autoAlpha: 0, duration: 0.04 }, 0.04);
+    tl.to(els.wordmark, { yPercent: -10, opacity: 0.1, duration: 0.1, ease: 'sine.inOut' }, 0.05);
 
     // Chapitres
     chapters.forEach((c, i) => {
@@ -129,9 +133,11 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
       if (c.until < 1) tl.to(el, { autoAlpha: 0, y: -18, duration: 0.04, ease: 'power1.in' }, c.until);
     });
 
-    // Annotations de la vue éclatée
-    tl.fromTo(els.notesBox, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.05, immediateRender: true }, 0.46);
-    tl.to(els.notesBox, { autoAlpha: 0, duration: 0.04 }, 0.615);
+    // Étiquettes accrochées à la scène
+    for (const o of overlays) {
+      tl.fromTo(o.box, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04, immediateRender: true }, o.at);
+      tl.to(o.box, { autoAlpha: 0, duration: 0.035 }, o.until);
+    }
 
     // La timeline doit durer exactement 1 : c'est l'échelle du défilement.
     tl.set({}, {}, 1);
@@ -225,7 +231,7 @@ export async function mountSequence(els, { chapters, onReady, onFail, onStep }) 
     els.canvas.removeEventListener('webglcontextlost', onLost);
     tl?.scrollTrigger?.kill();
     tl?.kill();
-    gsap.set([els.hero, els.hint, els.pin, els.wordmark, els.notesBox, ...els.chapters], { clearProps: 'all' });
+    gsap.set([els.hero, els.hint, els.pin, els.wordmark, ...overlays.map((o) => o.box), ...els.chapters], { clearProps: 'all' });
     els.root.style.removeProperty('--xp-dusk');
     els.root.classList.remove('xp-night');
     engine?.dispose();

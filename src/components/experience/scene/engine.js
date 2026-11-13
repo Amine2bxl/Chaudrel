@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { createMaterials } from './materials.js';
 import { ANCHORS, createBuilding } from './building.js';
+import { createAtelier } from './atelier.js';
 
 /**
  * Moteur de la maquette : rendu, lumière, application d'un état du storyboard.
@@ -67,11 +68,12 @@ export async function createEngine(canvas, { lowPower = false, quality = 'auto' 
   sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.03;
   sun.shadow.radius = lowPower ? 3 : 5;
+  /* Le cône d'ombre couvre la maquette et tout l'atelier autour d'elle. */
   const sc = sun.shadow.camera;
-  sc.left = -22;
-  sc.right = 22;
-  sc.top = 26;
-  sc.bottom = -16;
+  sc.left = -46;
+  sc.right = 46;
+  sc.top = 40;
+  sc.bottom = -36;
   sc.near = 1;
   sc.far = 120;
   scene.add(sun, sun.target);
@@ -100,6 +102,11 @@ export async function createEngine(canvas, { lowPower = false, quality = 'auto' 
   await pause();
   root.add(...lamps);
   scene.add(root);
+  await pause();
+
+  const atelier = createAtelier(mats.T, { anisotropy: Math.min(8, renderer.capabilities.getMaxAnisotropy()) });
+  scene.add(atelier.group);
+  await pause();
 
   /* Ombre portée sur la page : un plan qui ne reçoit que l'ombre. */
   const shadowMat = new THREE.ShadowMaterial({ opacity: 0.26, color: '#3a2f22' });
@@ -173,6 +180,9 @@ export async function createEngine(canvas, { lowPower = false, quality = 'auto' 
     mats.uniforms.uWipe.value = lerp(-1.2, 8.6, s.wipe);
     mats.uniforms.uLineOn.value = s.wipe > 0.001 && s.wipe < 0.999 ? 1 : 0;
 
+    // Le tracé des plans
+    atelier.uniforms.uDraw.value = s.draw ?? 1;
+
     // Jour → crépuscule
     const d = s.dusk;
     hemi.intensity = lerp(0.42, 0.2, d);
@@ -204,8 +214,11 @@ export async function createEngine(canvas, { lowPower = false, quality = 'auto' 
   /** Position écran (px, repère du canvas) d'un point d'ancrage nommé. */
   function project(name) {
     const a = ANCHORS[name];
-    if (!a) return null;
-    v.set(a.at[0], a.at[1] + groups[a.layer].position.y, a.at[2]).project(camera);
+    const b = atelier.anchors[name];
+    if (!a && !b) return null;
+    if (a) v.set(a.at[0], a.at[1] + groups[a.layer].position.y, a.at[2]);
+    else v.set(b[0], b[1], b[2]);
+    v.project(camera);
     return { x: (v.x * 0.5 + 0.5) * width, y: (-v.y * 0.5 + 0.5) * height, visible: v.z < 1 };
   }
 
@@ -213,6 +226,7 @@ export async function createEngine(canvas, { lowPower = false, quality = 'auto' 
     disposed = true;
     scene.traverse((o) => o.geometry?.dispose());
     mats.dispose();
+    atelier.dispose();
     shadowMat.dispose();
     scene.environment?.dispose();
     sun.shadow.map?.dispose();

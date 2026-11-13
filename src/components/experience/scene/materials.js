@@ -119,6 +119,7 @@ export async function createMaterials({ textureSize = 256, anisotropy = 4, pause
 
   return {
     M,
+    T,
     uniforms,
     dispose() {
       Object.values(M).forEach((m) => m.dispose());

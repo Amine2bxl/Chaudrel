@@ -1,5 +1,6 @@
 @import './styles/tokens.css';
 @import './styles/experience.css';
+@import './styles/gallery.css';
 
 @tailwind base;
 @tailwind components;
@@ -148,6 +149,75 @@
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+  }
+
+  /* Mot mis en valeur dans un titre : le laiton, jamais l'italique (Marcellus
+     n'en a pas). Un seul par titre. */
+  .t-display em,
+  .t-hero em,
+  .t-h1 em,
+  .t-h2 em,
+  .xp-h1 em,
+  .xp-chapter-title em {
+    font-style: normal;
+    color: rgb(var(--c-gold-deep-rgb));
+  }
+  .on-dark .t-display em,
+  .on-dark .t-hero em,
+  .on-dark .t-h1 em,
+  .on-dark .t-h2 em,
+  .xp-night .xp-chapter-title em {
+    color: var(--c-gold-light);
+  }
+
+  /* ---------- Repère de section ---------- */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.5rem 0.875rem 0.5rem 0.75rem;
+    border-radius: 999px;
+    background: rgb(var(--c-sand-rgb) / 0.75);
+    font-size: 0.6875rem;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--c-ink-rgb) / 0.78);
+  }
+  .eyebrow > span {
+    width: 0.375rem;
+    height: 0.375rem;
+    flex: none;
+    border-radius: 50%;
+    background: var(--c-gold);
+  }
+  .eyebrow-light {
+    background: rgb(var(--c-cream-rgb) / 0.08);
+    color: rgb(var(--c-cream-rgb) / 0.82);
+  }
+  .eyebrow-light > span {
+    background: var(--c-gold-light);
+  }
+
+  /* ---------- Nappe ----------
+     Une section qui remonte sur la précédente. La marge négative la fait
+     glisser dessus ; la section d'avant garde assez de marge basse pour que
+     rien ne passe sous l'arrondi. */
+  .sheet {
+    position: relative;
+    z-index: 1;
+    margin-top: calc(-1 * var(--r-sheet));
+    border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+  }
+
+  /* ---------- Photographie ----------
+     Les photos de chantier viennent de téléphones, à des heures et sous des
+     ciels différents. Un étalonnage commun, très léger, les fait tenir
+     ensemble : un peu moins de saturation, un peu plus de contraste. Rien
+     n'est retouché, recadré de force ni inventé. */
+  .photo {
+    filter: saturate(0.9) contrast(1.05);
   }
 
   .t-num {
@@ -337,12 +407,12 @@
 .rv {
   opacity: 0;
   transition:
-    opacity 0.8s ease-out,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--dur-reveal) ease-out,
+    transform var(--dur-reveal) var(--ease-soft);
   will-change: opacity, transform;
 }
 .rv-up {
-  transform: translateY(22px);
+  transform: translateY(var(--rise));
 }
 .rv-down {
   transform: translateY(-18px);
@@ -423,9 +493,11 @@ details[open] .faq-a {
     transform: none;
   }
 }
-.hero-in {
+/* Les entrées ne jouent qu'après une navigation interne (`data-nav`, posé par
+   App.jsx) : au premier affichage la page est prérendue et reste immobile. */
+html[data-nav] .hero-in {
   opacity: 0;
-  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fade-up var(--dur-reveal) var(--ease-soft) forwards;
 }
 .hero-d1 {
   animation-delay: 0.1s;
@@ -455,8 +527,24 @@ details[open] .faq-a {
     transform: scale(1);
   }
 }
-.slow-zoom {
+html[data-nav] .slow-zoom {
   animation: slow-zoom 2.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Changement de page : le contenu monte d'un souffle. Même course et même
+   courbe que les apparitions au défilement. */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+html[data-nav] .page-in {
+  animation: page-in 0.5s var(--ease-soft) both;
 }
 
 /* Menu mobile */
@@ -499,7 +587,8 @@ details[open] .faq-a {
   .rv,
   .rv-line,
   .rv-line-y,
-  .hero-in {
+  .hero-in,
+  .page-in {
     opacity: 1 !important;
     transform: none !important;
   }
@@ -590,4 +679,30 @@ details[open] .faq-a {
   font-size: clamp(2.5rem, 6vw, 5rem);
   line-height: 1;
   letter-spacing: -0.02em;
+}
+
+/* ---------- Pied de page : le mot-symbole, comme à l'ouverture ---------- */
+.footer-wordmark {
+  margin: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+  font-family: var(--font-display);
+  font-size: min(15.8vw, 14.4rem);
+  line-height: 0.82;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  color: rgb(var(--c-cream-rgb) / 0.94);
+  user-select: none;
+}
+.footer-wordmark span {
+  color: var(--c-gold-light);
+}
+
+/* Sans bande de conversion au-dessus de lui (devis, mentions, liens, 404), le
+   pied de page fait lui-même la « nappe » ; sinon il prolonge la bande. */
+.site-footer {
+  border-radius: var(--r-sheet) var(--r-sheet) 0 0;
+}
+main:has([data-cta-band]) + .site-footer {
+  border-radius: 0;
 }

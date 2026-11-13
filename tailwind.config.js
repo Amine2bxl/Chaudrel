@@ -31,6 +31,7 @@ export default {
         sand: rgb('sand'),
         ink: rgb('ink'),
         bark: rgb('bark'),
+        moss: rgb('moss'),
         gold: {
           DEFAULT: rgb('gold'),
           deep: rgb('gold-deep'),
@@ -54,6 +55,8 @@ export default {
         lg: 'var(--r-lg)',
         xl: 'var(--r-xl)',
         logo: 'var(--r-logo)',
+        arc: 'var(--r-arc)',
+        sheet: 'var(--r-sheet)',
       },
       boxShadow: {
         soft: 'var(--shadow-soft)',
@@ -75,6 +78,7 @@ export default {
         fast: 'var(--dur-fast)',
         DEFAULT: 'var(--dur)',
         slow: 'var(--dur-slow)',
+        reveal: 'var(--dur-reveal)',
       },
     },
   },

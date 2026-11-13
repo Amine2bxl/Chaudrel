@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Navbar from '@/components/layout/Navbar';
 import MobileBar from '@/components/layout/MobileBar';
@@ -19,22 +19,37 @@ import Links from '@/pages/Links';
 import Legal from '@/pages/Legal';
 import NotFound from '@/pages/NotFound';
 
-function ScrollToTop() {
+/**
+ * À chaque changement de route : retour en haut, et le contenu de la page
+ * entre avec l'animation commune (`.page-in`, `.hero-in`).
+ *
+ * Pas au premier affichage : la page arrive prérendue, déjà lisible. La
+ * rejouer en fondu la ferait clignoter et retarderait son contenu. Le drapeau
+ * `data-nav` n'est donc posé qu'à partir de la première navigation interne.
+ */
+function RouteChange() {
   const { pathname } = useLocation();
+  const first = useRef(true);
   useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    document.documentElement.dataset.nav = '1';
     window.scrollTo(0, 0);
   }, [pathname]);
   return null;
 }
 
 export default function App() {
+  const { pathname } = useLocation();
   return (
     <ContactDialogProvider>
       <div className="min-h-screen bg-cream">
         <Seo />
-        <ScrollToTop />
+        <RouteChange />
         <Navbar />
-        <main id="main">
+        <main id="main" key={pathname} className="page-in">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/realisations" element={<Projects />} />

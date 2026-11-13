@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Phone } from 'lucide-react';
 import { BRAND, LOGO, NAV } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
@@ -43,10 +42,21 @@ function Wordmark() {
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { openDialog } = useContactDialog();
   const { pathname } = useLocation();
 
   useEffect(() => setOpen(false), [pathname]);
+
+  /* La barre se resserre dès qu'on quitte le haut de la page : large et
+     presque transparente au repos, compacte et posée ensuite. Même objet,
+     deux tenues - jamais deux barres. */
+  useEffect(() => {
+    const on = () => setScrolled(window.scrollY > 24);
+    on();
+    window.addEventListener('scroll', on, { passive: true });
+    return () => window.removeEventListener('scroll', on);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -70,7 +80,15 @@ export default function Navbar() {
         Aller au contenu
       </a>
 
-      <div className="mx-auto my-2.5 flex w-[calc(100%-1.25rem)] max-w-[1240px] items-center justify-between rounded-full bg-cream/95 px-4 py-2.5 shadow-soft backdrop-blur-md sm:my-3 sm:px-5 lg:px-6">
+      <div
+        className={cn(
+          'mx-auto flex w-[calc(100%-1.25rem)] items-center justify-between rounded-full px-4 backdrop-blur-md',
+          'transition-[max-width,padding,margin,background-color,box-shadow] duration-slow ease-soft sm:px-5 lg:px-6',
+          scrolled || open
+            ? 'my-2 max-w-[1120px] bg-cream/95 py-2 shadow-soft sm:my-2.5'
+            : 'my-2.5 max-w-[1320px] bg-cream/75 py-2.5 shadow-none sm:my-3.5 lg:py-3'
+        )}
+      >
         <Wordmark />
 
         <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Navigation principale">
@@ -94,22 +112,15 @@ export default function Navbar() {
             </NavLink>
           ))}
 
-          {/* Une seule action de contact : un icône, pas un numéro. Le numéro
-              affiché ne faisait qu'appeler sans contexte ; l'icône ouvre la
-              fenêtre qui porte toutes les coordonnées - appeler, WhatsApp,
-              e-mail, horaires, adresse. */}
-          <button
-            type="button"
-            onClick={() => openDialog('navbar')}
-            aria-label="Nous joindre"
-            title="Nous joindre"
-            className="grid h-10 w-10 place-items-center rounded-full text-ink/70 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
-          >
-            <Phone size={18} strokeWidth={1.7} aria-hidden="true" />
+          {/* « Contact » n'est pas une page : il ouvre la fenêtre qui porte
+              toutes les coordonnées - appeler, WhatsApp, e-mail, horaires,
+              adresse. Même écriture que les liens voisins. */}
+          <button type="button" onClick={() => openDialog('navbar')} className="relative t-label pb-2 pt-1 text-ink/65 transition-colors duration-fast hover:text-ink">
+            Contact
           </button>
 
-          <Button to="/devis" size="sm" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
-            Devis gratuit
+          <Button to="/devis" size="sm" arrow onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
+            Demander un devis
           </Button>
         </nav>
 
@@ -153,11 +164,11 @@ export default function Navbar() {
             </ul>
 
             <div className="mt-7 flex flex-col gap-3">
-              <Button to="/devis" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
-                Devis gratuit
+              <Button to="/devis" arrow onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
+                Demander un devis
               </Button>
               <Button variant="outline" onClick={() => openDialog('menu')}>
-                Nous joindre
+                Contact
               </Button>
             </div>
 

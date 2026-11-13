@@ -42,8 +42,13 @@
   --c-cream-rgb: 247 245 242; /* fond de page - crème de Chaudrel */
   --c-shell-rgb: 255 255 255; /* surfaces surélevées : cartes, champs, panneaux */
   --c-sand-rgb: 234 229 222; /* aplats discrets, fond d'image en attente */
-  --c-ink-rgb: 26 26 26; /* texte et actions primaires */
-  --c-bark-rgb: 28 28 28; /* sections sombres */
+  --c-ink-rgb: 22 28 25; /* texte et actions primaires - noir tirant sur le vert */
+  /* Vert sapin : le ton sombre de la marque. Avec le laiton et le crème, c'est
+     le trio de toute la charte - horlogerie plus que chantier. Il remplace le
+     charbon neutre : une seule valeur ici, et toutes les sections sombres, le
+     crépuscule de la maquette 3D et le pied de page suivent. */
+  --c-bark-rgb: 22 36 30; /* sections sombres - #16241E */
+  --c-moss-rgb: 34 53 44; /* le même vert, un cran plus clair : halo, surfaces sur fond sombre */
   --c-gold-rgb: 140 118 78; /* accent : page active, focus, repères */
   --c-gold-deep-rgb: 111 93 61; /* fond du bouton devis - 5,8:1 sous le crème */
   --c-gold-hover-rgb: 122 102 66; /* son survol - 5,1:1, passe encore */
@@ -77,6 +82,16 @@
   --r-xl: 2rem; /* 32 px - grands blocs */
   --r-logo: 0.8125rem; /* 13 px sur 40 px - carré adouci */
 
+  /* ---------- Formes ----------
+     Deux gestes, et seulement deux, donnent sa silhouette au site :
+       feuille  un cadre photo dont UN angle s'ouvre en grand arc - le rappel
+                d'une voûte, d'une baie cintrée ;
+       nappe    une section sombre qui remonte sur la précédente, coins hauts
+                arrondis, comme une feuille de plan posée sur une autre.
+     Tout le reste garde l'échelle d'arrondis ci-dessus. */
+  --r-arc: clamp(4.5rem, 13vw, 11rem);
+  --r-sheet: clamp(1.75rem, 4.5vw, 3.5rem);
+
   /* ---------- Rythme vertical ----------
      Trois intervalles nommés, et rien entre les deux. Le rythme d'une page
      tient au contraste entre le serré et le large : cinq valeurs différentes
@@ -95,11 +110,15 @@
   --shadow-soft: 0 1px 2px rgb(var(--c-ink-rgb) / 0.04), 0 10px 28px -14px rgb(var(--c-ink-rgb) / 0.2);
   --shadow-lift: 0 2px 4px rgb(var(--c-ink-rgb) / 0.05), 0 26px 50px -22px rgb(var(--c-ink-rgb) / 0.3);
 
-  /* ---------- Mouvement ---------- */
+  /* ---------- Mouvement ----------
+     Une seule courbe, quatre durées. Voir docs/DESIGN-SYSTEM.md, « Grammaire
+     du mouvement » : qui bouge, de combien, et pourquoi. */
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 200ms;
-  --dur: 300ms;
-  --dur-slow: 500ms;
+  --dur-fast: 200ms; /* retour immédiat : survol, focus, bascule */
+  --dur: 300ms; /* changement d'état d'un composant */
+  --dur-slow: 500ms; /* panneau, barre, menu */
+  --dur-reveal: 900ms; /* apparition au défilement : texte, filet, photo */
+  --rise: 22px; /* course d'une apparition - jamais plus */
 
   /* ---------- Typographie ----------
      Deux voix, une seule origine. Marcellus - la serif inscriptionnelle du

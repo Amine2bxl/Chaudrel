@@ -34,7 +34,12 @@ export default function ServicesShowcase() {
       <Container>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading
-            title="Une rénovation complète, ou un seul poste."
+            label="Nos métiers"
+            title={
+              <>
+                Une rénovation complète, <em>ou un seul poste.</em>
+              </>
+            }
             text="Dans les deux cas, c’est nous qui coordonnons les corps de métier."
           />
           <TextLink to="/services" className="mb-1">
@@ -83,7 +88,7 @@ export default function ServicesShowcase() {
           </ol>
 
           <Reveal from="fade" className="col-span-7">
-            <div className="relative aspect-[5/4] overflow-hidden rounded-lg bg-sand">
+            <div className="relative aspect-[5/4] overflow-hidden rounded-lg rounded-tr-arc bg-sand">
               {SERVICES.map((s, i) => (
                 <img
                   key={s.slug}
@@ -95,7 +100,7 @@ export default function ServicesShowcase() {
                   loading="lazy"
                   decoding="async"
                   className={cn(
-                    'absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-700 ease-soft',
+                    'photo absolute inset-0 h-full w-full object-cover transition-[opacity,transform] duration-reveal ease-soft',
                     i === active ? 'scale-100 opacity-100' : 'scale-[1.03] opacity-0'
                   )}
                 />
@@ -124,7 +129,7 @@ export default function ServicesShowcase() {
                 height="900"
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
+                className="photo absolute inset-0 h-full w-full object-cover"
               />
               <span className="absolute inset-0 bg-gradient-to-t from-bark/85 via-bark/20 to-transparent" aria-hidden="true" />
               <span className="absolute inset-x-0 bottom-0 block p-5 text-cream">

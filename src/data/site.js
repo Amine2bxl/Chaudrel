@@ -93,18 +93,16 @@ export const whatsappUrl = (
 ) => `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(message)}`;
 
 /**
- * Quatre entrées, pas une de plus.
- * Un visiteur vient voir le travail, comprendre ce que Chaudrel prend en
- * charge, savoir comment ça se passe, puis appeler. « À propos » et « FAQ »
- * restent accessibles depuis l'accueil et le pied de page : ce sont des pages
- * qu'on consulte, pas des étapes du parcours.
+ * Navigation principale : ce qu'on vient voir (les chantiers), ce que
+ * Chaudrel prend en charge, comment ça se passe, qui c'est. Le logo ramène à
+ * l'accueil ; « Contact » ouvre la fenêtre de coordonnées ; la FAQ et les
+ * mentions vivent au pied de page.
  */
 export const NAV = [
-  { label: 'Accueil', to: '/' },
-  { label: 'Services', to: '/services' },
   { label: 'Réalisations', to: '/realisations' },
+  { label: 'Services', to: '/services' },
+  { label: 'Méthode', to: '/methode' },
   { label: 'À propos', to: '/a-propos' },
-  { label: 'FAQ', to: '/faq' },
 ];
 
 export const MOBILE_NAV = [

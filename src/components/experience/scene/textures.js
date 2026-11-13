@@ -143,7 +143,7 @@ export async function createTextures(size = 256, pause = async () => {}) {
     const br = rOak[Math.floor(x / (S / 8))];
     const gap = x % (S / 8) < 1.5 ? 0.55 : 1;
     const k = (0.78 + gOak[i] * 0.36) * mix(0.9, 1.08, br) * gap;
-    return tint([176, 132, 88], k);
+    return tint([170, 137, 100], k);
   });
   await pause();
   const oakBump = paint(S, (x, y, i) => {

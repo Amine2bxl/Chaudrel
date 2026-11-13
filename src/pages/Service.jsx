@@ -116,6 +116,7 @@ export default function Service() {
 
       {related.length > 0 && (
         <ProjectCarousel
+          sheet
           projects={related}
           sectionLabel="Sur le chantier"
           title="Des chantiers de ce type."

@@ -1,6 +1,6 @@
 import PageHero from '@/components/sections/PageHero';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Media, Section, SectionHeading } from '@/components/ui';
+import { Container, Eyebrow, Media, Section } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { BRAND } from '@/data/site';
 
@@ -12,7 +12,7 @@ export default function About() {
           <>
             Une entreprise de rénovation
             <br />
-            fondée à Bruxelles en {BRAND.founded}.
+            fondée à Bruxelles <em>en {BRAND.founded}.</em>
           </>
         }
         intro={`${BRAND.founders[0].name} et ${BRAND.founders[1].name} l’ont créée à deux. Elle fonctionne toujours de la même manière.`}
@@ -26,14 +26,15 @@ export default function About() {
             src="/story-before-after.webp"
             alt="Chantier de rénovation mené par l’équipe Chaudrel"
             ratio="aspect-[4/5]"
-            revealFrom="fade"
+            shape="leaf"
             className="lg:col-span-5"
           />
 
           <div className="lg:col-span-6 lg:col-start-7">
             <Reveal>
-              <p className="t-h2 text-[1.5rem] leading-[1.35] lg:text-[1.75rem]">
-                Nous ne vendons pas des travaux. Nous livrons des lieux qui fonctionnent.
+              <Eyebrow className="mb-6">Notre approche</Eyebrow>
+              <p className="t-h2 max-w-[20ch] text-balance">
+                Nous ne vendons pas des travaux. <em>Nous livrons des lieux qui fonctionnent.</em>
               </p>
             </Reveal>
 
@@ -56,8 +57,8 @@ export default function About() {
 
             <Reveal delay={200} className="mt-12 grid gap-px sm:grid-cols-2">
               {BRAND.founders.map((f) => (
-                <div key={f.name} className="border-t border-ink/12 pt-5">
-                  <p className="t-h3">{f.name}</p>
+                <div key={f.name} className="border-t border-ink/15 pt-5">
+                  <p className="font-display text-[1.5rem] leading-none">{f.name}</p>
                   <p className="t-small mt-1 text-ink/65">{f.role}</p>
                 </div>
               ))}

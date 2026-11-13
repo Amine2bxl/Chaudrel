@@ -84,7 +84,7 @@ export default function MobileBar() {
         onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
         className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-cream/20 bg-gold-deep text-cream shadow-lift active:translate-y-px"
       >
-        Devis gratuit
+        Demander un devis
       </Link>
       <button
         type="button"
@@ -92,7 +92,7 @@ export default function MobileBar() {
         onClick={() => openDialog('mobile_bar')}
         className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-ink/12 bg-shell text-ink shadow-soft active:translate-y-px"
       >
-        Nous joindre
+        Contact
       </button>
     </div>
   );

@@ -20,12 +20,16 @@ export default function Projects() {
   return (
     <>
       <PageHero
-        title="Des chantiers livrés, pas des images d’archives."
+        title={
+          <>
+            Des chantiers livrés, <em>pas des images d’archives.</em>
+          </>
+        }
         intro="Le portfolio dans son entier, une réalisation à la fois - comme elle a été livrée."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Réalisations' }]}
       />
 
-      <Section tone="cream" className="pt-0 pb-0 md:pt-0 md:pb-0 lg:pt-0 lg:pb-0">
+      <Section tone="cream" className="pt-0 pb-[calc(var(--r-sheet)+1.5rem)]">
         <Container>
           <div
             className="flex flex-wrap items-center gap-x-7 gap-y-3 border-b border-ink/[0.09] pb-6"
@@ -65,6 +69,8 @@ export default function Projects() {
 
       {items.length > 0 ? (
         <ProjectCarousel
+          key={filter}
+          sheet
           projects={items}
           sectionLabel="Nos chantiers"
           title={filter === 'all' ? '' : `${categoryLabel(filter)}, en détail.`}
@@ -88,6 +94,7 @@ export default function Projects() {
         title="Vous voulez un chantier comme les nôtres ?"
         text="Cinq questions, deux minutes. Nous organisons une visite et vous remettons un devis détaillé, gratuitement."
         source="projects"
+        sheet={items.length === 0}
       />
     </>
   );
