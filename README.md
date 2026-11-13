@@ -11,7 +11,7 @@ npm install
 npm run dev        # http://localhost:5173
 npm run build      # vite build + pré-rendu de toutes les routes + sitemap
 npm run preview    # sert dist/ (les fonctions /api ne tournent pas ici)
-npm test           # build + 44 tests de bout en bout (navigateur réel, API simulée)
+npm test           # build + 47 tests de bout en bout (navigateur réel, API simulée)
 npm run posters    # régénère les images de repli de la maquette 3D (avec `npm run dev` lancé)
 ```
 
@@ -114,12 +114,17 @@ l'écran — pas un chantier de Chaudrel.
 | Fichier | Rôle |
 |---|---|
 | `scene/building.js` | la maison, en mètres : murs percés, menuiseries, dalles, intérieur, toiture, extérieurs — répartie en couches (les métiers) |
+| `scene/atelier.js` | ce qui l'entoure sur le plan de travail : plans dessinés d'après les cotes de la maquette, échantillons de matières |
 | `scene/materials.js`, `scene/textures.js` | matériaux PBR, textures procédurales, passage brut → fini dans le shader |
-| `scene/storyboard.js` | **le film** : images-clés caméra / vue éclatée / finition / crépuscule, en paysage et en portrait |
+| `scene/storyboard.js` | **le film**, en six temps (Imaginer → Révéler) : images-clés caméra / tracé / vue éclatée / finition / crépuscule, en paysage et en portrait |
 | `scene/engine.js` | rendu three.js, lumière, une image par changement d'état (pas de boucle permanente) |
-| `ScrollSequence.js` | timeline GSAP ScrollTrigger (scrub) : maquette et textes sur la même horloge |
-| `ArchitecturalExperience.jsx`, `content.js` | balisage, textes, liens vers les métiers |
+| `ScrollSequence.js` | timeline GSAP ScrollTrigger (scrub) : maquette, textes et étiquettes sur la même horloge |
+| `ArchitecturalExperience.jsx`, `content.jsx` | balisage, textes, liens vers les métiers |
 | `src/styles/experience.css` | mise en page statique et « vivante » |
+
+Le design system (couleurs, formes, mouvement, photographie) est décrit dans
+`docs/DESIGN-SYSTEM.md` ; les références de direction artistique et leur état de
+consultation dans `docs/REFERENCES.md`.
 
 Règles tenues :
 

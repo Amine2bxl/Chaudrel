@@ -39,8 +39,8 @@ const LANDSCAPE = [
   { at: 0.2, az: -16, el: 48, dist: 43, tx: -24.5, ty: -0.7, tz: 17.5, sx: 0.2, sy: -0.03, draw: 1, explode: 0, wipe: 0, dusk: 0 },
   { at: 0.27, az: -11, el: 45, dist: 42, tx: -24, ty: -0.7, tz: 17.5, sx: 0.2, sy: -0.03, draw: 1, explode: 0, wipe: 0, dusk: 0 },
   // Préparer : elle redescend et rase les échantillons
-  { at: 0.38, az: 34, el: 21, dist: 29, tx: 23.5, ty: -0.2, tz: 20, sx: 0.09, draw: 1, explode: 0, wipe: 0, dusk: 0 },
-  { at: 0.45, az: 27, el: 19, dist: 28, tx: 23.5, ty: -0.2, tz: 20, sx: 0.09, draw: 1, explode: 0, wipe: 0, dusk: 0 },
+  { at: 0.38, az: 34, el: 21, dist: 29, tx: 23.5, ty: -0.2, tz: 21.8, sx: 0.09, draw: 1, explode: 0, wipe: 0, dusk: 0 },
+  { at: 0.45, az: 27, el: 19, dist: 28, tx: 23.5, ty: -0.2, tz: 21.8, sx: 0.09, draw: 1, explode: 0, wipe: 0, dusk: 0 },
   // Rénover : retour à la maquette, qui s'ouvre
   { at: 0.56, az: -36, el: 24, dist: 66, tx: 0, ty: 7.2, tz: 0, sx: 0.1, draw: 1, explode: 1, wipe: 0, dusk: 0 },
   { at: 0.64, az: -30, el: 22, dist: 66, tx: 0, ty: 7.2, tz: 0, sx: 0.1, draw: 1, explode: 1, wipe: 0.12, dusk: 0 },
@@ -58,8 +58,8 @@ const PORTRAIT = [
   { at: 0.07, az: 38, el: 7, dist: 98, tx: 0, ty: 3.6, tz: 0.5, sy: -0.14, draw: 0, explode: 0, wipe: 0, dusk: 0 },
   { at: 0.2, az: -8, el: 58, dist: 84, tx: -26, ty: -0.7, tz: 18.5, sy: -0.15, draw: 1, explode: 0, wipe: 0, dusk: 0 },
   { at: 0.27, az: -4, el: 55, dist: 82, tx: -26, ty: -0.7, tz: 18.5, sy: -0.15, draw: 1, explode: 0, wipe: 0, dusk: 0 },
-  { at: 0.38, az: 30, el: 32, dist: 66, tx: 23.8, ty: -0.2, tz: 20.4, sy: -0.15, draw: 1, explode: 0, wipe: 0, dusk: 0 },
-  { at: 0.45, az: 24, el: 30, dist: 64, tx: 23.8, ty: -0.2, tz: 20.4, sy: -0.15, draw: 1, explode: 0, wipe: 0, dusk: 0 },
+  { at: 0.38, az: 30, el: 32, dist: 66, tx: 23.8, ty: -0.2, tz: 22.2, sy: -0.15, draw: 1, explode: 0, wipe: 0, dusk: 0 },
+  { at: 0.45, az: 24, el: 30, dist: 64, tx: 23.8, ty: -0.2, tz: 22.2, sy: -0.15, draw: 1, explode: 0, wipe: 0, dusk: 0 },
   { at: 0.56, az: -42, el: 22, dist: 104, tx: 0, ty: 7.2, tz: 0, sy: -0.16, draw: 1, explode: 1, wipe: 0, dusk: 0 },
   { at: 0.64, az: -36, el: 20, dist: 104, tx: 0, ty: 7.2, tz: 0, sy: -0.16, draw: 1, explode: 1, wipe: 0.12, dusk: 0 },
   { at: 0.8, az: 30, el: 10, dist: 92, tx: 0, ty: 3.8, tz: 0.5, sy: -0.15, draw: 1, explode: 0, wipe: 1, dusk: 0 },

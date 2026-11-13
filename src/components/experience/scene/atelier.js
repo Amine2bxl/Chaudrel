@@ -414,7 +414,7 @@ export function createAtelier(T, { anisotropy = 4 } = {}) {
 
   /* ---------- Échantillons ---------- */
   /* Disposés en damier devant la maquette, à droite ; `at` décale l'ensemble. */
-  const at = ([x0, x1, z0, z1]) => [x0 + 3.4, x1 + 3.4, z0 + 12.4, z1 + 12.4];
+  const at = ([x0, x1, z0, z1]) => [x0 + 3.4, x1 + 3.4, z0 + 14.2, z1 + 14.2];
   const SAMPLES = [
     // clé, emprise [x0, x1, z0, z1], épaisseur, texture, fenêtre [u0, u1, v0, v1], réglages
     ['pierre', at([14.2, 19.4, 2.4, 8.6]), 0.42, 'stone', [0.28, 0.72, 0.03, 0.22], { roughness: 0.82, bumpMap: 'stoneBump', bumpScale: 1.4 }],
@@ -448,8 +448,8 @@ export function createAtelier(T, { anisotropy = 4 } = {}) {
     anchors[key] = [(x0 + x1) / 2, FLOOR + h, (z0 + z1) / 2];
   }
   // Plaque de laiton brossé : la quincaillerie, et la couleur de la maison.
-  add(new THREE.BoxGeometry(2.6, 0.12, 3.6), brass, 29.3, 0.06, 24.3, -0.12);
-  anchors.laiton = [29.3, FLOOR + 0.12, 24.3];
+  add(new THREE.BoxGeometry(2.6, 0.12, 3.6), brass, 29.3, 0.06, 26.1, -0.12);
+  anchors.laiton = [29.3, FLOOR + 0.12, 26.1];
   anchors.plan = [PLAN.x + 4, FLOOR + 0.05, PLAN.z - 2];
 
   return {
