@@ -5,7 +5,7 @@ import SiblingBar from '@/components/sections/SiblingBar';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Media, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import { PROJECTS, getProject, projectSiblings } from '@/data/projects';
+import { LEGACY_SLUGS, PROJECTS, getProject, projectSiblings } from '@/data/projects';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 
@@ -25,7 +25,11 @@ export default function Project() {
   const { slug } = useParams();
   const project = getProject(slug);
 
-  if (!project) return <Navigate to="/realisations" replace />;
+  if (!project) {
+    // Ancienne adresse de fiche : on mène au dossier qui contient sa photo.
+    const moved = LEGACY_SLUGS[slug];
+    return <Navigate to={moved ? `/realisations/${moved}` : '/realisations'} replace />;
+  }
 
   const { prev, next } = projectSiblings(project.slug);
   // La galerie ne répète pas la photo déjà montrée en en-tête : on ne montre
@@ -54,7 +58,7 @@ export default function Project() {
             </Reveal>
 
             <Reveal delay={120} as="dl" className="lg:col-span-4 lg:col-start-9">
-              <Spec label="Lieu">{project.location}</Spec>
+              {project.location && <Spec label="Lieu">{project.location}</Spec>}
               <Spec label="Nature">{project.type}</Spec>
               {project.year && <Spec label="Livraison">{project.year}</Spec>}
               {project.materials?.length > 0 && <Spec label="Matériaux">{project.materials.join(' · ')}</Spec>}

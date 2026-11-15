@@ -17,7 +17,7 @@ export default function Hero() {
     <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-bark">
       <img
         {...imageAttrs('/photos/hero.webp', SIZES.full)}
-        alt="Maison rénovée par Chaudrel, façade et intérieur éclairé à la tombée du jour"
+        alt="Maison contemporaine à façade sombre, intérieur éclairé à la tombée du jour"
         width="1920"
         height="1080"
         fetchpriority="high"

@@ -82,7 +82,7 @@ export default function Home() {
         <Container className="grid items-center gap-10 lg:grid-cols-12 lg:gap-20">
           <Media
             src="/story-before-after.webp"
-            alt="Intérieur rénové par Chaudrel"
+            alt="Grande maison en brique, allée neuve en asphalte et garages"
             ratio="aspect-[4/3] lg:aspect-[4/5]"
             revealFrom="fade"
             className="lg:col-span-5"

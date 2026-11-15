@@ -47,9 +47,8 @@ export const localBusinessLd = () => ({
     ...BRAND.areaServed.map((name) => ({ '@type': 'City', name })),
   ],
   sameAs: Object.values(BRAND.socials),
-  // TODO_VALIDATION : horaires provisoires (voir BRAND.hours). Les publier tels
-  // quels enverrait de fausses heures à Google - à confirmer avant mise en ligne.
-  openingHours: BRAND.hours.map((h) => `${h.days} ${h.time}`),
+  // `openingHours` volontairement absent : BRAND.hours est provisoire
+  // (TODO_VALIDATION). Le rétablir ici une fois les horaires confirmés.
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Services de rénovation',
@@ -211,7 +210,7 @@ export function metaFor(pathname = '/') {
     if (p) {
       return build({
         path,
-        title: `${p.title} - ${p.type} à ${p.location} | Chaudrel`,
+        title: `${p.title} - ${p.location ? `${p.type} à ${p.location}` : 'Réalisations'} | Chaudrel`,
         description: p.summary,
         image: abs(p.cover.src),
         ld: [
@@ -227,7 +226,7 @@ export function metaFor(pathname = '/') {
             description: p.description,
             image: p.images.map((im) => abs(im.src)),
             about: p.type,
-            locationCreated: { '@type': 'Place', name: p.location },
+            ...(p.location ? { locationCreated: { '@type': 'Place', name: p.location } } : {}),
             ...(p.year ? { dateCreated: String(p.year) } : {}),
             creator: { '@id': `${SITE_URL}/#business` },
           },
