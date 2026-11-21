@@ -37,6 +37,8 @@ recolorer la porte ou ajouter d'effet.
 
 ## Vêtements (noir) : petit logo devant, grand logo + `CHAUDREL.BE` en bas du dos
 
+Photos produit : `vetements/photo-<version>-face.jpg` / `-dos.jpg` (t-shirt photo vierge dans `vetements/photos/`, vrai logo posé à l'échelle). Placement : cœur 9 cm de large, côté gauche du porteur ; dos 28 cm de large, 8 cm sous le col ; domaine centré à environ 8 cm au-dessus de l'ourlet (à imprimer comme un second marquage).
+
 Deux versions validées, maquettes dans `vetements/` :
 
 - **Or métallisé** : monogramme au cœur, logo complet au dos, une seule encre or métallisée
