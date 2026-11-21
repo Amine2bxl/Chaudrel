@@ -3,7 +3,7 @@ import PageHero from '@/components/sections/PageHero';
 import BeforeAfter from '@/components/sections/BeforeAfter';
 import SiblingBar from '@/components/sections/SiblingBar';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Media, Section, SectionHeading } from '@/components/ui';
+import { Container, Media, Panel, Section, SectionHeading } from '@/components/ui';
 import Reveal from '@/lib/reveal';
 import { LEGACY_SLUGS, PROJECTS, getProject, projectSiblings } from '@/data/projects';
 import { EVENTS, track } from '@/lib/analytics';
@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 /** Une ligne de la fiche technique : intitulé à gauche, valeur en regard. */
 function Spec({ label, children }) {
   return (
-    <div className="grid grid-cols-[7rem_1fr] items-baseline gap-4 border-t border-ink/12 py-3.5">
+    <div className="grid grid-cols-[7rem_1fr] items-baseline gap-4 border-t border-ink/10 py-3.5 first:border-t-0 first:pt-0">
       <dt className="t-label text-ink/70">{label}</dt>
       <dd className="t-body text-ink/85">{children}</dd>
     </div>
@@ -40,13 +40,7 @@ export default function Project() {
     <>
       <PageHero
         title={project.title}
-        intro={project.summary}
         image={project.cover.src}
-        breadcrumb={[
-          { label: 'Accueil', to: '/' },
-          { label: 'Réalisations', to: '/realisations' },
-          { label: project.title },
-        ]}
       />
 
       {/* Contexte : le récit à gauche, la fiche technique en regard à droite. */}
@@ -57,13 +51,14 @@ export default function Project() {
               <p className="t-lead measure text-ink/75">{project.description}</p>
             </Reveal>
 
-            <Reveal delay={120} as="dl" className="lg:col-span-4 lg:col-start-9">
+            <Reveal delay={120} className="lg:col-span-5 lg:col-start-8">
+              <Panel as="dl">
               {project.location && <Spec label="Lieu">{project.location}</Spec>}
               <Spec label="Nature">{project.type}</Spec>
               {project.year && <Spec label="Livraison">{project.year}</Spec>}
               {project.materials?.length > 0 && <Spec label="Matériaux">{project.materials.join(' · ')}</Spec>}
               {project.works?.length > 0 && (
-                <div className="border-t border-ink/12 py-4">
+                <div className="border-t border-ink/10 pt-4">
                   <dt className="t-label text-ink/70">Travaux réalisés</dt>
                   <dd className="mt-3">
                     <ul className="space-y-2">
@@ -77,6 +72,7 @@ export default function Project() {
                   </dd>
                 </div>
               )}
+              </Panel>
             </Reveal>
           </div>
 
@@ -130,11 +126,7 @@ export default function Project() {
         next={next && { to: `/realisations/${next.slug}`, title: next.title }}
       />
 
-      <CTASection
-        title="Vous avez un projet similaire ?"
-        text="Cinq questions, deux minutes. Nous revenons vers vous, puis nous convenons d’une visite sur place."
-        source="project_detail"
-      />
+      <CTASection source="project_detail" />
     </>
   );
 }

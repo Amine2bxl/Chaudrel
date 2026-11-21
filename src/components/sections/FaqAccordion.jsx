@@ -1,6 +1,7 @@
-import { Plus } from 'lucide-react';
+import { PlusIcon } from '@/components/ui/Icons';
 import Reveal from '@/lib/reveal';
 import { cn } from '@/lib/utils';
+import { Panel } from '@/components/ui';
 
 /**
  * Accordéon de questions.
@@ -9,15 +10,15 @@ import { cn } from '@/lib/utils';
  * Une croix stable invite au geste ; quand la question s'ouvre, un trait
  * laiton entre avec la réponse et signale l'état sans lire le contenu.
  *
- * `tag` est un intitulé affiché au-dessus de la question (le métier, par
- * exemple), quand les questions viennent de sources différentes.
+ * `icon` : le symbole Chaudrel du métier, posé devant la question quand les
+ * questions viennent de métiers différents.
  */
 export default function FaqAccordion({ items = [], tone = 'dark', className }) {
   if (!items.length) return null;
   const light = tone === 'light';
 
   return (
-    <div className={cn('space-y-3', className)}>
+    <Panel className={cn('space-y-2.5', className)}>
       {items.map((f, i) => (
         <Reveal
           as="details"
@@ -37,10 +38,18 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
               light ? 'text-cream' : 'text-ink'
             )}
           >
-            <span className="min-w-0">
-              {f.tag && (
-                <span className={cn('t-label block pb-1', light ? 'text-gold-light' : 'text-gold-deep')}>{f.tag}</span>
-              )}
+            {f.icon && (
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'mt-0.5 grid h-10 w-10 flex-none place-items-center rounded-full',
+                  light ? 'bg-cream/10 text-gold-light' : 'bg-gold/15 text-gold-deep'
+                )}
+              >
+                <f.icon size={20} />
+              </span>
+            )}
+            <span className="min-w-0 flex-1">
               <span className="block font-display text-[1.2rem] leading-snug tracking-[-0.01em] sm:text-[1.3rem]">
                 {f.q}
               </span>
@@ -57,7 +66,7 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
               )}
               aria-hidden="true"
             >
-              <Plus className="h-4 w-4" strokeWidth={1.75} />
+              <PlusIcon size={16} strokeWidth={1.8} />
             </span>
           </summary>
 
@@ -70,6 +79,6 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
           </div>
         </Reveal>
       ))}
-    </div>
+    </Panel>
   );
 }

@@ -14,6 +14,7 @@ const PROJECT_TYPES = [
   'Aménagement extérieur',
   'Toiture',
   'Façade',
+  'Châssis et portes',
   'Piscine',
   'Autre',
 ];
@@ -285,14 +286,14 @@ export default function Quote() {
   if (status === 'success') {
     return (
       <>
-        <PageHero
-          title="C’est noté. Merci."
-          intro="Votre demande et ses fichiers viennent de partir. Vous recevez un e-mail de confirmation, puis nous convenons d’une visite et préparons votre devis."
-          breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
-        />
+        <PageHero title="C’est noté. Merci." />
         <Section tone="cream" className="pt-block">
           <Container className="max-w-[46rem]">
-            <ol>
+            <p className="t-body measure text-ink/80">
+              Votre demande et ses fichiers viennent de partir. Vous recevez un e-mail de confirmation, puis nous
+              convenons d’une visite et préparons votre devis.
+            </p>
+            <ol className="mt-8">
               <span className="t-label text-ink/65">La suite</span>
               {[
                 { n: '01', title: 'Analyse', text: "Nous prenons connaissance de votre demande et de vos photos." },
@@ -331,11 +332,7 @@ export default function Quote() {
 
   return (
     <>
-      <PageHero
-        title="Cinq questions, deux minutes."
-        intro="Gratuit et sans engagement. Photos, plan ou vidéo ? Joignez-les."
-        breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
-      />
+      <PageHero title="Cinq questions, deux minutes." />
 
       <Section tone="cream" className="pb-16 pt-block">
         <Container className="max-w-[46rem]">

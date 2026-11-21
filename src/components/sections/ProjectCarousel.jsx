@@ -1,143 +1,101 @@
 import { Link } from 'react-router-dom';
 import { Container, SectionHeading, TextLink } from '@/components/ui';
+import Reveal from '@/lib/reveal';
 import { EVENTS, track } from '@/lib/analytics';
-import { imageAttrs, SIZES } from '@/lib/image';
+import { imageAttrs } from '@/lib/image';
 import { cn } from '@/lib/utils';
+import { ArrowIcon } from '@/components/ui/Icons';
+
+/* Rythme de la grille, par groupe de quatre : grand / petit décalé, puis
+   petit / grand décalé. Deux colonnes inégales, jamais une rangée de cartes
+   identiques. */
+const LAYOUT = [
+  { col: 'lg:col-span-7', ratio: 'aspect-[4/3]', sizes: '(min-width: 1024px) 56vw, 100vw' },
+  { col: 'lg:col-span-5 lg:mt-24', ratio: 'aspect-[4/5]', sizes: '(min-width: 1024px) 40vw, 100vw' },
+  { col: 'lg:col-span-5', ratio: 'aspect-[4/5]', sizes: '(min-width: 1024px) 40vw, 100vw' },
+  { col: 'lg:col-span-7 lg:mt-24', ratio: 'aspect-[4/3]', sizes: '(min-width: 1024px) 56vw, 100vw' },
+];
+const WIDE = { col: 'lg:col-span-12', ratio: 'aspect-[4/3] lg:aspect-[21/9]', sizes: '100vw' };
 
 /**
- * Les chantiers, en cartes qui s'empilent au défilement.
- *
- * Chaque carte se colle en haut de l'écran (`position: sticky`) ; la
- * suivante monte et vient se poser dessus, et celle du dessous recule
- * légèrement. Le défilement reste natif : aucune cage, aucun bouton, et le
- * recul est une animation CSS liée à la `view-timeline` de la carte
- * suivante - jouée par la carte graphique, sans JavaScript. Sans prise en
- * charge, les cartes s'empilent sans reculer.
- *
- * Photo et texte alternent de côté d'une carte à l'autre.
+ * Les chantiers, en grille éditoriale : de grandes photos sur deux colonnes
+ * de tailles alternées, la nature des travaux et le titre en légende. La
+ * photo se découvre une fois à l'apparition, puis avance très légèrement au
+ * survol ; rien ne bouge au défilement.
  *
  * Le nom `ProjectCarousel` est conservé : c'est l'unique façon d'afficher
  * des chantiers (accueil, /realisations, pages métier).
  */
-export default function ProjectCarousel({ projects = [], sectionLabel = 'Nos chantiers', title = '', text = '', link }) {
+export default function ProjectCarousel({
+  projects = [],
+  sectionLabel = 'Nos chantiers',
+  title = '',
+  link,
+}) {
   if (!projects.length) return null;
-  const names = projects.map((_, i) => `--stack-${i}`);
 
   return (
-    <section aria-label={sectionLabel} className="bg-cream py-section">
+    <section aria-label={sectionLabel} className="py-section">
       <Container>
         {title && (
-          <div className="mb-block flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <SectionHeading title={title} text={text} />
+          <SectionHeading title={title} className="mb-block">
             {link && (
               <TextLink to={link.to} className="flex-none">
                 {link.label}
               </TextLink>
             )}
-          </div>
+          </SectionHeading>
         )}
 
-        <ol className="stack" style={{ timelineScope: names.join(', ') }}>
-          {projects.map((p, i) => (
-            <li
-              key={p.slug}
-              className="stack-item"
-              style={{ top: `calc(5.75rem + ${i * 14}px)`, viewTimelineName: names[i] }}
-            >
-              <ProjectCard
-                project={p}
-                index={i}
-                total={projects.length}
-                recedeOn={names[i + 1]}
-                flip={i % 2 === 1}
-              />
-            </li>
-          ))}
-        </ol>
-
-        {link && !title && (
-          <div className="mt-12 text-center">
-            <TextLink to={link.to}>{link.label}</TextLink>
-          </div>
-        )}
+        <ul className="grid gap-x-8 gap-y-14 lg:grid-cols-12">
+          {projects.map((p, i) => {
+            // Dernier chantier seul sur sa rangée : il prend toute la largeur.
+            const alone = i === projects.length - 1 && i % 2 === 0;
+            const l = alone ? WIDE : LAYOUT[i % LAYOUT.length];
+            const to = `/realisations/${p.slug}`;
+            return (
+              <li key={p.slug} className={l.col}>
+                <Link
+                  to={to}
+                  onClick={() => track(EVENTS.PROJECT_VIEW, { project: p.slug, source: 'grid' })}
+                  className="group block"
+                >
+                  <Reveal from="veil" className={cn('overflow-hidden rounded-[24px] bg-sand', l.ratio)}>
+                    {/* Le volet anime ce bloc ; le survol anime la photo : deux transform séparés. */}
+                    <div className="h-full w-full">
+                      <img
+                        {...imageAttrs(p.cover.src, l.sizes)}
+                        alt={p.cover.alt}
+                        width={p.cover.w}
+                        height={p.cover.h}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-soft group-hover:scale-[1.04]"
+                      />
+                    </div>
+                  </Reveal>
+                  <div className="mt-5 flex items-start justify-between gap-6">
+                    <div>
+                      <p className="t-label text-gold-deep">{p.type}</p>
+                      <h3 className="mt-2.5 font-display text-[1.75rem] leading-tight text-ink">{p.title}</h3>
+                      {p.location && <p className="t-small mt-1 text-ink/70">{p.location}</p>}
+                    </div>
+                    <span
+                      aria-hidden="true"
+                      className="mt-1 grid h-11 w-11 flex-none place-items-center rounded-full border border-ink/15 text-ink/70 transition-[border-color,color,transform] duration-200 ease-soft group-hover:border-gold group-hover:text-gold-deep group-active:scale-95"
+                    >
+                      <ArrowIcon
+                        size={18}
+                        className="transition-transform duration-200 ease-soft group-hover:translate-x-0.5"
+                      />
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </Container>
     </section>
-  );
-}
-
-function ProjectCard({ project: p, index, total, recedeOn, flip }) {
-  const to = `/realisations/${p.slug}`;
-  const open = () => track(EVENTS.PROJECT_VIEW, { project: p.slug, source: 'stack' });
-
-  return (
-    <article
-      className={cn(
-        'stack-card relative grid overflow-hidden rounded-[32px] border border-ink/10 bg-shell shadow-lift lg:min-h-[min(74vh,640px)] lg:grid-cols-12',
-        recedeOn && 'stack-recede'
-      )}
-      style={recedeOn ? { animationTimeline: recedeOn } : undefined}
-    >
-      <Link
-        to={to}
-        onClick={open}
-        tabIndex={-1}
-        aria-hidden="true"
-        className={cn(
-          'relative block aspect-[4/3] overflow-hidden bg-sand lg:col-span-7 lg:aspect-auto',
-          flip && 'lg:order-last'
-        )}
-      >
-        <img
-          {...imageAttrs(p.cover.src, SIZES.stage)}
-          alt=""
-          width={p.cover.w}
-          height={p.cover.h}
-          loading="lazy"
-          decoding="async"
-          className="stack-photo absolute inset-0 h-full w-full object-cover"
-        />
-      </Link>
-
-      <div className="flex flex-col justify-between gap-8 p-7 sm:p-10 lg:col-span-5 lg:p-12">
-        <div>
-          <p className="t-label flex items-center gap-3 text-gold-deep">
-            <span>{p.type}</span>
-            <span aria-hidden="true" className="h-px w-6 bg-gold/50" />
-            <span className="tabular-nums text-ink/60">
-              {index + 1} / {total}
-            </span>
-          </p>
-          <h3 className="t-h2 mt-5 text-balance">
-            <Link to={to} onClick={open} className="link-line">
-              {p.title}
-            </Link>
-          </h3>
-          {p.location && <p className="t-small mt-2 text-ink/70">{p.location}</p>}
-          <p className="t-lead mt-5 text-ink/80">{p.summary}</p>
-        </div>
-
-        {p.works?.length > 0 && (
-          <ul className="flex flex-wrap gap-2" aria-label="Travaux réalisés">
-            {p.works.slice(0, 4).map((w) => (
-              <li key={w} className="t-small rounded-full border border-ink/15 px-3.5 py-1.5 text-ink/80">
-                {w}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <TextLink to={to} onClick={open} className="w-fit">
-          Voir le chantier
-        </TextLink>
-      </div>
-
-      {recedeOn && (
-        <span
-          aria-hidden="true"
-          className="stack-shade pointer-events-none absolute inset-0 bg-bark"
-          style={{ animationTimeline: recedeOn }}
-        />
-      )}
-    </article>
   );
 }

@@ -1,28 +1,40 @@
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { BRAND } from '@/data/site';
+import { EVENTS, track } from '@/lib/analytics';
+import { PhoneIcon } from '@/components/ui/BrandIcons';
 
 /**
- * Les rangées de la carte de liens - partagées entre la page `/liens` et la
- * fenêtre de contact. Une seule source, pour que les deux gardent exactement
- * le même design.
+ * Les rangées de la carte de liens - partagées par la page `/liens`, la
+ * fenêtre de contact et chaque section du site. Une seule source, pour que
+ * tout garde exactement le même dessin.
  */
 
-/** Une rangée : icône dans sa pastille, libellé, description, chevron.
-    `compact` resserre la rangée pour les fenêtres (toutes visibles, sans
-    défilement). */
-export function Row({ to, href, icon: Icon, label, hint, onClick, primary = false, compact = false, className }) {
+/** L'icône dans sa pastille ronde ; `accent` la passe en bronze clair. */
+export function Chip({ icon: Icon, primary = false, compact = false, accent = false }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        'grid flex-none place-items-center rounded-full transition-colors duration-fast',
+        compact ? 'h-10 w-10' : 'h-11 w-11',
+        primary ? 'bg-bark/10 text-bark' : 'bg-ink/[0.06] group-hover:bg-ink/10',
+        !primary && (accent ? 'text-gold-light' : 'text-ink')
+      )}
+    >
+      <Icon width={compact ? 16 : 17} height={compact ? 16 : 17} />
+    </span>
+  );
+}
+
+/** Une rangée : pastille, libellé, description, chevron. Sans `to` ni `href`,
+    la rangée est une simple ligne d'information (ni lien, ni chevron).
+    `compact` la resserre pour les fenêtres. */
+export function Row({ to, href, icon, label, hint, onClick, primary = false, compact = false, className }) {
+  const linked = Boolean(to || href);
   const inner = (
     <>
-      <span
-        aria-hidden="true"
-        className={cn(
-          'grid flex-none place-items-center rounded-full transition-colors duration-fast',
-          compact ? 'h-10 w-10' : 'h-11 w-11',
-          primary ? 'bg-bark/10 text-bark' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
-        )}
-      >
-        <Icon width={compact ? 16 : 17} height={compact ? 16 : 17} />
-      </span>
+      <Chip icon={icon} primary={primary} compact={compact} />
 
       <span className="min-w-0 flex-1">
         <span className={cn('block text-[15px] font-medium leading-snug', primary ? 'text-bark' : 'text-ink')}>{label}</span>
@@ -31,30 +43,33 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
         )}
       </span>
 
-      <svg
-        width="13"
-        height="13"
-        viewBox="0 0 16 16"
-        aria-hidden="true"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        className={cn(
-          'flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5',
-          primary ? 'text-bark/60' : 'text-ink/60'
-        )}
-      >
-        <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+      {linked && (
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 16 16"
+          aria-hidden="true"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          className={cn(
+            'flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5',
+            primary ? 'text-bark/60' : 'text-ink/60'
+          )}
+        >
+          <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      )}
     </>
   );
 
   const classes = cn(
-    'group flex w-full items-center gap-3.5 rounded-lg text-left transition-[background-color,border-color,box-shadow,transform] duration-200 ease-soft active:scale-[0.98]',
+    'group flex w-full items-center gap-3.5 rounded-lg text-left',
+    linked && 'transition-[background-color,border-color,box-shadow,transform] duration-200 ease-soft active:scale-[0.98]',
     compact ? 'px-4 py-3' : 'px-5 py-4',
     primary
       ? 'bg-gold text-bark shadow-soft hover:bg-gold-hover hover:shadow-lift'
-      : 'border border-ink/[0.09] bg-shell hover:border-ink/20 hover:shadow-soft',
+      : cn('border border-ink/[0.09] bg-shell', linked && 'hover:border-ink/20 hover:shadow-soft'),
     className
   );
 
@@ -65,17 +80,20 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
       </Link>
     );
   }
-  return (
-    <a
-      href={href}
-      target={href?.startsWith('http') ? '_blank' : undefined}
-      rel={href?.startsWith('http') ? 'noopener noreferrer' : undefined}
-      onClick={onClick}
-      className={classes}
-    >
-      {inner}
-    </a>
-  );
+  if (href) {
+    return (
+      <a
+        href={href}
+        target={href.startsWith('http') ? '_blank' : undefined}
+        rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        onClick={onClick}
+        className={classes}
+      >
+        {inner}
+      </a>
+    );
+  }
+  return <div className={classes}>{inner}</div>;
 }
 
 /** Intertitre de groupe : un mot, un filet. */
@@ -84,6 +102,27 @@ export function GroupLabel({ children }) {
     <div className="mb-4 mt-9 flex items-center gap-4 first:mt-0">
       <span className="t-label flex-none text-gold-deep">{children}</span>
       <span aria-hidden="true" className="h-px flex-1 bg-ink/10" />
+    </div>
+  );
+}
+
+/** Les deux fondateurs, une ligne directe chacun : le nom, le rôle, le numéro. */
+export function FounderRows({ source, className }) {
+  return (
+    <div className={cn('space-y-2.5', className)}>
+      {BRAND.founders.map((f) => {
+        const phone = BRAND.phones.find((p) => p.name === f.name);
+        return (
+          <Row
+            key={f.name}
+            href={phone && `tel:${phone.tel}`}
+            icon={PhoneIcon}
+            label={f.name}
+            hint={phone ? `${f.role} · ${phone.number}` : f.role}
+            onClick={() => track(EVENTS.PHONE_CLICK, { source })}
+          />
+        );
+      })}
     </div>
   );
 }

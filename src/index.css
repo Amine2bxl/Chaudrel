@@ -515,51 +515,6 @@ html {
 }
 
 /* ============================================================
-   CHANTIERS EMPILÉS (ProjectCarousel)
-   La carte du dessous recule pendant que la suivante monte : animation
-   liée à la view-timeline de la carte suivante, jouée par la carte
-   graphique. Sans prise en charge, les cartes s'empilent sans reculer.
-   ============================================================ */
-.stack-item + .stack-item {
-  margin-top: 2.5rem;
-}
-/* Empilement seulement si une carte tient entière à l'écran : sinon, sur un
-   petit téléphone, le bas d'une carte resterait caché sous la suivante. */
-@media (min-height: 760px) {
-  .stack-item {
-    position: sticky;
-  }
-}
-.stack-card {
-  transform-origin: 50% 0;
-}
-.stack-shade {
-  opacity: 0;
-}
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .stack-recede {
-      animation: stack-recede linear both;
-      animation-range: entry 0% entry 100%;
-    }
-    .stack-shade {
-      animation: stack-shade linear both;
-      animation-range: entry 0% entry 100%;
-    }
-  }
-}
-@keyframes stack-recede {
-  to {
-    transform: scale(0.94);
-  }
-}
-@keyframes stack-shade {
-  to {
-    opacity: 0.5;
-  }
-}
-
-/* ============================================================
    PARALLAXE ET ENTRÉES DE PAGE
    La parallaxe suit la view-timeline de l'image : jouée par la carte
    graphique, sans JavaScript. Sans prise en charge, l'image reste fixe.
@@ -592,6 +547,48 @@ html {
 .door-open-in {
   animation: door-open 1.3s var(--ease-soft) 0.2s both;
   transform-origin: left center;
+}
+
+/* ============================================================
+   CARTE DE BELGIQUE (BelgiumCoverage)
+   Les provinces s'allument une à une depuis Bruxelles (--d = rang × 110 ms),
+   une seule fois à l'apparition ; le survol du tableau allume la province.
+   ============================================================ */
+.be-map path {
+  fill: rgb(var(--c-gold-rgb) / 0.16);
+  stroke: rgb(var(--c-ink-rgb) / 0.22);
+  transition: fill var(--dur-fast) var(--ease-soft);
+}
+.be-map path.is-on {
+  fill: var(--c-gold);
+}
+.be-pin {
+  fill: var(--c-gold-light);
+  stroke: rgb(var(--c-gold-light-rgb) / 0.5);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .is-in > .be-map path {
+    animation: be-light 0.9s var(--ease-soft) var(--d, 0ms) backwards;
+  }
+  .is-in > .be-map .be-pin {
+    animation: be-pin 0.6s var(--ease-soft) 1.2s backwards;
+  }
+}
+@keyframes be-light {
+  from {
+    fill: rgb(var(--c-ink-rgb) / 0.04);
+  }
+  40% {
+    fill: rgb(var(--c-gold-rgb) / 0.6);
+  }
+}
+@keyframes be-pin {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }
 
 /* ============================================================
