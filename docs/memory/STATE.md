@@ -21,6 +21,8 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 - D-006 : crème/nuit/bronze, Prata + Albert Sans — relevés sur le logo.
 - D-007 : photo d'ambiance (stock) gardée derrière la porte, jamais légendée comme chantier.
 
+- Passe 3 (branche de session, PR #6) : faits en plaque de verre et laiton, 4 étapes en escalier, bloc « Quel est votre projet ? » (devis pré-orienté), grille éditoriale des chantiers, en-têtes compacts, icônes Chaudrel (lucide-react retiré).
+
 ## Prochaines étapes
 1. Vérifier le site en production après le déploiement de `main`.
 1b. Recevoir de vraies paires avant/après (même point de vue) → `beforeAfter` dans projects.js.

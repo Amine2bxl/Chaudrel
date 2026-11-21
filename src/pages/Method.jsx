@@ -1,4 +1,4 @@
-import { BadgeCheck, Home, NotebookPen, UserCheck } from 'lucide-react';
+import { HouseIcon, KeyIcon, PersonIcon, QuoteDocIcon } from '@/components/ui/Icons';
 import PageHero from '@/components/sections/PageHero';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section } from '@/components/ui';
@@ -6,22 +6,22 @@ import Reveal from '@/lib/reveal';
 
 const PRINCIPES = [
   {
-    icon: NotebookPen,
+    icon: QuoteDocIcon,
     title: 'Ce qui est prévu est écrit',
     text: 'Le devis détaille les postes. Si un imprévu sort du cadre, on vous le dit avant, pas à la facture.',
   },
   {
-    icon: UserCheck,
+    icon: PersonIcon,
     title: 'Un seul interlocuteur',
     text: 'Vous ne coordonnez pas cinq corps de métier. C’est notre travail, pas le vôtre.',
   },
   {
-    icon: Home,
+    icon: HouseIcon,
     title: 'Le chantier se déroule chez vous',
     text: 'Protection des surfaces, propreté quotidienne, remise en état. Cela fait partie du travail.',
   },
   {
-    icon: BadgeCheck,
+    icon: KeyIcon,
     title: 'Terminé veut dire terminé',
     text: 'La livraison se fait ensemble. Tant qu’il reste une reprise, le chantier n’est pas fini.',
   },

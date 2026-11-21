@@ -2,7 +2,7 @@ import Hero from '@/components/sections/Hero';
 import FactsBand from '@/components/sections/FactsBand';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import ServicesBoard from '@/components/sections/ServicesBoard';
-import ProcessTimeline from '@/components/sections/ProcessTimeline';
+import ProcessStairs from '@/components/sections/ProcessStairs';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import BeforeAfter from '@/components/sections/BeforeAfter';
 import CTASection from '@/components/sections/CTASection';
@@ -76,7 +76,7 @@ export default function Home() {
             title="Quatre étapes, zéro surprise."
             text="Vous savez à tout moment où en est votre chantier, ce qui a été fait et ce qui vient ensuite."
           />
-          <ProcessTimeline tone="light" className="mt-block" />
+          <ProcessStairs className="mt-block" />
           <div className="mt-12 text-center">
             <Button to="/methode" variant="outlineLight" arrow>
               Découvrir notre méthode

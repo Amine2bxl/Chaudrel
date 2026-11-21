@@ -24,3 +24,8 @@
 ## 2026-11-21 — Fusion dans main
 - #3 (fe9f217) puis #4 (2fdfce4) fusionnées. PR #5 = ancien site (arbre de 78795e9).
 - Le proxy Git de la session refuse le push de tags ; branche d'archive utilisée à la place.
+
+## 2026-11-21 — Passe 3
+- Choix client : escalier, bloc de choix du projet, grille éditoriale, plaque (verre + laiton) parmi plaque / mètre ruban.
+- `/devis?projet=` présélectionne le type (liste blanche) ; ajout du type « Châssis et portes ».
+- À corriger (antérieur) : `QUOTE_FALLBACK_EMAIL` dans `src/pages/Quote.jsx` pointe vers une adresse de test, pas info@chaudrel.be.

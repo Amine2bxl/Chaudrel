@@ -1,8 +1,7 @@
 import { useEffect, useId, useRef } from 'react';
-import { Phone } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { BronzeGradient, DOOR_POINTS, LETTERS_PATH, MONO_VIEWBOX } from '@/components/ui/Logo';
-import { WhatsappIcon } from '@/components/ui/BrandIcons';
+import { PhoneIcon, WhatsappIcon } from '@/components/ui/BrandIcons';
 import { BRAND, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { imageAttrs, SIZES } from '@/lib/image';
@@ -209,7 +208,7 @@ export default function Hero() {
               aria-label={`Appeler ${BRAND.phones[0].name} au ${BRAND.phones[0].number}`}
               className="flex h-14 flex-none items-center justify-center gap-2.5 rounded-full px-5 text-[15px] font-medium text-cream transition-[background-color,transform] duration-200 hover:bg-cream/10 active:scale-[0.97]"
             >
-              <Phone size={16} strokeWidth={1.7} aria-hidden="true" />
+              <PhoneIcon width={16} height={16} aria-hidden="true" />
               <span className="hidden tabular-nums sm:inline">{BRAND.phones[0].number}</span>
             </a>
             <a

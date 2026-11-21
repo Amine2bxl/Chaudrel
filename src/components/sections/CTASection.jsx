@@ -1,108 +1,87 @@
-import { Button, Container } from '@/components/ui';
+import { Link } from 'react-router-dom';
+import { Container } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import usePointerGlow from '@/lib/usePointerGlow';
-import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
-import { imageAttrs, SIZES } from '@/lib/image';
-import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
-import { WhatsappIcon } from '@/components/ui/BrandIcons';
-import { Mail, Phone } from 'lucide-react';
+import { BRAND, whatsappUrl } from '@/data/site';
+import { ArrowIcon, FacadeIcon, HouseIcon, RoofIcon, WindowIcon } from '@/components/ui/Icons';
+
+/* Les quatre portes d'entrée du devis. `projet` doit exister dans la liste
+   PROJECT_TYPES du formulaire (src/pages/Quote.jsx), qui le présélectionne. */
+const CHOICES = [
+  { projet: 'Façade', sub: 'Enduit, ravalement, isolation', Icon: FacadeIcon },
+  { projet: 'Toiture', sub: 'Couverture, zinguerie, charpente', Icon: RoofIcon },
+  { projet: 'Châssis et portes', sub: 'Fenêtres, portes d’entrée, volets', Icon: WindowIcon },
+  { projet: 'Rénovation complète', sub: 'Tout le chantier, un seul interlocuteur', Icon: HouseIcon },
+];
 
 /**
- * Bloc de conversion en fin de page. À gauche, la décision : un titre, ce qui
- * se passe ensuite, le devis. À droite, la valeur immédiate : les lignes
- * directes des deux fondateurs, WhatsApp et l'e-mail, sur une carte de verre.
- * Derrière, un chantier livré qui glisse plus lentement que la page
- * (parallaxe CSS, sans JavaScript).
+ * Fin de page : une question directe et quatre réponses. Chaque réponse ouvre
+ * le devis déjà orienté (`/devis?projet=…`) ; les deux lignes directes et
+ * WhatsApp restent en texte simple dessous. Pas de photo ni de verre : le
+ * bloc se fond dans la page, c'est la question qui retient.
  */
 export default function CTASection({
-  title = 'Parlons de votre projet.',
-  text = 'Une visite sur place, puis un devis détaillé poste par poste. Gratuit, sans engagement.',
+  title = 'Quel est votre projet ?',
+  text = 'Choisissez, le devis s’ouvre déjà orienté. Visite et devis détaillé gratuits, réponse sous 48 h.',
   source = 'cta',
 }) {
-  const { openDialog } = useContactDialog();
-  const glow = usePointerGlow();
-  const row =
-    'group flex items-center gap-4 rounded-2xl px-4 py-3.5 transition-[background-color,transform] duration-200 hover:bg-cream/[0.07] active:scale-[0.98]';
+  const [alberto, matteo] = BRAND.phones;
+  const link = 'link-line tabular-nums text-ink transition-colors hover:text-gold-deep';
 
   return (
-    <section data-page-cta className="on-dark relative isolate overflow-hidden bg-bark py-section text-cream">
-      <img
-        {...imageAttrs('/photos/facade-garages.webp', SIZES.full)}
-        alt=""
-        aria-hidden="true"
-        width="1920"
-        height="1080"
-        loading="lazy"
-        decoding="async"
-        className="parallax absolute inset-0 -z-20 h-full w-full object-cover"
-      />
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-bark via-bark/85 to-bark/55" />
-
-      <Container className="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
-        <Reveal className="lg:col-span-7">
-          <h2 className="t-h1 max-w-[14ch] text-balance">{title}</h2>
-          <p className="t-lead mt-6 max-w-[46ch] text-cream/80">{text}</p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Button to="/devis" size="lg" arrow onClick={() => track(EVENTS.QUOTE_CTA, { source })}>
-              Demander un devis gratuit
-            </Button>
-            <Button variant="outlineLight" size="lg" onClick={() => openDialog(source)}>
-              Toutes nos coordonnées
-            </Button>
-          </div>
+    <section data-page-cta className="border-t border-ink/10 bg-cream py-section">
+      <Container className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <Reveal className="lg:col-span-5">
+          <h2 className="t-h2 max-w-[14ch] text-balance">{title}</h2>
+          <p className="t-lead mt-5 max-w-[40ch] text-ink/75">{text}</p>
         </Reveal>
 
-        <Reveal delay={120} from="left" {...glow} className="glass-dark rounded-[28px] p-3 lg:col-span-5">
-          <p className="t-label px-4 pb-2 pt-4 text-gold-light">En direct, sans standard</p>
-          <ul>
-            {BRAND.phones.map((p) => (
-              <li key={p.tel}>
-                <a
-                  href={`tel:${p.tel}`}
-                  onClick={() => track(EVENTS.PHONE_CLICK, { source })}
-                  className={row}
+        <div className="lg:col-span-7">
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {CHOICES.map(({ projet, sub, Icon }, i) => (
+              <Reveal as="li" key={projet} delay={i * 70}>
+                <Link
+                  to={`/devis?projet=${encodeURIComponent(projet)}`}
+                  onClick={() => track(EVENTS.QUOTE_CTA, { source, projet })}
+                  className="group flex h-full items-center gap-4 rounded-[20px] border border-ink/12 bg-shell px-5 py-5 transition-[border-color,background-color,transform] duration-200 ease-soft hover:border-gold/70 active:scale-[0.98]"
                 >
-                  <span className="grid h-11 w-11 flex-none place-items-center rounded-full bg-gold text-bark">
-                    <Phone size={17} strokeWidth={1.8} aria-hidden="true" />
+                  <span className="grid h-12 w-12 flex-none place-items-center rounded-full bg-gold/15 text-gold-deep transition-colors duration-200 group-hover:bg-gold group-hover:text-bark">
+                    <Icon size={24} />
                   </span>
-                  <span>
-                    <span className="block font-display text-[1.25rem] leading-tight">{p.name}</span>
-                    <span className="t-small tabular-nums text-cream/75">{p.number}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-display text-[1.25rem] leading-tight text-ink">{projet}</span>
+                    <span className="t-small mt-1 block text-ink/70">{sub}</span>
                   </span>
-                </a>
-              </li>
+                  <ArrowIcon
+                    size={18}
+                    className="flex-none text-ink/50 transition-transform duration-200 ease-soft group-hover:translate-x-1 group-hover:text-gold-deep"
+                  />
+                </Link>
+              </Reveal>
             ))}
-            <li>
-              <a
-                href={whatsappUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track(EVENTS.WHATSAPP_CLICK, { source })}
-                className={row}
-              >
-                <span className="grid h-11 w-11 flex-none place-items-center rounded-full bg-cream/10 text-cream">
-                  <WhatsappIcon width={18} height={18} />
-                </span>
-                <span>
-                  <span className="block font-medium">WhatsApp</span>
-                  <span className="t-small text-cream/75">Photos du chantier bienvenues</span>
-                </span>
-              </a>
-            </li>
-            <li>
-              <a href={`mailto:${BRAND.email}`} onClick={() => track(EVENTS.EMAIL_CLICK, { source })} className={row}>
-                <span className="grid h-11 w-11 flex-none place-items-center rounded-full bg-cream/10 text-cream">
-                  <Mail size={17} strokeWidth={1.8} aria-hidden="true" />
-                </span>
-                <span>
-                  <span className="block font-medium">{EMAIL_DISPLAY}</span>
-                  <span className="t-small text-cream/75">{BRAND.promises.responseTime}</span>
-                </span>
-              </a>
-            </li>
           </ul>
-        </Reveal>
+
+          <p className="t-small mt-6 text-ink/70">
+            Ou appelez directement :{' '}
+            <a href={`tel:${alberto.tel}`} onClick={() => track(EVENTS.PHONE_CLICK, { source })} className={link}>
+              {alberto.name} {alberto.number}
+            </a>{' '}
+            ·{' '}
+            <a href={`tel:${matteo.tel}`} onClick={() => track(EVENTS.PHONE_CLICK, { source })} className={link}>
+              {matteo.name} {matteo.number}
+            </a>{' '}
+            ·{' '}
+            <a
+              href={whatsappUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => track(EVENTS.WHATSAPP_CLICK, { source })}
+              className={link}
+            >
+              WhatsApp
+            </a>
+          </p>
+        </div>
       </Container>
     </section>
   );

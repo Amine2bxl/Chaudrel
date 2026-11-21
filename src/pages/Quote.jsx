@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import { Button, Container, Section } from '@/components/ui';
 import Reveal from '@/lib/reveal';
@@ -14,6 +15,7 @@ const PROJECT_TYPES = [
   'Aménagement extérieur',
   'Toiture',
   'Façade',
+  'Châssis et portes',
   'Piscine',
   'Autre',
 ];
@@ -119,10 +121,18 @@ function hasDraftContent(d) {
 export default function Quote() {
   const { openDialog } = useContactDialog();
   const [draft] = useState(loadDraft);
+  // `/devis?projet=Façade` (bloc « Quel est votre projet ? ») présélectionne le
+  // type. Seule une valeur de la liste est acceptée : le paramètre vient de l'URL.
+  const [params] = useSearchParams();
+  const preset = PROJECT_TYPES.includes(params.get('projet')) ? params.get('projet') : null;
   const [step, setStep] = useState(() =>
     draft && draft.step >= 1 && draft.step <= STEPS.length ? draft.step : 1
   );
-  const [data, setData] = useState(() => ({ ...EMPTY, ...(draft?.data || {}) }));
+  const [data, setData] = useState(() => ({
+    ...EMPTY,
+    ...(draft?.data || {}),
+    ...(preset ? { projectType: preset } : {}),
+  }));
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const [started, setStarted] = useState(false);

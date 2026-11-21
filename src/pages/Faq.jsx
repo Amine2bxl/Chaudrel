@@ -4,8 +4,11 @@ import CTASection from '@/components/sections/CTASection';
 import { Container, Section, SectionHeading } from '@/components/ui';
 import { FAQS } from '@/data/faqs';
 import { SERVICES } from '@/data/services';
+import { SERVICE_ICONS } from '@/components/ui/Icons';
 
-const serviceFaqs = SERVICES.flatMap((s) => (s.faqs?.[0] ? [{ ...s.faqs[0], tag: s.title }] : []));
+const serviceFaqs = SERVICES.flatMap((s) =>
+  s.faqs?.[0] ? [{ ...s.faqs[0], tag: s.title, icon: SERVICE_ICONS[s.slug] }] : []
+);
 
 export default function Faq() {
   return (

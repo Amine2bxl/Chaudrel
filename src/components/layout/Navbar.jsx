@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { Phone } from 'lucide-react';
+import { PhoneIcon } from '@/components/ui/BrandIcons';
 import { BRAND, NAV } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
@@ -116,7 +116,7 @@ export default function Navbar() {
               title="Nous joindre"
               className="grid h-10 w-10 place-items-center rounded-full text-cream/75 transition-[background-color,color,transform] duration-200 hover:bg-cream/10 hover:text-cream active:scale-[0.94]"
             >
-              <Phone size={17} strokeWidth={1.7} aria-hidden="true" />
+              <PhoneIcon width={17} height={17} aria-hidden="true" />
             </button>
             <Button to="/devis" size="sm" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
               Devis gratuit

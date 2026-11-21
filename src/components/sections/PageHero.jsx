@@ -40,7 +40,7 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
           <svg
             aria-hidden="true"
             viewBox="0 0 67 165"
-            className="door-open-in absolute bottom-0 right-[7%] -z-10 hidden h-[86%] w-auto md:block"
+            className="door-open-in absolute bottom-0 right-[7%] -z-10 hidden h-[78%] w-auto md:block"
           >
             <defs>
               <linearGradient id="page-door" x1="0" y1="0" x2="1" y2="1">
@@ -54,9 +54,9 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
         </>
       )}
 
-      <Container className={cn('pb-14 pt-32 lg:pb-20 lg:pt-40', hasImage && 'lg:pt-48')}>
+      <Container className={cn('pb-9 pt-[6.5rem] lg:pb-12 lg:pt-32', hasImage && 'lg:pb-14 lg:pt-36')}>
         {breadcrumb.length > 0 && (
-          <nav aria-label="Fil d'Ariane" className="rise-in mb-8">
+          <nav aria-label="Fil d'Ariane" className="rise-in mb-4">
             <ol className="t-label flex flex-wrap items-center gap-2 text-cream/70">
               {breadcrumb.map((b, i) => (
                 <li key={b.to || b.label} className="flex items-center gap-2">
@@ -78,15 +78,15 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
 
         <div className={cn(aside && 'lg:grid lg:grid-cols-12 lg:gap-12')}>
           <div className={cn('rise-in', aside && 'lg:col-span-7')} style={{ animationDelay: '80ms' }}>
-            <h1 className="t-h1 max-w-[16ch] text-balance text-cream">{title}</h1>
+            <h1 className="t-h2 max-w-[22ch] text-balance text-cream">{title}</h1>
           </div>
 
           {(intro || aside) && (
             <div
-              className={cn('rise-in mt-6 text-cream/80', aside && 'lg:col-span-5 lg:mt-0 lg:self-end')}
+              className={cn('rise-in mt-3 text-cream/80', aside && 'lg:col-span-5 lg:mt-0 lg:self-end')}
               style={{ animationDelay: '180ms' }}
             >
-              {intro && <p className="t-lead measure">{intro}</p>}
+              {intro && <p className="t-body measure">{intro}</p>}
               {aside}
             </div>
           )}

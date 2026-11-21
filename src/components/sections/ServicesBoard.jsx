@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Building, HardHat, Home, Layers, PaintRoller, Trees, Waves } from 'lucide-react';
+import { ArrowUpRightIcon, HouseIcon, SERVICE_ICONS } from '@/components/ui/Icons';
 import Reveal from '@/lib/reveal';
 import { SERVICES } from '@/data/services';
 import { EVENTS, track } from '@/lib/analytics';
@@ -10,14 +10,6 @@ import { imageAttrs, SIZES } from '@/lib/image';
 /* Une icône par métier : le geste d'entrée est visuel, le texte vient après,
    replié. Pas d'icône pour l'aménagement intérieur historique - les six métiers
    annoncés par Chaudrel portent chacun leur symbole. */
-const METIER_ICONS = {
-  'renovation-complete': Home,
-  'finitions-interieures': PaintRoller,
-  'amenagement-exterieur': Trees,
-  toiture: HardHat,
-  facade: Building,
-  piscine: Waves,
-};
 
 /**
  * Les métiers, en menu dépliant - visuel avant tout.
@@ -40,7 +32,7 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', visu
   const list = (
     <ul onMouseLeave={() => setHoverSlug(null)}>
       {services.map((s, i) => {
-        const Icon = METIER_ICONS[s.slug] || Layers;
+        const Icon = SERVICE_ICONS[s.slug] || HouseIcon;
         const open = openSlug === s.slug;
         const contentId = `metier-${s.slug}`;
 
@@ -184,7 +176,7 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', visu
                       )}
                     >
                       {s.title} - en détail
-                      <ArrowUpRight size={14} strokeWidth={1.8} aria-hidden="true" />
+                      <ArrowUpRightIcon size={14} strokeWidth={1.8} />
                     </Link>
                   </div>
                 </div>
