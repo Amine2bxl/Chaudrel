@@ -88,58 +88,104 @@ function selfCheck(blob, payload) {
   if (opened) throw new Error('chiffrement : une mauvaise clé a ouvert le fichier');
 }
 
-const certificat = (qrSvg) => `<!doctype html><html lang="fr"><head><meta charset="utf-8">${FONTS}<style>
-@page{size:297mm 210mm;margin:0}
+/* Dorure simulée : le même dégradé « métal » que les maquettes de vêtements. */
+const FOIL = `<linearGradient id="foil" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7A5A2E"/><stop offset=".3" stop-color="#E4C68E"/><stop offset=".5" stop-color="#A27D47"/><stop offset=".72" stop-color="#F1DCAA"/><stop offset="1" stop-color="#8A6A3A"/></linearGradient>`;
+const MONO_OR = fs
+  .readFileSync(path.join(BRAND, 'logo', `${M.slug}-monogram-or.svg`), 'utf8')
+  .replace(/<defs>[\s\S]*?<\/defs>/, '')
+  .replace(/fill="#[0-9A-Fa-f]{6}"/g, 'fill="url(#foil)"');
+
+/* Guilloché : ellipses tournées, comme le fond d'un papier-valeur. */
+const guilloche = (cx, cy, rx, ry, n) =>
+  Array.from({ length: n }, (_, i) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" transform="rotate(${(180 / n) * i} ${cx} ${cy})"/>`).join('');
+
+/* Couronne de laurier : des feuilles posées le long de deux arcs. */
+function laurel(cx, cy, r) {
+  const leaf = (a, side) => {
+    const x = cx + r * Math.cos(a);
+    const y = cy + r * Math.sin(a);
+    const deg = (a * 180) / Math.PI + (side > 0 ? 60 : 120);
+    return `<ellipse cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="1.1" ry="2.9" transform="rotate(${deg.toFixed(1)} ${x.toFixed(2)} ${y.toFixed(2)})"/>`;
+  };
+  let out = '';
+  for (let i = 0; i < 11; i++) {
+    const t = (i / 10) * (Math.PI * 0.62);
+    out += leaf(Math.PI / 2 + 0.18 + t, -1) + leaf(Math.PI / 2 - 0.18 - t, 1);
+  }
+  return out;
+}
+
+const certificat = (qrSvg) => {
+  const W = 297;
+  const H = 210;
+  const sealR = 17;
+  return `<!doctype html><html lang="fr"><head><meta charset="utf-8">${FONTS.replace('&display', '&family=Pinyon+Script&display')}<style>
+@page{size:${W}mm ${H}mm;margin:0}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:297mm;height:210mm}
+html,body{width:${W}mm;height:${H}mm}
 body{background:${C.nuit};color:${C.creme};font-family:'${S}',sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.cert{position:relative;width:297mm;height:210mm;overflow:hidden;
-  background:radial-gradient(120mm 80mm at 50% 0%,rgba(174,138,86,.16),transparent 70%),${C.nuit}}
-.f1,.f2{position:absolute;border:0.35mm solid ${C.bronze}}
-.f1{inset:8mm}.f2{inset:10mm;border-width:0.2mm;opacity:.5}
-.door{position:absolute;right:16mm;bottom:10mm;height:150mm;opacity:.045}
-.inner{position:absolute;inset:18mm 26mm 16mm;display:flex;flex-direction:column;align-items:center;text-align:center}
-.mono{width:19mm}.mono svg{width:100%;height:auto;display:block}
-.lbl{font:500 6.8pt '${S}';letter-spacing:.42em;text-transform:uppercase;color:${C.bronzeClair}}
-h1{font:400 34pt/1.05 '${T}';letter-spacing:-.01em}
-.to{margin-top:7mm}
-.client{font:400 30pt/1.1 '${T}';color:${C.bronzeClair};margin-top:2.5mm}
-.rule{width:22mm;height:0.35mm;background:${C.bronze};margin:6mm 0 5mm}
-.txt{font-size:10.5pt;line-height:1.65;color:rgba(234,224,211,.82);max-width:170mm}
-.mid{margin:auto 0;display:flex;flex-direction:column;align-items:center}
-.foot{width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:10mm}
-.sigs{display:flex;gap:12mm;text-align:left}
-.sig{width:42mm;border-top:0.3mm solid rgba(234,224,211,.45);padding-top:2.5mm}
-.sig b{display:block;font:400 12pt '${T}'}
-.sig span{font:500 6.5pt '${S}';letter-spacing:.18em;text-transform:uppercase;color:rgba(234,224,211,.6)}
-.seal{width:30mm;height:30mm;border-radius:50%;border:0.35mm solid ${C.bronze};display:grid;place-items:center;
-  box-shadow:inset 0 0 0 1.6mm ${C.nuit},inset 0 0 0 1.85mm rgba(174,138,86,.5)}
-.seal div{width:13mm}.seal svg{width:100%;height:auto;display:block}
-.num{font:500 6.5pt '${S}';letter-spacing:.2em;color:rgba(234,224,211,.6);margin-top:2.5mm}
+.cert{position:relative;width:${W}mm;height:${H}mm;overflow:hidden;background:
+  radial-gradient(150mm 95mm at 50% 38%,rgba(174,138,86,.13),transparent 70%),
+  linear-gradient(160deg,#211c18 0%,${C.nuit} 55%,#141110 100%)}
+.art{position:absolute;inset:0;width:${W}mm;height:${H}mm}
+.inner{position:absolute;inset:20mm 30mm 17mm;display:flex;flex-direction:column;align-items:center;text-align:center}
+.lbl{font:500 6.4pt '${S}';letter-spacing:.46em;text-transform:uppercase;color:${C.bronzeClair}}
+.sub{font:500 9pt '${S}';letter-spacing:.62em;text-transform:uppercase;color:${C.creme};margin-top:1mm}
+.client{font:400 31pt/1.1 '${T}';color:${C.creme};margin-top:2.5mm}
+.txt{font-size:10pt;line-height:1.6;color:rgba(234,224,211,.8);max-width:215mm;margin-top:4mm;text-wrap:balance}
+.band{display:grid;grid-template-columns:repeat(3,1fr);width:180mm;margin-top:7mm;border-top:.25mm solid rgba(205,174,126,.35);border-bottom:.25mm solid rgba(205,174,126,.35)}
+.band div{padding:3.2mm 0}.band div+div{border-left:.25mm solid rgba(205,174,126,.25)}
+.band b{display:block;font:400 12.5pt '${T}';color:${C.creme};margin-top:1.2mm}
+.foot{margin-top:auto;width:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:8mm}
+.sigs{display:flex;gap:7mm;text-align:left}
+.sig{width:40mm}
+.sig i{display:block;font:400 22pt/1 'Pinyon Script',cursive;color:${C.bronzeClair};padding-left:2mm;height:11mm}
+.sig div{border-top:.3mm solid rgba(234,224,211,.45);padding-top:2mm;font:400 11pt '${T}'}
+.sig span{display:block;font:500 6pt '${S}';letter-spacing:.2em;text-transform:uppercase;color:rgba(234,224,211,.6);margin-top:.8mm}
 .qr{justify-self:end;display:flex;align-items:end;gap:4mm;text-align:right}
-.qr .tile{width:27mm;height:27mm;padding:2mm;border-radius:2.5mm;background:${C.cremeLogo}}
+.qr .tile{width:27mm;height:27mm;padding:2mm;border-radius:2mm;background:${C.cremeLogo};box-shadow:0 0 0 .5mm ${C.nuit},0 0 0 .8mm #B8945F}
 .qr .tile svg{width:100%;height:100%;display:block}
-.qr p{font-size:7.5pt;line-height:1.5;color:rgba(234,224,211,.75);max-width:30mm}
-.qr p b{display:block;font:400 10pt '${T}';color:${C.creme}}
+.qr p{font-size:7.2pt;line-height:1.5;color:rgba(234,224,211,.72);max-width:31mm}
+.qr p b{display:block;font:400 10.5pt '${T}';color:${C.creme};margin-bottom:.6mm}
 </style></head><body><div class="cert">
-<div class="f1"></div><div class="f2"></div>
-<svg class="door" viewBox="0 0 67 165"><path d="M0 38 L67 0 L67 165 L0 142 Z" fill="${C.bronze}"/></svg>
+<svg class="art" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs>${FOIL}</defs>
+  <g fill="none" stroke="url(#foil)" stroke-width=".12" opacity=".2">${guilloche(W / 2, 78, 92, 30, 48)}${guilloche(W / 2, 78, 60, 18, 36)}</g>
+  <rect x="7" y="7" width="${W - 14}" height="${H - 14}" fill="none" stroke="url(#foil)" stroke-width=".7"/>
+  <rect x="9.6" y="9.6" width="${W - 19.2}" height="${H - 19.2}" fill="none" stroke="url(#foil)" stroke-width=".25"/>
+  ${[[7, 7, 1, 1], [W - 7, 7, -1, 1], [7, H - 7, 1, -1], [W - 7, H - 7, -1, -1]]
+    .map(([x, y, sx, sy]) => `<path d="M${x + sx * 1} ${y + sy * 14} V${y + sy * 1} H${x + sx * 14}" fill="none" stroke="url(#foil)" stroke-width="1.4"/><rect x="${x + sx * 4.6 - 1.3}" y="${y + sy * 4.6 - 1.3}" width="2.6" height="2.6" transform="rotate(45 ${x + sx * 4.6} ${y + sy * 4.6})" fill="url(#foil)"/>`)
+    .join('')}
+  <text x="${W / 2}" y="56" text-anchor="middle" font-family="${T}" font-size="17" letter-spacing="3.2" fill="url(#foil)">CERTIFICAT</text>
+  <g transform="translate(${W / 2} ${H - 37.5})">
+    <g fill="url(#foil)">${laurel(0, 0, sealR + 4.2)}</g>
+    <circle r="${sealR}" fill="${C.nuit}" stroke="url(#foil)" stroke-width=".7"/>
+    <circle r="${sealR - 1.6}" fill="none" stroke="url(#foil)" stroke-width=".2"/>
+    <path id="ring" d="M -${sealR - 4.2} 0 a ${sealR - 4.2} ${sealR - 4.2} 0 1 1 ${2 * (sealR - 4.2)} 0 a ${sealR - 4.2} ${sealR - 4.2} 0 1 1 -${2 * (sealR - 4.2)} 0" fill="none"/>
+    <text font-family="${S}" font-size="2.1" letter-spacing=".9" fill="${C.bronzeClair}"><textPath href="#ring" startOffset="2%">${esc(M.nom.toUpperCase())} · CHANTIER LIVRÉ · ${J.fin.slice(0, 4)} ·</textPath></text>
+    ${MONO_OR.replace('<svg ', '<svg x="-8.5" y="-6.6" width="17" height="13.3" ')}
+  </g>
+</svg>
 <div class="inner">
-  <div class="mono">${MONO}</div>
-  <p class="lbl" style="margin-top:4mm">${esc(M.nom)}</p>
-  <div class="mid">
-    <h1>Certificat de réalisation</h1>
-    <p class="lbl to">décerné à</p>
-    <p class="client">${esc(J.client)}</p>
-    <div class="rule"></div>
-    <p class="txt">Pour les travaux menés à bien à ${esc(J.commune)} : ${esc(J.travaux)}.<br>Chantier ouvert le ${date(J.debut)}, livré le ${date(J.fin)}.</p>
+  <div style="width:17mm">${MONO_OR.replace('<svg ', '<svg style="width:100%;height:auto;display:block" ')}</div>
+  <p class="lbl" style="margin-top:3.5mm">${esc(M.nom)}</p>
+  <div style="height:22mm"></div>
+  <p class="sub">de réalisation</p>
+  <p class="lbl" style="margin-top:7mm">ce certificat est remis à</p>
+  <p class="client">${esc(J.client)}</p>
+  <p class="txt">En reconnaissance d’un chantier mené à bien à ${esc(J.commune)} : ${esc(J.travaux)}.</p>
+  <div class="band">
+    <div><span class="lbl">Ouvert le</span><b>${date(J.debut)}</b></div>
+    <div><span class="lbl">Livré le</span><b>${date(J.fin)}</b></div>
+    <div><span class="lbl">Certificat</span><b>N° ${numero}</b></div>
   </div>
   <div class="foot">
-    <div class="sigs">${M.contacts.map((c) => `<div class="sig"><b>${esc(c.nom)}</b><span>${esc(c.role)}</span></div>`).join('')}</div>
-    <div style="display:flex;flex-direction:column;align-items:center"><div class="seal"><div>${MONO}</div></div><p class="num">N° ${numero}</p></div>
+    <div class="sigs">${M.contacts.map((c) => `<div class="sig"><i>${esc(c.nom)}</i><div>${esc(c.nom)}<span>${esc(c.role)}</span></div></div>`).join('')}</div>
+    <div style="width:60mm;height:44mm"></div>
     <div class="qr"><p><b>Avant, après.</b>Scannez pour revoir votre chantier.</p><div class="tile">${qrSvg}</div></div>
   </div>
 </div></div></body></html>`;
+};
 
 /* Page commune du QR : HTML statique, script externe (la CSP du site interdit
    le script en ligne), polices du site, aucune mesure d'audience. */
