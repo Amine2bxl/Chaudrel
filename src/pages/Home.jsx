@@ -6,7 +6,7 @@ import ProcessStairs from '@/components/sections/ProcessStairs';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import BeforeAfter from '@/components/sections/BeforeAfter';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Panel, Section, SectionHeading, TextLink } from '@/components/ui';
+import { Container, Panel, Section, SectionHeading } from '@/components/ui';
 import { FounderRows, Row } from '@/components/layout/ContactList';
 import { HouseIcon } from '@/components/ui/Icons';
 import Reveal from '@/lib/reveal';
@@ -55,23 +55,9 @@ export default function Home() {
         </Section>
       )}
 
-      <Section>
-        <Container>
-          <SectionHeading title="Une rénovation complète, ou un seul poste." />
-          <ServicesBoard visual className="mt-block" />
-        </Container>
-      </Section>
+      <ServicesBoard title="Une rénovation complète, ou un seul poste." />
 
-      <Section>
-        <Container>
-          <SectionHeading title="Quatre étapes, zéro surprise.">
-            <TextLink to="/methode" className="flex-none">
-              Notre méthode
-            </TextLink>
-          </SectionHeading>
-          <ProcessStairs className="mt-block" />
-        </Container>
-      </Section>
+      <ProcessStairs />
 
       <Section>
         <Container>

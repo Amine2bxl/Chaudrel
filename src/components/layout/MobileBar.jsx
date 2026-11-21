@@ -80,7 +80,7 @@ export default function MobileBar() {
           to="/devis"
           tabIndex={hidden ? -1 : undefined}
           onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
-          className="flex min-h-[50px] flex-1 items-center justify-center rounded-full bg-gold text-[15px] font-medium text-bark transition-transform duration-200 active:scale-[0.97]"
+          className="flex min-h-[50px] flex-1 items-center justify-center btn-bronze rounded-full text-[15px] font-medium transition-transform duration-200 active:scale-[0.97]"
         >
           Devis gratuit
         </Link>
@@ -88,7 +88,7 @@ export default function MobileBar() {
           type="button"
           tabIndex={hidden ? -1 : undefined}
           onClick={() => openDialog('mobile_bar')}
-          className="flex min-h-[50px] flex-1 items-center justify-center rounded-full text-[15px] font-medium text-cream transition-[transform,background-color] duration-200 hover:bg-cream/10 active:scale-[0.97]"
+          className="flex min-h-[50px] flex-1 items-center justify-center btn-glass rounded-full text-[15px] font-medium transition-[transform,background-color] duration-200 active:scale-[0.97]"
         >
           Nous joindre
         </button>

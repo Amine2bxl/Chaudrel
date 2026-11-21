@@ -13,7 +13,7 @@ const serviceFaqs = SERVICES.flatMap((s) =>
 export default function Faq() {
   return (
     <>
-      <PageHero title="Les questions qu’on nous pose." />
+      <PageHero title="Les questions qu’on nous pose." image="/photos/pf-4.webp" />
 
       <Section tone="cream" className="pt-block">
         <Container>

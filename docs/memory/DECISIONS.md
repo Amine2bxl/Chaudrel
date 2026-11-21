@@ -94,3 +94,8 @@
 - Décision : site, e-mail (info@chaudrelrenovation.be), QR, certificats, documents et vêtements passent sur chaudrelrenovation.be ; `vercel.json` redirige chaudrel.be et les www vers lui.
 - Contexte : aucun des deux domaines n'est encore relié au projet Vercel (production sur *.vercel.app).
 - Conséquences : avant la mise en production, relier le domaine à Vercel et créer la boîte e-mail, sinon les e-mails du site rebondissent.
+
+## D-017 — Vrai verre sur photo, boutons en verre à texte blanc
+- Date : 2026-11-21 · Statut : acceptée (demande client)
+- Décision : les sections clés (métiers, étapes, appel final) sont des `Scene` (photo voilée) où les panneaux `Panel glass` floutent réellement l'image ; les légendes des chantiers sont des plaques de verre sur les photos ; chaque page s'ouvre sur une photo. Boutons : `.btn-bronze` (verre bronze sombre, texte blanc) et `.btn-glass` (verre clair, texte crème). Faits sous le hero : titres seuls. Matteo = numéro principal (ordre de `BRAND.phones`).
+- Conséquences : le flou d'arrière-plan ne sert que là où une photo est derrière ; les autres panneaux gardent la carte sans flou.

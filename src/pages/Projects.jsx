@@ -19,7 +19,7 @@ export default function Projects() {
 
   return (
     <>
-      <PageHero title="Des chantiers réels, pas des images d’archives." />
+      <PageHero title="Des chantiers réels, pas des images d’archives." image="/photos/pf-1.webp" />
 
       <Section tone="cream" className="pb-0 pt-10 md:pb-0 lg:pb-0 lg:pt-14">
         <Container>

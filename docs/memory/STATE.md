@@ -7,6 +7,7 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 - 2026-11-21 : PR #3 puis PR #4 fusionnées dans `main` (refonte + passe 2 + kit de marque) — `main` = nouveau site.
 - Ancien `main` figé : branche `archive/site-v2-avant-refonte` (78795e9) et PR #5 (draft) qui restaure l'ancien site ; ne la fusionner que pour revenir en arrière. Tag impossible (proxy Git refuse les tags).
 - Logo client vectorisé : `marque/logo/*.svg`, monogramme dans `src/components/ui/Logo.jsx`.
+- 2026-11-21 : PR #6 fusionnée dans `main` (passes 3-4, marque/ + studio/, coffret, domaine). Passe 5 sur la branche de session : vrai verre, certificat façon Lucid, photos t-shirts.
 - 2026-11-21 (PR #6) : `brand/` → `marque/` (par support) + `studio/` (modèle réutilisable : `generer.cjs` lit `marque/marque.json`, `coffret.cjs`, `ETAPES.md` A → Z). Bug corrigé : la CSP bloquait les polices auto-hébergées en production (font-src 'self').
 - Coffret : certificat de réalisation (PDF) + page `/c/#id.clé` chiffrée (AES-GCM, clé seulement dans le QR) ; fiches clients dans `marque/coffret/chantiers/` (hors Git, dépôt public).
 - Système documenté : `DESIGN.md`, `.impeccable/design.json`, brief `.impeccable/surfaces/`.
@@ -29,6 +30,7 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 - D-014 : `marque/` (client) + `studio/` (modèle générique, piloté par `marque.json`) ; site à la racine (Vercel inchangé).
 - D-015 : page de remerciement privée = statique chiffrée, clé dans le fragment du QR ; rien de personnel dans le dépôt public.
 - D-016 : domaine principal = chaudrelrenovation.be (choix client) ; chaudrel.be et www redirigent vers lui.
+- D-017 : vrai verre sur photo (`Scene` + `Panel glass`), boutons en verre texte blanc, faits en titres seuls, Matteo numéro principal.
 
 ## Prochaines étapes
 1. Vérifier le site en production après le déploiement de `main`.

@@ -1,6 +1,7 @@
 import { HouseIcon, KeyIcon, PersonIcon, QuoteDocIcon } from '@/components/ui/Icons';
 import PageHero from '@/components/sections/PageHero';
 import CTASection from '@/components/sections/CTASection';
+import ProcessStairs from '@/components/sections/ProcessStairs';
 import { Container, Panel, Section } from '@/components/ui';
 import { Row } from '@/components/layout/ContactList';
 import Reveal from '@/lib/reveal';
@@ -31,7 +32,7 @@ const PRINCIPES = [
 export default function Method() {
   return (
     <>
-      <PageHero title="Notre méthode." />
+      <PageHero title="Notre méthode." image="/photos/facade-garages.webp" />
 
       <Section tone="cream" className="pt-block">
         <Container>
@@ -47,6 +48,8 @@ export default function Method() {
           </Reveal>
         </Container>
       </Section>
+
+      <ProcessStairs title="Les quatre étapes d’un chantier." link={false} />
 
       <CTASection source="method" />
     </>

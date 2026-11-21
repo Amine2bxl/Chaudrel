@@ -16,6 +16,7 @@ export default function About() {
             fondée à Bruxelles en {BRAND.founded}.
           </>
         }
+        image="/photos/maison-brique.webp"
       />
 
       <Section tone="cream" className="pt-block">

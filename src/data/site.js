@@ -24,8 +24,9 @@ export const BRAND = {
     geo: { lat: 50.868, lng: 4.3806 },
   },
   phones: [
-    { name: 'Alberto', number: '+32 477 27 31 18', tel: '+32477273118' },
+    // Matteo d'abord : son numéro est le numéro principal (choix client).
     { name: 'Matteo', number: '+32 493 97 25 17', tel: '+32493972517' },
+    { name: 'Alberto', number: '+32 477 27 31 18', tel: '+32477273118' },
   ],
   // TODO_VALIDATION : confirmer le numéro utilisé pour WhatsApp Business.
   whatsapp: '32477273118',
@@ -46,7 +47,7 @@ export const BRAND = {
    * mais nulle part sur chaudrelrenovation.be.
    */
   promises: {
-    responseTime: 'Réponse sous 48 h',
+    responseTime: 'Réponse sous 48\u00a0h',
     quote: 'Devis gratuit et sans engagement',
   },
   zone: 'Toute la Belgique',
