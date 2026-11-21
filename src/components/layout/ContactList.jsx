@@ -18,7 +18,7 @@ export function Chip({ icon: Icon, primary = false, compact = false, accent = fa
       className={cn(
         'grid flex-none place-items-center rounded-full transition-colors duration-fast',
         compact ? 'h-10 w-10' : 'h-11 w-11',
-        primary ? 'bg-white/15 text-[#fffdf8]' : 'bg-ink/[0.06] group-hover:bg-ink/10',
+        primary ? 'bg-white/15 text-white' : 'bg-ink/[0.06] group-hover:bg-ink/10',
         !primary && (accent ? 'text-gold-light' : 'text-ink')
       )}
     >
@@ -37,9 +37,9 @@ export function Row({ to, href, icon, label, hint, onClick, primary = false, com
       <Chip icon={icon} primary={primary} compact={compact} />
 
       <span className="min-w-0 flex-1">
-        <span className={cn('block text-[15px] font-medium leading-snug', primary ? 'text-[#fffdf8]' : 'text-ink')}>{label}</span>
+        <span className={cn('block text-[15px] font-medium leading-snug', primary ? 'text-white' : 'text-ink')}>{label}</span>
         {hint && (
-          <span className={cn('mt-0.5 block t-small', primary ? 'text-[#fffdf8]/80' : 'text-ink/70')}>{hint}</span>
+          <span className={cn('mt-0.5 block t-small', primary ? 'text-white/80' : 'text-ink/70')}>{hint}</span>
         )}
       </span>
 
@@ -54,7 +54,7 @@ export function Row({ to, href, icon, label, hint, onClick, primary = false, com
           strokeWidth="1.6"
           className={cn(
             'flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5',
-            primary ? 'text-[#fffdf8]/70' : 'text-ink/60'
+            primary ? 'text-white/70' : 'text-ink/60'
           )}
         >
           <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -68,7 +68,7 @@ export function Row({ to, href, icon, label, hint, onClick, primary = false, com
     linked && 'transition-[background-color,border-color,box-shadow,transform] duration-200 ease-soft active:scale-[0.98]',
     compact ? 'px-4 py-3' : 'px-5 py-4',
     primary
-      ? 'btn-bronze'
+      ? 'btn-solid'
       : cn('border border-ink/[0.09] bg-shell', linked && 'hover:border-ink/20 hover:shadow-soft'),
     className
   );

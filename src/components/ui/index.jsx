@@ -73,10 +73,10 @@ export function SectionHeading({ title, tone = 'dark', className, children }) {
 
 const VARIANTS = {
   // Libellé en `bark` : foncé dans tous les contextes (5,6:1 sur le bronze).
-  solid: 'btn-bronze',
+  solid: 'btn-solid',
   solidLight: 'bg-cream text-ink shadow-soft hover:bg-shell hover:shadow-lift',
-  outline: 'btn-glass',
-  outlineLight: 'btn-glass',
+  outline: 'btn-soft',
+  outlineLight: 'btn-soft',
 };
 
 const SIZES = {
@@ -88,10 +88,10 @@ const SIZES = {
 /* Pastille de flèche logée dans la pilule : elle donne la direction et
    glisse au survol. Décorative - le libellé dit déjà où l'on va. */
 const ARROW_TONE = {
-  solid: 'bg-white/15 text-[#fffdf8]',
+  solid: 'bg-white/15 text-white',
   solidLight: 'bg-ink/[0.08] text-ink',
-  outline: 'bg-white/10 text-[#eae0d3]',
-  outlineLight: 'bg-white/10 text-[#eae0d3]',
+  outline: 'bg-white/10 text-white',
+  outlineLight: 'bg-white/10 text-white',
 };
 
 function ArrowChip({ variant }) {
@@ -234,22 +234,16 @@ export function Media({
 /**
  * Carte de verre - celle de la page de liens, reprise par chaque section du
  * site : un seul matériau pour tout le corps des pages. Le reflet suit le
- * pointeur. `glass` : vrai verre dépoli (flou d'arrière-plan), à poser sur une
- * photo (voir `Scene`). `pad` et `radius` se remplacent en entier (pas de fusion de
+ * pointeur. `pad` et `radius` se remplacent en entier (pas de fusion de
  * classes ici). Pas de flou d'arrière-plan : derrière, il n'y a qu'un dégradé, le
  * flou ne s'y verrait pas et coûterait à chaque image du défilement.
  */
-export function Panel({ pad = 'p-5 sm:p-8', radius = 'rounded-[28px]', glass = false, className, children, as: Tag = 'div', ...rest }) {
+export function Panel({ pad = 'p-5 sm:p-8', radius = 'rounded-[28px]', className, children, as: Tag = 'div', ...rest }) {
   const glow = usePointerGlow();
   return (
     <Tag
       {...glow}
-      className={cn(
-        glass ? 'glass-dark' : 'glass-light [-webkit-backdrop-filter:none] [backdrop-filter:none]',
-        pad,
-        radius,
-        className
-      )}
+      className={cn('glass-light [-webkit-backdrop-filter:none] [backdrop-filter:none]', pad, radius, className)}
       {...rest}
     >
       {children}
@@ -302,29 +296,5 @@ export function Disclosure({ title, defaultOpen = false, className, children }) 
         </div>
       )}
     </div>
-  );
-}
-
-/**
- * Scène : une section posée sur une photo voilée de sombre. Les panneaux
- * `glass` qu'elle contient floutent réellement la photo : c'est là, et
- * seulement là, que le verre a quelque chose à montrer.
- */
-export function Scene({ image, veil = 'bg-[#110F0D]/75', className, children, ...rest }) {
-  return (
-    <section className={cn('relative isolate overflow-hidden py-section', className)} {...rest}>
-      {image && (
-        <img
-          {...imageAttrs(image, IMG_SIZES.full)}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 -z-20 h-full w-full object-cover"
-        />
-      )}
-      <div aria-hidden="true" className={cn('absolute inset-0 -z-10', veil)} />
-      {children}
-    </section>
   );
 }

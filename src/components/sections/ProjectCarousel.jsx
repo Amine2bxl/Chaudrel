@@ -6,16 +6,32 @@ import { imageAttrs } from '@/lib/image';
 import { cn } from '@/lib/utils';
 import { ArrowIcon } from '@/components/ui/Icons';
 
+/* Rythme de la grille, par groupe de quatre : grand / petit décalé, puis
+   petit / grand décalé. Deux colonnes inégales, jamais une rangée de cartes
+   identiques. */
+const LAYOUT = [
+  { col: 'lg:col-span-7', ratio: 'aspect-[4/3]', sizes: '(min-width: 1024px) 56vw, 100vw' },
+  { col: 'lg:col-span-5 lg:mt-24', ratio: 'aspect-[4/5]', sizes: '(min-width: 1024px) 40vw, 100vw' },
+  { col: 'lg:col-span-5', ratio: 'aspect-[4/5]', sizes: '(min-width: 1024px) 40vw, 100vw' },
+  { col: 'lg:col-span-7 lg:mt-24', ratio: 'aspect-[4/3]', sizes: '(min-width: 1024px) 56vw, 100vw' },
+];
+const WIDE = { col: 'lg:col-span-12', ratio: 'aspect-[4/3] lg:aspect-[21/9]', sizes: '100vw' };
+
 /**
- * Les chantiers : de grandes photos sur deux colonnes, la légende dans une
- * plaque de verre posée sur la photo (vrai flou d'arrière-plan). Un dernier
- * chantier seul sur sa rangée prend toute la largeur. Rien ne bouge au
- * défilement ; au survol, la photo avance à peine.
+ * Les chantiers, en grille éditoriale : de grandes photos sur deux colonnes
+ * de tailles alternées, la nature des travaux et le titre en légende. La
+ * photo se découvre une fois à l'apparition, puis avance très légèrement au
+ * survol ; rien ne bouge au défilement.
  *
  * Le nom `ProjectCarousel` est conservé : c'est l'unique façon d'afficher
  * des chantiers (accueil, /realisations, pages métier).
  */
-export default function ProjectCarousel({ projects = [], sectionLabel = 'Nos chantiers', title = '', link }) {
+export default function ProjectCarousel({
+  projects = [],
+  sectionLabel = 'Nos chantiers',
+  title = '',
+  link,
+}) {
   if (!projects.length) return null;
 
   return (
@@ -31,38 +47,50 @@ export default function ProjectCarousel({ projects = [], sectionLabel = 'Nos cha
           </SectionHeading>
         )}
 
-        <ul className="grid gap-4 md:grid-cols-2 lg:gap-5">
+        <ul className="grid gap-x-8 gap-y-14 lg:grid-cols-12">
           {projects.map((p, i) => {
-            const wide = i === projects.length - 1 && i % 2 === 0;
+            // Dernier chantier seul sur sa rangée : il prend toute la largeur.
+            const alone = i === projects.length - 1 && i % 2 === 0;
+            const l = alone ? WIDE : LAYOUT[i % LAYOUT.length];
+            const to = `/realisations/${p.slug}`;
             return (
-              <li key={p.slug} className={cn(wide && 'md:col-span-2')}>
-                <Reveal from="veil" delay={(i % 2) * 90} className={cn('rounded-[24px] bg-sand', wide ? 'aspect-[4/3] md:aspect-[21/9]' : 'aspect-[4/3]')}>
-                  <Link
-                    to={`/realisations/${p.slug}`}
-                    onClick={() => track(EVENTS.PROJECT_VIEW, { project: p.slug, source: 'grid' })}
-                    className="group relative block h-full w-full overflow-hidden rounded-[24px]"
-                  >
-                    <img
-                      {...imageAttrs(p.cover.src, wide ? '100vw' : '(min-width: 768px) 50vw, 100vw')}
-                      alt={p.cover.alt}
-                      width={p.cover.w}
-                      height={p.cover.h}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover transition-transform duration-700 ease-soft group-hover:scale-[1.03]"
-                    />
-                    <span className="glass-dark absolute inset-x-3 bottom-3 [background:rgb(17_15_13/0.55)] flex items-center justify-between gap-4 rounded-[18px] px-4 py-3 sm:inset-x-auto sm:left-4 sm:bottom-4 sm:min-w-[19rem] sm:px-5">
-                      <span className="min-w-0">
-                        <span className="t-label block text-gold-light">{p.type}</span>
-                        <span className="mt-1 block truncate text-[17px] font-medium text-ink">{p.title}</span>
-                      </span>
+              <li key={p.slug} className={l.col}>
+                <Link
+                  to={to}
+                  onClick={() => track(EVENTS.PROJECT_VIEW, { project: p.slug, source: 'grid' })}
+                  className="group block"
+                >
+                  <Reveal from="veil" className={cn('overflow-hidden rounded-[24px] bg-sand', l.ratio)}>
+                    {/* Le volet anime ce bloc ; le survol anime la photo : deux transform séparés. */}
+                    <div className="h-full w-full">
+                      <img
+                        {...imageAttrs(p.cover.src, l.sizes)}
+                        alt={p.cover.alt}
+                        width={p.cover.w}
+                        height={p.cover.h}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-soft group-hover:scale-[1.04]"
+                      />
+                    </div>
+                  </Reveal>
+                  <div className="mt-5 flex items-start justify-between gap-6">
+                    <div>
+                      <p className="t-label text-gold-deep">{p.type}</p>
+                      <h3 className="mt-2.5 font-display text-[1.75rem] leading-tight text-ink">{p.title}</h3>
+                      {p.location && <p className="t-small mt-1 text-ink/70">{p.location}</p>}
+                    </div>
+                    <span
+                      aria-hidden="true"
+                      className="mt-1 grid h-11 w-11 flex-none place-items-center rounded-full border border-ink/15 text-ink/70 transition-[border-color,color,transform] duration-200 ease-soft group-hover:border-gold group-hover:text-gold-deep group-active:scale-95"
+                    >
                       <ArrowIcon
                         size={18}
-                        className="flex-none text-ink/80 transition-transform duration-200 ease-soft group-hover:translate-x-0.5"
+                        className="transition-transform duration-200 ease-soft group-hover:translate-x-0.5"
                       />
                     </span>
-                  </Link>
-                </Reveal>
+                  </div>
+                </Link>
               </li>
             );
           })}

@@ -99,3 +99,8 @@
 - Date : 2026-11-21 · Statut : acceptée (demande client)
 - Décision : les sections clés (métiers, étapes, appel final) sont des `Scene` (photo voilée) où les panneaux `Panel glass` floutent réellement l'image ; les légendes des chantiers sont des plaques de verre sur les photos ; chaque page s'ouvre sur une photo. Boutons : `.btn-bronze` (verre bronze sombre, texte blanc) et `.btn-glass` (verre clair, texte crème). Faits sous le hero : titres seuls. Matteo = numéro principal (ordre de `BRAND.phones`).
 - Conséquences : le flou d'arrière-plan ne sert que là où une photo est derrière ; les autres panneaux gardent la carte sans flou.
+
+## D-018 — Retour au visuel de main, boutons à plat, zigzag (remplace D-017)
+- Date : 2026-11-21 · Statut : acceptée (retour client) · D-017 remplacée
+- Contexte : le client préfère le visuel de main au vrai verre sur photo ; il trouve les boutons « brillants ».
+- Décision : sections et pages reviennent à main ; boutons à plat façon Revolut (`.btn-solid` bronze sombre #8C6B3E texte blanc, `.btn-soft` voile blanc 10 % texte blanc) ; pages Services et Réalisations en zigzag (`Zigzag` : photo d'un côté, titre + texte de l'autre, en alternance). Gardés : faits en titres seuls, Matteo numéro principal.

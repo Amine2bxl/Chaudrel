@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
-import ProjectCarousel from '@/components/sections/ProjectCarousel';
+import Zigzag from '@/components/sections/Zigzag';
+import { EVENTS, track } from '@/lib/analytics';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section } from '@/components/ui';
-import { PROJECTS, activeCategories, categoryLabel, projectsByCategory } from '@/data/projects';
+import { PROJECTS, activeCategories, projectsByCategory } from '@/data/projects';
 import { cn } from '@/lib/utils';
 
 /**
@@ -19,7 +20,7 @@ export default function Projects() {
 
   return (
     <>
-      <PageHero title="Des chantiers réels, pas des images d’archives." image="/photos/pf-1.webp" />
+      <PageHero title="Des chantiers réels, pas des images d’archives." />
 
       <Section tone="cream" className="pb-0 pt-10 md:pb-0 lg:pb-0 lg:pt-14">
         <Container>
@@ -60,10 +61,17 @@ export default function Projects() {
       </Section>
 
       {items.length > 0 ? (
-        <ProjectCarousel
-          projects={items}
-          sectionLabel="Nos chantiers"
-          title={filter === 'all' ? '' : `${categoryLabel(filter)}, en détail.`}
+        <Zigzag
+          items={items.map((p) => ({
+            key: p.slug,
+            to: `/realisations/${p.slug}`,
+            image: { src: p.cover.src, w: p.cover.w, h: p.cover.h },
+            title: p.title,
+            meta: [p.type, p.location].filter(Boolean).join(' · '),
+            text: p.summary,
+            cta: 'Voir le chantier',
+            onClick: () => track(EVENTS.PROJECT_VIEW, { project: p.slug, source: 'zigzag' }),
+          }))}
         />
       ) : (
         <Section tone="cream" className="pt-block">
