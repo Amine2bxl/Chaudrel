@@ -20,3 +20,7 @@
 ## 2026-11-21 — Kit de marque
 - Carte Canva « (FINAL) » exportée en PDF (l'export PNG Canva a été refusé : « Not allowed ») ; aperçus rendus avec pdftoppm. QR décodé : https://linktr.ee/chaudrel.
 - Leçon : une page ouverte par `page.setContent` ne charge pas `file://` → passer les images en data URI.
+
+## 2026-11-21 — Fusion dans main
+- #3 (fe9f217) puis #4 (2fdfce4) fusionnées. PR #5 = ancien site (arbre de 78795e9).
+- Le proxy Git de la session refuse le push de tags ; branche d'archive utilisée à la place.

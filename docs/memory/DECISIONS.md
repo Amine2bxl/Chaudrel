@@ -62,3 +62,8 @@
 - Date : 2026-11-21 · Statut : acceptée (choix client)
 - Décision : `brand/` livré dans la PR de refonte ; carte de visite = design Canva existant du client (« FINAL »), exportée sans modification ; t-shirts noirs, logo or métallisé ou crème + bronze.
 - Conséquences : la carte garde l'ancien logo et un QR Linktree tant que le client n'a pas validé la mise à jour ; générateur `brand/outils/generer.cjs` pour tout le reste.
+
+## D-012 — Inversion des rôles main / PR
+- Date : 2026-11-21 · Statut : acceptée (demande client)
+- Décision : figer l'ancien `main` (branche `archive/site-v2-avant-refonte`), fusionner #3 puis #4 dans `main`, ouvrir la PR #5 qui contient l'ancien site.
+- Conséquences : revenir en arrière = fusionner la PR #5 ; l'historique de la refonte reste dans `main`.
