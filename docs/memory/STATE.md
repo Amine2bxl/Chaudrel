@@ -28,11 +28,14 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 
 - D-014 : `marque/` (client) + `studio/` (modèle générique, piloté par `marque.json`) ; site à la racine (Vercel inchangé).
 - D-015 : page de remerciement privée = statique chiffrée, clé dans le fragment du QR ; rien de personnel dans le dépôt public.
+- D-016 : domaine principal = chaudrelrenovation.be (choix client) ; chaudrel.be et www redirigent vers lui.
 
 ## Prochaines étapes
 1. Vérifier le site en production après le déploiement de `main`.
 1b. Recevoir de vraies paires avant/après (même point de vue) → `beforeAfter` dans projects.js.
-2. Carte de visite : copie Canva retravaillée (logo CR, fond nuit uni, QR devis) en attente de validation avant enregistrement ; polices à basculer à la main dans Canva (Prata / Albert Sans).
+2. Carte de visite : copie Canva enregistrée (mise en page d'origine, logo CR, QR doré vers chaudrelrenovation.be/devis) ; PDF dans `marque/carte-de-visite/` sans fonds perdus (à ajouter à l'export Canva « PDF impression »). Scanner le QR doré avec plusieurs téléphones avant impression.
+2c. Domaine chaudrelrenovation.be : l'acheter si besoin, le relier au projet Vercel, créer la boîte info@chaudrelrenovation.be AVANT de fusionner la PR #6.
+2d. T-shirt photo : Higgsfield à 0 crédit ; générer le t-shirt vierge dans Grok ou Gemini (Nano Banana), puis poser le vrai logo.
 2b. Renseigner `avisGoogle` dans `marque/marque.json` dès que la fiche Google existe ; valider le contenu physique du coffret.
 3. Remplacer `public/photos/hero.webp` par une vraie photo de chantier.
 

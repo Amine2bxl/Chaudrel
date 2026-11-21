@@ -88,3 +88,9 @@
 - Décision : page statique `/c/` ; contenu du client chiffré (AES-256-GCM) dans `public/c/<id>.bin` ; clé dans le fragment du QR (`#id.clé`), jamais envoyée au serveur ni commitée ; fiches et photos dans `marque/coffret/chantiers/` (ignoré par Git). noindex, no-referrer, no-store, exclu du service worker.
 - Alternatives écartées : URL secrète en clair (lisible dans le dépôt public), protection par mot de passe Vercel (payante), dépôt privé (historique Git difficile à purger).
 - Conséquences : couper l'accès = supprimer le `.bin` ; perdre `lien.txt` n'empêche pas de régénérer (nouveau QR).
+
+## D-016 — Domaine principal : chaudrelrenovation.be
+- Date : 2026-11-21 · Statut : acceptée (choix client)
+- Décision : site, e-mail (info@chaudrelrenovation.be), QR, certificats, documents et vêtements passent sur chaudrelrenovation.be ; `vercel.json` redirige chaudrel.be et les www vers lui.
+- Contexte : aucun des deux domaines n'est encore relié au projet Vercel (production sur *.vercel.app).
+- Conséquences : avant la mise en production, relier le domaine à Vercel et créer la boîte e-mail, sinon les e-mails du site rebondissent.
