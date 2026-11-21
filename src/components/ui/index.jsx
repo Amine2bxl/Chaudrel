@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { imageAttrs, SIZES as IMG_SIZES } from '@/lib/image';
 import Reveal from '@/lib/reveal';
+import usePointerGlow from '@/lib/usePointerGlow';
 
 /* ============================================================
    Primitives - tout le site est composé de ces briques.
@@ -48,43 +49,18 @@ export function Label({ children, tone = 'dark', className }) {
 }
 
 /**
- * En-tête de section : un titre, et au besoin une phrase dessous.
- *
- * Deux règles tenues sur tout le site :
- * - pas de sur-titre par défaut. Un `label` se justifie une fois toutes les
- *   trois sections au maximum ; la place de la section dans la page suffit
- *   presque toujours à dire de quoi elle parle.
- * - le texte se met SOUS le titre, pas dans une colonne à droite. Le couple
- *   « gros titre à gauche / petit paragraphe à droite » est le tic de mise en
- *   page qui fait ressembler toutes les pages entre elles. `align="split"`
- *   reste disponible quand la colonne de droite porte autre chose qu'un
- *   paragraphe de remplissage.
+ * En-tête de section : le titre seul. Pas de phrase dessous, pas de sur-titre :
+ * la section se lit à son titre et à ce qu'elle montre. `children` se pose en
+ * regard (un lien, une commande), jamais un paragraphe.
  */
-export function SectionHeading({ title, text, tone = 'dark', align = 'stack', className, children }) {
-  const light = tone === 'light';
-  const split = align === 'split';
-
+export function SectionHeading({ title, tone = 'dark', className, children }) {
   return (
-    <div className={cn(split && 'lg:grid lg:grid-cols-12 lg:gap-10', className)}>
-      <Reveal className={cn(split && 'lg:col-span-7')}>
-        {/* La largeur se pose sur le titre : `ch` se calcule sur la police de
-            l'élément, pas sur celle du conteneur. */}
-        <h2 className={cn('t-h2 max-w-[18ch] text-balance', light ? 'text-cream' : 'text-ink')}>{title}</h2>
+    <div className={cn('flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between', className)}>
+      <Reveal>
+        {/* La largeur se pose sur le titre : `ch` se calcule sur sa police. */}
+        <h2 className={cn('t-h2 max-w-[18ch] text-balance', tone === 'light' ? 'text-cream' : 'text-ink')}>{title}</h2>
       </Reveal>
-
-      {(text || children) && (
-        <Reveal
-          delay={120}
-          className={cn(
-            'mt-5',
-            split && 'lg:col-span-5 lg:mt-0 lg:self-end',
-            light ? 'text-cream/60' : 'text-ink/65'
-          )}
-        >
-          {text && <p className="t-lead measure">{text}</p>}
-          {children}
-        </Reveal>
-      )}
+      {children}
     </div>
   );
 }
@@ -256,13 +232,20 @@ export function Media({
 }
 
 /**
- * Surface surélevée : coquille claire, arrondi de 24 px, ombre teintée.
- * À n'utiliser que lorsque le contenu est réellement détaché de la page -
- * un formulaire, un encart de contact. Une liste n'a pas besoin de boîte.
+ * Carte de verre - celle de la page de liens, reprise par chaque section du
+ * site : un seul matériau pour tout le corps des pages. Le reflet suit le
+ * pointeur. `pad` et `radius` se remplacent en entier (pas de fusion de
+ * classes ici). Pas de flou d'arrière-plan : derrière, il n'y a qu'un dégradé, le
+ * flou ne s'y verrait pas et coûterait à chaque image du défilement.
  */
-export function Panel({ className, children, as: Tag = 'div', ...rest }) {
+export function Panel({ pad = 'p-5 sm:p-8', radius = 'rounded-[28px]', className, children, as: Tag = 'div', ...rest }) {
+  const glow = usePointerGlow();
   return (
-    <Tag className={cn('rounded-lg border border-ink/[0.07] bg-shell shadow-soft', className)} {...rest}>
+    <Tag
+      {...glow}
+      className={cn('glass-light [-webkit-backdrop-filter:none] [backdrop-filter:none]', pad, radius, className)}
+      {...rest}
+    >
       {children}
     </Tag>
   );

@@ -4,9 +4,9 @@
  * Configuration requise (variables d'environnement Vercel) :
  *   RESEND_API_KEY    clé API Resend (https://resend.com)
  *   LEAD_TO_EMAIL     boîte(s) de réception interne - une adresse, ou plusieurs
- *                     séparées par des virgules (ex. Info@chaudrel.be)
+ *                     séparées par des virgules (ex. Info@chaudrelrenovation.be)
  *   LEAD_BCC_EMAIL    optionnel - copie cachée (le second gérant, par exemple)
- *   LEAD_FROM_EMAIL   expéditeur vérifié chez Resend (ex. site@chaudrel.be)
+ *   LEAD_FROM_EMAIL   expéditeur vérifié chez Resend (ex. site@chaudrelrenovation.be)
  *
  * ⚠️ PROVISOIRE - tant que `LEAD_TO_EMAIL` n'est pas défini, la destination de
  *    test envoy@… reçoit les demandes (adresse d'Amine) pour vérifier que

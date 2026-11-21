@@ -1,0 +1,11 @@
+{
+  "client": "Famille Dupont",
+  "commune": "Uccle",
+  "travaux": "rénovation de la façade et remplacement des châssis",
+  "debut": "2026-09-02",
+  "fin": "2026-10-18",
+  "message": "",
+  "paires": [
+    { "avant": "avant-1.jpg", "apres": "apres-1.jpg", "legende": "La façade côté rue" }
+  ]
+}

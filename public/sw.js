@@ -36,6 +36,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
+  // Pages de remerciement privées (/c/) : jamais mises en cache sur l'appareil.
+  if (new URL(request.url).pathname.startsWith('/c/')) return;
 
   const isHTML = request.headers.get('accept')?.includes('text/html');
 

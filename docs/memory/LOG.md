@@ -20,3 +20,23 @@
 ## 2026-11-21 — Kit de marque
 - Carte Canva « (FINAL) » exportée en PDF (l'export PNG Canva a été refusé : « Not allowed ») ; aperçus rendus avec pdftoppm. QR décodé : https://linktr.ee/chaudrel.
 - Leçon : une page ouverte par `page.setContent` ne charge pas `file://` → passer les images en data URI.
+
+## 2026-11-21 — Fusion dans main
+- #3 (fe9f217) puis #4 (2fdfce4) fusionnées. PR #5 = ancien site (arbre de 78795e9).
+- Le proxy Git de la session refuse le push de tags ; branche d'archive utilisée à la place.
+
+## 2026-11-21 — Passe 3
+- Choix client : escalier, bloc de choix du projet, grille éditoriale, plaque (verre + laiton) parmi plaque / mètre ruban.
+- `/devis?projet=` présélectionne le type (liste blanche) ; ajout du type « Châssis et portes ».
+- À corriger (antérieur) : `QUOTE_FALLBACK_EMAIL` dans `src/pages/Quote.jsx` pointe vers une adresse de test, pas info@chaudrel.be.
+
+## 2026-11-21 — Passe 4 (système unique)
+- Choix client : sous-titres, intros et fils d'Ariane retirés ; bandeau de verre en fin de page ; style /liens partout ; provinces qui s'allument depuis Bruxelles.
+- `Panel` : `pad` et `radius` se remplacent en entier (`cn` ne fusionne pas les classes Tailwind, deux `p-*` en conflit donnent un résultat imprévisible).
+- Racine sombre : `ink` = couleur claire, `cream` = fond. Un composant sorti d'une section `bark` doit passer de `text-cream` à `text-ink` (ProcessStairs, Monogram).
+- Corrigé au passage (revue de la passe 3) : délai « 48 h » lu dans `BRAND`, présélection `?projet=` supprimée avec le bloc qui l'utilisait.
+
+## 2026-11-21 — Restructuration, coffret, carte
+- Bug production : CSP `font-src https://fonts.gstatic.com` bloquait Prata / Albert Sans auto-hébergées depuis la passe 2 → `font-src 'self'` (vérifié en local avec la CSP appliquée).
+- Canva MCP : pas de vignette pour une transaction non enregistrée ; les formes insérées passent devant (faire `layer_element back`) ; `update_fill` recadre en mode couvrir (corriger avec `crop_media`). Pas de choix de police par l'API.
+- Coffret testé : bonne clé → page ; mauvaise clé / id inconnu → message d'erreur ; relancer garde le même QR.

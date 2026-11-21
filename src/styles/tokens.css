@@ -79,8 +79,8 @@
      section  d'une section à l'autre
      block    d'un titre à son contenu
      group    d'un groupe apparenté au suivant */
-  --space-section: clamp(5rem, 9vw, 9.5rem);
-  --space-block: clamp(2.5rem, 4.5vw, 4.5rem);
+  --space-section: clamp(3rem, 5vw, 5rem);
+  --space-block: clamp(2rem, 3.5vw, 3.5rem);
   --space-group: clamp(1.75rem, 2.5vw, 2.5rem);
 
   /* ---------- Élévation ----------

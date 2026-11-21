@@ -1,0 +1,40 @@
+{
+  "nom": "Nom de l'entreprise",
+  "slug": "nom-court",
+  "domaine": "exemple.be",
+  "email": "info@exemple.be",
+  "adresse": [
+    "Rue et numéro",
+    "Code postal Commune"
+  ],
+  "tva": "BE0000000000",
+  "contacts": [
+    {
+      "nom": "Prénom",
+      "role": "Rôle",
+      "tel": "+32 000 00 00 00"
+    }
+  ],
+  "couleurs": {
+    "bronze": "#000000",
+    "or": "#000000",
+    "nuit": "#000000",
+    "page": "#000000",
+    "creme": "#000000",
+    "cremeLogo": "#000000",
+    "encre": "#000000",
+    "bronzeClair": "#000000"
+  },
+  "polices": {
+    "titre": "Police des titres (Google Fonts)",
+    "texte": "Police du texte (Google Fonts)"
+  },
+  "photoCouverture": "public/photos/couverture.webp",
+  "avisGoogle": "",
+  "charte": {
+    "date": "mois année",
+    "devise": "La phrase de la marque.",
+    "intro": "Ce que le logo raconte, en deux phrases.",
+    "accroche": "La promesse, une ligne."
+  }
+}

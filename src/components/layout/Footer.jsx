@@ -3,6 +3,7 @@ import { BRAND, EMAIL_DISPLAY, NAV } from '@/data/site';
 import { useContactDialog } from '@/lib/contactDialog';
 import { EVENTS, track } from '@/lib/analytics';
 import SocialLinks from '@/components/layout/SocialLinks';
+import { MailIcon, PhoneIcon, PinIcon } from '@/components/ui/BrandIcons';
 
 /**
  * Pied de page compact, en trois bandes :
@@ -39,15 +40,19 @@ export default function Footer() {
                 key={p.tel}
                 href={`tel:${p.tel}`}
                 onClick={() => track(EVENTS.PHONE_CLICK, { source: 'footer' })}
-                className={`${link} w-fit tabular-nums`}
+                className={`${link} inline-flex w-fit items-center gap-2.5 tabular-nums`}
               >
-                <span className="text-cream/55">{p.name}</span>&nbsp;&nbsp;{p.number}
+                <PhoneIcon width={15} height={15} aria-hidden="true" className="flex-none text-gold-light" />
+                <span className="text-cream/55">{p.name}</span>
+                {p.number}
               </a>
             ))}
-            <a href={`mailto:${BRAND.email}`} className={`${link} w-fit`}>
+            <a href={`mailto:${BRAND.email}`} className={`${link} inline-flex w-fit items-center gap-2.5`}>
+              <MailIcon width={15} height={15} aria-hidden="true" className="flex-none text-gold-light" />
               {EMAIL_DISPLAY}
             </a>
-            <span className="text-cream/75">
+            <span className="inline-flex items-center gap-2.5 text-cream/75">
+              <PinIcon width={15} height={15} aria-hidden="true" className="flex-none text-gold-light" />
               {address.street}, {address.postalCode} {address.city}
             </span>
           </address>

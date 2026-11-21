@@ -6,11 +6,7 @@ import { Container, Section } from '@/components/ui';
 export default function Services() {
   return (
     <>
-      <PageHero
-        title="Six métiers, un seul interlocuteur."
-        intro="La rénovation complète comme le poste isolé. Dépliez un métier, puis demandez le devis."
-        breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Services' }]}
-      />
+      <PageHero title="Six métiers, un seul interlocuteur." />
 
       <Section tone="cream" className="pt-block">
         <Container>

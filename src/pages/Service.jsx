@@ -1,13 +1,16 @@
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import FaqAccordion from '@/components/sections/FaqAccordion';
 import CTASection from '@/components/sections/CTASection';
-import { Button, Container, Section, SectionHeading } from '@/components/ui';
+import { Container, Panel, Section, SectionHeading } from '@/components/ui';
+import { GroupLabel, Row } from '@/components/layout/ContactList';
+import { HouseIcon, SERVICE_ICONS } from '@/components/ui/Icons';
+import { QuoteIcon } from '@/components/ui/BrandIcons';
+import { EVENTS, track } from '@/lib/analytics';
 import Reveal from '@/lib/reveal';
 import { SERVICES, getService } from '@/data/services';
 import { projectsForTags } from '@/data/projects';
-import { BRAND } from '@/data/site';
 
 /**
  * Anciens métiers de la V1 vers les métiers réels.
@@ -47,69 +50,63 @@ export default function Service() {
     <>
       <PageHero
         title={service.title}
-        intro={service.excerpt}
         image={service.image}
-        breadcrumb={[
-          { label: 'Accueil', to: '/' },
-          { label: 'Services', to: '/services' },
-          { label: service.title },
-        ]}
       />
 
-      <Section tone="cream">
+      <Section>
         <Container>
-          <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-7">
-              <p className="t-h3 measure text-ink">{service.intro}</p>
+          <div className="grid gap-6 lg:grid-cols-12 lg:items-start">
+            {/* Le métier, sur la carte de verre : la phrase d'entrée, puis les
+                postes groupés par nature. */}
+            <Reveal className="lg:col-span-8">
+              <Panel pad="p-6 sm:p-10">
+                <p className="t-h3 measure text-ink">{service.intro}</p>
+                {service.groups?.length > 0 && (
+                  <div className="mt-9 space-y-7">
+                    {service.groups.map((g) => (
+                      <div key={g.title}>
+                        <GroupLabel>{g.title}</GroupLabel>
+                        <ul className="flex flex-wrap gap-2">
+                          {g.items.map((item) => (
+                            <li
+                              key={item}
+                              className="t-small rounded-full border border-ink/[0.09] bg-shell px-3.5 py-1.5 text-ink/80"
+                            >
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Panel>
+            </Reveal>
 
-              {/* Les postes sont groupés par nature plutôt qu'alignés en une
-                  liste numérotée : trente lignes d'affilée ne se lisent pas, et
-                  la numérotation laissait croire à un ordre d'exécution. */}
-              {service.groups?.length > 0 && (
-                <div className="mt-block space-y-10">
-                  {service.groups.map((g, gi) => (
-                    <Reveal key={g.title} delay={gi * 90}>
-                      <h2 className="t-label text-ink/70">{g.title}</h2>
-                      <ul className="mt-4 flex flex-wrap gap-x-8 gap-y-2.5">
-                        {g.items.map((item) => (
-                          <li key={item} className="t-body flex items-baseline gap-2.5 text-ink/75">
-                            <span aria-hidden="true" className="h-1 w-1 flex-none rounded-full bg-gold" />
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </Reveal>
-                  ))}
+            {/* La suite : le devis, puis les autres métiers. */}
+            <Reveal delay={100} as="aside" className="lg:sticky lg:top-28 lg:col-span-4">
+              <Panel>
+                <div data-page-cta>
+                  <Row
+                    to="/devis"
+                    icon={QuoteIcon}
+                    label="Devis gratuit"
+                    onClick={() => track(EVENTS.QUOTE_CTA, { source: `service_${service.slug}_aside` })}
+                    primary
+                  />
                 </div>
-              )}
-            </div>
-
-            <aside className="lg:col-span-4 lg:col-start-9">
-              <div data-page-cta className="border-t border-ink/12 pt-6">
-                <span className="t-label text-ink/65">Devis gratuit</span>
-                <p className="t-body mt-4 text-ink/65">
-                  Décrivez votre projet {service.title.toLowerCase()}. Nous organisons une visite et vous remettons une
-                  proposition détaillée, sans engagement.
-                </p>
-                <Button to="/devis" variant="solid" className="mt-7 w-full">
-                  Devis gratuit
-                </Button>
-                <p className="t-small mt-5 text-ink/65">{BRAND.zoneLong}.</p>
-              </div>
-
-              <nav aria-label="Autres services" className="mt-12">
-                <span className="t-label text-ink/65">Autres services</span>
-                <ul className="mt-5 space-y-2.5">
-                  {others.map((s) => (
-                    <li key={s.slug}>
-                      <Link to={`/services/${s.slug}`} className="link-line t-small text-ink/65 hover:text-ink">
-                        {s.title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </aside>
+                <nav aria-label="Autres services" className="mt-8">
+                  <GroupLabel>Autres métiers</GroupLabel>
+                  <ul className="space-y-2">
+                    {others.map((s) => (
+                      <li key={s.slug}>
+                        <Row to={`/services/${s.slug}`} icon={SERVICE_ICONS[s.slug] || HouseIcon} label={s.title} compact />
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </Panel>
+            </Reveal>
           </div>
         </Container>
       </Section>
@@ -119,15 +116,14 @@ export default function Service() {
           projects={related}
           sectionLabel="Sur le chantier"
           title="Des chantiers de ce type."
-          text="Les mêmes gestes, déjà appliqués."
         />
       )}
 
       {service.faqs?.length > 0 && (
-        <Section tone="cream">
+        <Section>
           <Container>
             <SectionHeading title={`Questions sur ${service.title.toLowerCase()}.`} />
-            <FaqAccordion items={service.faqs} className="mt-12" />
+            <FaqAccordion items={service.faqs} className="mt-10 max-w-3xl" />
           </Container>
         </Section>
       )}

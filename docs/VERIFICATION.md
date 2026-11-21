@@ -63,7 +63,7 @@ Manquent pour être crédible : au moins 1 projet **salle de bain**, 1 **apparte
 | Siège | Rue Henri Stacquet 49-51, 1030 Schaerbeek | à confirmer |
 | Constitution | 15 juin 2009 | à confirmer |
 | Téléphones | Alberto +32 477 27 31 18 / Matteo +32 493 97 25 17 | à confirmer |
-| E-mail | Info@chaudrel.be | à confirmer |
+| E-mail | Info@chaudrelrenovation.be | à confirmer |
 | Assurance RC | AXA Belgium, police 010.330.000.014 | à confirmer + demander l'attestation |
 | **Numéro WhatsApp Business** | +32 477 27 31 18 (par défaut) | **à confirmer** - `BRAND.whatsapp` dans `src/data/site.js` |
 | Zone d'intervention | **Toute la Belgique** | confirmé par le client (août 2026) - le site l'affiche désormais partout, avec une carte des provinces sur l'accueil et la page méthode |
@@ -73,9 +73,9 @@ Manquent pour être crédible : au moins 1 projet **salle de bain**, 1 **apparte
 | Variable Vercel | Rôle |
 |---|---|
 | `RESEND_API_KEY` | clé API Resend pour l'envoi des demandes de devis |
-| `LEAD_TO_EMAIL` | boîte qui reçoit les leads (ex. Info@chaudrel.be), ou plusieurs adresses séparées par des virgules |
+| `LEAD_TO_EMAIL` | boîte qui reçoit les leads (ex. Info@chaudrelrenovation.be), ou plusieurs adresses séparées par des virgules |
 | `LEAD_BCC_EMAIL` | optionnel - copie cachée de la notification (ex. second gérant) |
-| `LEAD_FROM_EMAIL` | expéditeur vérifié chez Resend (ex. site@chaudrel.be) |
+| `LEAD_FROM_EMAIL` | expéditeur vérifié chez Resend (ex. site@chaudrelrenovation.be) |
 
 À chaque demande envoyée :
 1. la **notification interne** (avec type de projet, surface, échéance, budget,

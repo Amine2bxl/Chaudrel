@@ -1,0 +1,45 @@
+{
+  "nom": "Chaudrel Rénovation",
+  "slug": "chaudrel",
+  "domaine": "chaudrelrenovation.be",
+  "email": "info@chaudrelrenovation.be",
+  "adresse": [
+    "Rue Henri Stacquet 49-51",
+    "1030 Schaerbeek"
+  ],
+  "tva": "BE0812283245",
+  "contacts": [
+    {
+      "nom": "Alberto",
+      "role": "Maître d'œuvre",
+      "tel": "+32 477 27 31 18"
+    },
+    {
+      "nom": "Matteo",
+      "role": "Design & relation client",
+      "tel": "+32 493 97 25 17"
+    }
+  ],
+  "couleurs": {
+    "bronze": "#AE8A56",
+    "or": "#B8945F",
+    "nuit": "#1A1613",
+    "page": "#231E1A",
+    "creme": "#EAE0D3",
+    "cremeLogo": "#FCF4EC",
+    "encre": "#24221E",
+    "bronzeClair": "#CDAE7E"
+  },
+  "polices": {
+    "titre": "Prata",
+    "texte": "Albert Sans"
+  },
+  "photoCouverture": "public/photos/facade-garages.webp",
+  "avisGoogle": "",
+  "charte": {
+    "date": "novembre 2026",
+    "devise": "La porte entrouverte.",
+    "intro": "Le monogramme CR tient sur une porte bronze : c’est l’entrée de chaque chantier. Ce document fixe l’usage du logo, des couleurs et des polices sur le site, les cartes, les vêtements et les documents.",
+    "accroche": "Du premier plan à la dernière clé."
+  }
+}

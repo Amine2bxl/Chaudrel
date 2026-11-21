@@ -130,7 +130,7 @@ function writeSitemap(routes) {
   const urls = routes
     .map((path) => {
       const priority = path === '/' ? '1.0' : path.startsWith('/legal') ? '0.2' : '0.7';
-      return `  <url>\n    <loc>https://chaudrel.be${path === '/' ? '/' : path}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+      return `  <url>\n    <loc>https://chaudrelrenovation.be${path === '/' ? '/' : path}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
     })
     .join('\n');
 

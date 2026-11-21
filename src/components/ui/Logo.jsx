@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 
 /**
  * Monogramme CR de Chaudrel, vectorisé depuis le logo fourni par le client
- * (brand/source/logo-client.webp, novembre 2026).
+ * (marque/logo/source/logo-client.webp, novembre 2026).
  *
  * Le R n'a pas de fût : c'est la porte bronze qui le tient. La porte est un
  * tracé séparé (`DOOR`) pour que le hero puisse l'ouvrir au défilement.

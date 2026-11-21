@@ -34,11 +34,7 @@ function List({ items }) {
 export default function Legal() {
   return (
     <>
-      <PageHero
-        title="Mentions légales & confidentialité"
-        intro="Identité de l’éditeur, hébergement, propriété intellectuelle et traitement des données personnelles."
-        breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Mentions légales' }]}
-      />
+      <PageHero title="Mentions légales & confidentialité" />
 
       <Section tone="cream">
         <Container className="max-w-3xl">

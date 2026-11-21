@@ -2,7 +2,7 @@
 
 ## Situation
 
-- Domaine : chaudrel.be, déployé sur Vercel, redirection `www` → apex en place.
+- Domaine : chaudrelrenovation.be, déployé sur Vercel, redirection `www` → apex en place.
 - V1 : 2 URLs indexables. V2 : **22 URLs** pré-rendues en HTML statique.
 - Pas de fiche Google Business Profile identifiée → **c'est le levier n°1 manquant**,
   devant tout le reste du SEO technique.

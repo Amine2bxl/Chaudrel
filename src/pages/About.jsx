@@ -1,6 +1,7 @@
 import PageHero from '@/components/sections/PageHero';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Media, Section, SectionHeading } from '@/components/ui';
+import { Container, Media, Panel, Section } from '@/components/ui';
+import { FounderRows } from '@/components/layout/ContactList';
 import Reveal from '@/lib/reveal';
 import { BRAND } from '@/data/site';
 
@@ -15,8 +16,6 @@ export default function About() {
             fondée à Bruxelles en {BRAND.founded}.
           </>
         }
-        intro={`${BRAND.founders[0].name} et ${BRAND.founders[1].name} l’ont créée à deux. Elle fonctionne toujours de la même manière.`}
-        breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'À propos' }]}
       />
 
       <Section tone="cream" className="pt-block">
@@ -54,13 +53,10 @@ export default function About() {
               </p>
             </Reveal>
 
-            <Reveal delay={200} className="mt-12 grid gap-px sm:grid-cols-2">
-              {BRAND.founders.map((f) => (
-                <div key={f.name} className="border-t border-ink/12 pt-5">
-                  <p className="t-h3">{f.name}</p>
-                  <p className="t-small mt-1 text-ink/65">{f.role}</p>
-                </div>
-              ))}
+            <Reveal delay={200} className="mt-12">
+              <Panel>
+                <FounderRows source="about" />
+              </Panel>
             </Reveal>
           </div>
         </Container>
