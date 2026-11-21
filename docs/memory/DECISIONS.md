@@ -74,3 +74,17 @@
 - Décision : la carte de /liens devient le bloc unique (`Panel` dans `src/components/ui`, `Row`/`Chip`/`GroupLabel`/`FounderRows` dans `ContactList.jsx`). Titres de section seuls ; en-têtes de page sans intro ni fil d'Ariane ; bandeau de verre identique en fin de page ; fenêtre de contact au visuel de /liens, sans description sous WhatsApp ni le devis.
 - Alternatives écartées : plaques de laiton partout (trop lourd), verre seulement sur 2-3 blocs (moins de marque), bloc final centré ou bande bronze.
 - Conséquences : plaque laiton, escalier « lumineux » et bloc de choix du projet (passe 3) remplacés ; `/devis?projet=` n'est plus lu ; les cartes de verre du corps n'ont pas de flou d'arrière-plan (perf).
+
+## D-014 — Dépôt : `marque/` + `studio/`, site à la racine
+- Date : 2026-11-21 · Statut : acceptée (choix client par QCM)
+- Contexte : le client veut un système réutilisable pour ses prochaines entreprises (« pas fais comme Chaudrel »).
+- Décision : `brand/` devient `marque/`, rangé par support ; le générateur passe dans `studio/` et lit `marque/marque.json` ; `studio/ETAPES.md` décrit le parcours A → Z ; `studio/modele/` contient les fiches vierges.
+- Alternatives écartées : monorepo `site/` (réglage Vercel obligatoire à la fusion), dépôt séparé (impossible à créer d'ici).
+- Conséquences : le site ne bouge pas ; un nouveau client = un `marque.json` + ses SVG.
+
+## D-015 — Page de remerciement privée chiffrée
+- Date : 2026-11-21 · Statut : acceptée
+- Contexte : le QR du certificat doit ouvrir un avant / après que personne d'autre ne peut voir ; le dépôt GitHub est public ; aucun coût serveur.
+- Décision : page statique `/c/` ; contenu du client chiffré (AES-256-GCM) dans `public/c/<id>.bin` ; clé dans le fragment du QR (`#id.clé`), jamais envoyée au serveur ni commitée ; fiches et photos dans `marque/coffret/chantiers/` (ignoré par Git). noindex, no-referrer, no-store, exclu du service worker.
+- Alternatives écartées : URL secrète en clair (lisible dans le dépôt public), protection par mot de passe Vercel (payante), dépôt privé (historique Git difficile à purger).
+- Conséquences : couper l'accès = supprimer le `.bin` ; perdre `lien.txt` n'empêche pas de régénérer (nouveau QR).

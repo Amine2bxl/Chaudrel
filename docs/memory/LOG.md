@@ -35,3 +35,8 @@
 - `Panel` : `pad` et `radius` se remplacent en entier (`cn` ne fusionne pas les classes Tailwind, deux `p-*` en conflit donnent un résultat imprévisible).
 - Racine sombre : `ink` = couleur claire, `cream` = fond. Un composant sorti d'une section `bark` doit passer de `text-cream` à `text-ink` (ProcessStairs, Monogram).
 - Corrigé au passage (revue de la passe 3) : délai « 48 h » lu dans `BRAND`, présélection `?projet=` supprimée avec le bloc qui l'utilisait.
+
+## 2026-11-21 — Restructuration, coffret, carte
+- Bug production : CSP `font-src https://fonts.gstatic.com` bloquait Prata / Albert Sans auto-hébergées depuis la passe 2 → `font-src 'self'` (vérifié en local avec la CSP appliquée).
+- Canva MCP : pas de vignette pour une transaction non enregistrée ; les formes insérées passent devant (faire `layer_element back`) ; `update_fill` recadre en mode couvrir (corriger avec `crop_media`). Pas de choix de police par l'API.
+- Coffret testé : bonne clé → page ; mauvaise clé / id inconnu → message d'erreur ; relancer garde le même QR.
