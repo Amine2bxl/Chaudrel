@@ -41,3 +41,6 @@ coverage/
 
 # Outils locaux (config de prévisualisation, hors projet)
 .claude/
+
+# Fiches et photos des clients (coffret) : jamais dans le dépôt public.
+marque/coffret/chantiers/
