@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
  * l'autre, puis l'inverse à la rangée suivante. Pour les pages qui
  * présentent une liste (métiers, chantiers) : une chose à la fois, en grand.
  *
- * `items` : { key, to, image: { src, alt, w, h }, title, meta?, text, cta, onClick? }
+ * `items` : { key, to, image: { src, alt, w, h }, title, meta?, text, extra?, cta, onClick? }
  */
 export default function Zigzag({ items = [] }) {
   return (
@@ -34,6 +34,7 @@ export default function Zigzag({ items = [] }) {
               <h2 className="t-h2 max-w-[16ch] text-balance">{it.title}</h2>
               {it.meta && <p className="t-small mt-3 text-gold-light">{it.meta}</p>}
               <p className="t-body measure mt-5 text-ink/75">{it.text}</p>
+              {it.extra}
               <TextLink to={it.to} onClick={it.onClick} className="mt-7">
                 {it.cta}
               </TextLink>

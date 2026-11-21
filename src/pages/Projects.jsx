@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
 import Zigzag from '@/components/sections/Zigzag';
+import HouseDiagram, { partsFor } from '@/components/sections/HouseDiagram';
 import { EVENTS, track } from '@/lib/analytics';
 import CTASection from '@/components/sections/CTASection';
 import { Container, Section } from '@/components/ui';
@@ -69,6 +70,18 @@ export default function Projects() {
             title: p.title,
             meta: [p.type, p.location].filter(Boolean).join(' · '),
             text: p.summary,
+            extra: (
+              <div className="mt-7 flex items-center gap-5">
+                <HouseDiagram lit={partsFor(p.works)} className="w-36 flex-none sm:w-44" />
+                <ul aria-label="Travaux réalisés" className="flex flex-wrap gap-1.5">
+                  {p.works.map((w) => (
+                    <li key={w} className="t-small rounded-full border border-ink/[0.09] bg-shell px-3 py-1 text-ink/80">
+                      {w}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ),
             cta: 'Voir le chantier',
             onClick: () => track(EVENTS.PROJECT_VIEW, { project: p.slug, source: 'zigzag' }),
           }))}

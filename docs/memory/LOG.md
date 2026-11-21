@@ -40,3 +40,7 @@
 - Bug production : CSP `font-src https://fonts.gstatic.com` bloquait Prata / Albert Sans auto-hébergées depuis la passe 2 → `font-src 'self'` (vérifié en local avec la CSP appliquée).
 - Canva MCP : pas de vignette pour une transaction non enregistrée ; les formes insérées passent devant (faire `layer_element back`) ; `update_fill` recadre en mode couvrir (corriger avec `crop_media`). Pas de choix de police par l'API.
 - Coffret testé : bonne clé → page ; mauvaise clé / id inconnu → message d'erreur ; relancer garde le même QR.
+
+## 2026-11-21 — Schémas
+- `HouseDiagram` : maison au trait Chaudrel, parties allumées. Réalisations : `partsFor(works)` (règles vérifiées sur les 6 chantiers réels). Services : `ServicesHouse` (survol d'une partie ou choix d'un métier).
+- À propos : idées refusées par le client (deux rôles, carte d'identité, frise, carte) ; à reprendre avec lui.

@@ -1,5 +1,6 @@
 import PageHero from '@/components/sections/PageHero';
 import Zigzag from '@/components/sections/Zigzag';
+import ServicesHouse from '@/components/sections/ServicesHouse';
 import { SERVICES } from '@/data/services';
 import { EVENTS, track } from '@/lib/analytics';
 import CTASection from '@/components/sections/CTASection';
@@ -8,6 +9,8 @@ export default function Services() {
   return (
     <>
       <PageHero title="Six métiers, un seul interlocuteur." />
+
+      <ServicesHouse />
 
       <Zigzag
         items={SERVICES.map((s) => ({
