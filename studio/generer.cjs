@@ -1,7 +1,9 @@
 /**
- * Génère les fichiers du kit de marque à partir des SVG de brand/logo.
+ * Génère le kit de marque d'une entreprise à partir de son dossier marque :
+ * `marque.json` (nom, contacts, couleurs, polices, textes) + les SVG de
+ * `logo/` (<slug>-logo*.svg, <slug>-monogram*.svg, <slug>-app-icon.svg).
  *
- *   node brand/outils/generer.cjs        (depuis la racine du dépôt)
+ *   node studio/generer.cjs marque        (depuis la racine du dépôt)
  *
  * Nécessite Playwright + Chromium (`npm i -g playwright && npx playwright
  * install chromium` si absent) et une connexion pour Google Fonts (Prata,
@@ -12,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
 
-const ROOT = path.resolve(__dirname, '..');
+const ROOT = path.resolve(process.argv[2] || 'marque');
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const out = (p) => {
   const f = path.join(ROOT, p);
@@ -20,32 +22,26 @@ const out = (p) => {
   return f;
 };
 
-const C = {
-  bronze: '#AE8A56',
-  or: '#B8945F',
-  nuit: '#1A1613',
-  page: '#231E1A',
-  creme: '#EAE0D3',
-  cremeLogo: '#FCF4EC',
-  encre: '#24221E',
-  bronzeClair: '#CDAE7E',
-};
-const FONTS =
-  '<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=Prata&display=block" rel="stylesheet">';
+const M = JSON.parse(read('marque.json'));
+const C = M.couleurs;
+const T = M.polices.titre;
+const S = M.polices.texte;
+const gf = (f) => f.replace(/ /g, '+');
+const FONTS = `<link href="https://fonts.googleapis.com/css2?family=${gf(S)}:wght@400;500;600&family=${gf(T)}&display=block" rel="stylesheet">`;
 
 /* Logos : on garde les SVG tels quels et on change seulement leurs couleurs. */
 const LOGO = {
-  full: read('logo/chaudrel-logo.svg'),
-  fullCream: read('logo/chaudrel-logo-cream.svg'),
-  fullOr: read('logo/chaudrel-logo-or.svg'),
-  fullCremeBronze: read('logo/chaudrel-logo-creme-bronze.svg'),
-  fullNoir: read('logo/chaudrel-logo-noir.svg'),
-  mono: read('logo/chaudrel-monogram.svg'),
-  monoCream: read('logo/chaudrel-monogram-cream.svg'),
-  monoOr: read('logo/chaudrel-monogram-or.svg'),
-  monoCremeBronze: read('logo/chaudrel-monogram-creme-bronze.svg'),
-  monoNoir: read('logo/chaudrel-monogram-noir.svg'),
-  icon: read('logo/chaudrel-app-icon.svg'),
+  full: read(`logo/${M.slug}-logo.svg`),
+  fullCream: read(`logo/${M.slug}-logo-cream.svg`),
+  fullOr: read(`logo/${M.slug}-logo-or.svg`),
+  fullCremeBronze: read(`logo/${M.slug}-logo-creme-bronze.svg`),
+  fullNoir: read(`logo/${M.slug}-logo-noir.svg`),
+  mono: read(`logo/${M.slug}-monogram.svg`),
+  monoCream: read(`logo/${M.slug}-monogram-cream.svg`),
+  monoOr: read(`logo/${M.slug}-monogram-or.svg`),
+  monoCremeBronze: read(`logo/${M.slug}-monogram-creme-bronze.svg`),
+  monoNoir: read(`logo/${M.slug}-monogram-noir.svg`),
+  icon: read(`logo/${M.slug}-app-icon.svg`),
 };
 /* Version « or métallisé » pour les maquettes : dégradé qui imite le reflet du métal. */
 const metal = (svg, id) =>
@@ -102,11 +98,11 @@ async function main() {
 
   /* 1. Logos en PNG transparent et en PDF vectoriel ---------------------- */
   const logos = [
-    ['chaudrel-logo', LOGO.full],
-    ['chaudrel-logo-cream', LOGO.fullCream],
-    ['chaudrel-logo-or', LOGO.fullOr],
-    ['chaudrel-logo-creme-bronze', LOGO.fullCremeBronze],
-    ['chaudrel-logo-noir', LOGO.fullNoir],
+    [`${M.slug}-logo`, LOGO.full],
+    [`${M.slug}-logo-cream`, LOGO.fullCream],
+    [`${M.slug}-logo-or`, LOGO.fullOr],
+    [`${M.slug}-logo-creme-bronze`, LOGO.fullCremeBronze],
+    [`${M.slug}-logo-noir`, LOGO.fullNoir],
   ];
   for (const [name, svg] of logos) {
     await png(`logo/png/${name}-2400.png`, page(`<div class="logo">${svg}</div>`, '', 2400, 1500), 2400, 1500);
@@ -116,32 +112,44 @@ async function main() {
     });
   }
   const monos = [
-    ['chaudrel-monogram', LOGO.mono],
-    ['chaudrel-monogram-cream', LOGO.monoCream],
-    ['chaudrel-monogram-or', LOGO.monoOr],
-    ['chaudrel-monogram-creme-bronze', LOGO.monoCremeBronze],
-    ['chaudrel-monogram-noir', LOGO.monoNoir],
+    [`${M.slug}-monogram`, LOGO.mono],
+    [`${M.slug}-monogram-cream`, LOGO.monoCream],
+    [`${M.slug}-monogram-or`, LOGO.monoOr],
+    [`${M.slug}-monogram-creme-bronze`, LOGO.monoCremeBronze],
+    [`${M.slug}-monogram-noir`, LOGO.monoNoir],
   ];
   for (const [name, svg] of monos) {
     await png(`logo/png/${name}-1200.png`, page(`<div class="logo">${svg}</div>`, '', 1200, 938), 1200, 938);
   }
-  await png('logo/png/chaudrel-app-icon-1024.png', page(`<div class="logo">${LOGO.icon}</div>`, '', 1024, 1024), 1024, 1024);
+  await png(`logo/png/${M.slug}-app-icon-1024.png`, page(`<div class="logo">${LOGO.icon}</div>`, '', 1024, 1024), 1024, 1024);
 
-  /* 2. T-shirts : maquettes et fichiers de marquage ----------------------- */
+  /* 2. Vêtements : petit logo devant (cœur), grand logo au dos et le nom de
+        domaine en bas du dos. Maquettes + fichiers d'impression. -------- */
   const variants = {
-    'or-metallise': { mono: metal(LOGO.monoOr, 'gm'), full: metal(LOGO.fullOr, 'gf'), printMono: LOGO.monoOr, printFull: LOGO.fullOr },
-    'creme-bronze': { mono: LOGO.monoCremeBronze, full: LOGO.fullCremeBronze, printMono: LOGO.monoCremeBronze, printFull: LOGO.fullCremeBronze },
+    'or-metallise': { mono: metal(LOGO.monoOr, 'gm'), full: metal(LOGO.fullOr, 'gf'), printMono: LOGO.monoOr, printFull: LOGO.fullOr, ink: C.or },
+    'creme-bronze': { mono: LOGO.monoCremeBronze, full: LOGO.fullCremeBronze, printMono: LOGO.monoCremeBronze, printFull: LOGO.fullCremeBronze, ink: C.cremeLogo },
   };
+  const domain = M.domaine.toUpperCase();
   for (const [name, v] of Object.entries(variants)) {
     const bg = `body{background:#E9E4DD;display:grid;place-items:center}.wrap{width:1000px;height:1000px}`;
-    // Cœur : monogramme ~9 cm sur le côté gauche du porteur (à droite à l'écran).
-    await png(`t-shirts/maquette-${name}-face.png`, page(`<div class="wrap">${tee(false, place(v.mono, 560, 250, 105))}</div>`, bg, 1000, 1000), 1000, 1000, false);
-    // Dos : logo complet ~28 cm, centré sous le col.
-    await png(`t-shirts/maquette-${name}-dos.png`, page(`<div class="wrap">${tee(true, place(v.full, 335, 210, 330))}</div>`, bg, 1000, 1000), 1000, 1000, false);
-    // Fichiers d'impression aux dimensions réelles.
+    // Devant : monogramme ~9 cm sur le cœur (côté gauche du porteur, à droite à l'écran).
+    await png(`vetements/maquette-${name}-face.png`, page(`<div class="wrap">${tee(false, place(v.mono, 560, 250, 105))}</div>`, bg, 1000, 1000), 1000, 1000, false);
+    // Dos : logo complet ~28 cm sous le col, le domaine en bas du dos.
+    const dos = place(v.full, 335, 210, 330) + `<text x="500" y="790" text-anchor="middle" font-family="${S}" font-weight="500" font-size="24" letter-spacing="9" fill="${v.ink}">${domain}</text>`;
+    await png(`vetements/maquette-${name}-dos.png`, page(`<div class="wrap">${tee(true, dos)}</div>`, bg, 1000, 1000), 1000, 1000, false);
+    // Impression : cœur en SVG (logo seul) ; dos en PDF 280 × 400 mm (logo + domaine, police incluse).
     const sized = (svg, wmm) => svg.replace('<svg ', `<svg width="${wmm}mm" `);
-    fs.writeFileSync(out(`t-shirts/marquage-coeur-${name}-90mm.svg`), sized(v.printMono, 90));
-    fs.writeFileSync(out(`t-shirts/marquage-dos-${name}-280mm.svg`), sized(v.printFull, 280));
+    fs.writeFileSync(out(`vetements/marquage-coeur-${name}-90mm.svg`), sized(v.printMono, 90));
+    await pdf(
+      `vetements/marquage-dos-${name}-280x400mm.pdf`,
+      page(
+        `<div class="logo" style="width:280mm">${v.printFull}</div><p style="position:absolute;bottom:0;width:280mm;text-align:center;font:500 12mm '${S}';letter-spacing:.32em;color:${v.ink}">${domain}</p>`,
+        '@page{size:280mm 400mm;margin:0}html,body{width:280mm;height:400mm;position:relative}',
+        1058,
+        1512
+      ),
+      { width: '280mm', height: '400mm' }
+    );
   }
 
   /* 3. Fiche Google, réseaux : images ------------------------------------ */
@@ -155,7 +163,7 @@ async function main() {
   await png('google-business/logo-profil-720.png', square(720), 720, 720, false);
   await png('reseaux/profil-1080.png', square(1080), 1080, 1080, false);
   // Une page ouverte par setContent ne charge pas file:// : la photo passe en data URI.
-  const photo = 'data:image/webp;base64,' + fs.readFileSync(path.resolve(ROOT, '../public/photos/facade-garages.webp')).toString('base64');
+  const photo = 'data:image/webp;base64,' + fs.readFileSync(path.resolve(ROOT, '..', M.photoCouverture)).toString('base64');
   await png(
     'google-business/couverture-1600x900.jpg',
     page(`<img src="${photo}" style="width:1600px;height:900px;object-fit:cover">`, '', 1600, 900),
@@ -169,7 +177,7 @@ async function main() {
       `<div style="width:1640px;height:624px;background:radial-gradient(60% 90% at 50% 50%,#2b251e,${C.nuit});display:grid;place-items:center;position:relative;overflow:hidden">
         <svg viewBox="0 0 67 165" style="position:absolute;right:90px;bottom:0;height:72%;opacity:.22"><path d="M0 38 L67 0 L67 165 L0 142 Z" fill="${C.bronze}"/></svg>
         <div class="logo" style="width:420px">${LOGO.fullCream}</div>
-        <p style="position:absolute;bottom:56px;width:100%;text-align:center;font:500 20px 'Albert Sans';letter-spacing:.3em;text-transform:uppercase;color:rgba(234,224,211,.7)">Façades · Toitures · Châssis · Rénovations complètes</p>
+        <p style="position:absolute;bottom:56px;width:100%;text-align:center;font:500 20px '${S}';letter-spacing:.3em;text-transform:uppercase;color:rgba(234,224,211,.7)">Façades · Toitures · Châssis · Rénovations complètes</p>
       </div>`,
       '',
       1640,
@@ -183,7 +191,7 @@ async function main() {
   /* 4. Signature e-mail : image hébergée sur le site (Gmail bloque le SVG). */
   await png(
     '../public/email/signature-logo.png',
-    page(`<div style="display:inline-flex;align-items:center;gap:22px;height:120px;padding:0 4px"><div class="logo" style="width:120px">${LOGO.mono}</div><span style="font:500 34px 'Albert Sans';letter-spacing:.26em;color:${C.encre}">CHAUDREL</span></div>`, '', 392, 120),
+    page(`<div style="display:inline-flex;align-items:center;gap:22px;height:120px;padding:0 4px"><div class="logo" style="width:120px">${LOGO.mono}</div><span style="font:500 34px '${S}';letter-spacing:.26em;color:${C.encre}">CHAUDREL</span></div>`, '', 392, 120),
     392,
     120
   );
@@ -192,13 +200,13 @@ async function main() {
   const docCss = `
     @page{size:A4;margin:0}
     html,body{width:auto;height:auto;background:#fff}
-    body{font-family:'Albert Sans',sans-serif;color:${C.encre};-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{font-family:'${S}',sans-serif;color:${C.encre};-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .pg{width:210mm;height:297mm;padding:22mm 20mm;position:relative;overflow:hidden;page-break-after:always;background:#FCF8F3}
     .dark{background:${C.nuit};color:${C.creme}}
-    h1,h2,h3{font-family:Prata,serif;font-weight:400;letter-spacing:-.01em}
+    h1,h2,h3{font-family:'${T}',serif;font-weight:400;letter-spacing:-.01em}
     h1{font-size:44pt;line-height:1.05}h2{font-size:26pt;margin-bottom:8mm}h3{font-size:13pt;margin:7mm 0 3mm}
     p,li{font-size:10.5pt;line-height:1.6}
-    .lbl{font:500 8pt 'Albert Sans';letter-spacing:.24em;text-transform:uppercase;color:#6E532C}
+    .lbl{font:500 8pt '${S}';letter-spacing:.24em;text-transform:uppercase;color:#6E532C}
     .dark .lbl{color:${C.bronzeClair}}
     .grid{display:grid;gap:6mm}
     .tile{border-radius:4mm;padding:8mm;display:grid;place-items:center;min-height:52mm}
@@ -226,12 +234,13 @@ async function main() {
     ['Crème du logo', C.cremeLogo, 'Fond clair du logo d’origine.'],
     ['Encre', C.encre, 'Texte et logo sur fond clair.'],
   ];
-  const foot = (n) => `<div class="foot"><span>Chaudrel Rénovation · Charte graphique · novembre 2026</span><span>${n}</span></div>`;
+  // shortcut: quelques phrases de la charte (règles du logo, nuancier) restent propres à la marque ; à passer dans marque.json au prochain client.
+  const foot = (n) => `<div class="foot"><span>${M.nom} · Charte graphique · ${M.charte.date}</span><span>${n}</span></div>`;
   const charte = `<!doctype html><html lang="fr"><head><meta charset="utf-8">${FONTS}<style>${docCss}</style></head><body>
   <section class="pg dark" style="display:flex;flex-direction:column;justify-content:space-between">
     <p class="lbl">Charte graphique</p>
     <div style="width:120mm;margin:0 auto">${LOGO.fullCream}</div>
-    <div><h1>La porte entrouverte.</h1><p style="margin-top:6mm;max-width:120mm;color:rgba(234,224,211,.8)">Le monogramme CR tient sur une porte bronze : c’est l’entrée de chaque chantier. Ce document fixe l’usage du logo, des couleurs et des polices sur le site, les cartes, les t-shirts et les documents.</p></div>
+    <div><h1>${M.charte.devise}</h1><p style="margin-top:6mm;max-width:120mm;color:rgba(234,224,211,.8)">${M.charte.intro}</p></div>
     ${foot('1')}
   </section>
   <section class="pg">
@@ -244,7 +253,7 @@ async function main() {
     <h3>Zone de protection et taille minimale</h3>
     <ul><li>Autour du logo, laisser vide au moins la hauteur du mot RÉNOVATION × 2.</li><li>Logo complet : 30 mm de large minimum à l’impression, 140 px à l’écran.</li><li>Monogramme seul : 8 mm / 32 px minimum (favicon, avatar, broderie).</li></ul>
     <h3>Versions une couleur</h3>
-    <p>Or (textile, dorure), crème + bronze (sérigraphie deux couleurs sur fond sombre), noir (tampon, gravure). Fichiers dans <b>brand/logo</b>.</p>
+    <p>Or (textile, dorure), crème + bronze (sérigraphie deux couleurs sur fond sombre), noir (tampon, gravure). Fichiers dans <b>marque/logo</b>.</p>
     ${foot('2')}
   </section>
   <section class="pg">
@@ -258,8 +267,8 @@ async function main() {
   <section class="pg">
     <p class="lbl">03 · Typographie</p><h2>Deux voix.</h2>
     <div style="border-top:0.3mm solid rgba(36,34,30,.15);padding-top:6mm">
-      <p class="lbl">Titres — Prata</p>
-      <p style="font-family:Prata;font-size:36pt;line-height:1.1;margin-top:3mm">Du premier plan à la dernière clé.</p>
+      <p class="lbl">Titres — ${T}</p>
+      <p style="font-family:'${T}';font-size:36pt;line-height:1.1;margin-top:3mm">${M.charte.accroche}</p>
       <p style="margin-top:3mm">Une seule graisse : la présence vient de la taille et du contraste des pleins et déliés, jamais du gras.</p>
     </div>
     <div style="border-top:0.3mm solid rgba(36,34,30,.15);padding-top:6mm;margin-top:10mm">
@@ -277,7 +286,7 @@ async function main() {
       <div><h3>À éviter</h3><ul><li>Déformer, incliner ou contourer le logo.</li><li>Changer la couleur de la porte ou des lettres hors des versions prévues.</li><li>Ombres portées, effets 3D, dégradés arc-en-ciel.</li><li>Poser le logo sur une photo chargée sans voile.</li></ul></div>
     </div>
     <h3>Applications</h3>
-    <ul><li>Site : chaudrel.be (fond brun chaud, verre, porte qui s’ouvre).</li><li>Carte de visite : brand/carte-de-visite.</li><li>T-shirts : noir, logo or métallisé ou crème + bronze (brand/t-shirts).</li><li>Fiche Google, réseaux : brand/google-business, brand/reseaux.</li></ul>
+    <ul><li>Site : ${M.domaine}.</li><li>Carte de visite : marque/carte-de-visite.</li><li>Vêtements : marque/vetements.</li><li>Fiche Google, réseaux : marque/google-business, marque/reseaux.</li><li>Coffret de fin de chantier : marque/coffret.</li></ul>
     ${foot('5')}
   </section>
   </body></html>`;
@@ -289,11 +298,11 @@ async function main() {
   </style></head><body><section class="pg" style="page-break-after:auto">
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div style="width:44mm">${LOGO.full}</div>
-      <div style="text-align:right;font-size:8.5pt;line-height:1.7;color:#4a453f">Rue Henri Stacquet 49-51<br>1030 Schaerbeek<br>info@chaudrel.be<br>chaudrel.be</div>
+      <div style="text-align:right;font-size:8.5pt;line-height:1.7;color:#4a453f">${M.adresse.join('<br>')}<br>${M.email}<br>${M.domaine}</div>
     </div>
     <div style="height:0.4mm;background:${C.bronze};margin-top:8mm"></div>
     <div style="position:absolute;left:20mm;right:20mm;bottom:14mm;border-top:0.3mm solid rgba(36,34,30,.15);padding-top:4mm;display:flex;justify-content:space-between;font-size:7.5pt;color:#6b655d">
-      <span>Chaudrel Rénovation · TVA BE0812283245</span><span>Alberto +32 477 27 31 18 · Matteo +32 493 97 25 17</span>
+      <span>${M.nom} · TVA ${M.tva}</span><span>${M.contacts.map((c) => `${c.nom} ${c.tel}`).join(' · ')}</span>
     </div>
   </section></body></html>`;
   fs.writeFileSync(out('documents/papier-en-tete.html'), lettre);

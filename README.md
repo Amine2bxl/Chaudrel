@@ -109,7 +109,7 @@ Photos : `node scripts/responsive-images.mjs` génère les variantes 480/800/120
 (macOS : `sips` + `cwebp`) et le manifeste `src/data/image-variants.json`.
 
 Le kit de marque (logo vectoriel, carte de visite, t-shirts, fiche Google Business)
-vit dans `brand/`, séparé du code du site.
+vit dans `marque/`, séparé du code du site ; `studio/` contient le modèle réutilisable (générateur + étapes) pour les prochains clients.
 
 ## Formulaire de devis
 

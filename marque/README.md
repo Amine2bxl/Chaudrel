@@ -11,14 +11,15 @@ Charte complète : **`documents/charte-graphique.pdf`** (5 pages). Système du s
 | Dossier | Quoi | Pour qui |
 |---|---|---|
 | `logo/` | SVG (source), `png/` transparents haute définition, `pdf/` vectoriels | Tout le monde, imprimeurs |
-| `carte-de-visite/` | La carte Canva de Chaudrel (PDF d'impression, aperçus recto / verso) | Imprimeur |
-| `t-shirts/` | Fichiers de marquage à la taille réelle + maquettes | Imprimeur textile |
+| `carte-de-visite/` | La carte Canva de Chaudrel (PDF d'impression, aperçus recto / verso), QR vers le devis (`chaudrel.be/devis?utm_source=carte`) | Imprimeur |
+| `vetements/` | Marquage cœur (SVG 90 mm) et dos (PDF 280 × 400 mm : logo + domaine en bas) + maquettes | Imprimeur textile |
 | `google-business/` | Texte de la fiche (`fiche.md`), logo 720 px, couverture | Création de la fiche Google |
 | `reseaux/` | Photo de profil 1080 px, couverture Facebook 1640 × 624 | Instagram, Facebook, TikTok |
 | `documents/` | Charte graphique, papier à en-tête A4, signatures e-mail | Bureau |
-| `qr/` | QR code vers le devis (`chaudrel.be/devis?utm_source=carte`) | Carte, affiches |
-| `source/` | Le logo tel que fourni par Chaudrel | Archive |
-| `outils/generer.cjs` | Régénère PNG, PDF, maquettes et documents depuis les SVG | Mise à jour de la charte |
+| `coffret/` | Certificat de réalisation + page de remerciement privée (QR) | Fin de chantier |
+| `marque.json` | Nom, contacts, couleurs, polices, textes : la seule source des fichiers générés | Mise à jour |
+
+Le logo tel que fourni par Chaudrel : `logo/source/`. Tout se régénère avec `node studio/generer.cjs marque`.
 
 ## Logo : quelle version ?
 
@@ -34,9 +35,9 @@ Charte complète : **`documents/charte-graphique.pdf`** (5 pages). Système du s
 Taille minimale : logo complet 30 mm / 140 px, monogramme 8 mm / 32 px. Ne jamais déformer,
 recolorer la porte ou ajouter d'effet.
 
-## T-shirts (noir)
+## Vêtements (noir) : petit logo devant, grand logo + `CHAUDREL.BE` en bas du dos
 
-Deux versions validées, maquettes dans `t-shirts/` :
+Deux versions validées, maquettes dans `vetements/` :
 
 - **Or métallisé** : monogramme au cœur, logo complet au dos, une seule encre or métallisée
   (`marquage-*-or-metallise-*.svg`, repère écran `#B8945F`). Choisir la teinte exacte sur le
@@ -75,7 +76,7 @@ Chaudrel Rénovation (FINAL) »), 85 × 55 mm, 2 pages.
 ## Régénérer
 
 ```bash
-node brand/outils/generer.cjs
+node studio/generer.cjs marque
 ```
 
 Depuis la racine du dépôt ; nécessite Playwright + Chromium et une connexion (polices Google).
