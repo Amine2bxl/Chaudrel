@@ -1,15 +1,20 @@
 import { Link } from 'react-router-dom';
-import { BRAND, EMAIL_DISPLAY, NAV } from '@/data/site';
+import { BRAND, LOGO } from '@/data/site';
 import { useContactDialog } from '@/lib/contactDialog';
-import { EVENTS, track } from '@/lib/analytics';
 import SocialLinks from '@/components/layout/SocialLinks';
 
 /**
- * Pied de page compact, en trois bandes :
- *   1. le logo et la phrase de la marque | les coordonnées en clair
- *      (nom, adresse, téléphones : identiques à la fiche Google) ;
- *   2. le plan du site sur une ligne | les réseaux ;
- *   3. les mentions.
+ * Pied de page - une ligne, rien de plus.
+ *
+ * Il ne répète ni la navigation (présente en haut de chaque écran), ni les
+ * coordonnées (dans la fenêtre de contact), ni le devis (le bloc de conversion
+ * juste au-dessus ne parle que de ça). Un pied de page qui redit tout est un
+ * deuxième site posé sous le premier.
+ *
+ * Il reste donc : qui édite, où trouver les liens, et les réseaux - renvoyés
+ * ici depuis l'ancien rail latéral (supprimé) : le pied de page et la fenêtre
+ * de contact sont les seuls endroits où on les cherche sans qu'ils pèsent sur
+ * la navigation.
  *
  * pb mobile = hauteur de la barre d'action fixe, sinon elle recouvre la
  * dernière ligne.
@@ -17,64 +22,21 @@ import SocialLinks from '@/components/layout/SocialLinks';
 export default function Footer() {
   const year = new Date().getFullYear();
   const { openDialog } = useContactDialog();
-  const { address } = BRAND;
-  const link = 'link-line text-cream/75 transition-colors duration-200 hover:text-cream';
+
+  const link = 'link-line tap t-small text-cream/60 transition-colors duration-fast hover:text-cream';
 
   return (
-    <footer className="on-dark border-t border-cream/10 bg-bark text-cream">
-      <div className="mx-auto w-full max-w-page px-5 pb-[calc(80px+1rem)] pt-12 sm:px-8 lg:px-12 lg:pb-8 lg:pt-14">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-center gap-6">
-            <Link to="/" aria-label="Chaudrel Rénovation - accueil" className="flex-none">
-              <img src="/logo-cream.svg" alt="" width="1056" height="660" className="h-auto w-[132px]" />
-            </Link>
-            <p className="t-small max-w-[26ch] text-cream/70">
-              Façades, toitures, châssis et rénovations complètes. Depuis Schaerbeek, dans toute la Belgique.
-            </p>
-          </div>
-
-          <address className="t-small grid gap-x-10 gap-y-2 not-italic sm:grid-cols-2">
-            {BRAND.phones.map((p) => (
-              <a
-                key={p.tel}
-                href={`tel:${p.tel}`}
-                onClick={() => track(EVENTS.PHONE_CLICK, { source: 'footer' })}
-                className={`${link} w-fit tabular-nums`}
-              >
-                <span className="text-cream/55">{p.name}</span>&nbsp;&nbsp;{p.number}
-              </a>
-            ))}
-            <a href={`mailto:${BRAND.email}`} className={`${link} w-fit`}>
-              {EMAIL_DISPLAY}
-            </a>
-            <span className="text-cream/75">
-              {address.street}, {address.postalCode} {address.city}
+    <footer className="border-t border-cream/10 bg-bark text-cream">
+      <div className="mx-auto w-full max-w-page px-5 pb-[calc(66px+1rem)] pt-5 sm:px-8 lg:px-12 lg:pb-6 lg:pt-6">
+        <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4">
+          <Link to="/" className="flex flex-none items-center gap-2.5" aria-label="Chaudrel - accueil">
+            <span className="grid h-7 w-7 flex-none place-items-center overflow-hidden rounded-[0.5rem] bg-cream/10">
+              <img src={LOGO} alt="" aria-hidden="true" width="28" height="28" className="h-full w-full object-cover" />
             </span>
-          </address>
-        </div>
+            <span className="font-wordmark text-[15px] uppercase leading-none tracking-[0.2em]">{BRAND.name}</span>
+          </Link>
 
-        <div className="mt-10 flex flex-col gap-6 border-t border-cream/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <nav aria-label="Plan du site" className="t-small flex flex-wrap gap-x-6 gap-y-2">
-            {NAV.map((item) => (
-              <Link key={item.to} to={item.to} className={link}>
-                {item.label}
-              </Link>
-            ))}
-            <Link to="/methode" className={link}>
-              Méthode
-            </Link>
-            <Link to="/devis" className="link-line text-gold-light">
-              Devis gratuit
-            </Link>
-          </nav>
-          <SocialLinks tone="light" source="footer" size="sm" />
-        </div>
-
-        <div className="t-small mt-6 flex flex-col gap-3 text-cream/55 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {year} {BRAND.legalName} · TVA {BRAND.vat}
-          </p>
-          <div className="flex flex-wrap gap-x-6 gap-y-2">
+          <nav className="flex flex-wrap items-center gap-x-6 gap-y-2" aria-label="Pied de page">
             <button type="button" onClick={() => openDialog('footer')} className={link}>
               Nous joindre
             </button>
@@ -84,7 +46,18 @@ export default function Footer() {
             <Link to="/legal/politique-mentions" className={link}>
               Mentions légales
             </Link>
-          </div>
+          </nav>
+
+          <p className="t-small flex-none text-cream/35">
+            © {year} {BRAND.legalName}
+          </p>
+        </div>
+
+        {/* Réseaux - depuis le rail latéral, que le pied de page et la fenêtre
+            de contact remplacent : une seule ligne, en fin de page. */}
+        <div className="mt-5 flex items-center justify-between gap-4 border-t border-cream/10 pt-5">
+          <span className="t-small text-cream/40">Suivez les chantiers en cours</span>
+          <SocialLinks tone="light" source="footer" />
         </div>
       </div>
     </footer>

@@ -13,36 +13,6 @@
       ],
       "destination": "https://chaudrel.be/:path*",
       "permanent": true
-    },
-    {
-      "source": "/realisations/renovation-overijse",
-      "destination": "/realisations/abords-et-garages",
-      "permanent": true
-    },
-    {
-      "source": "/realisations/residence-uccle",
-      "destination": "/realisations/chassis-et-volets",
-      "permanent": true
-    },
-    {
-      "source": "/realisations/cuisine-ixelles",
-      "destination": "/realisations/toitures-et-volumes",
-      "permanent": true
-    },
-    {
-      "source": "/realisations/villa-tervuren",
-      "destination": "/realisations/chassis-et-volets",
-      "permanent": true
-    },
-    {
-      "source": "/realisations/terrasse-woluwe",
-      "destination": "/realisations/portes-d-entree",
-      "permanent": true
-    },
-    {
-      "source": "/realisations/allee-uccle",
-      "destination": "/realisations/abords-et-garages",
-      "permanent": true
     }
   ],
   "headers": [

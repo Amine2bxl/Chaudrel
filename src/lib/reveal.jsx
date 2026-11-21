@@ -13,9 +13,15 @@ const VARIANTS = {
 };
 
 /**
- * Un seul IntersectionObserver par marge pour toute la page ; les rappels
- * sont retrouvés par une WeakMap. Créé à la demande : au prérendu,
- * `IntersectionObserver` n'existe pas.
+ * Observateur partagé.
+ *
+ * Chaque <Reveal> créait son propre IntersectionObserver : près de quatre-vingts
+ * instances sur la page d'accueil, chacune avec son entrée dans la boucle de
+ * calcul du navigateur. Un seul observateur par marge suffit, et les rappels
+ * sont retrouvés par une WeakMap - pas de fuite quand un nœud disparaît.
+ *
+ * Créé à la demande : au prérendu, `IntersectionObserver` n'existe pas et rien
+ * ne doit être instancié à l'import.
  */
 const callbacks = new WeakMap();
 const observers = new Map();
@@ -26,7 +32,9 @@ function getObserver(margin) {
   if (!observer) {
     observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) callbacks.get(entry.target)?.(entry.isIntersecting);
+        for (const entry of entries) {
+          callbacks.get(entry.target)?.(entry.isIntersecting);
+        }
       },
       { rootMargin: margin, threshold: 0.05 }
     );
@@ -36,13 +44,10 @@ function getObserver(margin) {
 }
 
 /**
- * Apparition au scroll, en CSS pur : une classe posée une fois, puis la
- * carte graphique fait le reste (transform + opacity seulement, jamais de
- * flou ni de propriété qui repeint la page). Aucun calcul par image, donc
- * aucune énergie dépensée une fois l'élément apparu.
- *
- * `from` : up (défaut), down, left, right, fade, line / lineY (filet qui se
- * dessine), veil (photo découverte par un volet qui glisse). `delay` en ms.
+ * Apparition au scroll, sans dépendance externe.
+ * `from` choisit le type d'animation : translation, ligne qui se dessine
+ * (line / lineY) ou image révélée par un volet (veil).
+ * Les préférences `prefers-reduced-motion` sont gérées en CSS.
  */
 export default function Reveal({
   children,
@@ -50,7 +55,7 @@ export default function Reveal({
   from = 'up',
   delay = 0,
   once = true,
-  margin = '0px 0px -8% 0px',
+  margin = '-60px',
   className = '',
   style,
   ...rest
@@ -60,22 +65,28 @@ export default function Reveal({
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || (visible && once)) return undefined;
+    if (!el || visible) return undefined;
+
     const observer = getObserver(margin);
     if (!observer) {
+      // Pas d'API disponible : montrer le contenu plutôt que le cacher.
       setVisible(true);
       return undefined;
     }
-    callbacks.set(el, (inView) => {
-      if (inView) {
+
+    callbacks.set(el, (isIntersecting) => {
+      if (isIntersecting) {
         setVisible(true);
         if (once) {
           observer.unobserve(el);
           callbacks.delete(el);
         }
-      } else if (!once) setVisible(false);
+      } else if (!once) {
+        setVisible(false);
+      }
     });
     observer.observe(el);
+
     return () => {
       observer.unobserve(el);
       callbacks.delete(el);
@@ -85,8 +96,8 @@ export default function Reveal({
   return (
     <Tag
       ref={ref}
-      className={cn(VARIANTS[from] || VARIANTS.up, visible && 'is-in', className)}
-      style={delay ? { '--rv-delay': `${delay}ms`, ...style } : style}
+      className={cn(VARIANTS[from] || VARIANTS.up, visible && 'is-visible', className)}
+      style={{ transitionDelay: `${delay}ms`, ...style }}
       {...rest}
     >
       {children}

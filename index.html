@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#1A1613" />
+    <meta name="theme-color" content="#1B1512" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
 
@@ -41,13 +41,20 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Preload de l'image LCP (retiré des autres routes au prerender) -->
+    <link rel="preload" as="image" href="/photos/hero.webp" fetchpriority="high" />
 
     <!-- PWA -->
     <link rel="manifest" href="/manifest.webmanifest" />
 
-    <!-- Sans JavaScript, rien ne doit rester invisible. -->
-    <noscript><style>.rv,.rv-line,.rv-line-y,.rv-veil>*{opacity:1!important;transform:none!important}.rv-veil::after{display:none}</style></noscript>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Marcellus&family=Schibsted+Grotesk:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div id="root"></div>

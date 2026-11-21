@@ -19,12 +19,12 @@ export default function About() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'À propos' }]}
       />
 
-      <Section tone="cream" className="pt-block">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           {/* TODO_VALIDATION : remplacer par une vraie photo de l'équipe Chaudrel. */}
           <Media
-            src="/photos/maison-brique.webp"
-            alt="Grande maison en brique, allée neuve en asphalte et garages"
+            src="/story-before-after.webp"
+            alt="Chantier de rénovation mené par l’équipe Chaudrel"
             ratio="aspect-[4/5]"
             revealFrom="fade"
             className="lg:col-span-5"

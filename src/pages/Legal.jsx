@@ -16,7 +16,7 @@ function List({ items }) {
     <ul className="space-y-2">
       {items.map((it, i) => (
         <li key={i} className="flex gap-3">
-          <span className="text-gold-deep" aria-hidden="true">
+          <span className="text-gold" aria-hidden="true">
             -
           </span>
           <span>{it}</span>

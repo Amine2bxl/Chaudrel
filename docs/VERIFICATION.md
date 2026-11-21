@@ -16,7 +16,7 @@ n'a pas pu être vérifié depuis le repository a été retiré du site ou marqu
 | « Garantie décennale » affirmée | Retirée du site | Confirmer les couvertures exactes (l'assurance RC AXA police 010.330.000.014 est conservée dans les mentions légales) |
 | Services toiture / piscine / jardin / nettoyage | Retirés de la liste principale | **Décision à prendre** : les remettre si Chaudrel les réalise vraiment (voir §3) |
 | Durées de chantier dans les titres de section | Aucune n'est affichée | Communiquer des durées moyennes réelles si vous voulez les afficher |
-| Photos Unsplash | Retirées, sauf une | `public/photos/hero.webp` (maison contemporaine au crépuscule) est une photo de banque d'images, gardée comme ambiance derrière la porte du hero à la demande du client (novembre 2026). Elle n'est jamais légendée comme un chantier Chaudrel. **À remplacer** par une belle photo d'un vrai chantier dès qu'il y en a une |
+| Photos Unsplash | Retirées | Toutes les images du site sont désormais les photos du dossier `/public/photos` |
 
 ## 2. Avis clients - bloquant
 

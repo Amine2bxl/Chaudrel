@@ -1,20 +1,38 @@
 # Matériel commercial
 
-Charte : **nouveau logo CR (novembre 2026)**, détaillée dans `brand/documents/charte-graphique.pdf`.
-Nuit `#1A1613`, brun chaud `#231E1A`, crème `#EAE0D3`, bronze de la porte `#AE8A56` (seul accent),
-encre `#24221E` sur fond clair. Titres en Prata, textes en Albert Sans. Fichiers prêts à
-l'emploi dans `brand/` (logos, carte, t-shirts, fiche Google, réseaux, papier à en-tête,
-signatures e-mail). L'ancienne charte (Playfair, Inter, `#8C764E`) est abandonnée.
+Charte reprise du site V2 : noir `#141311`, crème `#F7F5F2`, beige `#EDE8E1`,
+pierre `#B9B1A6`, accent doré `#8C764E`. Titres en Playfair Display, textes en Inter.
+Angles nets, filets fins, beaucoup de blanc. Aucun dégradé.
 
 ---
 
 ## 1. Carte de visite (85 × 55 mm)
 
-Chaudrel a déjà sa carte sur Canva : `brand/carte-de-visite/` (PDF d'impression + aperçus).
-Avant réimpression : passer au **monogramme CR** (elle porte encore l'ancien logo), remplacer le
-QR Linktree par `brand/qr/qr-devis-carte.svg` (`chaudrel.be/devis?utm_source=carte`, mesurable),
-réexporter avec 3 mm de fonds perdus. Papier 350 g, pelliculage mat ; tester le QR au téléphone
-avant impression.
+**Recto** — le moins d'informations possible
+```
+        CHAUDREL
+        ─────────
+        Rénovation · Bruxelles
+```
+Fond crème, logo centré, filet doré fin. C'est tout.
+
+**Verso** — l'action
+```
+Alberto  +32 477 27 31 18
+Matteo   +32 493 97 25 17
+Info@chaudrel.be
+chaudrel.be
+
+[QR]  Demander un devis
+      chaudrel.be/devis
+```
+Fond noir, texte crème, QR doré ou blanc.
+
+**Détails d'impression** : 350 g, pelliculage mat (le brillant fait bon marché sur ce
+positionnement), QR **testé au téléphone avant impression**, taille minimale 2 × 2 cm.
+Quantité de départ : 250 par personne — on les distribue, on ne les stocke pas.
+
+Le QR doit pointer vers `https://chaudrel.be/devis?utm_source=carte` pour mesurer.
 
 ---
 

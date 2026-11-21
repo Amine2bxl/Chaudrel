@@ -18,16 +18,16 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
         className={cn(
           'grid flex-none place-items-center rounded-full transition-colors duration-fast',
           compact ? 'h-10 w-10' : 'h-11 w-11',
-          primary ? 'bg-bark/10 text-bark' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
+          primary ? 'bg-cream/20 text-cream' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
         )}
       >
         <Icon width={compact ? 16 : 17} height={compact ? 16 : 17} />
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className={cn('block text-[15px] font-medium leading-snug', primary ? 'text-bark' : 'text-ink')}>{label}</span>
+        <span className={cn('block t-label', primary ? 'text-cream' : 'text-ink')}>{label}</span>
         {hint && (
-          <span className={cn('mt-0.5 block t-small', primary ? 'text-bark/75' : 'text-ink/70')}>{hint}</span>
+          <span className={cn('mt-0.5 block t-small', primary ? 'text-cream/90' : 'text-ink/55')}>{hint}</span>
         )}
       </span>
 
@@ -41,7 +41,7 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
         strokeWidth="1.6"
         className={cn(
           'flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5',
-          primary ? 'text-bark/60' : 'text-ink/60'
+          primary ? 'text-cream/70' : 'text-ink/35'
         )}
       >
         <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -50,10 +50,10 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
   );
 
   const classes = cn(
-    'group flex w-full items-center gap-3.5 rounded-lg text-left transition-[background-color,border-color,box-shadow,transform] duration-200 ease-soft active:scale-[0.98]',
+    'group flex w-full items-center gap-3.5 rounded-lg text-left transition-all duration-fast ease-soft active:translate-y-px',
     compact ? 'px-4 py-3' : 'px-5 py-4',
     primary
-      ? 'bg-gold text-bark shadow-soft hover:bg-gold-hover hover:shadow-lift'
+      ? 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift'
       : 'border border-ink/[0.09] bg-shell hover:border-ink/20 hover:shadow-soft',
     className
   );
@@ -82,7 +82,7 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
 export function GroupLabel({ children }) {
   return (
     <div className="mb-4 mt-9 flex items-center gap-4 first:mt-0">
-      <span className="t-label flex-none text-gold-deep">{children}</span>
+      <span className="t-label flex-none text-ink/65">{children}</span>
       <span aria-hidden="true" className="h-px flex-1 bg-ink/10" />
     </div>
   );

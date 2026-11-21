@@ -57,7 +57,7 @@ export const SERVICES = [
         a: "Selon l'ampleur du chantier. Nous en parlons lors de la visite et l'indiquons dans le devis.",
       },
     ],
-    projectTags: ['gros-oeuvre', 'toiture', 'facade'],
+    projectTags: ['renovation-complete'],
   },
   {
     slug: 'finitions-interieures',
@@ -97,7 +97,7 @@ export const SERVICES = [
         a: "Nous pouvons les fournir ou poser les vôtres. Le devis distingue toujours la fourniture de la pose.",
       },
     ],
-    projectTags: [],
+    projectTags: ['renovation-complete', 'appartement', 'maison'],
   },
   {
     slug: 'amenagement-exterieur',
@@ -133,7 +133,7 @@ export const SERVICES = [
         a: "Oui. Selon son état, nous la démolissons et reprenons le support avant de poser le nouveau revêtement.",
       },
     ],
-    projectTags: ['exterieur'],
+    projectTags: ['maison'],
   },
   {
     slug: 'toiture',
@@ -168,7 +168,7 @@ export const SERVICES = [
         a: "Oui, comme les réfections complètes. Nous passons voir la toiture avant de chiffrer quoi que ce soit.",
       },
     ],
-    projectTags: ['toiture'],
+    projectTags: ['maison'],
   },
   {
     slug: 'facade',
@@ -193,7 +193,7 @@ export const SERVICES = [
         a: "Oui, elle modifie l'épaisseur des murs et le parement. Nous en parlons avant, avec les options possibles.",
       },
     ],
-    projectTags: ['facade', 'menuiseries'],
+    projectTags: ['maison'],
   },
   {
     slug: 'piscine',
@@ -218,7 +218,7 @@ export const SERVICES = [
         a: "Nous prenons en charge le gros œuvre et les finitions. Pour la filtration et le traitement de l'eau, nous travaillons avec un spécialiste.",
       },
     ],
-    projectTags: [],
+    projectTags: ['maison'],
   },
 ];
 

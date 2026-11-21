@@ -86,7 +86,7 @@ export default function ProcessTimeline({ steps = METHOD, tone = 'dark', classNa
             <path
               d={area}
               fill="url(#j-area-dark)"
-              className={cn('transition-opacity duration-[1000ms] ease-soft', light ? 'text-gold-light' : 'text-gold-deep', drawn ? 'opacity-100' : 'opacity-0')}
+              className={cn('transition-opacity duration-[1000ms] ease-soft', light ? 'text-gold-light' : 'text-gold', drawn ? 'opacity-100' : 'opacity-0')}
               style={{ transitionDelay: '500ms' }}
             />
 
@@ -137,7 +137,7 @@ export default function ProcessTimeline({ steps = METHOD, tone = 'dark', classNa
                         : 'bg-green text-cream'
                       : light
                         ? 'bg-gold-light text-bark'
-                        : 'bg-gold text-bark',
+                        : 'bg-gold text-cream',
                     done ? 'ring-green/15' : light ? 'ring-gold-light/15' : 'ring-gold/15'
                   )}
                   style={{
@@ -209,7 +209,7 @@ function MobileJourney({ light, steps, drawn, gold }) {
         : 'bg-green text-cream'
       : light
         ? 'bg-gold-light text-bark'
-        : 'bg-gold text-bark';
+        : 'bg-gold text-cream';
 
   return (
     <div className="relative lg:hidden">

@@ -290,7 +290,7 @@ export default function Quote() {
           intro="Votre demande et ses fichiers viennent de partir. Vous recevez un e-mail de confirmation, puis nous convenons d’une visite et préparons votre devis."
           breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
         />
-        <Section tone="cream" className="pt-block">
+        <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
           <Container className="max-w-[46rem]">
             <ol>
               <span className="t-label text-ink/65">La suite</span>
@@ -300,7 +300,7 @@ export default function Quote() {
                 { n: '03', title: 'Devis', text: 'Un devis détaillé, poste par poste, dans un délai court.' },
               ].map((s) => (
                 <li key={s.n} className="flex gap-8 border-b border-ink/12 py-6 first:border-t first:mt-5">
-                  <span className="t-num text-2xl text-ink/70">{s.n}</span>
+                  <span className="t-num text-2xl text-ink/40">{s.n}</span>
                   <div>
                     <h2 className="t-h3">{s.title}</h2>
                     <p className="t-small mt-1.5 text-ink/65">{s.text}</p>
@@ -337,7 +337,7 @@ export default function Quote() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
       />
 
-      <Section tone="cream" className="pb-16 pt-block">
+      <Section tone="cream" className="pt-0 pb-16 md:pt-0 lg:pt-0">
         <Container className="max-w-[46rem]">
           {/* Progression */}
           <div>
@@ -439,7 +439,7 @@ export default function Quote() {
 
             {step === 3 && (
               <Fieldset legend="Où se situe le projet ?" error={errors.province}>
-                <label htmlFor="province" className="t-label text-ink/70">
+                <label htmlFor="province" className="t-label text-ink/55">
                   Province
                 </label>
                 <select
@@ -578,11 +578,11 @@ export default function Quote() {
                 perdre volontairement reste nécessaire. */}
             {hasDraft && (
               <div className="mt-5 flex items-center justify-between gap-4">
-                <span className="t-small text-ink/70">Votre brouillon est conservé.</span>
+                <span className="t-small text-ink/45">Votre brouillon est conservé.</span>
                 <button
                   type="button"
                   onClick={clearDraft}
-                  className="link-line t-label inline-flex items-center gap-1.5 pb-0.5 text-ink/70 transition-colors duration-fast hover:text-ink"
+                  className="link-line t-label inline-flex items-center gap-1.5 pb-0.5 text-ink/55 transition-colors duration-fast hover:text-ink"
                 >
                   Tout effacer
                 </button>
@@ -801,15 +801,15 @@ function FileUpload({ files, onChange }) {
 
   return (
     <div className="mt-10">
-      <span className="t-label text-ink/70">Photos, plan ou vidéo</span>
-      <span className="t-small mt-1 block text-ink/70">
+      <span className="t-label text-ink/55">Photos, plan ou vidéo</span>
+      <span className="t-small mt-1 block text-ink/50">
         Facultatif - jusqu’à {ATTACH.maxFiles} photos ou PDF et une courte vidéo ({fmtBytes(ATTACH.total)} au total).
       </span>
 
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="mt-4 flex w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-ink/20 bg-shell px-6 py-7 text-ink/70 transition-colors duration-fast hover:border-gold hover:text-ink"
+        className="mt-4 flex w-full flex-col items-center justify-center gap-1.5 rounded-md border border-dashed border-ink/20 bg-shell px-6 py-7 text-ink/55 transition-colors duration-fast hover:border-gold hover:text-ink"
       >
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6">
           <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -836,7 +836,7 @@ function FileUpload({ files, onChange }) {
                 <img src={`data:${f.type};base64,${f.data}`} alt="" className="h-10 w-10 flex-none rounded-xs object-cover" />
               )}
               {f.kind === 'video' && (
-                <span className="grid h-10 w-10 flex-none place-items-center rounded-xs bg-gold/[0.09] text-gold-deep">
+                <span className="grid h-10 w-10 flex-none place-items-center rounded-xs bg-gold/[0.09] text-gold">
                   <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
                     <path d="M8 5.5v13l11-6.5-11-6.5Z" />
                   </svg>
@@ -844,13 +844,13 @@ function FileUpload({ files, onChange }) {
               )}
               <span className="min-w-0 flex-1">
                 <span className="block truncate t-small text-ink">{f.name}</span>
-                <span className="t-small text-ink/70">{fmtBytes(f.size)}</span>
+                <span className="t-small text-ink/50">{fmtBytes(f.size)}</span>
               </span>
               <button
                 type="button"
                 onClick={() => remove(i)}
                 aria-label={`Retirer ${f.name}`}
-                className="grid h-8 w-8 flex-none place-items-center rounded-full text-ink/70 transition-colors duration-fast hover:bg-error/[0.08] hover:text-error"
+                className="grid h-8 w-8 flex-none place-items-center rounded-full text-ink/50 transition-colors duration-fast hover:bg-error/[0.08] hover:text-error"
               >
                 <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M1 1l12 12M13 1L1 13" strokeLinecap="round" />
@@ -914,13 +914,13 @@ function Choice({ name, label, checked, onChange }) {
 function ChoiceGroup({ label, name, options, value, onChange, error, hint }) {
   return (
     <div className={cn(label && 'mt-10')}>
-      {label && <span className="t-label text-ink/70">{label}</span>}
+      {label && <span className="t-label text-ink/55">{label}</span>}
       <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
         {options.map((t) => (
           <Choice key={t} name={name} label={t} checked={value === t} onChange={() => onChange(t)} />
         ))}
       </div>
-      {hint && <p className="t-small mt-3 text-ink/70">{hint}</p>}
+      {hint && <p className="t-small mt-3 text-ink/50">{hint}</p>}
       {error && <FieldError>{error}</FieldError>}
     </div>
   );
@@ -929,7 +929,7 @@ function ChoiceGroup({ label, name, options, value, onChange, error, hint }) {
 function Field({ id, label, value, onChange, error, hint, type = 'text', className, ...rest }) {
   return (
     <div className={className}>
-      <label htmlFor={id} className="t-label text-ink/70">
+      <label htmlFor={id} className="t-label text-ink/55">
         {label}
       </label>
       <input
@@ -944,7 +944,7 @@ function Field({ id, label, value, onChange, error, hint, type = 'text', classNa
         {...rest}
       />
       {hint && !error && (
-        <p id={`${id}-hint`} className="t-small mt-2 text-ink/70">
+        <p id={`${id}-hint`} className="t-small mt-2 text-ink/50">
           {hint}
         </p>
       )}
