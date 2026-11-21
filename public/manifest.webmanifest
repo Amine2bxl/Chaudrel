@@ -1,15 +1,15 @@
 {
   "name": "Chaudrel Rénovation",
   "short_name": "Chaudrel",
-  "description": "Rénovation complète, cuisine, salle de bain et aménagement intérieur à Bruxelles et en périphérie.",
+  "description": "Façades, toitures, châssis et rénovations complètes, depuis Schaerbeek dans toute la Belgique.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F4F0E8",
-  "theme_color": "#1B1512",
+  "background_color": "#FCF4EC",
+  "theme_color": "#191714",
   "categories": ["business", "lifestyle"],
   "icons": [
     {

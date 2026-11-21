@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BRAND, EMAIL_DISPLAY, LOGO, whatsappUrl } from '@/data/site';
+import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import Reveal from '@/lib/reveal';
 import { cn } from '@/lib/utils';
@@ -54,13 +54,10 @@ export default function Links() {
       {/* pt = hauteur de la barre flottante ; pb = barre d'action mobile. */}
       <div className="mx-auto w-full max-w-lg px-5 pb-[calc(66px+3rem)] pt-28 sm:px-6 lg:pb-24 lg:pt-36">
         <Reveal className="text-center">
-          <span className="mx-auto grid h-16 w-16 place-items-center overflow-hidden rounded-logo bg-shell shadow-lift ring-1 ring-ink/[0.06]">
-            <img src={LOGO} alt="" aria-hidden="true" width="64" height="64" className="h-full w-full object-cover" />
-          </span>
-          <h1 className="mt-5 font-wordmark text-[22px] uppercase leading-none tracking-[0.2em] text-ink">
-            {BRAND.name}
+          <h1>
+            <img src="/logo-cream.svg" alt={BRAND.legalName} width="1056" height="660" className="mx-auto h-auto w-[200px]" />
           </h1>
-          <p className="t-small mt-3 text-ink/60">
+          <p className="t-small mt-6 text-ink/70">
             Entreprise de rénovation · {BRAND.zoneLong}
           </p>
         </Reveal>
@@ -69,7 +66,7 @@ export default function Links() {
           {/* La colonne de liens vit dans une carte : c'est la lecture « link
               tree » attendue d'une bio - une seule carte, un geste par ligne,
               pas de page derrière. */}
-          <div className="rounded-2xl bg-shell p-5 shadow-lift ring-1 ring-ink/[0.05] sm:p-8">
+          <div className="glass-light rounded-[28px] p-5 sm:p-8">
             <GroupLabel>Votre projet</GroupLabel>
           <div className="space-y-2.5">
             <Row

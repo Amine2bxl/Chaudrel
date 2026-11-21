@@ -6,18 +6,20 @@
 
 /* ============================================================
    CHAUDREL - DESIGN SYSTEM
-   Crème, sable, brun : une seule famille chromatique.
-   Schibsted Grotesk : une seule famille typographique.
-   Une seule échelle d'arrondis : rien n'est laissé à angle vif.
-   Les ombres sont teintées dans le brun du fond, jamais noires.
+   Crème, nuit, bronze : les trois matières du logo.
+   Prata pour les titres, Albert Sans pour le reste.
+   Le verre est réservé aux surfaces qui laissent voir derrière elles.
+   Les animations passent par Motion (src/lib/motion.js) ; ce fichier ne
+   garde que les transitions d'état (survol, focus, repli).
    ============================================================ */
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
-    overflow-x: hidden;
+    /* `clip`, pas `hidden` : `hidden` ferait de la page un conteneur de
+       défilement et casserait les éléments `sticky` (hero, barre de frères). */
+    overflow-x: clip;
   }
 
   body {
@@ -26,10 +28,9 @@
     color: var(--c-ink);
     font-size: 16px;
     line-height: 1.6;
-    font-feature-settings: 'ss01', 'cv05';
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   *,
@@ -50,7 +51,7 @@
      quand même à la charte : sélection, curseur, anneau de focus. */
   ::selection {
     background: var(--c-gold);
-    color: var(--c-cream);
+    color: var(--c-bark);
   }
 
   html {
@@ -74,59 +75,52 @@
 }
 
 @layer components {
-  /* ---------- Échelle typographique ---------- */
-
-  /* Marcellus n'a qu'une graisse (400). Sa présence tient à la taille et à
-     l'interlettrage serré, jamais au gras. */
+  /* ---------- Échelle typographique ----------
+     Prata n'a qu'une graisse : sa présence tient à la taille et au
+     contraste de ses pleins et déliés, jamais au gras. */
   .t-display {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(2.75rem, 7.6vw, 6rem);
-    line-height: 0.98;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.75rem, 7.4vw, 6rem);
+    line-height: 1;
+    letter-spacing: -0.022em;
   }
 
   .t-h1 {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(2.25rem, 5.2vw, 4rem);
-    line-height: 1.02;
-    letter-spacing: -0.018em;
+    font-size: clamp(2.375rem, 5.2vw, 4.25rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
   }
 
   .t-h2 {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(1.875rem, 3.6vw, 2.875rem);
+    font-size: clamp(1.875rem, 3.7vw, 3.125rem);
     line-height: 1.08;
-    letter-spacing: -0.012em;
+    letter-spacing: -0.016em;
   }
 
-  /* H3 reste en grotesque : sous les grands titres serif, il structure sans
-     rivaliser - le contraste des deux familles porte la hiérarchie. Un cran
-     plus haut que le texte courant, et pas seulement par la graisse : à 18 px
-     semi-gras contre 17 px normal, les deux rôles se confondaient. */
+  /* H3 en grotesque : sous les grands titres serif, il structure sans
+     rivaliser. Le contraste des deux familles porte la hiérarchie. */
   .t-h3 {
     font-family: var(--font-ui);
     font-weight: 600;
-    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
-    line-height: 1.28;
-    letter-spacing: -0.015em;
+    font-size: clamp(1.1875rem, 1.6vw, 1.375rem);
+    line-height: 1.3;
+    letter-spacing: -0.012em;
   }
 
-  /* Phrase d'introduction : plus grande que le texte courant, plus légère
-     qu'un titre. C'est le palier qui manquait entre les deux. */
   .t-lead {
-    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
-    line-height: 1.55;
-    font-weight: 400;
-    letter-spacing: -0.011em;
+    font-size: clamp(1.0625rem, 1.45vw, 1.25rem);
+    line-height: 1.6;
+    letter-spacing: -0.006em;
   }
 
   .t-body {
     font-size: 1.0625rem;
     line-height: 1.7;
-    font-weight: 400;
   }
 
   .t-small {
@@ -134,13 +128,13 @@
     line-height: 1.6;
   }
 
-  /* Réservé aux repères de navigation (fil d'Ariane, boutons, méta).
-     Ce n'est pas un sur-titre décoratif à poser au-dessus de chaque section. */
+  /* Capitales espacées, comme RÉNOVATION sous le logo. Réservé aux repères
+     (boutons secondaires, méta, fil d'Ariane) - jamais en sur-titre. */
   .t-label {
     font-size: 0.6875rem;
-    line-height: 1;
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
   }
 
@@ -151,10 +145,8 @@
     letter-spacing: -0.02em;
   }
 
-  /* ---------- Éléments ---------- */
-
   .measure {
-    max-width: 68ch;
+    max-width: 66ch;
   }
 
   .rule {
@@ -164,43 +156,103 @@
 
   .rule-light {
     border: 0;
-    border-top: 1px solid rgb(255 255 255 / 0.14);
+    border-top: 1px solid rgb(var(--c-cream-rgb) / 0.14);
   }
 
-  /* ---------- Texte clair sur fond sombre ----------
-     Un même réglage ne rend pas pareil dans les deux sens. Sur fond sombre,
-     les contreformes se referment et les fûts paraissent plus fins : il faut
-     un peu plus d'interligne, un peu plus d'interlettrage, et de la couleur
-     plutôt que du gris. `.on-dark` est posé par <Section tone="bark"> ; les
-     titres n'y touchent pas, seul le texte suivi en profite. */
+  /* Texte clair sur fond sombre : un peu plus d'air entre les lettres et les
+     lignes, sinon les contreformes se referment. */
   .on-dark .t-body,
   .on-dark .t-lead,
   .on-dark .t-small {
-    letter-spacing: 0.005em;
+    letter-spacing: 0.004em;
   }
-
   .on-dark .t-body {
     line-height: 1.75;
   }
 
-  .on-dark .t-lead {
-    line-height: 1.6;
+  /* ---------- Verre ----------
+     Deux versions : sur la nuit ou une photo (`glass-dark`), sur le crème
+     (`glass-light`). Le reflet suit le pointeur quand `usePointerGlow` est
+     posé sur l'élément (variables --mx, --my, --glow). */
+  .glass-dark,
+  .glass-light {
+    position: relative;
+    isolation: isolate;
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(160%);
   }
 
-  .on-dark .t-small {
-    line-height: 1.65;
+  .glass-dark {
+    background: var(--glass-dark-bg);
+    border: 1px solid var(--glass-dark-edge);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.2),
+      0 30px 60px -32px rgb(0 0 0 / 0.6);
   }
 
-  /* Les capitales espacées perdent le plus à contraste inversé. */
-  .on-dark .t-label {
-    letter-spacing: 0.16em;
+  .glass-light {
+    background: var(--glass-light-bg);
+    border: 1px solid var(--glass-light-edge);
+    box-shadow:
+      inset 0 1px 0 var(--glass-light-hi),
+      0 26px 54px -30px rgb(var(--c-shadow-rgb) / 0.6);
   }
 
-  /* ---------- Champs de saisie ----------
-     Un champ est une surface, pas une ligne : même arrondi que le reste du
-     site, fond coquille, et un anneau brun au focus plutôt qu'un contour
-     système. `.field-dark` est la même pièce sur fond sombre. */
+  /* Reflet : une lueur douce sous le pointeur, et le bord qui s'allume en
+     bronze au même endroit. Les deux restent éteints sans pointeur. */
+  .glass-dark::before,
+  .glass-light::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(
+      380px circle at var(--mx, 50%) var(--my, 0%),
+      rgb(255 255 255 / 0.12),
+      transparent 65%
+    );
+    opacity: var(--glow, 0);
+    transition: opacity var(--dur-slow) var(--ease-soft);
+  }
 
+  .glass-dark::after,
+  .glass-light::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    background: radial-gradient(
+      240px circle at var(--mx, 50%) var(--my, 0%),
+      rgb(var(--c-gold-light-rgb) / 0.75),
+      transparent 70%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    opacity: var(--glow, 0);
+    transition: opacity var(--dur-slow) var(--ease-soft);
+  }
+
+  /* Sans flou d'arrière-plan, le verre devient une surface presque opaque :
+     le texte reste lisible quoi qu'il y ait derrière. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass-dark {
+      background: rgb(var(--c-bark-rgb) / 0.94);
+    }
+    .glass-light {
+      background: rgb(var(--c-shell-rgb) / 0.96);
+    }
+  }
+
+  /* ---------- Champs de saisie ---------- */
   .field {
     width: 100%;
     border-radius: var(--r-md);
@@ -211,23 +263,23 @@
     line-height: 1.5;
     color: var(--c-ink);
     transition:
-      border-color 0.25s ease,
-      box-shadow 0.25s ease,
-      background-color 0.25s ease;
+      border-color var(--dur) ease,
+      box-shadow var(--dur) ease,
+      background-color var(--dur) ease;
   }
 
   .field::placeholder {
-    color: rgb(var(--c-ink-rgb) / 0.45);
+    color: rgb(var(--c-ink-rgb) / 0.5);
   }
 
   .field:hover {
-    border-color: rgb(var(--c-ink-rgb) / 0.2);
+    border-color: rgb(var(--c-ink-rgb) / 0.22);
   }
 
   .field:focus {
     outline: none;
     border-color: var(--c-gold);
-    box-shadow: 0 0 0 3px rgb(var(--c-gold-rgb) / 0.14);
+    box-shadow: 0 0 0 3px rgb(var(--c-gold-rgb) / 0.18);
   }
 
   .field-error {
@@ -246,7 +298,7 @@
   }
 
   .field-dark::placeholder {
-    color: rgb(var(--c-cream-rgb) / 0.45);
+    color: rgb(var(--c-cream-rgb) / 0.5);
   }
 
   .field-dark:hover {
@@ -255,7 +307,7 @@
 
   .field-dark:focus {
     border-color: var(--c-gold-light);
-    box-shadow: 0 0 0 3px rgb(var(--c-gold-light-rgb) / 0.18);
+    box-shadow: 0 0 0 3px rgb(var(--c-gold-light-rgb) / 0.2);
   }
 
   .field-dark.field-error {
@@ -266,12 +318,13 @@
     box-shadow: 0 0 0 3px rgb(var(--c-error-light-rgb) / 0.2);
   }
 
+  /* Soulignement qui se déploie depuis la gauche. */
   .link-line {
     background-image: linear-gradient(currentColor, currentColor);
     background-size: 0% 1px;
     background-position: 0 100%;
     background-repeat: no-repeat;
-    transition: background-size 0.4s var(--ease-soft);
+    transition: background-size 0.45s var(--ease-soft);
   }
 
   .link-line:hover,
@@ -279,14 +332,8 @@
     background-size: 100% 1px;
   }
 
-  /* Zone tactile de 44 px sans déplacer un pixel.
-     Un lien de texte fait 11 à 15 px de haut : c'est la hauteur des lettres,
-     pas celle d'un pouce. Grossir la boîte réglerait la cible mais décrocherait
-     le soulignement, posé sur le bas de la boîte, et casserait le rythme
-     vertical. Le pseudo-élément étend la surface cliquable au-dessus et en
-     dessous du texte, là où il n'y a rien.
-     Réservé aux contrôles alignés horizontalement : deux `.tap` empilés
-     verticalement à moins de 44 px se recouvriraient. */
+  /* Zone tactile de 44 px sans déplacer un pixel. Réservé aux contrôles
+     alignés horizontalement. */
   .tap {
     position: relative;
   }
@@ -300,18 +347,21 @@
   }
 }
 
-/* ---------- Scrollbar ---------- */
-
+/* ---------- Barre de défilement ---------- */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--c-cream);
+  background: var(--c-bark);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(var(--c-gold-rgb) / 0.35);
+  background: rgb(var(--c-gold-rgb) / 0.55);
   border-radius: 999px;
+  border: 2px solid var(--c-bark);
+}
+html {
+  scrollbar-color: rgb(var(--c-gold-rgb) / 0.6) var(--c-bark);
 }
 @media (max-width: 1023px) {
   ::-webkit-scrollbar {
@@ -324,69 +374,250 @@
 }
 
 /* ============================================================
-   ANIMATIONS - discrètes, courtes, jamais permanentes
+   APPARITIONS AU DÉFILEMENT (<Reveal>)
+   Transform et opacity uniquement : la carte graphique les anime seule,
+   sans recalcul de page. Une seule fois par élément, puis plus rien.
    ============================================================ */
-
-/* Apparition au scroll */
 .rv {
   opacity: 0;
   transition:
-    opacity 0.8s ease-out,
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
+    opacity 0.7s var(--ease-soft) var(--rv-delay, 0ms),
+    transform 0.9s var(--ease-soft) var(--rv-delay, 0ms);
 }
 .rv-up {
-  transform: translateY(22px);
+  transform: translate3d(0, 28px, 0);
 }
 .rv-down {
-  transform: translateY(-18px);
+  transform: translate3d(0, -20px, 0);
 }
 .rv-left {
-  transform: translateX(-26px);
+  transform: translate3d(-32px, 0, 0);
 }
 .rv-right {
-  transform: translateX(26px);
+  transform: translate3d(32px, 0, 0);
 }
-.rv-fade {
-  transform: none;
-}
-.rv.is-visible {
+.rv.is-in {
   opacity: 1;
   transform: none;
 }
 
-/* Lignes qui se dessinent */
+.rv-line,
+.rv-line-y {
+  transition: transform 1.1s var(--ease-soft) var(--rv-delay, 0ms);
+}
 .rv-line {
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.rv-line.is-visible {
-  transform: scaleX(1);
 }
 .rv-line-y {
   transform: scaleY(0);
   transform-origin: center top;
-  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.rv-line-y.is-visible {
-  transform: scaleY(1);
+.rv-line.is-in,
+.rv-line-y.is-in {
+  transform: none;
 }
 
-/* Image révélée par un volet.
-   Le clip porte sur l'enfant, jamais sur l'élément observé : un élément
-   entièrement rogné n'intersecte plus rien, et l'IntersectionObserver ne se
-   déclencherait jamais. */
+/* Photo découverte par un volet : un aplat qui glisse vers le haut, la photo
+   qui se pose (léger recul d'échelle). Tout en transform. */
+.rv-veil {
+  position: relative;
+  overflow: hidden;
+}
 .rv-veil > * {
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(1.08);
+  transition: transform 1.6s var(--ease-soft) var(--rv-delay, 0ms);
 }
-.rv-veil.is-visible > * {
-  clip-path: inset(0 0 0 0);
+.rv-veil::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(var(--c-sand-rgb));
+  transition: transform 1.1s var(--ease-soft) var(--rv-delay, 0ms);
+  pointer-events: none;
+}
+.rv-veil.is-in > * {
+  transform: none;
+}
+.rv-veil.is-in::after {
+  transform: translate3d(0, -101%, 0);
 }
 
-/* Entrée de la réponse d'une question (accordéon FAQ) : la question s'ouvre,
-   la réponse glisse sous elle. Native `details`, animation légère. */
+/* ============================================================
+   HERO - LA PORTE (src/components/sections/Hero.jsx)
+   Un écran de défilement épinglé. Entrées au chargement en CSS
+   (transform / opacity), progression pilotée par la ViewTimeline.
+   ============================================================ */
+.door-hero {
+  height: 200svh;
+}
+.door-final {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.door-letters-in {
+  animation: door-letters 1.2s var(--ease-soft) both;
+}
+.door-panel-in {
+  animation: door-open 1s var(--ease-soft) 0.5s both;
+}
+.door-word {
+  animation: door-word 1s var(--ease-soft) both;
+}
+.door-bar {
+  animation: door-rise 0.9s var(--ease-soft) 1.05s both;
+}
+@keyframes door-letters {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+@keyframes door-open {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes door-word {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes door-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+/* Moins de mouvement : pas d'épinglage, la photo et la carte d'emblée. Le
+   titre reste dans la page pour les lecteurs d'écran. */
+@media (prefers-reduced-motion: reduce) {
+  .door-hero {
+    height: auto;
+  }
+  .door-mono,
+  .door-glow,
+  .door-fade {
+    display: none;
+  }
+  .door-intro {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .door-final {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   CHANTIERS EMPILÉS (ProjectCarousel)
+   La carte du dessous recule pendant que la suivante monte : animation
+   liée à la view-timeline de la carte suivante, jouée par la carte
+   graphique. Sans prise en charge, les cartes s'empilent sans reculer.
+   ============================================================ */
+.stack-item + .stack-item {
+  margin-top: 2.5rem;
+}
+/* Empilement seulement si une carte tient entière à l'écran : sinon, sur un
+   petit téléphone, le bas d'une carte resterait caché sous la suivante. */
+@media (min-height: 760px) {
+  .stack-item {
+    position: sticky;
+  }
+}
+.stack-card {
+  transform-origin: 50% 0;
+}
+.stack-shade {
+  opacity: 0;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .stack-recede {
+      animation: stack-recede linear both;
+      animation-range: entry 0% entry 100%;
+    }
+    .stack-shade {
+      animation: stack-shade linear both;
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+@keyframes stack-recede {
+  to {
+    transform: scale(0.94);
+  }
+}
+@keyframes stack-shade {
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* ============================================================
+   PARALLAXE ET ENTRÉES DE PAGE
+   La parallaxe suit la view-timeline de l'image : jouée par la carte
+   graphique, sans JavaScript. Sans prise en charge, l'image reste fixe.
+   ============================================================ */
+.parallax {
+  transform: scale(1.14);
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax {
+      animation: parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+@keyframes parallax {
+  from {
+    transform: translate3d(0, -6%, 0) scale(1.14);
+  }
+  to {
+    transform: translate3d(0, 6%, 0) scale(1.14);
+  }
+}
+
+/* Entrée au chargement d'une page (en-têtes) : délai posé en ligne. */
+.rise-in {
+  animation: door-rise 0.9s var(--ease-soft) both;
+}
+.door-open-in {
+  animation: door-open 1.3s var(--ease-soft) 0.2s both;
+  transform-origin: left center;
+}
+
+/* ============================================================
+   TRANSITIONS ENTRE PAGES (View Transitions, natif)
+   Le navigateur fige l'ancienne page et fond la nouvelle par-dessus, sur la
+   carte graphique. La barre de navigation ne bouge pas.
+   ============================================================ */
+::view-transition-old(root) {
+  animation: vt-out 220ms var(--ease-soft) both;
+}
+::view-transition-new(root) {
+  animation: vt-in 380ms var(--ease-soft) both;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+}
+
+/* Réponse de la FAQ : native `details`, la réponse glisse sous la question. */
 @keyframes faq-in {
   from {
     opacity: 0;
@@ -399,86 +630,6 @@
 }
 details[open] .faq-a {
   animation: faq-in 0.4s var(--ease-soft);
-}
-@media (prefers-reduced-motion: reduce) {
-  details[open] .faq-a {
-    animation: none;
-  }
-}
-
-/* Hero */
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.hero-in {
-  opacity: 0;
-  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-.hero-d1 {
-  animation-delay: 0.1s;
-}
-.hero-d2 {
-  animation-delay: 0.22s;
-}
-.hero-d3 {
-  animation-delay: 0.34s;
-}
-.hero-d4 {
-  animation-delay: 0.46s;
-}
-.hero-d5 {
-  animation-delay: 0.6s;
-}
-/* Le mot-symbole entre en dernier : la promesse se lit avant la signature. */
-.hero-d6 {
-  animation-delay: 0.72s;
-}
-
-@keyframes slow-zoom {
-  from {
-    transform: scale(1.06);
-  }
-  to {
-    transform: scale(1);
-  }
-}
-.slow-zoom {
-  animation: slow-zoom 2.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Menu mobile */
-@keyframes panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.panel-in {
-  animation: panel-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Transition d'image (avant/après) */
-@keyframes soft-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.soft-in {
-  animation: soft-in 0.45s ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -493,15 +644,11 @@ details[open] .faq-a {
   .rv,
   .rv-line,
   .rv-line-y,
-  .hero-in {
+  .rv-veil > * {
     opacity: 1 !important;
     transform: none !important;
   }
-  .rv-veil > * {
-    clip-path: none !important;
+  .rv-veil::after {
+    display: none;
   }
 }
-
-/* Le cadre et le rail sont retirés : le site est en plein écran, sans liseré
-   sable ni borne sur les côtés. (Le rail latéral a déjà été supprimé - les
-   réseaux vivent au pied de page et dans la fenêtre de contact.) */
