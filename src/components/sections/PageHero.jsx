@@ -4,20 +4,16 @@ import { cn } from '@/lib/utils';
 import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
- * En-tête de page intérieure - un champ profond, comme l'ouverture de
- * l'accueil : on change de page sans changer de maison. Fil d'Ariane, titre
- * en Prata, une phrase. Entrées en CSS (transform / opacity).
- *
- * Sans photo, la porte bronze du logo se tient à droite, entrouverte : la
- * signature de la marque, à l'échelle d'un élément d'architecture. Avec une
- * photo (service, chantier), la photo prend le fond sous un voile.
+ * En-tête de page interne : fil d'Ariane, label, H1, une phrase.
+ * Sans image par défaut - le vide fait le travail. L'image reste possible
+ * quand la page a un visuel qui mérite la pleine largeur.
  */
 export default function PageHero({ title, intro, image, breadcrumb = [], aside }) {
   const hasImage = Boolean(image);
 
   return (
-    <header className="on-dark relative isolate overflow-hidden bg-bark text-cream">
-      {hasImage ? (
+    <header className={cn('relative isolate overflow-hidden', hasImage ? 'bg-bark' : 'bg-cream')}>
+      {hasImage && (
         <>
           <img
             {...imageAttrs(image, SIZES.full)}
@@ -26,47 +22,26 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
             width="1920"
             height="1080"
             fetchpriority="high"
-            decoding="async"
-            className="absolute inset-0 -z-20 h-full w-full object-cover"
+            decoding="sync"
+            className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-bark via-bark/75 to-bark/55" aria-hidden="true" />
-        </>
-      ) : (
-        <>
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-20 bg-[radial-gradient(900px_600px_at_75%_30%,rgb(var(--c-gold-rgb)/0.1),transparent_70%)]"
-          />
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 67 165"
-            className="door-open-in absolute bottom-0 right-[7%] -z-10 hidden h-[86%] w-auto md:block"
-          >
-            <defs>
-              <linearGradient id="page-door" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stopColor="#9C7946" stopOpacity="0.5" />
-                <stop offset="0.55" stopColor="#B8945F" stopOpacity="0.28" />
-                <stop offset="1" stopColor="#A27F4C" stopOpacity="0.06" />
-              </linearGradient>
-            </defs>
-            <path d="M0 38 L67 0 L67 165 L0 142 Z" fill="url(#page-door)" />
-          </svg>
+          <div className="absolute inset-0 -z-10 bg-bark/70" aria-hidden="true" />
         </>
       )}
 
-      <Container className={cn('pb-14 pt-32 lg:pb-20 lg:pt-40', hasImage && 'lg:pt-48')}>
+      <Container className={cn('pb-12 pt-24 lg:pb-16 lg:pt-32', hasImage && 'pb-16 lg:pb-24')}>
         {breadcrumb.length > 0 && (
-          <nav aria-label="Fil d'Ariane" className="rise-in mb-8">
-            <ol className="t-label flex flex-wrap items-center gap-2 text-cream/70">
+          <nav aria-label="Fil d'Ariane" className="mb-8">
+            <ol className={cn('t-label flex flex-wrap items-center gap-2', hasImage ? 'text-cream/65' : 'text-ink/65')}>
               {breadcrumb.map((b, i) => (
                 <li key={b.to || b.label} className="flex items-center gap-2">
                   {i > 0 && <span aria-hidden="true">/</span>}
                   {b.to ? (
-                    <Link to={b.to} className="tap transition-colors hover:text-gold-light">
+                    <Link to={b.to} className="tap transition-colors hover:text-gold">
                       {b.label}
                     </Link>
                   ) : (
-                    <span aria-current="page" className="text-cream/85">
+                    <span aria-current="page" className={hasImage ? 'text-cream/70' : 'text-ink/65'}>
                       {b.label}
                     </span>
                   )}
@@ -76,15 +51,23 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
           </nav>
         )}
 
+        {/* La colonne de droite n'existe que si elle porte autre chose qu'un
+            paragraphe : sinon le texte se lit sous le titre, à la bonne
+            largeur de lecture. */}
         <div className={cn(aside && 'lg:grid lg:grid-cols-12 lg:gap-12')}>
-          <div className={cn('rise-in', aside && 'lg:col-span-7')} style={{ animationDelay: '80ms' }}>
-            <h1 className="t-h1 max-w-[16ch] text-balance text-cream">{title}</h1>
+          <div className={cn(aside && 'lg:col-span-7')}>
+            {/* `ch` se calcule sur la police de l'élément : la largeur se pose
+                donc sur le titre, jamais sur le conteneur. */}
+            <h1 className={cn('t-h1 max-w-[16ch] text-balance', hasImage ? 'text-cream' : 'text-ink')}>{title}</h1>
           </div>
 
           {(intro || aside) && (
             <div
-              className={cn('rise-in mt-6 text-cream/80', aside && 'lg:col-span-5 lg:mt-0 lg:self-end')}
-              style={{ animationDelay: '180ms' }}
+              className={cn(
+                'mt-6',
+                aside && 'lg:col-span-5 lg:mt-0 lg:self-end',
+                hasImage ? 'text-cream/65' : 'text-ink/65'
+              )}
             >
               {intro && <p className="t-lead measure">{intro}</p>}
               {aside}

@@ -12,7 +12,7 @@ export default function Services() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Services' }]}
       />
 
-      <Section tone="cream" className="pt-block">
+      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
         <Container>
           <ServicesBoard />
         </Container>

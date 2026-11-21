@@ -74,18 +74,10 @@ export const BRAND = {
     'Wavre',
     'Arlon',
   ],
-  /**
-   * Profils vérifiés (novembre 2026) :
-   *  - Instagram et Facebook : liens publiés par Chaudrel sur son Linktree
-   *    (linktr.ee/chaudrel). L'ancienne adresse `facebook.com/chaudrel_renovation`
-   *    ne mène à aucune page (Facebook refuse le tiret bas dans un nom de page).
-   *  - TikTok : le compte `@chaudrel_renovation` existe (« Chaudrel Rénovation »).
-   *  - YouTube : `@chaudrelrenovations` renvoie une erreur 404. Retiré tant que
-   *    Chaudrel n'a pas communiqué l'adresse de sa chaîne.
-   */
   socials: {
     instagram: 'https://www.instagram.com/chaudrel_renovation/',
-    facebook: 'https://www.facebook.com/profile.php?id=61574019493337',
+    facebook: 'https://www.facebook.com/chaudrel_renovation/',
+    youtube: 'https://www.youtube.com/@chaudrelrenovations',
     tiktok: 'https://www.tiktok.com/@chaudrel_renovation',
   },
   founders: [
@@ -93,6 +85,8 @@ export const BRAND = {
     { name: 'Matteo', role: 'Design & relation client' },
   ],
 };
+
+export const LOGO = '/chaudrel-logo.webp';
 
 export const whatsappUrl = (
   message = 'Bonjour Chaudrel, je souhaite un devis pour mon projet de rénovation.'
@@ -117,6 +111,16 @@ export const MOBILE_NAV = [
   { label: 'Accueil', to: '/' },
   { label: 'Réalisations', to: '/realisations' },
   { label: 'Devis', to: '/devis' },
+];
+
+/**
+ * Deux faits, uniquement vérifiables.
+ * Aucun compteur de chantiers ou de clients tant que Chaudrel n'a pas
+ * communiqué de chiffre réel.
+ */
+export const PROOF = [
+  { value: '17 ans d’expérience', label: 'Depuis 2009' },
+  { value: 'Un interlocuteur', label: 'Du devis à la livraison' },
 ];
 
 /**

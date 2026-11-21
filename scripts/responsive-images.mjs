@@ -20,7 +20,6 @@ const dir = resolve(process.cwd(), 'public/photos');
 /* Trois paliers couvrent le parc : téléphone, tablette / demi-écran, écran
    large. Un quatrième n'apporterait que des octets à générer. */
 const WIDTHS = [480, 800, 1200];
-const VARIANT = new RegExp(`-(${WIDTHS.join('|')})$`);
 
 /** Largeur d'une image, en pixels. */
 function widthOf(file) {
@@ -36,8 +35,7 @@ const manifest = {};
 for (const name of readdirSync(dir)) {
   const { ext, name: base } = parse(name);
   // On ne repart jamais d'une variante : elle a déjà perdu des pixels.
-  // Seuls les suffixes de largeur comptent : `pf-1` est une source, pas une variante.
-  if (ext !== '.webp' || VARIANT.test(base)) continue;
+  if (ext !== '.webp' || /-\d+$/.test(base)) continue;
 
   const source = join(dir, name);
   const sourceTime = statSync(source).mtimeMs;
@@ -71,7 +69,7 @@ for (const name of readdirSync(dir)) {
    téléphone de quelqu'un — c'est pire que pas de `srcset` du tout. */
 for (const name of readdirSync(dir)) {
   const { ext, name: base } = parse(name);
-  if (ext !== '.webp' || VARIANT.test(base)) continue;
+  if (ext !== '.webp' || /-\d+$/.test(base)) continue;
   const widths = WIDTHS.filter((w) => existsSync(join(dir, `${base}-${w}.webp`)));
   if (widths.length) manifest[`/photos/${base}.webp`] = widths;
 }

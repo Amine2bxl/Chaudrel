@@ -10,7 +10,7 @@
  *   title       nom du chantier
  *   type        nature, en clair (« Rénovation complète », « Cuisine sur mesure »)
  *   categories  ids de CATEGORIES, pour le filtre et les projets liés
- *   location    commune réelle - null tant que non confirmée (non affichée)
+ *   location    commune réelle
  *   year        année de livraison - null tant que Chaudrel ne l'a pas confirmée
  *               (TODO_VALIDATION). Affichée uniquement si renseignée.
  *   featured    mis en avant sur l'accueil et en tête de portfolio
@@ -20,17 +20,10 @@
  *   materials   matières employées
  *   cover       image d'ouverture { src, alt, w, h }
  *   images      galerie [{ src, alt, w, h }] - alt factuels, jamais inventés
- *   beforeAfter { before, after } - uniquement pour deux photos prises du même
- *               point de vue (aucune des paires `ba-*` actuelles ne l'est)
+ *   beforeAfter { before, after } quand une comparaison existe
  *
- * ⚠️ Novembre 2026 : les fiches précédentes (« Cuisine Ixelles », « Villa
- *    Tervuren », « Terrasse Woluwe »…) reprenaient des titres de la V1 et leur
- *    associaient des photos qui montraient autre chose (une porte d'entrée sous
- *    « terrasse en pierre naturelle », une façade sous « cuisine sur mesure »).
- *    Les réalisations sont donc regroupées par nature de travaux et chaque
- *    texte décrit ce que montrent les photos. `location` reste null tant que
- *    Chaudrel n'a pas confirmé la commune d'un chantier : elle n'est alors pas
- *    affichée. Les anciennes adresses redirigent (LEGACY_SLUGS, vercel.json).
+ * ⚠️ Localisations, matériaux et descriptifs proviennent de la V1 et doivent
+ *    être confirmés par Chaudrel avant publication (voir docs/VERIFICATION.md).
  *
  * ⚠️ PHOTOS - qualité inégale, signalée à Chaudrel. `pf-2` et `pf-3` sont des
  *    portraits basse définition (900×1125) ; les `ba-*` sont en 1200×800. Une
@@ -39,195 +32,127 @@
  */
 
 export const CATEGORIES = [
-  { id: 'facade', label: 'Façade' },
-  { id: 'menuiseries', label: 'Châssis et portes' },
-  { id: 'gros-oeuvre', label: 'Gros œuvre et extensions' },
-  { id: 'toiture', label: 'Toiture' },
-  { id: 'exterieur', label: 'Abords et garages' },
+  { id: 'renovation-complete', label: 'Rénovation complète' },
+  { id: 'cuisine', label: 'Cuisine' },
+  { id: 'salle-de-bain', label: 'Salle de bain' },
+  { id: 'appartement', label: 'Appartement' },
+  { id: 'maison', label: 'Maison' },
+  { id: 'commerce', label: 'Commerce' },
 ];
 
 const img = (src, alt, w, h) => ({ src, alt, w, h });
 
 export const PROJECTS = [
   {
-    slug: 'abords-et-garages',
-    title: 'Abords et garages',
-    type: 'Aménagement extérieur',
-    categories: ['exterieur'],
-    location: null,
-    year: null,
-    featured: true,
-    summary: 'Allée asphaltée devant une grande maison en brique, et une rangée de garages à portes sectionnelles.',
-    description:
-      "Devant une grande maison en brique, une allée neuve en asphalte mène aux garages, bordée de pavés. Ailleurs, une rangée de garages en brique reçoit des portes sectionnelles blanches.",
-    works: ['Allée et entrée de garage', 'Bordures', 'Portes de garage sectionnelles'],
-    materials: [],
-    cover: img('/photos/maison-brique.webp', 'Grande maison en brique, allée neuve en asphalte et garages', 1000, 1333),
-    images: [
-      img('/photos/maison-brique.webp', 'Grande maison en brique, allée neuve en asphalte et garages', 1000, 1333),
-      img('/photos/ba-allee-apres.webp', 'Rangée de garages en brique, portes sectionnelles blanches', 1200, 800),
-    ],
-  },
-  {
-    slug: 'chassis-et-volets',
-    title: 'Châssis et volets',
-    type: 'Châssis et portes',
-    categories: ['menuiseries', 'facade'],
-    location: null,
+    slug: 'renovation-overijse',
+    title: 'Rénovation Overijse',
+    type: 'Rénovation complète',
+    categories: ['renovation-complete', 'maison'],
+    location: 'Overijse, Brabant flamand',
     year: null,
     featured: true,
     summary:
-      'Menuiseries anthracite et brunes posées dans des façades existantes, en brique comme en pierre, volets roulants compris.',
+      "Rénovation complète d'une maison à Overijse, de la structure aux finitions, pièce après pièce.",
     description:
-      "Les façades gardent leur parement ; les baies changent. Châssis et portes anthracite dans la brique rouge, menuiseries brunes et caissons de volets sur une brique peinte en blanc, châssis blancs dans une maison en pierre.",
-    works: ['Châssis', 'Portes', 'Volets roulants', 'Raccords de façade'],
+      "Chaudrel a mené la rénovation complète de cette maison à Overijse : reprise de la structure et des techniques, puis sols, murs et finitions pièce par pièce. Le client a suivi le chantier avec un seul interlocuteur, du premier débarras à la remise des clés.",
+    works: ['Reprise de la structure', 'Électricité et plomberie', 'Sols, murs et plafonds', 'Peinture et finitions'],
     materials: [],
-    cover: img('/photos/pf-2.webp', 'Maison en brique rouge, châssis et porte anthracite, volets roulants', 900, 1125),
-    images: [
-      img('/photos/pf-2.webp', 'Maison en brique rouge, châssis et porte anthracite, volets roulants', 900, 1125),
-      img('/photos/pf-1.webp', 'Façade de brique sur deux niveaux, châssis anthracite neufs', 1400, 933),
-      img(
-        '/photos/svc-salle-de-bain.webp',
-        'Brique peinte en blanc, fenêtre et porte brunes avec caissons de volets roulants',
-        1200,
-        900
-      ),
-      img(
-        '/photos/ba-cuisine-avant.webp',
-        "Porte d'entrée et fenêtre anthracite sur une façade de brique, pendant la pose",
-        1200,
-        800
-      ),
-      img('/photos/ba-terrasse-avant.webp', 'Maison en pierre, châssis blancs', 1200, 800),
-      img('/photos/ba-allee-avant.webp', 'Volet roulant anthracite, vue rapprochée', 1200, 800),
-    ],
+    cover: img('/story-before-after.webp', 'Rénovation à Overijse, pièce de vie après travaux', 1000, 1333),
+    images: [img('/story-before-after.webp', 'Rénovation Overijse - pièce de vie après travaux', 1000, 1333)],
   },
   {
-    slug: 'portes-d-entree',
-    title: "Portes d'entrée",
-    type: 'Châssis et portes',
-    categories: ['menuiseries'],
-    location: null,
+    slug: 'residence-uccle',
+    title: 'Résidence Uccle',
+    type: 'Rénovation complète',
+    categories: ['renovation-complete', 'maison'],
+    location: 'Uccle, Bruxelles',
     year: null,
     featured: true,
-    summary: "Portes d'entrée posées dans la maçonnerie existante : vitrages, impostes et poignées droites.",
+    summary:
+      "Rénovation d'une maison familiale, de la structure aux finitions, avec un seul interlocuteur pour l'ensemble du chantier.",
     description:
-      "Trois portes, trois façades. Une porte bleu nuit à vitrages latéraux sur un seuil en pierre ; une porte taupe à fentes vitrées et poignée droite ; une porte anthracite à quatre jours carrés, posée dans la brique.",
-    works: ["Portes d'entrée", 'Vitrages et impostes', 'Raccords de maçonnerie'],
-    materials: [],
-    cover: img('/photos/pf-3.webp', "Porte d'entrée bleu nuit à vitrages, façade de brique et seuil en pierre", 900, 1125),
-    images: [
-      img('/photos/pf-3.webp', "Porte d'entrée bleu nuit à vitrages, façade de brique et seuil en pierre", 900, 1125),
-      img('/photos/svc-cuisine.webp', "Porte d'entrée taupe, fentes vitrées et poignée droite", 1200, 900),
-      img('/photos/ba-cuisine-apres.webp', "Porte d'entrée anthracite à quatre jours carrés, dans la brique", 1200, 800),
-    ],
+      "Chaudrel a assuré la rénovation de cette résidence à Uccle : redistribution des espaces, reprise des techniques, sols, murs et finitions. L'objectif était de conserver le caractère du bâtiment tout en apportant le confort d'un logement contemporain.",
+    works: ['Redistribution des espaces', 'Électricité et plomberie', 'Sols et revêtements', 'Peinture et finitions'],
+    materials: ['Pierre naturelle', 'Bois massif'],
+    cover: img('/photos/pf-1.webp', 'Maison familiale rénovée à Uccle, pièce de vie après travaux', 1400, 933),
+    images: [img('/photos/pf-1.webp', 'Résidence Uccle - pièce de vie après rénovation complète', 1400, 933)],
   },
   {
-    slug: 'facades-enduites',
-    title: 'Façades enduites',
-    type: 'Façade',
-    categories: ['facade', 'exterieur'],
-    location: null,
+    slug: 'cuisine-ixelles',
+    title: 'Cuisine Ixelles',
+    type: 'Cuisine sur mesure',
+    categories: ['cuisine', 'appartement'],
+    location: 'Ixelles, Bruxelles',
     year: null,
     featured: true,
-    summary: 'Volumes enduits gris clair contre la brique, menuiseries anthracite et portes de garage sectionnelles.',
+    summary: 'Cuisine entièrement repensée : implantation, plan de travail et rangements sur mesure.',
     description:
-      "Deux façades. Sur la première, un volume enduit gris clair abrite deux portes de garage sectionnelles, entre une façade de brique sombre et une colonne vitrée. Sur la seconde, toute la façade est enduite : châssis anthracite, porte d'entrée vitrée et porte de garage la complètent, photographiés pendant les derniers travaux.",
-    works: ['Enduit de façade', 'Portes de garage sectionnelles', "Châssis et porte d'entrée"],
-    materials: [],
-    cover: img(
-      '/photos/facade-garages.webp',
-      'Façade en brique sombre, volume enduit gris clair et deux portes de garage sectionnelles blanches',
-      1920,
-      1080
-    ),
-    images: [
-      img(
-        '/photos/facade-garages.webp',
-        'Volume enduit gris clair, deux portes de garage sectionnelles et colonne vitrée',
-        1920,
-        1080
-      ),
-      img(
-        '/photos/svc-piscine.webp',
-        "Façade enduite grise, châssis anthracite, porte d'entrée vitrée et porte de garage, en fin de chantier",
-        1200,
-        900
-      ),
+      "Rénovation complète de la cuisine d'un appartement à Ixelles. L'implantation a été revue pour dégager un plan de travail continu et un espace de circulation confortable. Travaux techniques, pose et finitions réalisés par notre équipe.",
+    works: [
+      "Dépose de l'ancienne cuisine",
+      'Électricité et plomberie',
+      'Pose des meubles et du plan de travail',
+      'Crédence et éclairage',
     ],
+    materials: ['Marbre', 'Bois massif'],
+    cover: img('/photos/pf-4.webp', 'Cuisine sur mesure à Ixelles, plan de travail continu après travaux', 1400, 933),
+    images: [
+      img('/photos/pf-4.webp', 'Cuisine Ixelles - vue d’ensemble après rénovation', 1400, 933),
+      img('/photos/svc-cuisine.webp', 'Cuisine Ixelles - plan de travail et rangements sur mesure', 1200, 900),
+    ],
+    beforeAfter: { before: '/photos/ba-cuisine-avant.webp', after: '/photos/ba-cuisine-apres.webp' },
   },
   {
-    slug: 'toitures-et-volumes',
-    title: 'Toitures et volumes',
-    type: 'Toiture',
-    categories: ['toiture', 'gros-oeuvre'],
-    location: null,
+    slug: 'villa-tervuren',
+    title: 'Villa Tervuren',
+    type: 'Architecture intérieure',
+    categories: ['renovation-complete', 'maison'],
+    location: 'Tervuren',
     year: null,
     featured: true,
-    summary: 'Couvertures sombres neuves, sur une maison de brique et sur un volume construit de neuf.',
+    summary: "Aménagement intérieur d'une villa : lumière, circulation et matières.",
     description:
-      "Sur la première maison, une couverture neuve en tuiles sombres et un volume enduit au rez-de-chaussée. Sur la seconde, un bâtiment en brique grise sous une toiture sombre, photographié à la fin du gros œuvre.",
-    works: ['Couverture', 'Rives et zinguerie', 'Volume enduit'],
-    materials: [],
-    cover: img(
-      '/photos/pf-4.webp',
-      'Maison en brique rouge, toiture neuve en tuiles sombres et volume enduit au rez-de-chaussée',
-      1400,
-      933
-    ),
-    images: [
-      img(
-        '/photos/pf-4.webp',
-        'Maison en brique rouge, toiture neuve en tuiles sombres et volume enduit au rez-de-chaussée',
-        1400,
-        933
-      ),
-      img('/photos/svc-toiture.webp', 'Bâtiment en brique grise sous toiture sombre, abords en chantier', 1200, 900),
-    ],
+      "Travaux d'aménagement intérieur d'une villa à Tervuren. Le projet portait sur la circulation entre les pièces de vie, l'apport de lumière naturelle et le choix de matières sobres et durables.",
+    works: ['Cloisons et ouvertures', 'Éclairage intégré', 'Sols', 'Finitions'],
+    materials: ['Bois massif', 'Enduits'],
+    cover: img('/photos/pf-2.webp', 'Villa à Tervuren, intérieur après aménagement', 900, 1125),
+    images: [img('/photos/pf-2.webp', 'Villa Tervuren - pièce de vie après aménagement intérieur', 900, 1125)],
   },
   {
-    slug: 'extensions-baies-vitrees',
-    title: 'Extensions et baies vitrées',
-    type: 'Gros œuvre',
-    categories: ['gros-oeuvre'],
-    location: null,
+    slug: 'terrasse-woluwe',
+    title: 'Terrasse Woluwe',
+    type: 'Aménagement extérieur',
+    categories: ['maison'],
+    location: 'Woluwe-Saint-Pierre',
+    year: null,
+    featured: true,
+    summary: 'Terrasse et abords repensés en pierre naturelle.',
+    description:
+      "Rénovation de la terrasse et des abords d'une maison à Woluwe-Saint-Pierre : préparation du support, pose en pierre naturelle et raccords avec le jardin existant.",
+    works: ['Préparation du support', 'Pose pierre naturelle', 'Raccords et finitions'],
+    materials: ['Pierre naturelle'],
+    cover: img('/photos/pf-3.webp', 'Terrasse en pierre naturelle à Woluwe-Saint-Pierre après travaux', 900, 1125),
+    images: [img('/photos/pf-3.webp', 'Terrasse Woluwe - pierre naturelle et abords après rénovation', 900, 1125)],
+    beforeAfter: { before: '/photos/ba-terrasse-avant.webp', after: '/photos/ba-terrasse-apres.webp' },
+  },
+  {
+    slug: 'allee-uccle',
+    title: 'Allée extérieure Uccle',
+    type: 'Aménagement extérieur',
+    categories: ['maison'],
+    location: 'Uccle, Bruxelles',
     year: null,
     featured: false,
-    summary: 'Nouveaux volumes ouverts par de grandes baies en aluminium, photographiés en cours de chantier.',
+    summary: "Remplacement complet d'une allée dégradée.",
     description:
-      "Deux extensions de plain-pied, saisies avant les finitions extérieures. Les grandes baies aluminium sont posées, l'enduit est en cours, les abords sont encore à faire.",
-    works: ['Gros œuvre', 'Baies vitrées aluminium', 'Enduit'],
-    materials: [],
-    cover: img(
-      '/photos/ba-terrasse-apres.webp',
-      'Extension enduite à grandes baies vitrées aluminium, en cours de chantier',
-      1200,
-      800
-    ),
-    images: [
-      img(
-        '/photos/ba-terrasse-apres.webp',
-        'Extension enduite à grandes baies vitrées aluminium, en cours de chantier',
-        1200,
-        800
-      ),
-      img('/photos/svc-jardin.webp', 'Extension de plain-pied, portes vitrées aluminium, avant enduit', 1200, 900),
-    ],
+      "L'ancienne allée, fissurée et irrégulière, a été démolie et remplacée. Le support a été repris avant la pose du nouveau revêtement, avec traitement des raccords et des bordures.",
+    works: ['Démolition', 'Reprise du support', 'Pose du revêtement', 'Bordures et raccords'],
+    materials: ['Revêtement extérieur'],
+    cover: img('/photos/ba-allee-apres.webp', 'Allée extérieure refaite à Uccle après travaux', 1200, 800),
+    images: [img('/photos/ba-allee-apres.webp', 'Allée Uccle - revêtement extérieur après remplacement', 1200, 800)],
+    beforeAfter: { before: '/photos/ba-allee-avant.webp', after: '/photos/ba-allee-apres.webp' },
   },
 ];
-
-/**
- * Anciennes adresses → dossier qui contient leur photo d'origine. Redirigées
- * en 301 par vercel.json et côté client par la page projet.
- */
-export const LEGACY_SLUGS = {
-  'renovation-overijse': 'abords-et-garages',
-  'residence-uccle': 'chassis-et-volets',
-  'cuisine-ixelles': 'toitures-et-volumes',
-  'villa-tervuren': 'chassis-et-volets',
-  'terrasse-woluwe': 'portes-d-entree',
-  'allee-uccle': 'abords-et-garages',
-};
 
 /* ---------- Accès ---------- */
 
