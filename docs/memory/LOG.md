@@ -16,3 +16,7 @@
 - Bug corrigé : `scripts/responsive-images.mjs` ignorait `pf-1…pf-4` (regex `-\d+$`) ; désormais seuls les suffixes de largeur sont exclus.
 - Leçon : un `position: sticky` plus haut que l'écran cache son bas ; l'empilement n'est actif qu'à partir de 760 px de hauteur.
 - Leçon : l'aperçu Vercel suit chaque push de la branche (lien dans la PR).
+
+## 2026-11-21 — Kit de marque
+- Carte Canva « (FINAL) » exportée en PDF (l'export PNG Canva a été refusé : « Not allowed ») ; aperçus rendus avec pdftoppm. QR décodé : https://linktr.ee/chaudrel.
+- Leçon : une page ouverte par `page.setContent` ne charge pas `file://` → passer les images en data URI.

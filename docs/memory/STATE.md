@@ -8,6 +8,7 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 - Intègre la PR #3 (réalisations décrites fidèlement, liens réseaux vérifiés).
 - Logo client vectorisé : `brand/logo/*.svg`, monogramme dans `src/components/ui/Logo.jsx`.
 - Système documenté : `DESIGN.md`, `.impeccable/design.json`, brief `.impeccable/surfaces/`.
+- Kit de marque livré dans `brand/` (même PR #4, choix client) : logos PNG/PDF/variantes, carte Canva exportée, t-shirts noirs (or métallisé, crème + bronze), fiche Google, réseaux, charte PDF, papier à en-tête, signatures e-mail ; régénération `node brand/outils/generer.cjs`.
 
 ## Décisions clés
 - D-001 : kit de marque dans `brand/` — seul dépôt accessible.
@@ -23,7 +24,7 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 ## Prochaines étapes
 1. Retour client sur la PR #4, puis fusion (après #3).
 1b. Recevoir de vraies paires avant/après (même point de vue) → `beforeAfter` dans projects.js.
-2. PR kit de marque : carte de visite, t-shirts, fiche Google Business, documents à la nouvelle DA.
+2. Carte de visite : passer au monogramme CR dans Canva + QR devis + fonds perdus (en attente d'accord client).
 3. Remplacer `public/photos/hero.webp` par une vraie photo de chantier.
 
 ## Questions ouvertes

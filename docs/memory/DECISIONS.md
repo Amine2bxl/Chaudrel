@@ -57,3 +57,8 @@
 - Date : 2026-11-21 · Statut : acceptée (choix client)
 - Décision : porte sur un seul écran (masque agrandi par transform), chantiers en cartes empilées, comparateur à poignée porte bronze, View Transitions entre pages.
 - Conséquences : avant/après masqué tant qu'aucune vraie paire n'est renseignée.
+
+## D-011 — Kit de marque dans la PR #4
+- Date : 2026-11-21 · Statut : acceptée (choix client)
+- Décision : `brand/` livré dans la PR de refonte ; carte de visite = design Canva existant du client (« FINAL »), exportée sans modification ; t-shirts noirs, logo or métallisé ou crème + bronze.
+- Conséquences : la carte garde l'ancien logo et un QR Linktree tant que le client n'a pas validé la mise à jour ; générateur `brand/outils/generer.cjs` pour tout le reste.
