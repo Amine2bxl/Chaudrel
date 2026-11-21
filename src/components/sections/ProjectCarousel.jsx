@@ -30,23 +30,21 @@ export default function ProjectCarousel({
   projects = [],
   sectionLabel = 'Nos chantiers',
   title = '',
-  text = '',
   link,
 }) {
   if (!projects.length) return null;
 
   return (
-    <section aria-label={sectionLabel} className="bg-cream py-section">
+    <section aria-label={sectionLabel} className="py-section">
       <Container>
         {title && (
-          <div className="mb-block flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <SectionHeading title={title} text={text} />
+          <SectionHeading title={title} className="mb-block">
             {link && (
               <TextLink to={link.to} className="flex-none">
                 {link.label}
               </TextLink>
             )}
-          </div>
+          </SectionHeading>
         )}
 
         <ul className="grid gap-x-8 gap-y-14 lg:grid-cols-12">
@@ -97,12 +95,6 @@ export default function ProjectCarousel({
             );
           })}
         </ul>
-
-        {link && !title && (
-          <div className="mt-14 text-center">
-            <TextLink to={link.to}>{link.label}</TextLink>
-          </div>
-        )}
       </Container>
     </section>
   );

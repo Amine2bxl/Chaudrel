@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import { Button, Container, Section } from '@/components/ui';
 import Reveal from '@/lib/reveal';
@@ -121,18 +120,10 @@ function hasDraftContent(d) {
 export default function Quote() {
   const { openDialog } = useContactDialog();
   const [draft] = useState(loadDraft);
-  // `/devis?projet=Façade` (bloc « Quel est votre projet ? ») présélectionne le
-  // type. Seule une valeur de la liste est acceptée : le paramètre vient de l'URL.
-  const [params] = useSearchParams();
-  const preset = PROJECT_TYPES.includes(params.get('projet')) ? params.get('projet') : null;
   const [step, setStep] = useState(() =>
     draft && draft.step >= 1 && draft.step <= STEPS.length ? draft.step : 1
   );
-  const [data, setData] = useState(() => ({
-    ...EMPTY,
-    ...(draft?.data || {}),
-    ...(preset ? { projectType: preset } : {}),
-  }));
+  const [data, setData] = useState(() => ({ ...EMPTY, ...(draft?.data || {}) }));
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
   const [started, setStarted] = useState(false);
@@ -295,14 +286,14 @@ export default function Quote() {
   if (status === 'success') {
     return (
       <>
-        <PageHero
-          title="C’est noté. Merci."
-          intro="Votre demande et ses fichiers viennent de partir. Vous recevez un e-mail de confirmation, puis nous convenons d’une visite et préparons votre devis."
-          breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
-        />
+        <PageHero title="C’est noté. Merci." />
         <Section tone="cream" className="pt-block">
           <Container className="max-w-[46rem]">
-            <ol>
+            <p className="t-body measure text-ink/80">
+              Votre demande et ses fichiers viennent de partir. Vous recevez un e-mail de confirmation, puis nous
+              convenons d’une visite et préparons votre devis.
+            </p>
+            <ol className="mt-8">
               <span className="t-label text-ink/65">La suite</span>
               {[
                 { n: '01', title: 'Analyse', text: "Nous prenons connaissance de votre demande et de vos photos." },
@@ -341,11 +332,7 @@ export default function Quote() {
 
   return (
     <>
-      <PageHero
-        title="Cinq questions, deux minutes."
-        intro="Gratuit et sans engagement. Photos, plan ou vidéo ? Joignez-les."
-        breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Devis gratuit' }]}
-      />
+      <PageHero title="Cinq questions, deux minutes." />
 
       <Section tone="cream" className="pb-16 pt-block">
         <Container className="max-w-[46rem]">

@@ -19,11 +19,7 @@ export default function Projects() {
 
   return (
     <>
-      <PageHero
-        title="Des chantiers réels, pas des images d’archives."
-        intro="Le portfolio dans son entier, une réalisation à la fois - comme elle a été livrée."
-        breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Réalisations' }]}
-      />
+      <PageHero title="Des chantiers réels, pas des images d’archives." />
 
       <Section tone="cream" className="pb-0 pt-10 md:pb-0 lg:pb-0 lg:pt-14">
         <Container>
@@ -84,11 +80,7 @@ export default function Projects() {
         </Section>
       )}
 
-      <CTASection
-        title="Vous voulez un chantier comme les nôtres ?"
-        text="Cinq questions, deux minutes. Nous organisons une visite et vous remettons un devis détaillé, gratuitement."
-        source="projects"
-      />
+      <CTASection source="projects" />
     </>
   );
 }

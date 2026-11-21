@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { EASE } from '@/lib/motion';
 import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
@@ -20,9 +19,9 @@ import {
 /**
  * Fenêtre de contact - tout tient à l'écran, rien ne se plie.
  *
- * Une carte de visite : un titre, les trois gestes (devis, WhatsApp, appel),
- * les coordonnées en bloc compact, les réseaux. Aucun défilement à
- * l'intérieur - tout est visible d'un coup d'œil. Le fond se fige et se voile
+ * La carte de la page de liens, en fenêtre : un titre, les gestes (devis,
+ * WhatsApp, les deux lignes, l'e-mail), les réseaux. Sans description sous
+ * les libellés : tout tient à l'écran d'un coup d'œil. Le fond se fige et se voile
  * à l'ouverture ; fermeture par Échap, par le fond, ou par une action.
  */
 const SOCIALS = [
@@ -31,16 +30,6 @@ const SOCIALS = [
   { key: 'facebook', label: 'Facebook', icon: FacebookIcon },
   { key: 'youtube', label: 'YouTube', icon: YoutubeIcon },
 ];
-
-/** Une ligne de coordonnées : intitulé discret, valeur cliquable. */
-function Coord({ label, children }) {
-  return (
-    <div className="flex items-baseline justify-between gap-4">
-      <dt className="t-label flex-none text-ink/70">{label}</dt>
-      <dd className="t-small text-right text-ink/80">{children}</dd>
-    </div>
-  );
-}
 
 export default function ContactDialog() {
   const { open, source, closeDialog } = useContactDialog();
@@ -111,11 +100,11 @@ export default function ContactDialog() {
             aria-modal="true"
             aria-labelledby="contact-dialog-title"
             tabIndex={-1}
-                initial={{ opacity: 0, scale: 0.96, y: 10 }}
+            initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 6, transition: { duration: 0.18, ease: EASE } }}
             transition={{ duration: 0.38, ease: EASE }}
-            className="on-light glass-light relative max-h-[calc(100svh-2rem)] w-full max-w-sm overflow-y-auto rounded-[28px] outline-none"
+            className="glass-light relative max-h-[calc(100svh-2rem)] w-full max-w-sm overflow-y-auto rounded-[28px] outline-none"
           >
             {/* En-tête : un titre, une croix. Rien d'autre. */}
             <div className="flex items-center justify-between gap-4 px-5 pb-2 pt-5">
@@ -134,89 +123,50 @@ export default function ContactDialog() {
               </button>
             </div>
 
-            {/* Les trois gestes : décider, écrire, parler. */}
-            <div className="space-y-2 px-5">
+            {/* Les gestes, sans détail : le libellé suffit. */}
+            <div className="space-y-2 px-5 pb-5">
+              <Row to="/devis" icon={QuoteIcon} label="Devis gratuit" onClick={t(EVENTS.QUOTE_CTA)} primary compact />
+              <Row href={whatsappUrl()} icon={WhatsappIcon} label="WhatsApp" onClick={t(EVENTS.WHATSAPP_CLICK)} compact />
+              {BRAND.phones.map((p) => (
+                <Row
+                  key={p.tel}
+                  href={`tel:${p.tel}`}
+                  icon={PhoneIcon}
+                  label={`Appeler ${p.name}`}
+                  hint={p.number}
+                  onClick={t(EVENTS.PHONE_CLICK)}
+                  compact
+                />
+              ))}
               <Row
-                to="/devis"
-                icon={QuoteIcon}
-                label="Devis gratuit"
-                hint={`Sans engagement - ${BRAND.promises.responseTime}`}
-                onClick={t(EVENTS.QUOTE_CTA)}
-                primary
-                compact
-              />
-              <Row
-                href={whatsappUrl()}
-                icon={WhatsappIcon}
-                label="WhatsApp"
-                hint="Réponse rapide, photos bienvenues"
-                onClick={t(EVENTS.WHATSAPP_CLICK)}
-                compact
-              />
-              <Row
-                href={`tel:${BRAND.phones[0].tel}`}
-                icon={PhoneIcon}
-                label={`Appeler ${BRAND.phones[0].name}`}
-                hint={BRAND.phones[0].number}
-                onClick={t(EVENTS.PHONE_CLICK)}
+                href={`mailto:${BRAND.email}`}
+                icon={MailIcon}
+                label="Nous écrire"
+                hint={EMAIL_DISPLAY}
+                onClick={t(EVENTS.EMAIL_CLICK)}
                 compact
               />
             </div>
 
-            {/* Coordonnées, en bloc compact. */}
-            <dl className="mt-4 space-y-2.5 border-t border-ink/10 px-5 py-4">
-              <Coord label="Téléphones">
-                <span className="space-x-2">
-                  {BRAND.phones.map((p) => (
-                    <a key={p.tel} href={`tel:${p.tel}`} onClick={t(EVENTS.PHONE_CLICK)} className="link-line tabular-nums text-ink">
-                      {p.number}
+            {/* Les réseaux, en barre d'icônes comme sur /liens. */}
+            <ul className="flex justify-center gap-2.5 border-t border-ink/10 px-5 py-4">
+              {SOCIALS.map(({ key, label, icon: Icon }) =>
+                BRAND.socials[key] ? (
+                  <li key={key}>
+                    <a
+                      href={BRAND.socials[key]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      onClick={t(EVENTS.SOCIAL_CLICK)}
+                      className="grid h-11 w-11 place-items-center rounded-md border border-ink/[0.09] bg-shell text-ink/70 transition-all duration-fast ease-soft hover:border-ink/20 hover:text-ink active:translate-y-px"
+                    >
+                      <Icon width="18" height="18" />
                     </a>
-                  ))}
-                </span>
-              </Coord>
-              <Coord label="E-mail">
-                <a href={`mailto:${BRAND.email}`} onClick={t(EVENTS.EMAIL_CLICK)} className="link-line break-all text-ink">
-                  {EMAIL_DISPLAY}
-                </a>
-              </Coord>
-              {/* Horaires : masqués tant que Chaudrel ne les a pas confirmés
-                  (BRAND.hours est provisoire - voir data/site.js). */}
-              <Coord label="Adresse">
-                <address className="not-italic text-ink/80">
-                  {BRAND.address.postalCode} {BRAND.address.city}
-                  <br />
-                  <span className="text-ink/70">{BRAND.zoneLong}</span>
-                </address>
-              </Coord>
-            </dl>
-
-            {/* Réseaux + site. */}
-            <div className="border-t border-ink/10 px-5 py-3">
-              <div className="flex items-center justify-between">
-                <span className="t-label text-ink/70">Nous suivre</span>
-                <ul className="flex items-center gap-1.5">
-                  {SOCIALS.map(({ key, label, icon: Icon }) =>
-                    BRAND.socials[key] ? (
-                      <li key={key}>
-                        <a
-                          href={BRAND.socials[key]}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={label}
-                          onClick={t(EVENTS.SOCIAL_CLICK, { network: key })}
-                          className="grid h-9 w-9 place-items-center rounded-full text-ink/70 transition-all duration-fast ease-soft hover:bg-ink/5 hover:text-gold-deep"
-                        >
-                          <Icon width="17" height="17" />
-                        </a>
-                      </li>
-                    ) : null
+                  </li>
+                ) : null
               )}
             </ul>
-            <Link to="/" onClick={() => closeDialog()} className="link-line t-label inline-flex items-center gap-1 pb-0.5 text-ink">
-              Voir le site
-            </Link>
-          </div>
-        </div>
       </motion.div>
     </div>
       )}

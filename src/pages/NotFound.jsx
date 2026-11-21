@@ -4,10 +4,7 @@ import { Button, Container, Section } from '@/components/ui';
 export default function NotFound() {
   return (
     <>
-      <PageHero
-        title="Cette page n’existe pas"
-        intro="Le lien est peut-être ancien, ou recopié en partie."
-      />
+      <PageHero title="Cette page n’existe pas" />
       <Section tone="cream">
         {/* Deux issues, pas trois. La troisième - « Devis gratuit » - est déjà
             dans la barre de navigation et dans la barre d'action mobile : la

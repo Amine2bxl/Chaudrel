@@ -91,7 +91,7 @@ rounded:
 spacing:
   group: "clamp(1.75rem, 2.5vw, 2.5rem)"
   block: "clamp(2.5rem, 4.5vw, 4.5rem)"
-  section: "clamp(5rem, 9vw, 9.5rem)"
+  section: "clamp(3rem, 5vw, 5rem)"
 components:
   button-primary:
     backgroundColor: "{colors.bronze}"
@@ -126,7 +126,7 @@ components:
 
 The whole system comes from the client's logo: a high-contrast CR monogram whose R stands on a bronze door, CHAUDREL in calm wide capitals and RÉNOVATION tracked out between two bronze rules. The site is that logo turned into architecture, at evening: a warm, softened dark (never near-black against bright white, which tired the eyes), attenuated cream text, and the bronze door as the only accent. It always means "come in": the quote, the active page, a rule, a marker. Cream survives only as inserts (the contact dialog).
 
-Glass is the window material of the house. It only appears where something sits behind it (a photo, the page scrolling under the navigation), frosted, with a one-pixel light edge and a top highlight; under the pointer a soft glow and a bronze edge follow the cursor. Motion is one authored moment per page and costs nothing at rest: the door opening on the home page, stacked project cards receding, CSS entrances elsewhere.
+Glass is the house's one material. Over a photo or the scrolling page (navigation, hero card, contact dialog) it is frosted; in the body of every page it is the glass card of the links page, the same card in every section, with a one-pixel light edge and a top highlight; under the pointer a soft glow and a bronze edge follow the cursor. Motion is one authored moment per page and costs nothing at rest: the door opening on the home page, the provinces lighting up from Brussels on the map, CSS entrances elsewhere.
 
 **Key Characteristics:**
 - Softened warm dark, one metal (bronze), cream only for inserts.
@@ -179,7 +179,7 @@ A softened warm dark with a single brushed-bronze accent. Tailwind names keep th
 
 ## Layout
 
-One page container (max 1320px, 20/32/48px gutters). Three vertical intervals only: `section`, `block`, `group`. Sections alternate page / raised / deep, a gentle tonal step rather than a light-dark flash. Text and visuals alternate sides from one block to the next (services photo left, map right, founders photo left, contacts right). Inner pages open on a deep page hero. Mobile: one column, a glass action bar fixed at the bottom (quote + contact), hidden while a page call-to-action is on screen. The navigation is always visible.
+One page container (max 1320px, 20/32/48px gutters). Three vertical intervals only: `section`, `block`, `group`. Every body section sits on the same page ground and is built the same way: a Prata title alone (no sentence under it, no eyebrow, no breadcrumb), then the glass card. Photos stay outside the card, large. Inner pages open on a compact deep hero carrying the title only, and every page ends on the same glass call-to-action band. Mobile: one column, a glass action bar fixed at the bottom (quote + contact), hidden while a page call-to-action is on screen. The navigation is always visible.
 
 ## Elevation & Depth
 
@@ -189,10 +189,10 @@ Hybrid: tinted soft shadows on cream, glass on night and photos.
 - **Soft** (`0 1px 2px rgb(8 6 4 / .2), 0 12px 30px -16px rgb(8 6 4 / .55)`): buttons, resting cards.
 - **Lift** (`0 2px 4px rgb(8 6 4 / .25), 0 30px 60px -28px rgb(8 6 4 / .7)`): hover, open panels, project cards.
 - **Glass dark** (`inset 0 1px 0 rgb(255 255 255 / .2), 0 30px 60px -32px rgb(0 0 0 / .6)` + `backdrop-filter: blur(16px) saturate(160%)`): navigation, hero card, call-to-action card, mobile bar.
-- **Glass light** (`inset 0 1px 0 rgb(255 255 255 / .9), 0 26px 54px -30px rgb(36 34 30 / .4)`): contact dialog, links card.
+- **Glass light** (`inset 0 1px 0 rgb(255 255 255 / .06), 0 26px 54px -30px rgb(8 6 4 / .6)` at the dark root): the glass card (`Panel`) in every section, the links page, the contact dialog. In-page cards drop `backdrop-filter`: only a soft gradient sits behind them, so blur would cost scrolling for nothing.
 
 ### Named Rules
-**The Window Rule.** Glass only where something shows through it. Without `backdrop-filter` support it falls back to a near-opaque surface.
+**The Window Rule.** Real blur only where something shows through (navigation, hero card, dialog). Without `backdrop-filter` support it falls back to a near-opaque surface.
 
 ## Shapes
 
@@ -209,8 +209,8 @@ Controls are pills; images and panels 24px; glass cards and windows 28–32px; f
 ### Navigation
 Deep-tinted glass pill fixed at the top and always visible: logo (monogram + CHAUDREL) left, links centred, contact icon + primary button right. A glass pill slides between links (`layoutId`), a bronze dot marks the current page. Mobile: full-height glass sheet, Prata links, staggered entrance. Page changes cross-fade with native View Transitions; the navigation is excluded and stays still.
 
-### Glass card
-Frosted panel on a photo, 28–32px radius, pointer-following glow and bronze edge. Carries the offer (home hero) and the direct lines in the closing call.
+### Glass card and rows (the site's one block)
+`Panel` (`src/components/ui`): the links-page card, 28px radius, light edge, top highlight, pointer-following glow and bronze edge. Inside it, `Row` (`src/components/layout/ContactList.jsx`): icon in a round chip, label 15px medium, optional one-line hint, chevron when it links; the primary row is bronze. `GroupLabel` splits a card into groups. Services, steps, map table, founders, method, FAQ, service and project details, the contact dialog and the links page all use these three pieces, nothing else.
 
 ### Door hero (signature)
 The cream monogram on deep with its bronze door. One screen of scroll: a deep mask pierced by the door scales up by `transform` around the door, the bronze panel fades to reveal the photo through it, the mask fades out and a glass card brings the offer. Web Animations driven by the native `ViewTimeline` (no JS per frame); passive-scroll fallback. Reduced motion shows the final state directly.
@@ -218,14 +218,17 @@ The cream monogram on deep with its bronze door. One screen of scroll: a deep ma
 ### Project grid
 Editorial grid on two unequal columns (7/5, then 5/7, offset by 6rem), large photos with 24px radius, type label and Prata title underneath, round arrow button. The photo is revealed once by a sliding veil and scales to 1.04 on hover; nothing moves on scroll. A last project alone on its row spans the full width.
 
-### Facts plate
-The four verified facts engraved on a smoked-glass plate held by a brass frame and four brass screws, monogram on the left, the bronze door glowing behind the glass.
+### Facts
+The four verified facts on one glass card: monogram, then one bronze chip per fact. The response delay comes from `BRAND.promises.responseTime`, never typed in a component.
 
 ### Stairs (four steps)
-Four steps rising like a staircase (15 → 25.5rem tall), bronze nosing on top, Chaudrel icon and a large faint numeral, the last step tinted bronze and carrying the key. Steps rise one after the other on entry; on phones they stack with an increasing indent.
+Four glass cards rising like a staircase (14 → 23rem), bronze nosing on top, bronze chip and a large faint numeral; the last step tinted bronze and carrying the key. Steps rise one after the other on entry; on phones they stack with an increasing indent.
 
-### Project chooser (end of page)
-"Quel est votre projet ?" with four answers (Façade, Toiture, Châssis et portes, Rénovation complète) that open `/devis?projet=…` pre-selected, plus direct lines and WhatsApp in plain text. No photo, no glass: it blends into the page.
+### Map
+Belgium on the glass card, provinces grouped by region as rows beside it. On entry the provinces light up one by one from Brussels (CSS, once), then the head-office pin appears; hovering or focusing a province row lights it on the map.
+
+### Call-to-action band (end of every page)
+One glass card: "Parlons de votre projet." on the left, "Demander un devis gratuit" (bronze) and "Nous appeler" (opens the contact dialog) on the right, a soft bronze glow behind. Same title and actions on every page.
 
 ### Icons
 Chaudrel's own set (`src/components/ui/Icons.jsx`, plus `BrandIcons.jsx`): 24px grid, 1.6 stroke, round caps; the logo's door trapezoid is the door of every building. No icon library.

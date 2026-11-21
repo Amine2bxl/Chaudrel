@@ -21,7 +21,8 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 - D-006 : crème/nuit/bronze, Prata + Albert Sans — relevés sur le logo.
 - D-007 : photo d'ambiance (stock) gardée derrière la porte, jamais légendée comme chantier.
 
-- Passe 3 (branche de session, PR #6) : faits en plaque de verre et laiton, 4 étapes en escalier, bloc « Quel est votre projet ? » (devis pré-orienté), grille éditoriale des chantiers, en-têtes compacts, icônes Chaudrel (lucide-react retiré).
+- D-013 : un seul bloc pour tout le corps du site = la carte de verre de /liens (`Panel` + `Row` + `GroupLabel`) ; titres seuls (ni sous-titre, ni intro, ni fil d'Ariane) ; même bandeau « Parlons de votre projet. » en fin de page.
+- Passes 3 et 4 (branche de session, PR #6) : icônes Chaudrel (lucide-react retiré), grille éditoriale des chantiers, escalier des 4 étapes, puis passe 4 : fenêtre de contact au visuel de /liens, carte de Belgique en verre (provinces qui s'allument), faits/métiers/fondateurs/méthode/FAQ/pages métier et chantier sur la carte de verre ; bloc « Quel est votre projet ? » et présélection `?projet=` retirés.
 
 ## Prochaines étapes
 1. Vérifier le site en production après le déploiement de `main`.

@@ -67,3 +67,10 @@
 - Date : 2026-11-21 · Statut : acceptée (demande client)
 - Décision : figer l'ancien `main` (branche `archive/site-v2-avant-refonte`), fusionner #3 puis #4 dans `main`, ouvrir la PR #5 qui contient l'ancien site.
 - Conséquences : revenir en arrière = fusionner la PR #5 ; l'historique de la refonte reste dans `main`.
+
+## D-013 — Un seul bloc de verre pour tout le corps du site
+- Date : 2026-11-21 · Statut : acceptée (choix client par QCM)
+- Contexte : le client aime l'accueil, le pied de page et /liens ; le milieu du site lui paraît disparate (« chaque page différente »), trop long.
+- Décision : la carte de /liens devient le bloc unique (`Panel` dans `src/components/ui`, `Row`/`Chip`/`GroupLabel`/`FounderRows` dans `ContactList.jsx`). Titres de section seuls ; en-têtes de page sans intro ni fil d'Ariane ; bandeau de verre identique en fin de page ; fenêtre de contact au visuel de /liens, sans description sous WhatsApp ni le devis.
+- Alternatives écartées : plaques de laiton partout (trop lourd), verre seulement sur 2-3 blocs (moins de marque), bloc final centré ou bande bronze.
+- Conséquences : plaque laiton, escalier « lumineux » et bloc de choix du projet (passe 3) remplacés ; `/devis?projet=` n'est plus lu ; les cartes de verre du corps n'ont pas de flou d'arrière-plan (perf).

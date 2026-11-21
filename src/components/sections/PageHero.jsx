@@ -1,18 +1,17 @@
-import { Link } from 'react-router-dom';
 import { Container } from '@/components/ui';
 import { cn } from '@/lib/utils';
 import { imageAttrs, SIZES } from '@/lib/image';
 
 /**
  * En-tête de page intérieure - un champ profond, comme l'ouverture de
- * l'accueil : on change de page sans changer de maison. Fil d'Ariane, titre
- * en Prata, une phrase. Entrées en CSS (transform / opacity).
+ * l'accueil : on change de page sans changer de maison. Le titre seul, en
+ * Prata ; entrée en CSS (transform / opacity).
  *
  * Sans photo, la porte bronze du logo se tient à droite, entrouverte : la
  * signature de la marque, à l'échelle d'un élément d'architecture. Avec une
  * photo (service, chantier), la photo prend le fond sous un voile.
  */
-export default function PageHero({ title, intro, image, breadcrumb = [], aside }) {
+export default function PageHero({ title, image }) {
   const hasImage = Boolean(image);
 
   return (
@@ -55,42 +54,7 @@ export default function PageHero({ title, intro, image, breadcrumb = [], aside }
       )}
 
       <Container className={cn('pb-9 pt-[6.5rem] lg:pb-12 lg:pt-32', hasImage && 'lg:pb-14 lg:pt-36')}>
-        {breadcrumb.length > 0 && (
-          <nav aria-label="Fil d'Ariane" className="rise-in mb-4">
-            <ol className="t-label flex flex-wrap items-center gap-2 text-cream/70">
-              {breadcrumb.map((b, i) => (
-                <li key={b.to || b.label} className="flex items-center gap-2">
-                  {i > 0 && <span aria-hidden="true">/</span>}
-                  {b.to ? (
-                    <Link to={b.to} className="tap transition-colors hover:text-gold-light">
-                      {b.label}
-                    </Link>
-                  ) : (
-                    <span aria-current="page" className="text-cream/85">
-                      {b.label}
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )}
-
-        <div className={cn(aside && 'lg:grid lg:grid-cols-12 lg:gap-12')}>
-          <div className={cn('rise-in', aside && 'lg:col-span-7')} style={{ animationDelay: '80ms' }}>
-            <h1 className="t-h2 max-w-[22ch] text-balance text-cream">{title}</h1>
-          </div>
-
-          {(intro || aside) && (
-            <div
-              className={cn('rise-in mt-3 text-cream/80', aside && 'lg:col-span-5 lg:mt-0 lg:self-end')}
-              style={{ animationDelay: '180ms' }}
-            >
-              {intro && <p className="t-body measure">{intro}</p>}
-              {aside}
-            </div>
-          )}
-        </div>
+        <h1 className="rise-in t-h2 max-w-[22ch] text-balance text-cream">{title}</h1>
       </Container>
     </header>
   );

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import Reveal from '@/lib/reveal';
-import { cn } from '@/lib/utils';
+import { Panel } from '@/components/ui';
 import { GroupLabel, Row } from '@/components/layout/ContactList';
 import {
   FacebookIcon,
@@ -66,7 +66,7 @@ export default function Links() {
           {/* La colonne de liens vit dans une carte : c'est la lecture « link
               tree » attendue d'une bio - une seule carte, un geste par ligne,
               pas de page derrière. */}
-          <div className="glass-light rounded-[28px] p-5 sm:p-8">
+          <Panel>
             <GroupLabel>Votre projet</GroupLabel>
           <div className="space-y-2.5">
             <Row
@@ -129,7 +129,7 @@ export default function Links() {
               ) : null
             )}
           </ul>
-          </div>
+          </Panel>
         </Reveal>
 
         <Reveal delay={200} className="mt-10 text-center">

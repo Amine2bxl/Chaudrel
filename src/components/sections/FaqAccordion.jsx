@@ -1,6 +1,7 @@
 import { PlusIcon } from '@/components/ui/Icons';
 import Reveal from '@/lib/reveal';
 import { cn } from '@/lib/utils';
+import { Panel } from '@/components/ui';
 
 /**
  * Accordéon de questions.
@@ -9,16 +10,15 @@ import { cn } from '@/lib/utils';
  * Une croix stable invite au geste ; quand la question s'ouvre, un trait
  * laiton entre avec la réponse et signale l'état sans lire le contenu.
  *
- * `tag` est un intitulé affiché au-dessus de la question (le métier, par
- * exemple), quand les questions viennent de sources différentes ; `icon`,
- * le symbole Chaudrel de ce métier, posé devant.
+ * `icon` : le symbole Chaudrel du métier, posé devant la question quand les
+ * questions viennent de métiers différents.
  */
 export default function FaqAccordion({ items = [], tone = 'dark', className }) {
   if (!items.length) return null;
   const light = tone === 'light';
 
   return (
-    <div className={cn('space-y-3', className)}>
+    <Panel className={cn('space-y-2.5', className)}>
       {items.map((f, i) => (
         <Reveal
           as="details"
@@ -50,9 +50,6 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
               </span>
             )}
             <span className="min-w-0 flex-1">
-              {f.tag && (
-                <span className={cn('t-label block pb-1', light ? 'text-gold-light' : 'text-gold-deep')}>{f.tag}</span>
-              )}
               <span className="block font-display text-[1.2rem] leading-snug tracking-[-0.01em] sm:text-[1.3rem]">
                 {f.q}
               </span>
@@ -82,6 +79,6 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
           </div>
         </Reveal>
       ))}
-    </div>
+    </Panel>
   );
 }

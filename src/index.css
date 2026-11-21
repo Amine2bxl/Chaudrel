@@ -550,42 +550,45 @@ html {
 }
 
 /* ============================================================
-   PLAQUE DES FAITS (FactsBand) : verre fumé, cadre et vis de laiton.
-   Matières en dégradés fixes : rien n'est animé hors de l'entrée.
+   CARTE DE BELGIQUE (BelgiumCoverage)
+   Les provinces s'allument une à une depuis Bruxelles (--d = rang × 110 ms),
+   une seule fois à l'apparition ; le survol du tableau allume la province.
    ============================================================ */
-.plate-frame {
-  box-shadow:
-    inset 0 0 0 1px rgb(var(--c-gold-rgb) / 0.55),
-    inset 0 0 0 5px rgb(var(--c-bark-rgb) / 0.35),
-    inset 0 0 0 6px rgb(var(--c-gold-rgb) / 0.22),
-    inset 0 1px 0 rgb(255 255 255 / 0.2),
-    0 30px 60px -32px rgb(var(--c-shadow-rgb) / 0.8);
+.be-map path {
+  fill: rgb(var(--c-gold-rgb) / 0.16);
+  stroke: rgb(var(--c-ink-rgb) / 0.22);
+  transition: fill var(--dur-fast) var(--ease-soft);
 }
-.plate-screw {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #f1dcaa, #8a6a3a 70%);
-  box-shadow:
-    inset 0 -1px 1px rgb(0 0 0 / 0.4),
-    0 1px 2px rgb(0 0 0 / 0.5);
+.be-map path.is-on {
+  fill: var(--c-gold);
 }
-.plate-screw::after {
-  content: '';
-  position: absolute;
-  left: 2.5px;
-  right: 2.5px;
-  top: 50%;
-  height: 1.5px;
-  margin-top: -0.75px;
-  background: rgb(58 43 18 / 0.75);
-  transform: rotate(-30deg);
+.be-pin {
+  fill: var(--c-gold-light);
+  stroke: rgb(var(--c-gold-light-rgb) / 0.5);
+  transform-box: fill-box;
+  transform-origin: center;
 }
-/* Gravure : une ombre nette sous la lettre, un reflet au-dessus. */
-.plate-etch {
-  text-shadow:
-    0 1px 0 rgb(0 0 0 / 0.6),
-    0 -1px 0 rgb(255 255 255 / 0.07);
+@media (prefers-reduced-motion: no-preference) {
+  .is-in > .be-map path {
+    animation: be-light 0.9s var(--ease-soft) var(--d, 0ms) backwards;
+  }
+  .is-in > .be-map .be-pin {
+    animation: be-pin 0.6s var(--ease-soft) 1.2s backwards;
+  }
+}
+@keyframes be-light {
+  from {
+    fill: rgb(var(--c-ink-rgb) / 0.04);
+  }
+  40% {
+    fill: rgb(var(--c-gold-rgb) / 0.6);
+  }
+}
+@keyframes be-pin {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }
 
 /* ============================================================
