@@ -20,7 +20,7 @@ export default function Projects() {
   return (
     <>
       <PageHero
-        title="Des chantiers livrés, pas des images d’archives."
+        title="Des chantiers réels, pas des images d’archives."
         intro="Le portfolio dans son entier, une réalisation à la fois - comme elle a été livrée."
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Réalisations' }]}
       />

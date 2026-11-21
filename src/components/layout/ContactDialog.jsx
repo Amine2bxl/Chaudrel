@@ -169,15 +169,8 @@ export default function ContactDialog() {
               {EMAIL_DISPLAY}
             </a>
           </Coord>
-          <Coord label="Horaires">
-            <span className="inline-block text-left">
-              {BRAND.hours.map((h) => (
-                <span key={h.days} className="block tabular-nums">
-                  {h.days} · {h.time}
-                </span>
-              ))}
-            </span>
-          </Coord>
+          {/* Horaires : masqués tant que Chaudrel ne les a pas confirmés
+              (BRAND.hours est provisoire - voir data/site.js). */}
           <Coord label="Adresse">
             <address className="not-italic text-ink/80">
               {BRAND.address.postalCode} {BRAND.address.city}

@@ -33,7 +33,7 @@ export default function SocialLinks({ tone = 'dark', source = 'footer', size = '
 
   return (
     <ul className="flex items-center gap-2.5">
-      {NETWORKS.map(({ id, label, url, Icon }) => (
+      {NETWORKS.filter((n) => n.url).map(({ id, label, url, Icon }) => (
         <li key={id}>
           {url && (
             <a

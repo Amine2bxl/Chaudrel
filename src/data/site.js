@@ -74,10 +74,18 @@ export const BRAND = {
     'Wavre',
     'Arlon',
   ],
+  /**
+   * Profils vérifiés (novembre 2026) :
+   *  - Instagram et Facebook : liens publiés par Chaudrel sur son Linktree
+   *    (linktr.ee/chaudrel). L'ancienne adresse `facebook.com/chaudrel_renovation`
+   *    ne mène à aucune page (Facebook refuse le tiret bas dans un nom de page).
+   *  - TikTok : le compte `@chaudrel_renovation` existe (« Chaudrel Rénovation »).
+   *  - YouTube : `@chaudrelrenovations` renvoie une erreur 404. Retiré tant que
+   *    Chaudrel n'a pas communiqué l'adresse de sa chaîne.
+   */
   socials: {
     instagram: 'https://www.instagram.com/chaudrel_renovation/',
-    facebook: 'https://www.facebook.com/chaudrel_renovation/',
-    youtube: 'https://www.youtube.com/@chaudrelrenovations',
+    facebook: 'https://www.facebook.com/profile.php?id=61574019493337',
     tiktok: 'https://www.tiktok.com/@chaudrel_renovation',
   },
   founders: [
