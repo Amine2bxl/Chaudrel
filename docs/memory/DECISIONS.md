@@ -41,3 +41,19 @@
 - Contexte : `hero.webp` est une photo de banque d'images, pas un chantier.
 - Décision : le client garde cette photo d'ambiance ; aucune légende ne la présente comme un chantier Chaudrel.
 - Conséquences : à remplacer dès qu'une vraie photo de qualité existe (docs/VERIFICATION.md).
+
+## D-008 — Performance d'abord, rien à l'arrêt
+- Date : 2026-11-21 · Statut : acceptée (remplace la partie Lenis de D-005)
+- Contexte : demande client « 120 fps partout, aucune énergie, chargement ultra rapide », effet « cage » du hero.
+- Décision : défilement natif (Lenis retiré), entrées en CSS, hero et cartes pilotés par ViewTimeline / animation-timeline, polices auto-hébergées, variantes d'images 480/800/1200, plus aucune boucle infinie.
+- Conséquences : 0 callback rAF et ~1 ms CPU sur 5 s au repos (mesuré) ; Motion ne sert qu'aux menus, dialogue et pastille de navigation.
+
+## D-009 — Sombre dominant adouci
+- Date : 2026-11-21 · Statut : acceptée (choix client parmi 3)
+- Décision : page #231E1A, texte #EAE0D3 (12,7:1), sections profondes #1A1613, crème seulement en encarts. Rôles Tailwind inchangés, inversés à la racine ; `.on-dark` / `.on-light` restaurent le sens premier.
+- Conséquences : tout `text-cream` doit vivre dans un bloc `.on-dark` ; libellés sur bronze en `text-bark`.
+
+## D-010 — Hero court, cartes empilées, avant/après à poignée
+- Date : 2026-11-21 · Statut : acceptée (choix client)
+- Décision : porte sur un seul écran (masque agrandi par transform), chantiers en cartes empilées, comparateur à poignée porte bronze, View Transitions entre pages.
+- Conséquences : avant/après masqué tant qu'aucune vraie paire n'est renseignée.

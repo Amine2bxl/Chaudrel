@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { useLenis } from 'lenis/react';
 import { EASE } from '@/lib/motion';
 import { BRAND, EMAIL_DISPLAY, whatsappUrl } from '@/data/site';
 import { useContactDialog } from '@/lib/contactDialog';
@@ -47,7 +46,6 @@ export default function ContactDialog() {
   const { open, source, closeDialog } = useContactDialog();
   const panelRef = useRef(null);
   const restoreRef = useRef(null);
-  const lenis = useLenis();
 
   useEffect(() => {
     if (!open) return undefined;
@@ -56,7 +54,6 @@ export default function ContactDialog() {
     const { body } = document;
     const prevOverflow = body.style.overflow;
     body.style.overflow = 'hidden';
-    lenis?.stop();
 
     const panel = panelRef.current;
     panel?.focus();
@@ -84,10 +81,9 @@ export default function ContactDialog() {
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       body.style.overflow = prevOverflow;
-      lenis?.start();
       restoreRef.current?.focus?.();
     };
-  }, [open, closeDialog, lenis]);
+  }, [open, closeDialog]);
 
   const t = (event) => () => {
     closeDialog();
@@ -115,12 +111,11 @@ export default function ContactDialog() {
             aria-modal="true"
             aria-labelledby="contact-dialog-title"
             tabIndex={-1}
-            data-lenis-prevent
-            initial={{ opacity: 0, scale: 0.96, y: 10 }}
+                initial={{ opacity: 0, scale: 0.96, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 6, transition: { duration: 0.18, ease: EASE } }}
             transition={{ duration: 0.38, ease: EASE }}
-            className="glass-light relative max-h-[calc(100svh-2rem)] w-full max-w-sm overflow-y-auto rounded-[28px] outline-none"
+            className="on-light glass-light relative max-h-[calc(100svh-2rem)] w-full max-w-sm overflow-y-auto rounded-[28px] outline-none"
           >
             {/* En-tête : un titre, une croix. Rien d'autre. */}
             <div className="flex items-center justify-between gap-4 px-5 pb-2 pt-5">

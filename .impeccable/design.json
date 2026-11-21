@@ -7,42 +7,37 @@
       "bronze": {
         "role": "primary",
         "displayName": "Door Bronze",
-        "canonical": "#AE8A56",
-        "tonalRamp": [
-          "#3A2D1A",
-          "#5A4628",
-          "#7D6035",
-          "#9C7946",
-          "#AE8A56",
-          "#C9A876",
-          "#DEC7A2",
-          "#F1E5D2"
-        ]
+        "canonical": "#AE8A56"
       },
-      "ink": {
-        "role": "neutral",
-        "displayName": "Warm Ink",
-        "canonical": "#24221E",
-        "tonalRamp": [
-          "#141311",
-          "#24221E",
-          "#3B3833",
-          "#56524B",
-          "#77726A",
-          "#9C978E",
-          "#C6C1B8",
-          "#ECE7DF"
-        ]
+      "bronze-light": {
+        "role": "primary",
+        "displayName": "Light Bronze",
+        "canonical": "#CDAE7E"
       },
-      "night": {
+      "page": {
         "role": "neutral",
-        "displayName": "Night",
-        "canonical": "#191714"
+        "displayName": "Page",
+        "canonical": "#231E1A"
       },
-      "cream": {
+      "raised": {
         "role": "neutral",
-        "displayName": "Logo Cream",
-        "canonical": "#FCF4EC"
+        "displayName": "Raised",
+        "canonical": "#2C2621"
+      },
+      "deep": {
+        "role": "neutral",
+        "displayName": "Deep",
+        "canonical": "#1A1613"
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Soft Cream Text",
+        "canonical": "#EAE0D3"
+      },
+      "insert-cream": {
+        "role": "neutral",
+        "displayName": "Insert Cream",
+        "canonical": "#EAE0D3"
       }
     },
     "typographyMeta": {
@@ -66,12 +61,12 @@
     "shadows": [
       {
         "name": "soft",
-        "value": "0 1px 2px rgb(36 34 30 / .05), 0 12px 30px -16px rgb(36 34 30 / .22)",
+        "value": "0 1px 2px rgb(8 6 4 / .2), 0 12px 30px -16px rgb(8 6 4 / .55)",
         "purpose": "Buttons and resting cards."
       },
       {
         "name": "lift",
-        "value": "0 2px 4px rgb(36 34 30 / .06), 0 30px 60px -28px rgb(36 34 30 / .4)",
+        "value": "0 2px 4px rgb(8 6 4 / .25), 0 30px 60px -28px rgb(8 6 4 / .7)",
         "purpose": "Hover and open panels."
       },
       {
@@ -88,13 +83,18 @@
       },
       {
         "name": "reveal",
-        "value": "0.9s rise 28px + blur 6px",
-        "purpose": "Scroll entrances via Motion whileInView."
+        "value": "CSS class, 28px rise + fade, 0.9s",
+        "purpose": "Scroll entrances, transform/opacity only."
       },
       {
-        "name": "spring-pill",
-        "value": "spring stiffness 420 damping 38",
-        "purpose": "Navigation pill sliding between links."
+        "name": "door-hero",
+        "value": "WAAPI on ViewTimeline, contain 0%-100%",
+        "purpose": "Signature door opening over one screen of scroll."
+      },
+      {
+        "name": "stack-recede",
+        "value": "CSS animation-timeline on next card, entry 0%-100%",
+        "purpose": "Stacked project cards."
       }
     ],
     "breakpoints": [
@@ -119,7 +119,7 @@
       "refersTo": "button-primary",
       "description": "The quote action, on every page.",
       "html": "<button class=\"ds-btn\">Demander un devis gratuit</button>",
-      "css": ".ds-btn{height:56px;padding:0 28px;border:0;border-radius:9999px;background:#AE8A56;color:#24221E;font:500 15px 'Albert Sans',system-ui,sans-serif;box-shadow:0 1px 2px rgb(36 34 30/.05),0 12px 30px -16px rgb(36 34 30/.22);transition:background-color .2s cubic-bezier(.22,1,.36,1),transform .2s cubic-bezier(.22,1,.36,1)}.ds-btn:hover{background:#BE9A64}.ds-btn:active{transform:scale(.97)}.ds-btn:focus-visible{outline:2px solid #AE8A56;outline-offset:3px}"
+      "css": ".ds-btn{height:56px;padding:0 28px;border:0;border-radius:9999px;background:#AE8A56;color:#1A1613;font:500 15px 'Albert Sans',system-ui,sans-serif;box-shadow:0 1px 2px rgb(36 34 30/.05),0 12px 30px -16px rgb(36 34 30/.22);transition:background-color .2s cubic-bezier(.22,1,.36,1),transform .2s cubic-bezier(.22,1,.36,1)}.ds-btn:hover{background:#BE9A64}.ds-btn:active{transform:scale(.97)}.ds-btn:focus-visible{outline:2px solid #AE8A56;outline-offset:3px}"
     },
     {
       "name": "Outline Light Button",
@@ -142,7 +142,7 @@
       "refersTo": "field",
       "description": "Form input on cream.",
       "html": "<input class=\"ds-field\" placeholder=\"Votre nom\">",
-      "css": ".ds-field{width:100%;padding:14px 18px;border-radius:18px;border:1px solid rgb(36 34 30/.12);background:#FFFAF4;color:#24221E;font:16px 'Albert Sans',sans-serif}.ds-field:focus{outline:none;border-color:#AE8A56;box-shadow:0 0 0 3px rgb(174 138 86/.18)}"
+      "css": ".ds-field{width:100%;padding:14px 18px;border-radius:18px;border:1px solid rgb(36 34 30/.12);background:#2C2621;color:#EAE0D3;font:16px 'Albert Sans',sans-serif}.ds-field:focus{outline:none;border-color:#AE8A56;box-shadow:0 0 0 3px rgb(174 138 86/.18)}"
     }
   ],
   "narrative": {
@@ -174,17 +174,24 @@
         "name": "The Window Rule",
         "body": "Glass only where something shows through it.",
         "section": "elevation"
+      },
+      {
+        "name": "The Soft Night Rule",
+        "body": "No pure white, no near-black: text #EAE0D3, darkest field #1A1613.",
+        "section": "colors"
       }
     ],
     "dos": [
       "Do use Door Bronze for the quote action with an ink label",
       "Do keep secondary text at ink 70% or cream 60% minimum",
-      "Do honour prefers-reduced-motion"
+      "Do honour prefers-reduced-motion",
+      "Do drive scroll effects with CSS animation-timeline or WAAPI on a ViewTimeline; nothing runs at rest"
     ],
     "donts": [
       "Don't put an eyebrow above a heading",
       "Don't use glass over an empty cream area",
-      "Don't caption the ambience photo as a Chaudrel job"
+      "Don't caption the ambience photo as a Chaudrel job",
+      "Don't add smooth-scroll libraries or infinite animations"
     ]
   }
 }

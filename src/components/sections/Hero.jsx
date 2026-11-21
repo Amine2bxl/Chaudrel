@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useId, useRef } from 'react';
-import { motion, useMotionValue, useMotionValueEvent, useReducedMotion, useTransform } from 'motion/react';
+import { useEffect, useId, useRef } from 'react';
 import { Phone } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { BronzeGradient, DOOR_POINTS, LETTERS_PATH, MONO_VIEWBOX } from '@/components/ui/Logo';
@@ -7,211 +6,194 @@ import { WhatsappIcon } from '@/components/ui/BrandIcons';
 import { BRAND, whatsappUrl } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { imageAttrs, SIZES } from '@/lib/image';
-import { EASE } from '@/lib/motion';
 import usePointerGlow from '@/lib/usePointerGlow';
-import useSectionProgress from '@/lib/useSectionProgress';
 
 /* Repère du monogramme : viewBox « x y largeur hauteur » du tracé d'origine. */
 const [VX, VY, VW, VH] = MONO_VIEWBOX.split(' ').map(Number);
-/* Centre de la porte, en fraction du monogramme : c'est là qu'on entre. */
-const DOOR_CX = (DOOR_POINTS.reduce((s, p) => s + p[0], 0) / 4 - VX) / VW;
-const DOOR_CY = (DOOR_POINTS.reduce((s, p) => s + p[1], 0) / 4 - VY) / VH;
 const DOOR_D = `M${DOOR_POINTS.map((p) => p.join(' ')).join(' L')} Z`;
-
-const clamp01 = (v) => Math.min(1, Math.max(0, v));
-const easeOut = (t) => 1 - Math.pow(1 - t, 3);
-const lerp = (a, b, t) => a + (b - a) * t;
-/** Grossissement du monogramme : lent au départ, puis on traverse la porte. */
-const zoom = (p) => 1 + Math.pow(p, 2.2) * 11;
+/* Centre de la porte, en fraction du monogramme : c'est là qu'on entre. */
+const ORIGIN_X = ((DOOR_POINTS.reduce((s, p) => s + p[0], 0) / 4 - VX) / VW) * 100;
+const ORIGIN_Y = ((DOOR_POINTS.reduce((s, p) => s + p[1], 0) / 4 - VY) / VH) * 100;
+/* La nuit autour de la porte : un grand aplat percé de la porte, assez large
+   pour couvrir l'écran à l'échelle 1 sur n'importe quelle largeur. */
+const M = 2400;
+const MASK_D = `M${VX - M} ${VY - M} H${VX + VW + M} V${VY + VH + M} H${VX - M} Z ${DOOR_D}`;
 
 const HEADLINE = 'Du premier plan à la dernière clé.';
+
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const range = (p, a, b) => clamp01((p - a) / (b - a));
+const ZOOM = 34;
+/** Grossissement : lent au départ, puis on traverse la porte. */
+const zoom = (p) => 1 + Math.pow(range(p, 0, 0.82), 2.4) * (ZOOM - 1);
+
+/* Chaque couche en fonction de la progression p (0 → 1). Échantillonnées en
+   images clés, elles sont ensuite jouées par le navigateur seul. */
+const LAYERS = {
+  door: (p) => ({ transform: `scale(${zoom(p)})` }),
+  letters: (p) => ({ opacity: 1 - range(p, 0.08, 0.3) }),
+  panel: (p) => ({ opacity: 1 - range(p, 0.03, 0.2) }),
+  mask: (p) => ({ opacity: 1 - range(p, 0.55, 0.86) }),
+  glow: (p) => ({ opacity: 1 - range(p, 0, 0.35) }),
+  photo: (p) => ({ transform: `scale(${1.14 - 0.14 * range(p, 0.25, 0.8)})` }),
+  intro: (p) => ({ opacity: 1 - range(p, 0, 0.16), transform: `translateY(${-32 * range(p, 0, 0.16)}px)` }),
+  fade: (p) => ({ opacity: 1 - range(p, 0, 0.12) }),
+  final: (p) => ({ opacity: range(p, 0.8, 0.98), transform: `translateY(${28 * (1 - range(p, 0.8, 0.98))}px)` }),
+};
+const STOPS = 32;
+const framesFor = (fn) => Array.from({ length: STOPS + 1 }, (_, i) => ({ offset: i / STOPS, ...fn(i / STOPS) }));
 
 /**
  * Hero - la porte du logo s'ouvre sur une maison.
  *
- * Premier écran : le monogramme CR en crème sur la nuit, la porte bronze, la
- * promesse et les trois issues (devis, appel, WhatsApp). Au défilement, on
- * avance vers la porte : le monogramme grossit autour d'elle, la porte
- * s'efface et laisse voir la photo à travers son contour, puis le contour se
- * redresse jusqu'au plein écran. Une carte de verre porte alors l'offre.
+ * Premier écran : le monogramme CR sur la nuit, la porte bronze, la promesse
+ * et les trois issues (devis, appel, WhatsApp). Un seul écran de défilement
+ * suffit à entrer : la porte s'efface et laisse voir la photo à travers son
+ * contour, on avance vers elle jusqu'au plein cadre, puis une carte de verre
+ * porte l'offre.
  *
- * Le contour de la photo suit les quatre coins de la porte, recalculés à
- * chaque image à partir de la progression du défilement (Motion `useScroll`) :
- * aucune image clé à maintenir, rien ne dérive au redimensionnement.
+ * Performance : la nuit est un aplat percé de la porte que l'on agrandit par
+ * `transform` - jamais de `clip-path` ni de calcul de mise en page. Les
+ * animations sont des Web Animations pilotées par la `ViewTimeline` native :
+ * le navigateur les joue sur la carte graphique, sans JavaScript à chaque
+ * image. Sans `ViewTimeline`, un écouteur passif ne travaille que pendant le
+ * défilement. À l'arrêt, rien ne tourne.
  *
- * `prefers-reduced-motion` : pas d'épinglage ni de zoom, la section affiche
- * directement l'état final - photo, carte, actions.
+ * `prefers-reduced-motion` : pas d'épinglage, l'état final s'affiche
+ * directement (CSS seul, aucun saut au chargement).
  *
  * La photo est une image d'ambiance : elle ne montre pas un chantier
  * Chaudrel et n'est jamais légendée comme tel.
  */
 export default function Hero() {
-  const reduce = useReducedMotion();
   const sectionRef = useRef(null);
-  const stageRef = useRef(null);
-  const monoRef = useRef(null);
-  const photoRef = useRef(null);
+  const refs = useRef({});
   const gid = useId().replace(/:/g, '');
   const glow = usePointerGlow();
-
-  const scrolled = useSectionProgress(sectionRef, ['start start', 'end end']);
-  const done = useMotionValue(1);
-  const progress = reduce ? done : scrolled;
-
-  const monoScale = useTransform(progress, zoom);
-  const monoOpacity = useTransform(progress, [0.72, 0.9], [1, 0]);
-  const lettersOpacity = useTransform(progress, [0.1, 0.32], [1, 0]);
-  const doorOpacity = useTransform(progress, [0.04, 0.24], [1, 0]);
-  const introOpacity = useTransform(progress, [0, 0.16], [1, 0]);
-  const introY = useTransform(progress, [0, 0.16], [0, -24]);
-  const photoScale = useTransform(progress, [0.35, 1], [1.18, 1]);
-  const finalOpacity = useTransform(progress, [0.8, 0.98], [0, 1]);
-  const finalY = useTransform(progress, [0.8, 0.98], [28, 0]);
-  const veilOpacity = useTransform(progress, [0.55, 1], [0, 1]);
-
-  /* Le contour de la photo : les coins de la porte à l'écran, puis le
-     plein cadre. Écrit directement dans le style - pas de rendu React. */
-  const paint = useCallback(
-    (p) => {
-      const stage = stageRef.current;
-      const mono = monoRef.current;
-      const photo = photoRef.current;
-      if (!stage || !mono || !photo) return;
-      const W = stage.clientWidth;
-      const H = stage.clientHeight;
-      if (reduce || p >= 0.999) {
-        photo.style.clipPath = 'inset(0 0 0 0)';
-        return;
-      }
-      // Boîte du monogramme hors transformation (offset* ignore le zoom).
-      const mw = mono.offsetWidth;
-      const mh = mono.offsetHeight;
-      const ml = mono.offsetLeft;
-      const mt = mono.offsetTop;
-      const ox = ml + DOOR_CX * mw;
-      const oy = mt + DOOR_CY * mh;
-      const s = zoom(p);
-      const t = easeOut(clamp01((p - 0.34) / 0.6));
-      const full = [
-        [0, 0],
-        [W, 0],
-        [W, H],
-        [0, H],
-      ];
-      const pts = DOOR_POINTS.map(([x, y], i) => {
-        const px = ml + ((x - VX) / VW) * mw;
-        const py = mt + ((y - VY) / VH) * mh;
-        const sx = ox + (px - ox) * s;
-        const sy = oy + (py - oy) * s;
-        return `${lerp(sx, full[i][0], t).toFixed(1)}px ${lerp(sy, full[i][1], t).toFixed(1)}px`;
-      });
-      photo.style.clipPath = `polygon(${pts.join(',')})`;
-    },
-    [reduce],
-  );
-
-  useMotionValueEvent(progress, 'change', paint);
+  const bind = (name) => (el) => {
+    refs.current[name] = el;
+  };
 
   useEffect(() => {
-    const run = () => paint(progress.get());
-    run();
-    window.addEventListener('resize', run);
-    document.fonts?.ready.then(run);
-    return () => window.removeEventListener('resize', run);
-  }, [paint, progress]);
+    const section = sectionRef.current;
+    if (!section || !section.animate) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+
+    const native = typeof window.ViewTimeline === 'function';
+    const timeline = native ? new window.ViewTimeline({ subject: section, axis: 'block' }) : null;
+
+    const animations = [];
+    for (const [name, fn] of Object.entries(LAYERS)) {
+      const els = name === 'fade' ? [refs.current.fade, refs.current.fade2, refs.current.fade3] : [refs.current[name]];
+      const frames = framesFor(fn);
+      for (const el of els) {
+        if (!el) continue;
+        const anim = native
+          ? el.animate(frames, { timeline, rangeStart: 'contain 0%', rangeEnd: 'contain 100%', fill: 'both' })
+          : el.animate(frames, { duration: 1000, fill: 'both' });
+        if (!native) anim.pause();
+        animations.push(anim);
+      }
+    }
+
+    if (native) return () => animations.forEach((a) => a.cancel());
+
+    // Repli : on ne calcule que lorsque la page défile, une fois par image.
+    let frame = 0;
+    const sync = () => {
+      frame = 0;
+      const span = section.offsetHeight - window.innerHeight;
+      const p = span > 0 ? clamp01((window.scrollY - section.offsetTop) / span) : 1;
+      for (const a of animations) a.currentTime = p * 1000;
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(sync);
+    };
+    sync();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      animations.forEach((a) => a.cancel());
+    };
+  }, []);
 
   const words = HEADLINE.split(' ');
 
   return (
-    <section
-      ref={sectionRef}
-      aria-label="Chaudrel Rénovation"
-      className={reduce ? 'relative bg-bark' : 'relative h-[230svh] bg-bark lg:h-[250vh]'}
-    >
-      <div
-        ref={stageRef}
-        className="sticky top-0 flex h-[100svh] min-h-[600px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(900px_700px_at_50%_42%,#2b251e,#191714_72%)] text-cream"
-      >
+    <section ref={sectionRef} aria-label="Chaudrel Rénovation" className="door-hero on-dark relative bg-bark">
+      <div className="door-stage sticky top-0 flex h-[100svh] min-h-[560px] flex-col items-center justify-center overflow-hidden text-cream">
         {/* La maison derrière la porte. */}
-        <div ref={photoRef} className="absolute inset-0 z-[1]" style={{ clipPath: 'inset(50% 50% 50% 50%)' }}>
-          <motion.img
-            {...imageAttrs('/photos/hero.webp', SIZES.full)}
-            alt="Maison contemporaine à façade sombre, intérieur éclairé à la tombée du jour"
-            width="1920"
-            height="1080"
-            decoding="async"
-            style={{ scale: photoScale }}
-            className="h-full w-full object-cover"
-          />
-          <motion.div
-            aria-hidden="true"
-            style={{ opacity: veilOpacity }}
-            className="absolute inset-0 bg-gradient-to-t from-bark/90 via-bark/25 to-bark/40"
-          />
-        </div>
+        <img
+          ref={bind('photo')}
+          {...imageAttrs('/photos/hero.webp', SIZES.full)}
+          alt="Maison contemporaine à façade sombre, intérieur éclairé à la tombée du jour"
+          width="1920"
+          height="1080"
+          decoding="async"
+          fetchpriority="low"
+          className="door-photo absolute inset-0 h-full w-full object-cover"
+        />
+        <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-bark/90 via-bark/20 to-bark/45" />
 
-        {/* Le monogramme, la porte. */}
-        <motion.div
-          ref={monoRef}
+        {/* La porte : la nuit percée, le monogramme, le panneau bronze. */}
+        <div
+          ref={bind('door')}
           aria-hidden="true"
-          style={{ scale: monoScale, opacity: monoOpacity, transformOrigin: `${DOOR_CX * 100}% ${DOOR_CY * 100}%` }}
-          className="relative z-[2] w-[min(74vw,380px)] will-change-transform sm:w-[min(52vw,480px)] lg:w-[min(40vw,560px)]"
+          className="door-mono relative z-[1] aspect-[476/372] w-[min(72vw,360px,58svh)] sm:w-[min(50vw,460px,60svh)] lg:w-[min(38vw,540px,62vh)]"
+          style={{ transformOrigin: `${ORIGIN_X}% ${ORIGIN_Y}%` }}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.94, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            transition={{ duration: 1.4, ease: EASE }}
+          <svg
+            ref={bind('mask')}
+            viewBox={MONO_VIEWBOX}
+            className="door-mask absolute inset-0 h-full w-full overflow-visible"
           >
-            <svg viewBox={MONO_VIEWBOX} className="block h-auto w-full overflow-visible">
+            <path d={MASK_D} fillRule="evenodd" fill="rgb(var(--c-bark-rgb))" />
+          </svg>
+          <div className="door-letters-in absolute inset-0">
+            <svg ref={bind('letters')} viewBox={MONO_VIEWBOX} className="door-letters absolute inset-0 h-full w-full">
+              <path d={LETTERS_PATH} fillRule="evenodd" className="fill-cream" />
+            </svg>
+          </div>
+          <div className="door-panel-in absolute inset-0" style={{ transformOrigin: `${((600 - VX) / VW) * 100}% 50%` }}>
+            <svg ref={bind('panel')} viewBox={MONO_VIEWBOX} className="door-panel absolute inset-0 h-full w-full">
               <defs>
                 <BronzeGradient id={gid} />
               </defs>
-              <motion.path
-                d={LETTERS_PATH}
-                fillRule="evenodd"
-                className="fill-cream"
-                style={{ opacity: lettersOpacity }}
-              />
-              <motion.path
-                d={DOOR_D}
-                fill={`url(#${gid})`}
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 1.1, ease: EASE, delay: 0.55 }}
-                style={{ opacity: doorOpacity, transformBox: 'fill-box', transformOrigin: 'left center' }}
-              />
+              <path d={DOOR_D} fill={`url(#${gid})`} />
             </svg>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
+
+        {/* Lueur chaude derrière le monogramme. */}
+        <div
+          ref={bind('glow')}
+          aria-hidden="true"
+          className="door-glow pointer-events-none absolute inset-0 z-[2] bg-[radial-gradient(640px_480px_at_50%_40%,rgb(var(--c-gold-rgb)/0.13),transparent_70%)]"
+        />
 
         {/* Promesse et actions du premier écran. */}
-        <motion.div
-          style={{ opacity: introOpacity, y: introY }}
-          className="relative z-[3] mt-10 flex w-full flex-col items-center px-5 text-center sm:mt-12"
+        <div
+          ref={bind('intro')}
+          className="door-intro relative z-[3] mt-9 flex w-full flex-col items-center px-5 text-center"
         >
           <h1 className="t-h1 max-w-[16ch] text-balance sm:max-w-none" aria-label={HEADLINE}>
             {words.map((w, i) => (
               <span key={i} aria-hidden="true" className="inline-block overflow-hidden pb-[0.12em] align-bottom">
-                <motion.span
-                  className="inline-block"
-                  initial={{ y: '105%' }}
-                  animate={{ y: '0%' }}
-                  transition={{ duration: 1, ease: EASE, delay: 0.7 + i * 0.06 }}
-                >
+                <span className="door-word inline-block" style={{ animationDelay: `${650 + i * 55}ms` }}>
                   {w}
                   {i < words.length - 1 && ' '}
-                </motion.span>
+                </span>
               </span>
             ))}
           </h1>
 
-          <motion.div
+          <div
             data-page-cta
             {...glow}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: EASE, delay: 1.15 }}
-            className="glass-dark mt-8 flex w-full max-w-[22rem] items-center gap-1.5 rounded-full p-1.5 sm:w-auto sm:max-w-none"
+            className="door-bar glass-dark mt-8 flex w-full max-w-[22rem] items-center gap-1.5 rounded-full p-1.5 sm:w-auto sm:max-w-none"
           >
             <Button
               to="/devis"
@@ -241,47 +223,39 @@ export default function Hero() {
               <WhatsappIcon width={17} height={17} />
               <span className="hidden sm:inline">WhatsApp</span>
             </a>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Repères de coin. */}
-        <motion.p
-          style={{ opacity: introOpacity }}
-          className="t-label absolute bottom-8 left-8 z-[3] hidden text-cream/60 md:block lg:left-12"
+        <p
+          ref={bind('fade')}
+          className="door-fade t-label absolute bottom-8 left-8 z-[3] hidden text-cream/70 md:block lg:left-12"
         >
           Rénovation · depuis {BRAND.founded}
-        </motion.p>
-        <motion.p
-          style={{ opacity: introOpacity }}
-          className="t-label absolute bottom-8 right-8 z-[3] hidden text-right leading-[1.9] text-cream/60 md:block lg:right-12"
+        </p>
+        <p
+          ref={bind('fade2')}
+          className="door-fade t-label absolute bottom-8 right-8 z-[3] hidden text-right leading-[1.9] text-cream/70 md:block lg:right-12"
         >
           Bruxelles
           <br />
           Toute la Belgique
-        </motion.p>
-        {!reduce && (
-          <motion.span
-            aria-hidden="true"
-            style={{ opacity: introOpacity }}
-            className="absolute bottom-0 left-1/2 z-[3] h-12 w-px -translate-x-1/2 overflow-hidden bg-cream/10"
-          >
-            <motion.span
-              className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-transparent to-gold-light"
-              animate={{ y: ['-100%', '200%'] }}
-              transition={{ duration: 2.2, ease: EASE, repeat: Infinity, repeatDelay: 0.6 }}
-            />
-          </motion.span>
-        )}
+        </p>
+        <span
+          ref={bind('fade3')}
+          aria-hidden="true"
+          className="door-fade absolute bottom-0 left-1/2 z-[3] h-12 w-px -translate-x-1/2 bg-gradient-to-b from-transparent to-gold-light/70"
+        />
 
         {/* Derrière la porte : l'offre, sur une carte de verre. */}
-        <motion.div
+        <div
+          ref={bind('final')}
           data-page-cta
           {...glow}
-          style={{ opacity: finalOpacity, y: finalY }}
-          className="glass-dark absolute inset-x-4 bottom-4 z-[4] rounded-[28px] p-6 sm:inset-x-auto sm:bottom-10 sm:left-8 sm:w-[34rem] sm:p-9 lg:bottom-14 lg:left-12"
+          className="door-final glass-dark absolute inset-x-4 bottom-4 z-[4] rounded-[28px] p-6 sm:inset-x-auto sm:bottom-10 sm:left-8 sm:w-[34rem] sm:p-9 lg:bottom-14 lg:left-12"
         >
           <h2 className="t-h2">Bienvenue chez vous.</h2>
-          <p className="t-lead mt-4 text-cream/80">
+          <p className="t-lead mt-4 text-cream/85">
             Façades, toitures, châssis et rénovations complètes. {BRAND.founders[0].name} et {BRAND.founders[1].name}{' '}
             suivent chaque chantier en personne, du devis à la remise des clés.
           </p>
@@ -293,10 +267,10 @@ export default function Hero() {
               Nos réalisations
             </Button>
           </div>
-          <p className="t-small mt-5 text-cream/60">
+          <p className="t-small mt-5 text-cream/70">
             {BRAND.promises.quote} · {BRAND.promises.responseTime}
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

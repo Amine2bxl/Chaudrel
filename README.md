@@ -91,15 +91,22 @@ Les images vont dans `public/photos/` (WebP, largeur ≥ 1600 px pour les visuel
 ## Design system
 
 Tiré du logo Chaudrel (monogramme CR, porte bronze) : voir `DESIGN.md`.
-Deux matières (crème `#FCF4EC`, nuit `#191714`) et un métal (bronze `#AE8A56`),
-Prata pour les titres, Albert Sans pour le reste. Jetons dans `src/styles/tokens.css`,
-verre (`.glass-dark`, `.glass-light`) dans `src/index.css`.
+Sombre dominant adouci (page `#231E1A`, texte `#EAE0D3`), un seul métal (bronze
+`#AE8A56`), le crème réservé aux encarts. Prata pour les titres, Albert Sans pour le
+reste, polices hébergées sur le site (`@fontsource`). Jetons dans
+`src/styles/tokens.css`, verre (`.glass-dark`, `.glass-light`) dans `src/index.css`.
 
-Animations : [Motion](https://motion.dev) (`motion/react`) et défilement amorti
-[Lenis](https://lenis.darkroom.engineering). `<Reveal>` (`src/lib/reveal.jsx`) porte
-les entrées au scroll ; le hero de l'accueil ouvre la porte du logo au défilement
-(`src/components/sections/Hero.jsx`). `prefers-reduced-motion` coupe Lenis et les
-déplacements (`<MotionConfig reducedMotion="user">`).
+Animations, sans rien qui tourne à l'arrêt :
+- défilement natif (pas de bibliothèque de défilement amorti) ;
+- `<Reveal>` (`src/lib/reveal.jsx`) : une classe CSS posée une fois, transform + opacity ;
+- hero « porte » : Web Animations pilotées par la `ViewTimeline` native ;
+- cartes de chantier empilées et parallaxe : `animation-timeline` CSS ;
+- [Motion](https://motion.dev) seulement pour le menu, la fenêtre de contact et la pastille de navigation ;
+- changements de page : View Transitions natives.
+`prefers-reduced-motion` affiche directement les états finaux.
+
+Photos : `node scripts/responsive-images.mjs` génère les variantes 480/800/1200
+(macOS : `sips` + `cwebp`) et le manifeste `src/data/image-variants.json`.
 
 Le kit de marque (logo vectoriel, carte de visite, t-shirts, fiche Google Business)
 vit dans `brand/`, séparé du code du site.

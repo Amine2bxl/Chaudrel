@@ -1,72 +1,92 @@
-import { motion } from 'motion/react';
-import { EASE, REVEAL } from '@/lib/motion';
+import { useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
 
-/**
- * Apparition au scroll, portée par Motion (`whileInView`).
- *
- * `from` : up (défaut, monte en sortant d'un léger flou), down, left, right,
- * fade, line / lineY (filet qui se dessine), veil (image découverte de haut
- * en bas par un volet). `delay` en millisecondes, comme avant.
- *
- * `prefers-reduced-motion` est géré globalement par <MotionConfig
- * reducedMotion="user"> : les déplacements disparaissent, l'opacité reste.
- */
-const CREATED = new Map();
-const motionTag = (as) => {
-  if (typeof as === 'string') return motion[as];
-  if (!CREATED.has(as)) CREATED.set(as, motion.create(as));
-  return CREATED.get(as);
+const VARIANTS = {
+  up: 'rv rv-up',
+  down: 'rv rv-down',
+  left: 'rv rv-left',
+  right: 'rv rv-right',
+  fade: 'rv rv-fade',
+  line: 'rv-line',
+  lineY: 'rv-line-y',
+  veil: 'rv-veil',
 };
 
+/**
+ * Un seul IntersectionObserver par marge pour toute la page ; les rappels
+ * sont retrouvés par une WeakMap. Créé à la demande : au prérendu,
+ * `IntersectionObserver` n'existe pas.
+ */
+const callbacks = new WeakMap();
+const observers = new Map();
+
+function getObserver(margin) {
+  if (typeof IntersectionObserver === 'undefined') return null;
+  let observer = observers.get(margin);
+  if (!observer) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) callbacks.get(entry.target)?.(entry.isIntersecting);
+      },
+      { rootMargin: margin, threshold: 0.05 }
+    );
+    observers.set(margin, observer);
+  }
+  return observer;
+}
+
+/**
+ * Apparition au scroll, en CSS pur : une classe posée une fois, puis la
+ * carte graphique fait le reste (transform + opacity seulement, jamais de
+ * flou ni de propriété qui repeint la page). Aucun calcul par image, donc
+ * aucune énergie dépensée une fois l'élément apparu.
+ *
+ * `from` : up (défaut), down, left, right, fade, line / lineY (filet qui se
+ * dessine), veil (photo découverte par un volet qui glisse). `delay` en ms.
+ */
 export default function Reveal({
   children,
-  as = 'div',
+  as: Tag = 'div',
   from = 'up',
   delay = 0,
   once = true,
-  margin = '-60px',
+  margin = '0px 0px -8% 0px',
   className = '',
   style,
   ...rest
 }) {
-  const Tag = motionTag(as);
-  const transition = { duration: from === 'line' || from === 'lineY' ? 1.1 : 0.9, ease: EASE, delay: delay / 1000 };
-  const viewport = { once, margin };
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
 
-  if (from === 'veil') {
-    // Le volet porte sur l'enfant, pas sur l'élément observé : un élément
-    // entièrement rogné n'intersecte plus rien.
-    return (
-      <Tag className={className} style={style} initial="hidden" whileInView="show" viewport={viewport} {...rest}>
-        <motion.div
-          className="h-full w-full"
-          variants={{ hidden: { clipPath: 'inset(0 0 100% 0)' }, show: { clipPath: 'inset(0 0 0% 0)' } }}
-          transition={{ duration: 1.2, ease: EASE, delay: delay / 1000 }}
-        >
-          <motion.div
-            className="h-full w-full"
-            variants={{ hidden: { scale: 1.08 }, show: { scale: 1 } }}
-            transition={{ duration: 1.6, ease: EASE, delay: delay / 1000 }}
-          >
-            {children}
-          </motion.div>
-        </motion.div>
-      </Tag>
-    );
-  }
-
-  const v = REVEAL[from] || REVEAL.up;
-  const origin = from === 'line' ? 'left center' : from === 'lineY' ? 'center top' : undefined;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || (visible && once)) return undefined;
+    const observer = getObserver(margin);
+    if (!observer) {
+      setVisible(true);
+      return undefined;
+    }
+    callbacks.set(el, (inView) => {
+      if (inView) {
+        setVisible(true);
+        if (once) {
+          observer.unobserve(el);
+          callbacks.delete(el);
+        }
+      } else if (!once) setVisible(false);
+    });
+    observer.observe(el);
+    return () => {
+      observer.unobserve(el);
+      callbacks.delete(el);
+    };
+  }, [once, margin, visible]);
 
   return (
     <Tag
-      className={className}
-      style={origin ? { transformOrigin: origin, ...style } : style}
-      initial="hidden"
-      whileInView="show"
-      viewport={viewport}
-      variants={v}
-      transition={transition}
+      ref={ref}
+      className={cn(VARIANTS[from] || VARIANTS.up, visible && 'is-in', className)}
+      style={delay ? { '--rv-delay': `${delay}ms`, ...style } : style}
       {...rest}
     >
       {children}

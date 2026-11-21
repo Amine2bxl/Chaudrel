@@ -18,16 +18,16 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
         className={cn(
           'grid flex-none place-items-center rounded-full transition-colors duration-fast',
           compact ? 'h-10 w-10' : 'h-11 w-11',
-          primary ? 'bg-ink/10 text-ink' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
+          primary ? 'bg-bark/10 text-bark' : 'bg-ink/[0.06] text-ink group-hover:bg-ink/10'
         )}
       >
         <Icon width={compact ? 16 : 17} height={compact ? 16 : 17} />
       </span>
 
       <span className="min-w-0 flex-1">
-        <span className="block text-[15px] font-medium leading-snug text-ink">{label}</span>
+        <span className={cn('block text-[15px] font-medium leading-snug', primary ? 'text-bark' : 'text-ink')}>{label}</span>
         {hint && (
-          <span className={cn('mt-0.5 block t-small', primary ? 'text-ink/75' : 'text-ink/70')}>{hint}</span>
+          <span className={cn('mt-0.5 block t-small', primary ? 'text-bark/75' : 'text-ink/70')}>{hint}</span>
         )}
       </span>
 
@@ -41,7 +41,7 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
         strokeWidth="1.6"
         className={cn(
           'flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5',
-          primary ? 'text-ink/70' : 'text-ink/70'
+          primary ? 'text-bark/60' : 'text-ink/60'
         )}
       >
         <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -53,7 +53,7 @@ export function Row({ to, href, icon: Icon, label, hint, onClick, primary = fals
     'group flex w-full items-center gap-3.5 rounded-lg text-left transition-[background-color,border-color,box-shadow,transform] duration-200 ease-soft active:scale-[0.98]',
     compact ? 'px-4 py-3' : 'px-5 py-4',
     primary
-      ? 'bg-gold text-ink shadow-soft hover:bg-gold-hover hover:shadow-lift'
+      ? 'bg-gold text-bark shadow-soft hover:bg-gold-hover hover:shadow-lift'
       : 'border border-ink/[0.09] bg-shell hover:border-ink/20 hover:shadow-soft',
     className
   );

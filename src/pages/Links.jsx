@@ -55,7 +55,7 @@ export default function Links() {
       <div className="mx-auto w-full max-w-lg px-5 pb-[calc(66px+3rem)] pt-28 sm:px-6 lg:pb-24 lg:pt-36">
         <Reveal className="text-center">
           <h1>
-            <img src="/logo-ink.svg" alt={BRAND.legalName} width="1056" height="660" className="mx-auto h-auto w-[200px]" />
+            <img src="/logo-cream.svg" alt={BRAND.legalName} width="1056" height="660" className="mx-auto h-auto w-[200px]" />
           </h1>
           <p className="t-small mt-6 text-ink/70">
             Entreprise de rénovation · {BRAND.zoneLong}

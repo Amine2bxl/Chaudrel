@@ -10,3 +10,9 @@
 - Leçon : pas de config Prettier dans le dépôt — ne jamais lancer `prettier --write` sur `src/**` (reformate tout). Formater seulement les fichiers réécrits.
 - Leçon : `overflow-x: hidden` sur html/body casse `position: sticky` ; utiliser `overflow-x: clip`.
 - Commandes utiles : `npm run build` ; captures Playwright dans le scratchpad (1440 et 390, états réduits, menu, dialogue).
+
+## 2026-11-21 — Passe 2 (perf, sombre adouci)
+- Mesure au repos (build prod, après défilement complet) : 0 rAF, 1 ms de tâches sur 5 s, 0 layout. LCP local 164 ms.
+- Bug corrigé : `scripts/responsive-images.mjs` ignorait `pf-1…pf-4` (regex `-\d+$`) ; désormais seuls les suffixes de largeur sont exclus.
+- Leçon : un `position: sticky` plus haut que l'écran cache son bas ; l'empilement n'est actif qu'à partir de 760 px de hauteur.
+- Leçon : l'aperçu Vercel suit chaque push de la branche (lien dans la PR).

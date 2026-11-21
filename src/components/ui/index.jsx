@@ -96,7 +96,8 @@ export function SectionHeading({ title, text, tone = 'dark', align = 'stack', cl
    voit sans attendre la page suivante. */
 
 const VARIANTS = {
-  solid: 'bg-gold text-ink shadow-soft hover:bg-gold-hover hover:shadow-lift',
+  // Libellé en `bark` : foncé dans tous les contextes (5,6:1 sur le bronze).
+  solid: 'bg-gold text-bark shadow-soft hover:bg-gold-hover hover:shadow-lift',
   solidLight: 'bg-cream text-ink shadow-soft hover:bg-shell hover:shadow-lift',
   outline: 'border border-ink/20 text-ink hover:border-ink/45 hover:bg-ink/[0.04]',
   outlineLight: 'border border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/[0.08]',
@@ -111,7 +112,7 @@ const SIZES = {
 /* Pastille de flèche logée dans la pilule : elle donne la direction et
    glisse au survol. Décorative - le libellé dit déjà où l'on va. */
 const ARROW_TONE = {
-  solid: 'bg-ink/10 text-ink',
+  solid: 'bg-bark/10 text-bark',
   solidLight: 'bg-ink/[0.08] text-ink',
   outline: 'bg-ink/[0.07] text-ink',
   outlineLight: 'bg-cream/15 text-cream',

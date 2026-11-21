@@ -62,9 +62,9 @@ export const PROJECTS = [
       "Devant une grande maison en brique, une allée neuve en asphalte mène aux garages, bordée de pavés. Ailleurs, une rangée de garages en brique reçoit des portes sectionnelles blanches.",
     works: ['Allée et entrée de garage', 'Bordures', 'Portes de garage sectionnelles'],
     materials: [],
-    cover: img('/story-before-after.webp', 'Grande maison en brique, allée neuve en asphalte et garages', 1000, 1333),
+    cover: img('/photos/maison-brique.webp', 'Grande maison en brique, allée neuve en asphalte et garages', 1000, 1333),
     images: [
-      img('/story-before-after.webp', 'Grande maison en brique, allée neuve en asphalte et garages', 1000, 1333),
+      img('/photos/maison-brique.webp', 'Grande maison en brique, allée neuve en asphalte et garages', 1000, 1333),
       img('/photos/ba-allee-apres.webp', 'Rangée de garages en brique, portes sectionnelles blanches', 1200, 800),
     ],
   },

@@ -2,17 +2,19 @@
 name: Chaudrel Rénovation
 description: Façades, toitures, châssis et rénovations complètes, depuis Schaerbeek dans toute la Belgique.
 colors:
-  cream: "#FCF4EC"
-  shell: "#FFFAF4"
-  sand: "#F3E8DB"
-  ink: "#24221E"
-  night: "#191714"
+  page: "#231E1A"
+  raised: "#2C2621"
+  inset: "#1D1916"
+  deep: "#1A1613"
+  text: "#EAE0D3"
   bronze: "#AE8A56"
-  bronze-deep: "#7D6035"
+  bronze-light: "#CDAE7E"
   bronze-hover: "#BE9A64"
-  bronze-light: "#C9A876"
-  green: "#3D6B4E"
-  error: "#9A3B23"
+  insert-cream: "#EAE0D3"
+  insert-ink: "#24221E"
+  insert-bronze: "#6E532C"
+  green: "#7FB08D"
+  error: "#E8917A"
 typography:
   display:
     fontFamily: "Prata, Georgia, serif"
@@ -43,6 +45,31 @@ typography:
     fontSize: "1.0625rem"
     fontWeight: 400
     lineHeight: 1.7
+  menu:
+    fontFamily: "Prata, Georgia, serif"
+    fontSize: "2rem"
+    fontWeight: 400
+    lineHeight: 1.1
+  name:
+    fontFamily: "Prata, Georgia, serif"
+    fontSize: "1.75rem"
+    fontWeight: 400
+    lineHeight: 1.1
+  name-sm:
+    fontFamily: "Prata, Georgia, serif"
+    fontSize: "1.25rem"
+    fontWeight: 400
+    lineHeight: 1.1
+  control:
+    fontFamily: "Albert Sans Variable, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 500
+    lineHeight: 1
+  nav:
+    fontFamily: "Albert Sans Variable, system-ui, sans-serif"
+    fontSize: "14px"
+    fontWeight: 400
+    lineHeight: 1
   label:
     fontFamily: "Albert Sans, system-ui, sans-serif"
     fontSize: "0.6875rem"
@@ -63,25 +90,25 @@ spacing:
 components:
   button-primary:
     backgroundColor: "{colors.bronze}"
-    textColor: "{colors.ink}"
+    textColor: "{colors.deep}"
     rounded: "{rounded.pill}"
     height: "56px"
     padding: "0 28px"
   button-primary-hover:
     backgroundColor: "{colors.bronze-hover}"
-    textColor: "{colors.ink}"
+    textColor: "{colors.deep}"
   button-outline-light:
-    textColor: "{colors.cream}"
+    textColor: "{colors.text}"
     rounded: "{rounded.pill}"
     height: "56px"
     padding: "0 28px"
   nav:
-    backgroundColor: "{colors.night}"
-    textColor: "{colors.cream}"
+    backgroundColor: "{colors.deep}"
+    textColor: "{colors.text}"
     rounded: "{rounded.pill}"
   field:
-    backgroundColor: "{colors.shell}"
-    textColor: "{colors.ink}"
+    backgroundColor: "{colors.raised}"
+    textColor: "{colors.text}"
     rounded: "{rounded.md}"
     padding: "14px 18px"
 ---
@@ -92,37 +119,37 @@ components:
 
 **Creative North Star: "La porte entrouverte"**
 
-The whole system comes from the client's logo: a high-contrast CR monogram whose R stands on a bronze door, set over a warm cream ground, with CHAUDREL in calm wide capitals and RÉNOVATION tracked out between two bronze rules. The site is that logo turned into architecture. Night fields and cream fields alternate like rooms; the bronze door is the only accent and always means "come in": the quote, the active page, a rule, a marker.
+The whole system comes from the client's logo: a high-contrast CR monogram whose R stands on a bronze door, CHAUDREL in calm wide capitals and RÉNOVATION tracked out between two bronze rules. The site is that logo turned into architecture, at evening: a warm, softened dark (never near-black against bright white, which tired the eyes), attenuated cream text, and the bronze door as the only accent. It always means "come in": the quote, the active page, a rule, a marker. Cream survives only as inserts (the contact dialog).
 
-Glass is the window material of the house. It only appears where something sits behind it (a photo, a night field, the page scrolling under the navigation), frosted, with a one-pixel light edge and a top highlight. Under the pointer it catches light: a soft glow and a bronze edge follow the cursor. Motion is one authored moment per page, not a garnish: the door opening on the home page, a rising, unblurring entrance elsewhere, a slow parallax behind glass cards.
+Glass is the window material of the house. It only appears where something sits behind it (a photo, the page scrolling under the navigation), frosted, with a one-pixel light edge and a top highlight; under the pointer a soft glow and a bronze edge follow the cursor. Motion is one authored moment per page and costs nothing at rest: the door opening on the home page, stacked project cards receding, CSS entrances elsewhere.
 
 **Key Characteristics:**
-- Two materials (cream paper, night) and one metal (bronze).
+- Softened warm dark, one metal (bronze), cream only for inserts.
 - Prata for every title, Albert Sans for everything else; tracked caps only for small markers.
 - Glass over content, never glass over nothing.
+- Native scroll, compositor-only animation, zero work when idle.
 - Real job photos, never captioned beyond what they show. The home hero photo is an ambience image and is never presented as a Chaudrel job.
 
 ## Colors
 
-A warm two-field palette with a single brushed-bronze accent.
+A softened warm dark with a single brushed-bronze accent. Tailwind names keep their original roles (`bg-cream` page, `text-ink` text); at the root the page is dark, and `.on-dark` / `.on-light` scopes restore the light-text-on-deep and dark-text-on-cream pairs.
 
 ### Primary
-- **Door Bronze** (#AE8A56): the logo's door. Primary button fill (ink label, 5.0:1), rules, door marks, active-page dot, focus ring, text selection. Never text on cream (2.9:1).
-- **Deep Bronze** (#7D6035): bronze when it must be read on cream: links in legal text, icons, small markers (5.4:1).
-- **Light Bronze** (#C9A876): bronze on night: footer headings, active nav dot, kicker-free markers (8.0:1).
-- **Bronze Hover** (#BE9A64): primary button hover (ink label 6.1:1).
+- **Door Bronze** (#AE8A56): the logo's door. Primary button fill with a deep label (`text-bark`, 5.6:1), rules, door marks, active-page dot, focus ring, selection. 5.2:1 on the page.
+- **Light Bronze** (#CDAE7E): bronze text on dark (7.8:1 on the page).
+- **Insert Bronze** (#6E532C): bronze text on cream inserts (5.5:1).
 
 ### Neutral
-- **Logo Cream** (#FCF4EC): page ground and light sections.
-- **Shell** (#FFFAF4): raised surfaces on cream (fields, cards).
-- **Sand** (#F3E8DB): image placeholders, quiet fills.
-- **Warm Ink** (#24221E): text and monogram letters (14.6:1 on cream). Secondary text uses ink at 70% minimum.
-- **Night** (#191714): dark fields, footer, page heroes, navigation tint (cream on night 16.4:1).
+- **Page** (#231E1A): page ground (`bg-cream` at the root).
+- **Raised** (#2C2621): cards, fields, alternate sections (`bg-shell`).
+- **Inset** (#1D1916): image placeholders (`bg-sand`).
+- **Deep** (#1A1613): hero, method, footer, navigation tint (`bg-bark`).
+- **Text** (#EAE0D3): body and titles, 12.7:1 on the page; secondary at 70% (6.9:1), never below 55%.
 
 ### Named Rules
-**The One Metal Rule.** Bronze is the only accent. Green (#3D6B4E) means "done and verified", red (#9A3B23) means error; neither is ever decorative.
+**The One Metal Rule.** Bronze is the only accent. Green means "done and verified", red means error; neither is decorative.
 
-**The Readable Bronze Rule.** Door Bronze on cream is for fills and marks; any bronze text on cream uses Deep Bronze.
+**The Soft Night Rule.** No pure white and no near-black: text is #EAE0D3, the darkest field is #1A1613.
 
 ## Typography
 
@@ -137,23 +164,25 @@ A warm two-field palette with a single brushed-bronze accent.
 - **Title** (400, clamp(1.875rem, 3.7vw, 3.125rem), 1.08): section H2.
 - **Subtitle** (Albert Sans 600, clamp(1.1875rem, 1.6vw, 1.375rem), 1.3): H3 under serif titles.
 - **Lead / Body** (400, 1.0625–1.25rem / 1.0625rem, 1.6 / 1.7): max 66ch.
-- **Label** (500, 0.6875rem, 0.24em, uppercase): breadcrumbs, footer headings, meta. Never above a heading.
+- **Menu / Name** (Prata 400, 2rem / 1.75rem / 1.25rem): mobile menu links, founder and service names.
+- **Control** (Albert Sans 500, 15px): button and action labels, sentence case. **Nav** 14px.
+- **Label** (500, 0.6875rem, 0.24em, uppercase): breadcrumbs, meta, card markers. Never above a heading.
 
 ### Named Rules
 **The Two Voices Rule.** Serif titles, sans everything else; hierarchy comes from the contrast between the two, never from bold serif (Prata has one weight).
 
 ## Layout
 
-One page container (max 1320px, 20/32/48px gutters). Three vertical intervals only: `section` between sections, `block` between a title and its content, `group` inside a block. Sections alternate cream and night; inner pages open on a night page hero so navigation reads the same everywhere. Mobile: one column, a glass action bar fixed at the bottom (quote + contact), hidden while a page call-to-action is on screen.
+One page container (max 1320px, 20/32/48px gutters). Three vertical intervals only: `section`, `block`, `group`. Sections alternate page / raised / deep, a gentle tonal step rather than a light-dark flash. Text and visuals alternate sides from one block to the next (services photo left, map right, founders photo left, contacts right). Inner pages open on a deep page hero. Mobile: one column, a glass action bar fixed at the bottom (quote + contact), hidden while a page call-to-action is on screen. The navigation is always visible.
 
 ## Elevation & Depth
 
 Hybrid: tinted soft shadows on cream, glass on night and photos.
 
 ### Shadow Vocabulary
-- **Soft** (`0 1px 2px rgb(36 34 30 / .05), 0 12px 30px -16px rgb(36 34 30 / .22)`): buttons, resting cards.
-- **Lift** (`0 2px 4px rgb(36 34 30 / .06), 0 30px 60px -28px rgb(36 34 30 / .4)`): hover, open panels.
-- **Glass dark** (`inset 0 1px 0 rgb(255 255 255 / .2), 0 30px 60px -32px rgb(0 0 0 / .6)` + `backdrop-filter: blur(22px) saturate(160%)`): navigation, hero card, call-to-action card, mobile bar.
+- **Soft** (`0 1px 2px rgb(8 6 4 / .2), 0 12px 30px -16px rgb(8 6 4 / .55)`): buttons, resting cards.
+- **Lift** (`0 2px 4px rgb(8 6 4 / .25), 0 30px 60px -28px rgb(8 6 4 / .7)`): hover, open panels, project cards.
+- **Glass dark** (`inset 0 1px 0 rgb(255 255 255 / .2), 0 30px 60px -32px rgb(0 0 0 / .6)` + `backdrop-filter: blur(16px) saturate(160%)`): navigation, hero card, call-to-action card, mobile bar.
 - **Glass light** (`inset 0 1px 0 rgb(255 255 255 / .9), 0 26px 54px -30px rgb(36 34 30 / .4)`): contact dialog, links card.
 
 ### Named Rules
@@ -172,13 +201,19 @@ Controls are pills; images and panels 24px; glass cards and windows 28–32px; f
 - **Outline light / dark:** 1px cream or ink border at 25/20%, fill at 8/4% on hover.
 
 ### Navigation
-Night-tinted glass pill fixed at the top, logo (monogram + CHAUDREL) left, links centred, contact icon + primary button right. A glass pill slides between links (`layoutId`), a bronze dot marks the current page. Hides on scroll down, returns on scroll up. Mobile: full-height glass sheet, Prata links, staggered entrance.
+Deep-tinted glass pill fixed at the top and always visible: logo (monogram + CHAUDREL) left, links centred, contact icon + primary button right. A glass pill slides between links (`layoutId`), a bronze dot marks the current page. Mobile: full-height glass sheet, Prata links, staggered entrance. Page changes cross-fade with native View Transitions; the navigation is excluded and stays still.
 
 ### Glass card
-Frosted panel on a photo or night field, 28–32px radius, pointer-following glow and bronze edge. Carries the offer (home hero), the founders and the closing call.
+Frosted panel on a photo, 28–32px radius, pointer-following glow and bronze edge. Carries the offer (home hero) and the direct lines in the closing call.
 
 ### Door hero (signature)
-The cream monogram on night with its bronze door; on scroll the monogram scales around the door, the door turns into a window on the photo, then straightens to full-bleed and a glass card brings the offer. Reduced motion shows the final state directly.
+The cream monogram on deep with its bronze door. One screen of scroll: a deep mask pierced by the door scales up by `transform` around the door, the bronze panel fades to reveal the photo through it, the mask fades out and a glass card brings the offer. Web Animations driven by the native `ViewTimeline` (no JS per frame); passive-scroll fallback. Reduced motion shows the final state directly.
+
+### Stacked project cards
+Raised cards, 32px radius, photo and text alternating sides; each sticks under the navigation and the next one slides over it while the one below recedes (scale 0.94 + shade), a CSS animation on the next card's view-timeline. Sticky only on screens at least 760px tall.
+
+### Before / after
+Two photos of the same viewpoint; the after image is clipped from the left at the handle, a cream rule with a bronze door knob. Drag (pointer capture), arrow keys, Home/End; one hint nudge on first view. Shown only for a real pair.
 
 ### Fields
 Shell background, 1px ink 12% border, 18px radius; focus: bronze border + 3px bronze ring at 18%.
@@ -188,11 +223,13 @@ Shell background, 1px ink 12% border, 18px radius; focus: bronze border + 3px br
 ### Do:
 - **Do** use Door Bronze for the quote action on every page, label in Warm Ink.
 - **Do** keep secondary text at ink 70% or cream 60% minimum.
-- **Do** enter content with a rise from 28px and a 6px blur, ease `cubic-bezier(0.22, 1, 0.36, 1)`, 0.9s.
-- **Do** honour `prefers-reduced-motion`: Motion runs with `reducedMotion="user"`, Lenis is off.
+- **Do** enter content with a 28px rise and fade, ease `cubic-bezier(0.22, 1, 0.36, 1)`, 0.9s, transform and opacity only.
+- **Do** drive scroll effects with CSS `animation-timeline` or WAAPI on a `ViewTimeline`; nothing may run while the page is idle.
+- **Do** honour `prefers-reduced-motion` (Motion `reducedMotion="user"`, CSS fallbacks show final states).
 
 ### Don't:
 - **Don't** put a label or eyebrow above a heading.
-- **Don't** use glass over a flat cream area with nothing behind it.
+- **Don't** use glass over a flat area with nothing behind it.
+- **Don't** add smooth-scroll libraries, infinite animations, or animated `filter: blur` on large areas.
 - **Don't** add a second accent colour, gradient text, or a colored side border on cards.
 - **Don't** caption the ambience hero photo as a Chaudrel job, or show any number, review or delay Chaudrel has not validated.

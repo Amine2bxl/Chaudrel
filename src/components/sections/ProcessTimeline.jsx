@@ -137,7 +137,7 @@ export default function ProcessTimeline({ steps = METHOD, tone = 'dark', classNa
                         : 'bg-green text-cream'
                       : light
                         ? 'bg-gold-light text-bark'
-                        : 'bg-gold text-cream',
+                        : 'bg-gold text-bark',
                     done ? 'ring-green/15' : light ? 'ring-gold-light/15' : 'ring-gold/15'
                   )}
                   style={{
@@ -209,7 +209,7 @@ function MobileJourney({ light, steps, drawn, gold }) {
         : 'bg-green text-cream'
       : light
         ? 'bg-gold-light text-bark'
-        : 'bg-gold text-cream';
+        : 'bg-gold text-bark';
 
   return (
     <div className="relative lg:hidden">

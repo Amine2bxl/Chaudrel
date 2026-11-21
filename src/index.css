@@ -1,5 +1,4 @@
 @import './styles/tokens.css';
-@import 'lenis/dist/lenis.css';
 
 @tailwind base;
 @tailwind components;
@@ -52,7 +51,7 @@
      quand même à la charte : sélection, curseur, anneau de focus. */
   ::selection {
     background: var(--c-gold);
-    color: var(--c-ink);
+    color: var(--c-bark);
   }
 
   html {
@@ -195,8 +194,8 @@
     background: var(--glass-light-bg);
     border: 1px solid var(--glass-light-edge);
     box-shadow:
-      inset 0 1px 0 rgb(255 255 255 / 0.9),
-      0 26px 54px -30px rgb(var(--c-ink-rgb) / 0.4);
+      inset 0 1px 0 var(--glass-light-hi),
+      0 26px 54px -30px rgb(var(--c-shadow-rgb) / 0.6);
   }
 
   /* Reflet : une lueur douce sous le pointeur, et le bord qui s'allume en
@@ -374,6 +373,250 @@ html {
   }
 }
 
+/* ============================================================
+   APPARITIONS AU DÉFILEMENT (<Reveal>)
+   Transform et opacity uniquement : la carte graphique les anime seule,
+   sans recalcul de page. Une seule fois par élément, puis plus rien.
+   ============================================================ */
+.rv {
+  opacity: 0;
+  transition:
+    opacity 0.7s var(--ease-soft) var(--rv-delay, 0ms),
+    transform 0.9s var(--ease-soft) var(--rv-delay, 0ms);
+}
+.rv-up {
+  transform: translate3d(0, 28px, 0);
+}
+.rv-down {
+  transform: translate3d(0, -20px, 0);
+}
+.rv-left {
+  transform: translate3d(-32px, 0, 0);
+}
+.rv-right {
+  transform: translate3d(32px, 0, 0);
+}
+.rv.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.rv-line,
+.rv-line-y {
+  transition: transform 1.1s var(--ease-soft) var(--rv-delay, 0ms);
+}
+.rv-line {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.rv-line-y {
+  transform: scaleY(0);
+  transform-origin: center top;
+}
+.rv-line.is-in,
+.rv-line-y.is-in {
+  transform: none;
+}
+
+/* Photo découverte par un volet : un aplat qui glisse vers le haut, la photo
+   qui se pose (léger recul d'échelle). Tout en transform. */
+.rv-veil {
+  position: relative;
+  overflow: hidden;
+}
+.rv-veil > * {
+  transform: scale(1.08);
+  transition: transform 1.6s var(--ease-soft) var(--rv-delay, 0ms);
+}
+.rv-veil::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(var(--c-sand-rgb));
+  transition: transform 1.1s var(--ease-soft) var(--rv-delay, 0ms);
+  pointer-events: none;
+}
+.rv-veil.is-in > * {
+  transform: none;
+}
+.rv-veil.is-in::after {
+  transform: translate3d(0, -101%, 0);
+}
+
+/* ============================================================
+   HERO - LA PORTE (src/components/sections/Hero.jsx)
+   Un écran de défilement épinglé. Entrées au chargement en CSS
+   (transform / opacity), progression pilotée par la ViewTimeline.
+   ============================================================ */
+.door-hero {
+  height: 200svh;
+}
+.door-final {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.door-letters-in {
+  animation: door-letters 1.2s var(--ease-soft) both;
+}
+.door-panel-in {
+  animation: door-open 1s var(--ease-soft) 0.5s both;
+}
+.door-word {
+  animation: door-word 1s var(--ease-soft) both;
+}
+.door-bar {
+  animation: door-rise 0.9s var(--ease-soft) 1.05s both;
+}
+@keyframes door-letters {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+@keyframes door-open {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes door-word {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes door-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+/* Moins de mouvement : pas d'épinglage, la photo et la carte d'emblée. Le
+   titre reste dans la page pour les lecteurs d'écran. */
+@media (prefers-reduced-motion: reduce) {
+  .door-hero {
+    height: auto;
+  }
+  .door-mono,
+  .door-glow,
+  .door-fade {
+    display: none;
+  }
+  .door-intro {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .door-final {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   CHANTIERS EMPILÉS (ProjectCarousel)
+   La carte du dessous recule pendant que la suivante monte : animation
+   liée à la view-timeline de la carte suivante, jouée par la carte
+   graphique. Sans prise en charge, les cartes s'empilent sans reculer.
+   ============================================================ */
+.stack-item + .stack-item {
+  margin-top: 2.5rem;
+}
+/* Empilement seulement si une carte tient entière à l'écran : sinon, sur un
+   petit téléphone, le bas d'une carte resterait caché sous la suivante. */
+@media (min-height: 760px) {
+  .stack-item {
+    position: sticky;
+  }
+}
+.stack-card {
+  transform-origin: 50% 0;
+}
+.stack-shade {
+  opacity: 0;
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .stack-recede {
+      animation: stack-recede linear both;
+      animation-range: entry 0% entry 100%;
+    }
+    .stack-shade {
+      animation: stack-shade linear both;
+      animation-range: entry 0% entry 100%;
+    }
+  }
+}
+@keyframes stack-recede {
+  to {
+    transform: scale(0.94);
+  }
+}
+@keyframes stack-shade {
+  to {
+    opacity: 0.5;
+  }
+}
+
+/* ============================================================
+   PARALLAXE ET ENTRÉES DE PAGE
+   La parallaxe suit la view-timeline de l'image : jouée par la carte
+   graphique, sans JavaScript. Sans prise en charge, l'image reste fixe.
+   ============================================================ */
+.parallax {
+  transform: scale(1.14);
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax {
+      animation: parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+@keyframes parallax {
+  from {
+    transform: translate3d(0, -6%, 0) scale(1.14);
+  }
+  to {
+    transform: translate3d(0, 6%, 0) scale(1.14);
+  }
+}
+
+/* Entrée au chargement d'une page (en-têtes) : délai posé en ligne. */
+.rise-in {
+  animation: door-rise 0.9s var(--ease-soft) both;
+}
+.door-open-in {
+  animation: door-open 1.3s var(--ease-soft) 0.2s both;
+  transform-origin: left center;
+}
+
+/* ============================================================
+   TRANSITIONS ENTRE PAGES (View Transitions, natif)
+   Le navigateur fige l'ancienne page et fond la nouvelle par-dessus, sur la
+   carte graphique. La barre de navigation ne bouge pas.
+   ============================================================ */
+::view-transition-old(root) {
+  animation: vt-out 220ms var(--ease-soft) both;
+}
+::view-transition-new(root) {
+  animation: vt-in 380ms var(--ease-soft) both;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+}
+
 /* Réponse de la FAQ : native `details`, la réponse glisse sous la question. */
 @keyframes faq-in {
   from {
@@ -397,5 +640,15 @@ details[open] .faq-a {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .rv,
+  .rv-line,
+  .rv-line-y,
+  .rv-veil > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .rv-veil::after {
+    display: none;
   }
 }

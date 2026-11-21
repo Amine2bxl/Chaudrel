@@ -69,7 +69,7 @@ export default function MobileBar() {
     <div
       aria-hidden={hidden}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-40 px-3 lg:hidden',
+        'on-dark fixed inset-x-0 bottom-0 z-40 px-3 lg:hidden',
         'transition-[transform,opacity] duration-slow ease-soft motion-reduce:transition-none',
         hidden ? 'pointer-events-none translate-y-6 opacity-0' : 'translate-y-0 opacity-100'
       )}
@@ -80,7 +80,7 @@ export default function MobileBar() {
           to="/devis"
           tabIndex={hidden ? -1 : undefined}
           onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
-          className="flex min-h-[50px] flex-1 items-center justify-center rounded-full bg-gold text-[15px] font-medium text-ink transition-transform duration-200 active:scale-[0.97]"
+          className="flex min-h-[50px] flex-1 items-center justify-center rounded-full bg-gold text-[15px] font-medium text-bark transition-transform duration-200 active:scale-[0.97]"
         >
           Devis gratuit
         </Link>

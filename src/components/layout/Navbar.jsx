@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react';
-import { useLenis } from 'lenis/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { Phone } from 'lucide-react';
 import { BRAND, NAV } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
@@ -25,53 +24,34 @@ function MenuIcon({ open }) {
 
 /**
  * Une seule barre de navigation pour tout le site : une capsule de verre
- * nuit, la même sur fond clair comme sur photo. Elle s'efface quand on
- * descend et revient dès qu'on remonte - le contenu garde tout l'écran, la
- * navigation reste à un geste.
+ * nuit, la même sur fond clair comme sur photo, toujours visible.
  *
  * La page courante est marquée par une pastille de verre qui glisse d'un
  * onglet à l'autre (animation de mise en page partagée, `layoutId`).
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [hovered, setHovered] = useState(null);
   const { openDialog } = useContactDialog();
   const { pathname } = useLocation();
   const glow = usePointerGlow();
-  const lenis = useLenis();
-  const { scrollY } = useScroll();
-
-  useMotionValueEvent(scrollY, 'change', (y) => {
-    const prev = scrollY.getPrevious() ?? 0;
-    setHidden(y > 240 && y > prev + 2 && !open);
-    if (y < prev - 2 || y < 240) setHidden(false);
-  });
 
   useEffect(() => setOpen(false), [pathname]);
 
-  // Menu ouvert : la page derrière ne défile plus (ni au doigt, ni via Lenis).
+  // Menu ouvert : la page derrière ne défile plus.
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
-    if (open) lenis?.stop();
-    else lenis?.start();
     return () => {
       document.body.style.overflow = '';
-      lenis?.start();
     };
-  }, [open, lenis]);
+  }, [open]);
 
   const isActive = (to) => (to === '/' ? pathname === '/' : pathname.startsWith(to));
   const pill = hovered ?? NAV.find((n) => isActive(n.to))?.to;
 
   return (
     <>
-      <motion.header
-        className="fixed inset-x-0 top-0 z-50"
-        initial={false}
-        animate={{ y: hidden ? '-120%' : '0%' }}
-        transition={{ duration: 0.45, ease: EASE }}
-      >
+      <header className="on-dark fixed inset-x-0 top-0 z-50" style={{ viewTransitionName: 'site-nav' }}>
         <a
           href="#main"
           className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-cream"
@@ -154,14 +134,13 @@ export default function Navbar() {
             <MenuIcon open={open} />
           </button>
         </div>
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {open && (
           <motion.div
             id="mobile-menu"
-            data-lenis-prevent
-            className="fixed inset-x-2.5 bottom-2.5 top-[78px] z-40 overflow-y-auto rounded-[28px] lg:hidden"
+            className="on-dark fixed inset-x-2.5 bottom-2.5 top-[78px] z-40 overflow-y-auto rounded-[28px] lg:hidden"
             initial={{ opacity: 0, y: -12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.2, ease: EASE } }}
