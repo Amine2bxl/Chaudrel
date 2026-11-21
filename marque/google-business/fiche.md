@@ -16,8 +16,8 @@ Google, site, Facebook, Instagram, Linktree, annuaires.
 | Catégories secondaires | Les équivalents proposés de : entrepreneur général, couvreur (toiture), pose de châssis / fenêtres, façades. Ne cocher que ce que Chaudrel fait réellement. |
 | Téléphone principal | +32 477 27 31 18 (Alberto) |
 | Téléphone secondaire | +32 493 97 25 17 (Matteo) |
-| Site web | `https://chaudrel.be/?utm_source=google&utm_medium=fiche` |
-| Lien de rendez-vous / devis | `https://chaudrel.be/devis?utm_source=google&utm_medium=fiche` |
+| Site web | `https://chaudrelrenovation.be/?utm_source=google&utm_medium=fiche` |
+| Lien de rendez-vous / devis | `https://chaudrelrenovation.be/devis?utm_source=google&utm_medium=fiche` |
 | Date d'ouverture | 2009 |
 | Adresse | Rue Henri Stacquet 49-51, 1030 Schaerbeek |
 
@@ -31,7 +31,7 @@ rendez-vous). Ne pas publier sans confirmation.
 
 ## Description (630 caractères, limite Google : 750)
 
-> Chaudrel Rénovation est une entreprise de rénovation fondée en 2009 à Schaerbeek. Nous réalisons façades, toitures, châssis et portes, aménagements extérieurs et rénovations complètes, à Bruxelles et partout en Belgique. Les deux fondateurs, Alberto et Matteo, suivent chaque chantier en personne : Alberto pour la technique et l'exécution, Matteo pour le design et la relation client. Vous avez un seul interlocuteur, du devis à la remise des clés, et nous coordonnons tous les corps de métier. Visite sur place et devis détaillé gratuits, sans engagement, réponse sous 48 h. Demandez votre devis sur chaudrel.be ou par WhatsApp.
+> Chaudrel Rénovation est une entreprise de rénovation fondée en 2009 à Schaerbeek. Nous réalisons façades, toitures, châssis et portes, aménagements extérieurs et rénovations complètes, à Bruxelles et partout en Belgique. Les deux fondateurs, Alberto et Matteo, suivent chaque chantier en personne : Alberto pour la technique et l'exécution, Matteo pour le design et la relation client. Vous avez un seul interlocuteur, du devis à la remise des clés, et nous coordonnons tous les corps de métier. Visite sur place et devis détaillé gratuits, sans engagement, réponse sous 48 h. Demandez votre devis sur chaudrelrenovation.be ou par WhatsApp.
 
 ## Services (rubrique « Services »)
 
@@ -57,7 +57,7 @@ Description courte de chaque service : reprendre la phrase `excerpt` du fichier.
 
 ## Premières publications (rubrique « Actualités »)
 
-1. **Nouveau site** — « Nos chantiers en photos, nos métiers et un devis gratuit en deux minutes : chaudrel.be ». Bouton : *En savoir plus* → site.
+1. **Nouveau site** — « Nos chantiers en photos, nos métiers et un devis gratuit en deux minutes : chaudrelrenovation.be ». Bouton : *En savoir plus* → site.
 2. **Un seul interlocuteur** — « Alberto suit la technique, Matteo le design et la relation client. Depuis 2009, vous savez toujours qui appeler. » Bouton : *Appeler*.
 3. **Devis gratuit** — « Une visite sur place, puis un devis détaillé poste par poste. Gratuit, sans engagement, réponse sous 48 h. » Bouton : *Réserver* → lien devis.
 

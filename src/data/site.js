@@ -4,7 +4,7 @@
  *    avant mise en production (voir docs/VERIFICATION.md).
  */
 
-export const SITE_URL = 'https://chaudrel.be';
+export const SITE_URL = 'https://chaudrelrenovation.be';
 
 export const BRAND = {
   name: 'Chaudrel',
@@ -13,7 +13,7 @@ export const BRAND = {
   founded: 2009,
   // Graphie telle que Chaudrel l'écrit - conservée pour les `mailto:` et le
   // JSON-LD. Voir EMAIL_DISPLAY plus bas pour l'affichage.
-  email: 'Info@chaudrel.be',
+  email: 'Info@chaudrelrenovation.be',
   vat: 'BE0812283245',
   address: {
     street: 'Rue Henri Stacquet 49\u201151',

@@ -8,10 +8,32 @@
       "has": [
         {
           "type": "host",
+          "value": "www.chaudrelrenovation.be"
+        }
+      ],
+      "destination": "https://chaudrelrenovation.be/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
           "value": "www.chaudrel.be"
         }
       ],
-      "destination": "https://chaudrel.be/:path*",
+      "destination": "https://chaudrelrenovation.be/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "chaudrel.be"
+        }
+      ],
+      "destination": "https://chaudrelrenovation.be/:path*",
       "permanent": true
     },
     {

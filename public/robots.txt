@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chaudrel.be/sitemap.xml
+Sitemap: https://chaudrelrenovation.be/sitemap.xml

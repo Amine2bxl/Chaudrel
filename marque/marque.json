@@ -1,8 +1,8 @@
 {
   "nom": "Chaudrel Rénovation",
   "slug": "chaudrel",
-  "domaine": "chaudrel.be",
-  "email": "info@chaudrel.be",
+  "domaine": "chaudrelrenovation.be",
+  "email": "info@chaudrelrenovation.be",
   "adresse": [
     "Rue Henri Stacquet 49-51",
     "1030 Schaerbeek"
@@ -36,7 +36,6 @@
   },
   "photoCouverture": "public/photos/facade-garages.webp",
   "avisGoogle": "",
-  "domaineVetements": "chaudrelrenovation.be",
   "charte": {
     "date": "novembre 2026",
     "devise": "La porte entrouverte.",

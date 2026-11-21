@@ -28,7 +28,7 @@ le dire et demander.
 
 ## À montrer (dans cet ordre)
 
-1. `chaudrel.be` V1 sur téléphone — 20 secondes, juste pour le contraste
+1. `chaudrelrenovation.be` V1 sur téléphone — 20 secondes, juste pour le contraste
 2. La V2 : accueil desktop
 3. `/realisations` + un projet avec avant/après
 4. `/services/cuisine` (page SEO type)

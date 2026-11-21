@@ -18,8 +18,8 @@ réellement.
 ## 2. Ajouter le domaine d'envoi
 
 1. Dans Resend → **Domains** → `Add Domain`.
-2. Saisir un domaine/ sous-domaine d'envoi, ex. **`chaudrel.be`** (le plus simple pour
-   un `from` propre du type `site@chaudrel.be`).
+2. Saisir un domaine/ sous-domaine d'envoi, ex. **`chaudrelrenovation.be`** (le plus simple pour
+   un `from` propre du type `site@chaudrelrenovation.be`).
 3. Resend affiche **3 enregistrements DNS** à créer chez l'hébergeur du domaine
    (un `SPF`, un `DKIM`, un `DMARC`, tous en `TXT`).
 
@@ -27,7 +27,7 @@ réellement.
 
 Chez l'hébergeur du domaine (OVH, Cloudflare, Namecheap…) :
 
-1. Ouvrir la zone DNS de `chaudrel.be`.
+1. Ouvrir la zone DNS de `chaudrelrenovation.be`.
 2. Ajouter les **3 enregistrements TXT** donnés par Resend (valeurs exactes,
    sans espaces en trop).
 3. Retourner dans Resend → le domaine passe à **Verified** en quelques minutes
@@ -53,8 +53,8 @@ Pour tester immédiatement :
 
 Limites de la boîte d'essai : un petit pied de page « Sent with Resend » est
 ajouté aux e-mails, et l'envoi est limité en volume. Ça suffit largement pour
-la phase de test. Dès que chaudrel.be est officiel : ajoutez le domaine,
-vérifiez les DNS, et repassez à `site@chaudrel.be`.
+la phase de test. Dès que chaudrelrenovation.be est officiel : ajoutez le domaine,
+vérifiez les DNS, et repassez à `site@chaudrelrenovation.be`.
 
 
 
@@ -67,7 +67,7 @@ vérifiez les DNS, et repassez à `site@chaudrel.be`.
 | Variable | Valeur | Rôle |
 |---|---|---|
 | `RESEND_API_KEY` | `re_...` | la clé Resend de l'étape 4 |
-| `LEAD_FROM_EMAIL` | `site@chaudrel.be` (ou `onboarding@resend.dev` faute de domaine) | expéditeur |
+| `LEAD_FROM_EMAIL` | `site@chaudrelrenovation.be` (ou `onboarding@resend.dev` faute de domaine) | expéditeur |
 | `LEAD_TO_EMAIL` | `amineazouzi2009@gmail.com` | **destinataire de test** (mettre la vraie boîte en production) |
 | `LEAD_BCC_EMAIL` | *(facultatif)* | copie cachée, ex. le second gérant |
 
@@ -104,5 +104,5 @@ En cas de problème, regarder la sortie du log de la Vercel Function `lead`
 ---
 
 *Pour la production, remplacer `LEAD_TO_EMAIL` par la vraie boîte de Chaudrel
-(Info@chaudrel.be) et, à plus long terme, retirer le repli de test présent dans
+(Info@chaudrelrenovation.be) et, à plus long terme, retirer le repli de test présent dans
 `api/lead.js`.*

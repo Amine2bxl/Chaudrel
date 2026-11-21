@@ -11,7 +11,7 @@ Charte complète : **`documents/charte-graphique.pdf`** (5 pages). Système du s
 | Dossier | Quoi | Pour qui |
 |---|---|---|
 | `logo/` | SVG (source), `png/` transparents haute définition, `pdf/` vectoriels | Tout le monde, imprimeurs |
-| `carte-de-visite/` | La carte Canva de Chaudrel (PDF d'impression, aperçus recto / verso), QR vers le devis (`chaudrel.be/devis?utm_source=carte`) | Imprimeur |
+| `carte-de-visite/` | La carte Canva de Chaudrel (PDF d'impression, aperçus recto / verso), QR vers le devis (`chaudrelrenovation.be/devis?utm_source=carte`) | Imprimeur |
 | `vetements/` | Marquage cœur (SVG 90 mm) et dos (PDF 280 × 400 mm : logo + domaine en bas) + maquettes | Imprimeur textile |
 | `google-business/` | Texte de la fiche (`fiche.md`), logo 720 px, couverture | Création de la fiche Google |
 | `reseaux/` | Photo de profil 1080 px, couverture Facebook 1640 × 624 | Instagram, Facebook, TikTok |

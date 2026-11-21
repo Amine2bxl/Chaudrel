@@ -12,7 +12,7 @@ signatures e-mail). L'ancienne charte (Playfair, Inter, `#8C764E`) est abandonn�
 
 Chaudrel a déjà sa carte sur Canva : `marque/carte-de-visite/` (PDF d'impression + aperçus).
 Avant réimpression : passer au **monogramme CR** (elle porte encore l'ancien logo), remplacer le
-QR Linktree par `marque/carte-de-visite/qr-devis-carte.svg` (`chaudrel.be/devis?utm_source=carte`, mesurable),
+QR Linktree par `marque/carte-de-visite/qr-devis-carte.svg` (`chaudrelrenovation.be/devis?utm_source=carte`, mesurable),
 réexporter avec 3 mm de fonds perdus. Papier 350 g, pelliculage mat ; tester le QR au téléphone
 avant impression.
 

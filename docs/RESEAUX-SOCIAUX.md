@@ -135,7 +135,7 @@ Ces étiquettes sont le CRM tant qu'il n'y a pas de CRM.
 
 ## 5. Linktree - intégré au site
 
-Plus de service externe : la page **`https://chaudrel.be/liens`** (route `/liens`,
+Plus de service externe : la page **`https://chaudrelrenovation.be/liens`** (route `/liens`,
 alias `/link` et `/links`) est le linktree du site. Elle est pensée pour un pouce, sur
 un téléphone, en trois secondes - une carte, des rangées hautes, quatre réseaux
 en pied. C'est l'adresse à mettre dans les bios Instagram, TikTok et Facebook,
@@ -145,7 +145,7 @@ Ordre imposé par l'intention : action commerciale d'abord, exploration ensuite.
 1. **Demander un devis gratuit** → `/devis`
 2. **Nous écrire sur WhatsApp** → `wa.me/32477273118`
 3. **Appeler** → `tel:+32477273118`
-4. **Nous écrire** → `mailto:Info@chaudrel.be`
+4. **Nous écrire** → `mailto:Info@chaudrelrenovation.be`
 5. **Voir nos réalisations** → `/realisations`
 6. **Nos services** → `/services`
 7. **Les réseaux** (Instagram, TikTok, Facebook, YouTube)
