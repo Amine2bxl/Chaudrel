@@ -77,7 +77,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
         <div className="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
           {REGIONS.map((r) => (
             <div key={r.name}>
-              <h4 className={cn('t-label', light ? 'text-cream/45' : 'text-ink/45')}>{r.name}</h4>
+              <h4 className={cn('t-label', light ? 'text-cream/60' : 'text-ink/70')}>{r.name}</h4>
               <ul className="mt-2">
                 {r.ids.map((id) => {
                   const p = ID_TO_PROVINCE[id];
@@ -113,7 +113,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                                   : 'text-ink'
                                 : light
                                   ? 'text-cream/60 group-hover:text-cream'
-                                  : 'text-ink/60 group-hover:text-ink'
+                                  : 'text-ink/70 group-hover:text-ink'
                             )}
                           >
                             {p.name}
@@ -130,7 +130,7 @@ export default function BelgiumCoverage({ tone = 'cream', className }) {
                           strokeWidth="1.5"
                           className={cn(
                             'flex-none transition-all duration-fast ease-soft',
-                            on ? (light ? 'text-gold-light' : 'text-gold') : (light ? 'text-cream/0 group-hover:text-cream/70' : 'text-ink/0 group-hover:text-ink/60')
+                            on ? (light ? 'text-gold-light' : 'text-gold-deep') : (light ? 'text-cream/0 group-hover:text-cream/70' : 'text-ink/0 group-hover:text-ink/70')
                           )}
                         >
                           <path d="m6 2 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />

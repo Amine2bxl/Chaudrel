@@ -69,28 +69,30 @@ export default function MobileBar() {
     <div
       aria-hidden={hidden}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-40 flex gap-2 px-3 lg:hidden',
+        'fixed inset-x-0 bottom-0 z-40 px-3 lg:hidden',
         'transition-[transform,opacity] duration-slow ease-soft motion-reduce:transition-none',
         hidden ? 'pointer-events-none translate-y-6 opacity-0' : 'translate-y-0 opacity-100'
       )}
       style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 0.75rem)' }}
     >
-      <Link
-        to="/devis"
-        tabIndex={hidden ? -1 : undefined}
-        onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
-        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-cream/20 bg-gold-deep text-cream shadow-lift active:translate-y-px"
-      >
-        Devis gratuit
-      </Link>
-      <button
-        type="button"
-        tabIndex={hidden ? -1 : undefined}
-        onClick={() => openDialog('mobile_bar')}
-        className="t-label flex min-h-[54px] flex-1 items-center justify-center rounded-full border border-ink/12 bg-shell text-ink shadow-soft active:translate-y-px"
-      >
-        Nous joindre
-      </button>
+      <div className="glass-dark flex gap-1.5 rounded-full bg-bark/70 p-1.5">
+        <Link
+          to="/devis"
+          tabIndex={hidden ? -1 : undefined}
+          onClick={() => track(EVENTS.QUOTE_CTA, { source: 'mobile_bar' })}
+          className="flex min-h-[50px] flex-1 items-center justify-center rounded-full bg-gold text-[15px] font-medium text-ink transition-transform duration-200 active:scale-[0.97]"
+        >
+          Devis gratuit
+        </Link>
+        <button
+          type="button"
+          tabIndex={hidden ? -1 : undefined}
+          onClick={() => openDialog('mobile_bar')}
+          className="flex min-h-[50px] flex-1 items-center justify-center rounded-full text-[15px] font-medium text-cream transition-[transform,background-color] duration-200 hover:bg-cream/10 active:scale-[0.97]"
+        >
+          Nous joindre
+        </button>
+      </div>
     </div>
   );
 }

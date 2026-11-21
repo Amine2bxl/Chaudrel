@@ -25,7 +25,7 @@ export default function Projects() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'Réalisations' }]}
       />
 
-      <Section tone="cream" className="pt-0 pb-0 md:pt-0 md:pb-0 lg:pt-0 lg:pb-0">
+      <Section tone="cream" className="pb-0 pt-10 md:pb-0 lg:pb-0 lg:pt-14">
         <Container>
           <div
             className="flex flex-wrap items-center gap-x-7 gap-y-3 border-b border-ink/[0.09] pb-6"
@@ -56,7 +56,7 @@ export default function Projects() {
                 </button>
               );
             })}
-            <span className="t-label ml-auto tabular-nums text-ink/50">
+            <span className="t-label ml-auto tabular-nums text-ink/70">
               {String(items.length).padStart(2, '0')} / {String(PROJECTS.length).padStart(2, '0')}
             </span>
           </div>
@@ -70,9 +70,9 @@ export default function Projects() {
           title={filter === 'all' ? '' : `${categoryLabel(filter)}, en détail.`}
         />
       ) : (
-        <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+        <Section tone="cream" className="pt-block">
           <Container>
-            <p className="t-lead text-ink/60">Aucun chantier publié dans cette catégorie pour le moment.</p>
+            <p className="t-lead text-ink/70">Aucun chantier publié dans cette catégorie pour le moment.</p>
             <button
               type="button"
               onClick={() => setFilter('all')}

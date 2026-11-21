@@ -22,7 +22,7 @@ export default function BeforeAfter({ before, after, label, ratio = 'aspect-[4/3
           height="800"
           loading="lazy"
           decoding="async"
-          className="soft-in h-full w-full object-cover"
+          className="h-full w-full object-cover"
         />
 
         <div

@@ -1,11 +1,17 @@
-import Hero, { ProofBand } from '@/components/sections/Hero';
+import { useRef } from 'react';
+import { motion, useTransform } from 'motion/react';
+import useSectionProgress from '@/lib/useSectionProgress';
+import Hero from '@/components/sections/Hero';
+import FactsBand from '@/components/sections/FactsBand';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import ServicesBoard from '@/components/sections/ServicesBoard';
 import ProcessTimeline from '@/components/sections/ProcessTimeline';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
 import CTASection from '@/components/sections/CTASection';
-import { Button, Container, Media, Section, SectionHeading, TextLink } from '@/components/ui';
+import { Button, Container, Section, SectionHeading, TextLink } from '@/components/ui';
 import Reveal from '@/lib/reveal';
+import usePointerGlow from '@/lib/usePointerGlow';
+import { imageAttrs, SIZES } from '@/lib/image';
 import { PROJECTS } from '@/data/projects';
 import { BRAND } from '@/data/site';
 
@@ -13,38 +19,31 @@ const featured = PROJECTS.filter((p) => p.featured);
 
 /**
  * L'accueil répond à quatre questions, dans cet ordre, puis demande le devis :
- *   1. qu'est-ce qu'ils font ?        → hero + trois faits
- *   2. est-ce que c'est bien fait ?   → trois chantiers
- *   3. est-ce qu'ils font mon poste ? → services
- *   4. comment ça se passe ?          → les quatre étapes
- *   → formulaire.
- *
- * Tout ce qui ne répond pas à l'une de ces questions a quitté la page : le
- * comparateur avant/après, la carte de couverture (partie sur la page Contact,
- * où l'on se demande vraiment « viennent-ils chez moi ? »), les avis non
- * vérifiés et la FAQ, qui gardent leurs pages. Une page d'accueil qui montre
- * tout ne montre rien.
+ *   1. qui sont-ils, que font-ils ?   → la porte, la promesse, quatre faits
+ *   2. est-ce que c'est bien fait ?   → les chantiers
+ *   3. est-ce qu'ils font mon poste ? → les métiers
+ *   4. comment ça se passe ?          → les quatre étapes, la zone
+ *   → qui sera mon interlocuteur, puis le devis.
  */
 export default function Home() {
   return (
     <>
       <Hero />
-      <ProofBand />
+      <FactsBand />
 
-      {/* La preuve avant le discours */}
       <ProjectCarousel
         projects={featured}
         sectionLabel="Nos chantiers"
-        title="Le travail parle pour nous."
-        text="Une seule réalisation à la fois, en grand - comme elle a été livrée."
+        title="Des chantiers, pas des promesses."
+        text="Portes, châssis, façades, toitures : nos chantiers, en photos."
         link={{ label: 'Toutes les réalisations', to: '/realisations' }}
       />
 
-      <Section tone="shell">
+      <Section tone="cream">
         <Container>
           <SectionHeading
             title="Une rénovation complète, ou un seul poste."
-            text="Dans les deux cas, c’est nous qui coordonnons les corps de métier."
+            text="Dans les deux cas, nous coordonnons tous les corps de métier : vous n’avez qu’un numéro à retenir."
           />
           <ServicesBoard className="mt-block" />
         </Container>
@@ -58,56 +57,83 @@ export default function Home() {
             text="Vous savez à tout moment où en est votre chantier, ce qui a été fait et ce qui vient ensuite."
           />
           <ProcessTimeline tone="light" className="mt-block" />
-
-          {/* La page « méthode » n'était liée depuis nulle part : ni la
-              navigation, ni une section. Le bouton ci-dessous l'ouvre. */}
-          <div className="mt-10 text-center">
-            <Button to="/methode" variant="outlineLight">
+          <div className="mt-12 text-center">
+            <Button to="/methode" variant="outlineLight" arrow>
               Découvrir notre méthode
             </Button>
           </div>
         </Container>
       </Section>
 
-      {/* « Venez-vous chez moi ? » est la question qui suit immédiatement
-          « comment ça se passe ? ». */}
       <Section tone="cream">
         <Container>
-          <SectionHeading title="Où nous intervenons." />
+          <SectionHeading title="De Schaerbeek à toute la Belgique." />
           <BelgiumCoverage className="mt-block" />
         </Container>
       </Section>
 
-      <Section tone="shell">
-        <Container className="grid items-center gap-10 lg:grid-cols-12 lg:gap-20">
-          <Media
-            src="/story-before-after.webp"
-            alt="Grande maison en brique, allée neuve en asphalte et garages"
-            ratio="aspect-[4/3] lg:aspect-[4/5]"
-            revealFrom="fade"
-            className="lg:col-span-5"
-          />
-
-          <Reveal from="right" className="lg:col-span-7">
-            <h2 className="t-h2 max-w-[18ch] text-balance">
-              Deux artisans, une même exigence depuis {BRAND.founded}.
-            </h2>
-            {/* Emphase par la couleur, pas par la graisse : le contexte
-                s'écrit en gris, la phrase qui compte revient au noir du texte.
-                L'œil trouve la conclusion sans qu'on la mette en gras. */}
-            <p className="t-lead measure mt-6 text-ink/45">
-              {BRAND.founders[0].name} suit les chantiers et la technique. {BRAND.founders[1].name} s’occupe du design et
-              de la relation client. Cette répartition n’a pas bougé depuis le premier jour,{' '}
-              <span className="text-ink">et c’est pour cela que vous n’avez jamais qu’un seul interlocuteur.</span>
-            </p>
-            <div className="mt-9">
-              <TextLink to="/a-propos">Découvrir Chaudrel</TextLink>
-            </div>
-          </Reveal>
-        </Container>
-      </Section>
+      <Founders />
 
       <CTASection source="home" />
     </>
+  );
+}
+
+/**
+ * Les deux fondateurs : la raison de choisir Chaudrel, dite sur une carte de
+ * verre posée sur un chantier livré. La photo glisse plus lentement que la
+ * page - la carte semble flotter devant.
+ */
+function Founders() {
+  const ref = useRef(null);
+  const glow = usePointerGlow();
+  const scrollYProgress = useSectionProgress(ref);
+  const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%']);
+  const [alberto, matteo] = BRAND.founders;
+
+  return (
+    <Section tone="shell">
+      <Container>
+        <div ref={ref} className="relative overflow-hidden rounded-[32px] bg-bark">
+          <motion.img
+            {...imageAttrs('/story-before-after.webp', SIZES.full)}
+            alt="Grande maison en brique, allée neuve en asphalte et garages"
+            width="1000"
+            height="1333"
+            loading="lazy"
+            decoding="async"
+            style={{ y, scale: 1.18 }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-r from-bark/70 via-bark/20 to-transparent"
+          />
+
+          <div className="relative flex min-h-[640px] items-end p-4 sm:p-8 lg:min-h-[720px] lg:items-center lg:p-14">
+            <Reveal {...glow} className="glass-dark w-full max-w-[34rem] rounded-[28px] p-7 text-cream sm:p-10">
+              <h2 className="t-h2 text-balance">Deux fondateurs. Un seul interlocuteur.</h2>
+              <p className="t-lead mt-6 text-cream/80">
+                {alberto.name} suit les chantiers et la technique. {matteo.name} s’occupe du design et de la relation
+                client. Depuis {BRAND.founded}, cette répartition n’a pas bougé : vous savez toujours qui appeler.
+              </p>
+              <dl className="mt-8 grid grid-cols-2 gap-6 border-t border-cream/15 pt-6">
+                {BRAND.founders.map((f) => (
+                  <div key={f.name}>
+                    <dt className="font-display text-[1.5rem] leading-none">{f.name}</dt>
+                    <dd className="t-small mt-2 text-cream/70">{f.role}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-8">
+                <TextLink to="/a-propos" tone="light">
+                  Qui sommes-nous
+                </TextLink>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </Container>
+    </Section>
   );
 }

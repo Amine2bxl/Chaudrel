@@ -86,7 +86,7 @@ export default function ProcessTimeline({ steps = METHOD, tone = 'dark', classNa
             <path
               d={area}
               fill="url(#j-area-dark)"
-              className={cn('transition-opacity duration-[1000ms] ease-soft', light ? 'text-gold-light' : 'text-gold', drawn ? 'opacity-100' : 'opacity-0')}
+              className={cn('transition-opacity duration-[1000ms] ease-soft', light ? 'text-gold-light' : 'text-gold-deep', drawn ? 'opacity-100' : 'opacity-0')}
               style={{ transitionDelay: '500ms' }}
             />
 

@@ -67,15 +67,15 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
                     'grid h-12 w-12 flex-none place-items-center rounded-lg border transition-colors duration-300 ease-soft',
                     light
                       ? 'border-cream/20 bg-cream/[0.04] text-cream/80 group-hover:text-gold-light'
-                      : 'border-gold/[0.22] bg-gold/[0.06] text-gold group-hover:border-gold group-hover:bg-gold/[0.1]'
+                      : 'border-gold/30 bg-gold/[0.08] text-gold-deep group-hover:border-gold group-hover:bg-gold/[0.14]'
                   )}
                 >
                   <Icon size={20} strokeWidth={1.6} aria-hidden="true" />
                 </span>
 
                 <span className="min-w-0 flex-1">
-                  <span className={cn('t-h3 block', light ? 'text-cream' : 'text-ink')}>{s.title}</span>
-                  <span className={cn('mt-1 block t-small', light ? 'text-cream/55' : 'text-ink/55')}>
+                  <span className={cn('block font-display text-[1.375rem] leading-tight tracking-[-0.01em] sm:text-[1.75rem]', light ? 'text-cream' : 'text-ink')}>{s.title}</span>
+                  <span className={cn('mt-1.5 block t-small', light ? 'text-cream/65' : 'text-ink/70')}>
                     {s.excerpt}
                   </span>
                 </span>
@@ -87,7 +87,7 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
                     'grid h-10 w-10 flex-none place-items-center rounded-full border transition-all duration-300 ease-soft',
                     light
                       ? 'border-cream/20 text-cream/60 group-hover:border-cream/50 group-hover:text-cream'
-                      : 'border-ink/[0.15] text-ink/60 group-hover:border-gold group-hover:text-gold',
+                      : 'border-ink/[0.15] text-ink/70 group-hover:border-gold group-hover:text-gold-deep',
                     open && 'rotate-180'
                   )}
                 >
@@ -133,7 +133,7 @@ export default function ServicesBoard({ services = SERVICES, tone = 'dark', clas
                         <dl className="mt-6 space-y-4">
                           {(s.groups ?? []).map((g) => (
                             <div key={g.title}>
-                              <dt className={cn('t-label', light ? 'text-cream/50' : 'text-ink/50')}>{g.title}</dt>
+                              <dt className={cn('t-label', light ? 'text-cream/50' : 'text-ink/70')}>{g.title}</dt>
                               <dd className={cn('mt-2 flex flex-wrap gap-x-5 gap-y-2 t-small', light ? 'text-cream/70' : 'text-ink/70')}>
                                 {g.items.map((item) => (
                                   <span key={item} className="flex items-baseline gap-2">

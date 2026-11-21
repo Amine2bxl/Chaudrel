@@ -147,9 +147,10 @@ export default function CoverFlowCarousel({
 
   return (
     <section
-      className={cn('relative overflow-hidden border-y border-cream/10 py-section text-cream select-none', className)}
+      aria-label={sectionLabel || undefined}
+      className={cn('relative overflow-hidden py-section text-cream select-none', className)}
       style={{
-        backgroundColor: '#120d0a',
+        backgroundColor: 'var(--c-bark)',
         color: '#ffffff',
         fontFamily: 'var(--font-ui)',
       }}
@@ -178,7 +179,7 @@ export default function CoverFlowCarousel({
           className="absolute inset-0"
           style={{
             background:
-              'radial-gradient(circle at center, rgba(18,13,10,0.25) 0%, rgba(18,13,10,0.94) 100%)',
+              'radial-gradient(circle at center, rgb(25 23 20 / 0.25) 0%, rgb(25 23 20 / 0.94) 100%)',
           }}
         />
       </div>
@@ -187,20 +188,8 @@ export default function CoverFlowCarousel({
         {/* En-tête du bloc - libellé, titre éventuel, phrase éventuelle. */}
         {(sectionLabel || title || text) && (
           <div className="mb-12 text-center lg:mb-14">
-            {sectionLabel && (
-              <div className="flex items-center justify-center gap-3">
-                <span className="block h-px w-9" style={{ background: 'linear-gradient(90deg, transparent, var(--c-gold-light))' }} />
-                <h3
-                  className="t-label"
-                  style={{ color: 'var(--c-gold-light)' }}
-                >
-                  {sectionLabel}
-                </h3>
-                <span className="block h-px w-9" style={{ background: 'linear-gradient(90deg, var(--c-gold-light), transparent)' }} />
-              </div>
-            )}
-            {title && <h2 className="t-h2 mx-auto mt-6 max-w-[20ch] text-balance text-cream">{title}</h2>}
-            {text && <p className="t-lead mx-auto mt-5 max-w-[52ch] text-cream/60">{text}</p>}
+            {title && <h2 className="t-h2 mx-auto max-w-[20ch] text-balance text-cream">{title}</h2>}
+            {text && <p className="t-lead mx-auto mt-5 max-w-[52ch] text-cream/70">{text}</p>}
           </div>
         )}
 
@@ -211,7 +200,7 @@ export default function CoverFlowCarousel({
           aria-label={regionLabel}
           tabIndex={total > 1 ? 0 : undefined}
           onKeyDown={onKeyDown}
-          className="relative outline-none focus-visible:ring-2 focus-visible:ring-gold-light focus-visible:ring-offset-4 focus-visible:ring-offset-[#120d0a]"
+          className="relative outline-none focus-visible:ring-2 focus-visible:ring-gold-light focus-visible:ring-offset-4 focus-visible:ring-offset-bark"
           style={{ height: 'clamp(400px, 66vh, 520px)', perspective: '1500px' }}
         >
           {items.map((item, i) => {
@@ -292,23 +281,6 @@ export default function CoverFlowCarousel({
                     pointerEvents: isCenter ? 'auto' : 'none',
                   }}
                 >
-                  {item.tag && (
-                    <div style={{ textAlign: 'right', width: '100%', paddingRight: '4px' }}>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          fontSize: '0.72rem',
-                          fontWeight: 600,
-                          letterSpacing: '0.08em',
-                          color: 'var(--c-gold-light)',
-                          textShadow: '0 2px 6px rgba(0,0,0,0.8)',
-                        }}
-                      >
-                        {item.tag}
-                      </span>
-                    </div>
-                  )}
-
                   <div
                     style={{
                       display: 'flex',
@@ -322,10 +294,9 @@ export default function CoverFlowCarousel({
                     <h3
                       style={{
                         fontFamily: 'var(--font-display)',
-                        fontSize: 'clamp(1.3rem, 3vw, 1.6rem)',
+                        fontSize: 'clamp(1.4rem, 3vw, 1.75rem)',
                         fontWeight: 400,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.03em',
+                        letterSpacing: '-0.01em',
                         color: '#ffffff',
                         margin: 0,
                         lineHeight: 1.1,
@@ -354,10 +325,9 @@ export default function CoverFlowCarousel({
                       style={{
                         width: '34px',
                         height: '2px',
-                        backgroundColor: 'var(--c-gold-light)',
+                        background: 'var(--bronze-grain)',
                         borderRadius: '2px',
-                        margin: '6px auto 5px',
-                        boxShadow: '0 0 8px rgba(201,174,131,0.7)',
+                        margin: '8px auto 5px',
                       }}
                     />
 
@@ -393,8 +363,8 @@ export default function CoverFlowCarousel({
                           gap: '7px',
                           padding: '8px 18px',
                           borderRadius: '9999px',
-                          background: 'linear-gradient(135deg, var(--c-gold-light) 0%, #a48256 100%)',
-                          color: '#16100b',
+                          background: 'var(--c-gold)',
+                          color: 'var(--c-ink)',
                           fontSize: '0.7rem',
                           fontWeight: 800,
                           letterSpacing: '0.14em',
@@ -423,7 +393,7 @@ export default function CoverFlowCarousel({
               type="button"
               onClick={() => go(-1)}
               aria-label="Précédent"
-              className="absolute left-3 top-[54%] z-40 grid h-11 w-11 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-cream/20 bg-black/50 text-cream transition-all duration-fast ease-soft hover:scale-105 hover:bg-black/70 active:scale-95 sm:left-0 sm:h-12 sm:w-12 lg:-left-6"
+              className="absolute left-3 top-[54%] z-40 grid h-11 w-11 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-cream/20 glass-dark text-cream transition-transform duration-200 ease-soft hover:scale-105 active:scale-95 sm:left-0 sm:h-12 sm:w-12 lg:-left-6"
               style={{ backdropFilter: 'blur(8px)' }}
             >
               <ChevronLeft width={20} height={20} strokeWidth={2.4} aria-hidden="true" />
@@ -432,7 +402,7 @@ export default function CoverFlowCarousel({
               type="button"
               onClick={() => go(1)}
               aria-label="Suivant"
-              className="absolute right-3 top-[54%] z-40 grid h-11 w-11 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-cream/20 bg-black/50 text-cream transition-all duration-fast ease-soft hover:scale-105 hover:bg-black/70 active:scale-95 sm:right-0 sm:h-12 sm:w-12 lg:-right-6"
+              className="absolute right-3 top-[54%] z-40 grid h-11 w-11 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-cream/20 glass-dark text-cream transition-transform duration-200 ease-soft hover:scale-105 active:scale-95 sm:right-0 sm:h-12 sm:w-12 lg:-right-6"
               style={{ backdropFilter: 'blur(8px)' }}
             >
               <ChevronRight width={20} height={20} strokeWidth={2.4} aria-hidden="true" />
@@ -483,7 +453,7 @@ export default function CoverFlowCarousel({
                   (onCtaClick || onCardClick)(items[index]);
                 }
               }}
-              className="group/btn mt-7 inline-flex items-center gap-2.5 rounded-full bg-gold-deep px-7 py-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-cream shadow-soft transition-all duration-300 ease-soft hover:bg-gold-hover hover:shadow-lift active:translate-y-px"
+              className="group/btn mt-8 inline-flex h-12 items-center gap-2.5 rounded-full bg-gold px-6 text-[15px] font-medium text-ink shadow-soft transition-[background-color,box-shadow,transform] duration-200 ease-soft hover:bg-gold-hover hover:shadow-lift active:scale-[0.97]"
             >
               {items[index].ctaText || 'Voir le chantier'}
               <ArrowRight width={13} height={13} strokeWidth={2.4} aria-hidden="true" />

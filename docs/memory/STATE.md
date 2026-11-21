@@ -1,23 +1,28 @@
 # STATE
 
 ## Objectif
-Refonte complète du site Chaudrel (nouvelle DA, glassmorphism animé, animations par librairie), puis kit de marque dans `brand/` (logo, carte de visite, t-shirts, fiche Google Business, documents).
+Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre animé, animations Motion + Lenis), puis kit de marque dans `brand/` (carte de visite, t-shirts, fiche Google Business, documents).
 
 ## État actuel
-- Site V2 en ligne (React 18 + Vite 5 + Tailwind 3, pré-rendu, Vercel).
-- `PRODUCT.md` écrit (cible, positionnement, preuves disponibles).
-- En attente : fichier du nouveau logo fourni par le client.
+- PR #4 (branche `claude/beautiful-tesla-x6r9du`) : refonte du site livrée, build + pré-rendu OK (21 pages).
+- Intègre la PR #3 (réalisations décrites fidèlement, liens réseaux vérifiés).
+- Logo client vectorisé : `brand/logo/*.svg`, monogramme dans `src/components/ui/Logo.jsx`.
+- Système documenté : `DESIGN.md`, `.impeccable/design.json`, brief `.impeccable/surfaces/`.
 
 ## Décisions clés
-- D-001 : kit de marque dans `brand/` de ce dépôt — seul dépôt accessible en écriture.
-- D-002 : textes réécrits librement, zéro chiffre/avis/délai inventé — règle de contenu existante.
-- D-003 : cible prioritaire = propriétaires, rénovations complètes.
+- D-001 : kit de marque dans `brand/` — seul dépôt accessible.
+- D-002 : réécriture libre, zéro invention.
+- D-003 : cible = propriétaires, rénovations complètes.
+- D-004 : direction « La porte qui s'ouvre » — choisie par le client parmi 3 maquettes.
+- D-005 : Motion + Lenis — choix du client ; relais `useSectionProgress` obligatoire.
+- D-006 : crème/nuit/bronze, Prata + Albert Sans — relevés sur le logo.
+- D-007 : photo d'ambiance (stock) gardée derrière la porte, jamais légendée comme chantier.
 
 ## Prochaines étapes
-1. Recevoir le logo, fixer palette et typo depuis lui.
-2. PR refonte site (Motion + Lenis proposés, glassmorphism).
-3. PR kit de marque dans `brand/`.
+1. Retour client sur la PR #4, puis fusion (après #3).
+2. PR kit de marque : carte de visite, t-shirts, fiche Google Business, documents à la nouvelle DA.
+3. Remplacer `public/photos/hero.webp` par une vraie photo de chantier.
 
 ## Questions ouvertes
-- Librairie d'animation : Motion + Lenis (proposé) ou GSAP.
-- Charte couleurs/polices du nouveau logo.
+- Fichier vectoriel natif du logo disponible chez le graphiste ?
+- Horaires réels, avis Google, chiffres validés (voir docs/VERIFICATION.md).

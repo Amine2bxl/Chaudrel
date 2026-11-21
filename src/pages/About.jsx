@@ -19,7 +19,7 @@ export default function About() {
         breadcrumb={[{ label: 'Accueil', to: '/' }, { label: 'À propos' }]}
       />
 
-      <Section tone="cream" className="pt-0 md:pt-0 lg:pt-0">
+      <Section tone="cream" className="pt-block">
         <Container className="grid items-start gap-12 lg:grid-cols-12 lg:gap-16">
           {/* TODO_VALIDATION : remplacer par une vraie photo de l'équipe Chaudrel. */}
           <Media

@@ -94,8 +94,6 @@ export const BRAND = {
   ],
 };
 
-export const LOGO = '/chaudrel-logo.webp';
-
 export const whatsappUrl = (
   message = 'Bonjour Chaudrel, je souhaite un devis pour mon projet de rénovation.'
 ) => `https://wa.me/${BRAND.whatsapp}?text=${encodeURIComponent(message)}`;
@@ -119,16 +117,6 @@ export const MOBILE_NAV = [
   { label: 'Accueil', to: '/' },
   { label: 'Réalisations', to: '/realisations' },
   { label: 'Devis', to: '/devis' },
-];
-
-/**
- * Deux faits, uniquement vérifiables.
- * Aucun compteur de chantiers ou de clients tant que Chaudrel n'a pas
- * communiqué de chiffre réel.
- */
-export const PROOF = [
-  { value: '17 ans d’expérience', label: 'Depuis 2009' },
-  { value: 'Un interlocuteur', label: 'Du devis à la livraison' },
 ];
 
 /**

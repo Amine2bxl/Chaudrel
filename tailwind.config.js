@@ -18,12 +18,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // Une seule famille d'interface. La hiérarchie tient à la graisse et à
-        // l'échelle, pas à un deuxième caractère. `wordmark` ne sert qu'au
-        // logotype Chaudrel.
+        // Albert Sans pour l'interface et le texte, Prata pour les titres.
         sans: ['var(--font-ui)'],
-        display: ['var(--font-ui)'],
-        wordmark: ['var(--font-wordmark)'],
+        display: ['var(--font-display)'],
       },
       colors: {
         cream: rgb('cream'),

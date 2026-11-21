@@ -7,89 +7,97 @@
 
 :root {
   /* ---------- Couleur ----------
-     Le crème est la couleur principale de Chaudrel : c'est le fond du site,
-     la barre de navigation, les surfaces. Le graphite porte le texte et les
-     actions. L'or de laiton n'est qu'un accent : page active, focus, repères.
+     Tirée du logo Chaudrel (novembre 2026) : crème du fond, noir chaud des
+     lettres, bronze de la porte. Rien d'autre.
 
-     ⚠️ #8C764E donne 4,0:1 sur le crème et 3,9:1 sur le sombre : sous le seuil
-     AA pour du texte courant. Il ne sert donc jamais à écrire un paragraphe -
-     seulement des repères, des grands corps et des bordures. Sur fond sombre,
-     c'est `gold-light` (8:1) qui prend le relais.
+     - cream  #FCF4EC  fond clair, papier du logo
+     - shell  #FFFAF4  surfaces surélevées (cartes, champs)
+     - sand   #F3E8DB  aplats discrets, image en attente
+     - ink    #24221E  texte et lettres du monogramme - 14,6:1 sur le crème
+     - bark   #191714  champs sombres (« nuit ») - le crème dessus : 16,4:1
+     - gold   #AE8A56  le bronze de la porte. Décor, filets, fonds de bouton
+                       (encre dessus : 5,0:1). Jamais du texte sur le crème
+                       (2,9:1).
+     - gold-deep  #7D6035  bronze lisible sur crème : 5,4:1
+     - gold-hover #BE9A64  survol du bouton bronze (encre dessus : 6,1:1)
+     - gold-light #C9A876  bronze lisible sur la nuit : 8,0:1
 
-     Le bouton « Devis gratuit » est en laiton, comme demandé, mais dans la
-     nuance `gold-deep` : son libellé fait 11 px, et du crème sur #8C764E ne
-     donne que 4,0:1. `gold-deep` monte à 5,8:1 en restant franchement laiton.
-     Les triplets RVB existent pour que Tailwind puisse appliquer une opacité
-     (`text-ink/65`) sans dupliquer la couleur. */
-  --c-cream-rgb: 247 245 242; /* fond de page - crème de Chaudrel */
-  --c-shell-rgb: 255 255 255; /* surfaces surélevées : cartes, champs, panneaux */
-  --c-sand-rgb: 234 229 222; /* aplats discrets, fond d'image en attente */
-  --c-ink-rgb: 26 26 26; /* texte et actions primaires */
-  --c-bark-rgb: 28 28 28; /* sections sombres */
-  --c-gold-rgb: 140 118 78; /* accent : page active, focus, repères */
-  --c-gold-deep-rgb: 111 93 61; /* fond du bouton devis - 5,8:1 sous le crème */
-  --c-gold-hover-rgb: 122 102 66; /* son survol - 5,1:1, passe encore */
-  --c-gold-light-rgb: 201 174 131; /* le même accent sur fond sombre */
-  /* Vert de validation. Réservé à ce qui est terminé et vérifié - jamais
-     décoratif : s'il apparaît ailleurs que sur un état achevé, il ne veut plus
-     rien dire. Désaturé pour tenir à côté du laiton sans le concurrencer.
-     #3D6B4E : 5,7:1 sous le crème, et le crème dessus au même rapport.
-     #7FB08D : la même fonction sur fond sombre - 6,9:1 sur le bark. */
+     Le vert de validation et le rouge d'erreur restent réservés à leur état.
+     Les triplets RVB existent pour que Tailwind applique une opacité
+     (`text-ink/70`) sans dupliquer la couleur. */
+  --c-cream-rgb: 252 244 236;
+  --c-shell-rgb: 255 250 244;
+  --c-sand-rgb: 243 232 219;
+  --c-ink-rgb: 36 34 30;
+  --c-bark-rgb: 25 23 20;
+  --c-gold-rgb: 174 138 86;
+  --c-gold-deep-rgb: 125 96 53;
+  --c-gold-hover-rgb: 190 154 100;
+  --c-gold-light-rgb: 201 168 118;
   --c-green-rgb: 61 107 78;
   --c-green-light-rgb: 127 176 141;
-
   --c-error-rgb: 154 59 35;
   --c-error-light-rgb: 232 145 122;
 
   --c-cream: rgb(var(--c-cream-rgb));
   --c-shell: rgb(var(--c-shell-rgb));
   --c-ink: rgb(var(--c-ink-rgb));
+  --c-bark: rgb(var(--c-bark-rgb));
   --c-gold: rgb(var(--c-gold-rgb));
   --c-gold-light: rgb(var(--c-gold-light-rgb));
   --c-error: rgb(var(--c-error-rgb));
   --c-error-light: rgb(var(--c-error-light-rgb));
 
+  /* Le bronze de la porte du logo, en matière : trois arrêts, comme le
+     brossé du métal. Réservé à la porte et à ses rappels. */
+  --bronze-grain: linear-gradient(135deg, #9c7946 0%, #b8945f 55%, #a27f4c 100%);
+
+  /* ---------- Verre ----------
+     Le verre est la matière des fenêtres de la marque : il ne se pose que là
+     où il laisse voir quelque chose derrière lui (photo, champ sombre, page
+     qui défile sous la navigation). Bord crème d'un pixel, reflet en haut,
+     ombre teintée. Sans `backdrop-filter`, le fond devient presque opaque. */
+  --glass-blur: 22px;
+  --glass-dark-bg: linear-gradient(140deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.04) 60%);
+  --glass-dark-edge: rgb(255 255 255 / 0.15);
+  --glass-light-bg: linear-gradient(140deg, rgb(255 255 255 / 0.78), rgb(var(--c-cream-rgb) / 0.58));
+  --glass-light-edge: rgb(var(--c-ink-rgb) / 0.08);
+
   /* ---------- Rayons ----------
-     Une seule échelle. Commandes en pilule, surfaces en 24 px.
-     Le logo utilise `--r-logo` : un carré aux coins adoucis, ni rond ni vif. */
-  --r-xs: 0.625rem; /* 10 px - cases à cocher, micro-éléments */
-  --r-sm: 0.875rem; /* 14 px - chips compacts */
-  --r-md: 1.125rem; /* 18 px - champs de saisie */
-  --r-lg: 1.5rem; /* 24 px - images, panneaux, accordéon */
-  --r-xl: 2rem; /* 32 px - grands blocs */
-  --r-logo: 0.8125rem; /* 13 px sur 40 px - carré adouci */
+     Commandes en pilule, surfaces en 24 px, fenêtres en 32 px. */
+  --r-xs: 0.625rem;
+  --r-sm: 0.875rem;
+  --r-md: 1.125rem;
+  --r-lg: 1.5rem;
+  --r-xl: 2rem;
+  --r-logo: 0.8125rem;
 
   /* ---------- Rythme vertical ----------
-     Trois intervalles nommés, et rien entre les deux. Le rythme d'une page
-     tient au contraste entre le serré et le large : cinq valeurs différentes
-     pour séparer deux blocs ne créent pas de nuance, elles effacent la
-     cadence. Les micro-écarts internes à un composant (intitulé → valeur)
-     restent libres, ils ne portent pas la structure.
-       section  d'une section à l'autre
-       block    d'un titre à son contenu, d'un bloc majeur au suivant
-       group    d'un groupe apparenté au suivant, à l'intérieur d'un bloc */
-  --space-section: clamp(4.5rem, 8vw, 8.5rem);
+     section  d'une section à l'autre
+     block    d'un titre à son contenu
+     group    d'un groupe apparenté au suivant */
+  --space-section: clamp(5rem, 9vw, 9.5rem);
   --space-block: clamp(2.5rem, 4.5vw, 4.5rem);
   --space-group: clamp(1.75rem, 2.5vw, 2.5rem);
 
   /* ---------- Élévation ----------
-     Toujours un décalage vertical et un flou, teintés dans le brun du fond. */
-  --shadow-soft: 0 1px 2px rgb(var(--c-ink-rgb) / 0.04), 0 10px 28px -14px rgb(var(--c-ink-rgb) / 0.2);
-  --shadow-lift: 0 2px 4px rgb(var(--c-ink-rgb) / 0.05), 0 26px 50px -22px rgb(var(--c-ink-rgb) / 0.3);
+     Toujours un décalage vertical et un flou, teintés dans le noir chaud. */
+  --shadow-soft: 0 1px 2px rgb(var(--c-ink-rgb) / 0.05), 0 12px 30px -16px rgb(var(--c-ink-rgb) / 0.22);
+  --shadow-lift: 0 2px 4px rgb(var(--c-ink-rgb) / 0.06), 0 30px 60px -28px rgb(var(--c-ink-rgb) / 0.4);
 
-  /* ---------- Mouvement ---------- */
+  /* ---------- Mouvement ----------
+     Une seule courbe de sortie, partagée par le CSS et Motion
+     (src/lib/motion.js). Jamais d'ease-in sur une entrée. */
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur-fast: 200ms;
-  --dur: 300ms;
-  --dur-slow: 500ms;
+  --dur-fast: 180ms;
+  --dur: 280ms;
+  --dur-slow: 520ms;
 
   /* ---------- Typographie ----------
-     Deux voix, une seule origine. Marcellus - la serif inscriptionnelle du
-     logotype - porte les grands titres : c'est elle qui donne au site son
-     accent architectural et éditorial, et elle relie chaque page au mot-symbole.
-     Schibsted Grotesk porte tout le reste : sous-titres, interface, texte,
-     repères. Le contraste serif/grotesque EST la hiérarchie. */
-  --font-ui: 'Schibsted Grotesk', system-ui, sans-serif;
-  --font-display: 'Marcellus', 'Schibsted Grotesk', Georgia, serif;
-  --font-wordmark: 'Marcellus', 'Schibsted Grotesk', serif;
+     Deux voix, prises au logo. Prata - contraste fort, empattements en coin,
+     la famille du monogramme CR - porte les titres. Albert Sans - capitales
+     larges et calmes, proches du mot CHAUDREL - porte tout le reste ; espacée
+     en capitales, elle rappelle RÉNOVATION. */
+  --font-ui: 'Albert Sans', system-ui, sans-serif;
+  --font-display: 'Prata', Georgia, 'Times New Roman', serif;
 }

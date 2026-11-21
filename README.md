@@ -90,15 +90,19 @@ Les images vont dans `public/photos/` (WebP, largeur ≥ 1600 px pour les visuel
 
 ## Design system
 
-Cinq couleurs (`ink`, `night`, `cream`, `sand`, `gold`), deux familles
-typographiques (Inter pour tout, Playfair Display réservé aux titres) et sept
-niveaux de texte (`.t-display`, `.t-h1`, `.t-h2`, `.t-h3`, `.t-body`, `.t-small`,
-`.t-label`) définis dans `src/index.css`. Pas d'ombre portée, pas de dégradé :
-la mise en page repose sur des filets, du vide et la typographie.
+Tiré du logo Chaudrel (monogramme CR, porte bronze) : voir `DESIGN.md`.
+Deux matières (crème `#FCF4EC`, nuit `#191714`) et un métal (bronze `#AE8A56`),
+Prata pour les titres, Albert Sans pour le reste. Jetons dans `src/styles/tokens.css`,
+verre (`.glass-dark`, `.glass-light`) dans `src/index.css`.
 
-Animations : `<Reveal>` (`up`, `fade`, `line`, `lineY`, `veil`) applique une classe
-au scroll via IntersectionObserver, tout le reste est en CSS. `prefers-reduced-motion`
-neutralise l'ensemble.
+Animations : [Motion](https://motion.dev) (`motion/react`) et défilement amorti
+[Lenis](https://lenis.darkroom.engineering). `<Reveal>` (`src/lib/reveal.jsx`) porte
+les entrées au scroll ; le hero de l'accueil ouvre la porte du logo au défilement
+(`src/components/sections/Hero.jsx`). `prefers-reduced-motion` coupe Lenis et les
+déplacements (`<MotionConfig reducedMotion="user">`).
+
+Le kit de marque (logo vectoriel, carte de visite, t-shirts, fiche Google Business)
+vit dans `brand/`, séparé du code du site.
 
 ## Formulaire de devis
 

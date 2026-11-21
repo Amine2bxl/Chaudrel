@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'motion/react';
+import { useLenis } from 'lenis/react';
 import { Phone } from 'lucide-react';
-import { BRAND, LOGO, NAV } from '@/data/site';
+import { BRAND, NAV } from '@/data/site';
 import { EVENTS, track } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import { useContactDialog } from '@/lib/contactDialog';
+import { EASE, SPRING } from '@/lib/motion';
+import usePointerGlow from '@/lib/usePointerGlow';
 import { Button } from '@/components/ui';
+import { Logo } from '@/components/ui/Logo';
 
-/** Deux lignes qui deviennent une croix - pas d'icône importée. */
+/** Deux traits qui deviennent une croix. */
 function MenuIcon({ open }) {
-  const bar = 'block h-px w-6 bg-ink transition-all duration-fast ease-soft';
+  const bar = 'block h-px w-6 bg-cream transition-transform duration-300 ease-soft';
   return (
     <span className="relative flex h-6 w-6 flex-col items-center justify-center gap-[6px]">
       <span className={cn(bar, open && 'translate-y-[3.5px] rotate-45')} />
@@ -18,159 +23,212 @@ function MenuIcon({ open }) {
   );
 }
 
-/** Logotype : carré aux coins adoucis, jamais rond, jamais à angle vif. */
-function Wordmark() {
-  return (
-    <Link to="/" className="flex items-center gap-3" aria-label="Chaudrel - accueil">
-      <span className="grid h-10 w-10 place-items-center overflow-hidden rounded-logo bg-shell shadow-soft">
-        <img src={LOGO} alt="" aria-hidden="true" width="40" height="40" className="h-full w-full object-cover" />
-      </span>
-      <span className="font-wordmark text-[19px] uppercase leading-none tracking-[0.2em] text-ink sm:text-[21px]">
-        {BRAND.name}
-      </span>
-    </Link>
-  );
-}
-
 /**
- * Une seule barre de navigation pour tout le site.
+ * Une seule barre de navigation pour tout le site : une capsule de verre
+ * nuit, la même sur fond clair comme sur photo. Elle s'efface quand on
+ * descend et revient dès qu'on remonte - le contenu garde tout l'écran, la
+ * navigation reste à un geste.
  *
- * Elle ne change pas d'apparence selon la page : la version posée - capsule
- * crème, ombre teintée - est la seule. Un visiteur qui passe de l'accueil à une
- * page intérieure ne doit pas avoir l'impression de changer de site, et la
- * page où il se trouve doit se lire sans réfléchir : c'est le rôle du point
- * brun sous l'onglet actif.
+ * La page courante est marquée par une pastille de verre qui glisse d'un
+ * onglet à l'autre (animation de mise en page partagée, `layoutId`).
  */
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [hovered, setHovered] = useState(null);
   const { openDialog } = useContactDialog();
   const { pathname } = useLocation();
+  const glow = usePointerGlow();
+  const lenis = useLenis();
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const prev = scrollY.getPrevious() ?? 0;
+    setHidden(y > 240 && y > prev + 2 && !open);
+    if (y < prev - 2 || y < 240) setHidden(false);
+  });
 
   useEffect(() => setOpen(false), [pathname]);
 
+  // Menu ouvert : la page derrière ne défile plus (ni au doigt, ni via Lenis).
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
+    if (open) lenis?.stop();
+    else lenis?.start();
     return () => {
       document.body.style.overflow = '';
+      lenis?.start();
     };
-  }, [open]);
+  }, [open, lenis]);
 
-  const linkClass = ({ isActive }) =>
-    cn(
-      'relative t-label pb-2 pt-1 transition-colors duration-fast',
-      isActive ? 'text-ink' : 'text-ink/60 hover:text-ink'
-    );
+  const isActive = (to) => (to === '/' ? pathname === '/' : pathname.startsWith(to));
+  const pill = hovered ?? NAV.find((n) => isActive(n.to))?.to;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <a
-        href="#main"
-        className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-cream"
+    <>
+      <motion.header
+        className="fixed inset-x-0 top-0 z-50"
+        initial={false}
+        animate={{ y: hidden ? '-120%' : '0%' }}
+        transition={{ duration: 0.45, ease: EASE }}
       >
-        Aller au contenu
-      </a>
+        <a
+          href="#main"
+          className="t-label sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-5 focus:z-50 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-cream"
+        >
+          Aller au contenu
+        </a>
 
-      <div className="mx-auto my-2.5 flex w-[calc(100%-1.25rem)] max-w-[1240px] items-center justify-between rounded-full bg-cream/95 px-4 py-2.5 shadow-soft backdrop-blur-md sm:my-3 sm:px-5 lg:px-6">
-        <Wordmark />
+        <div
+          {...glow}
+          className="glass-dark mx-auto mt-3 flex bg-bark/85 w-[calc(100%-1.25rem)] max-w-[1180px] items-center justify-between gap-6 rounded-full py-2 pl-5 pr-2 text-cream sm:mt-4 lg:pl-6"
+        >
+          <Link to="/" aria-label="Chaudrel - accueil" className="rounded-full">
+            <Logo tone="cream" />
+          </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-9" aria-label="Navigation principale">
-          {NAV.map((item) => (
-            <NavLink key={item.to} to={item.to} end={item.to === '/'} className={linkClass}>
-              {({ isActive }) => (
-                <>
-                  {item.label}
-                  {/* Repère de page courante : un point, pas une couleur de
-                      texte - il reste lisible pour qui distingue mal les
-                      teintes, et il ne coûte rien à l'œil. */}
+          <nav
+            className="hidden items-center lg:flex"
+            aria-label="Navigation principale"
+            onMouseLeave={() => setHovered(null)}
+          >
+            {NAV.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === '/'}
+                onMouseEnter={() => setHovered(item.to)}
+                onFocus={() => setHovered(item.to)}
+                onBlur={() => setHovered(null)}
+                className={({ isActive: active }) =>
+                  cn(
+                    'relative rounded-full px-4 py-2.5 text-[14px] transition-colors duration-200',
+                    active ? 'text-cream' : 'text-cream/70 hover:text-cream',
+                  )
+                }
+              >
+                {pill === item.to && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    transition={SPRING}
+                    aria-hidden="true"
+                    className="absolute inset-0 -z-10 rounded-full bg-cream/[0.1] ring-1 ring-inset ring-cream/[0.12]"
+                  />
+                )}
+                {item.label}
+                {isActive(item.to) && (
                   <span
                     aria-hidden="true"
-                    className={cn(
-                      'absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-1 rounded-full bg-gold transition-opacity duration-fast',
-                      isActive ? 'opacity-100' : 'opacity-0'
-                    )}
+                    className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-gold-light"
                   />
-                </>
-              )}
-            </NavLink>
-          ))}
+                )}
+              </NavLink>
+            ))}
+          </nav>
 
-          {/* Une seule action de contact : un icône, pas un numéro. Le numéro
-              affiché ne faisait qu'appeler sans contexte ; l'icône ouvre la
-              fenêtre qui porte toutes les coordonnées - appeler, WhatsApp,
-              e-mail, horaires, adresse. */}
+          <div className="hidden items-center gap-2 lg:flex">
+            {/* Une seule action de contact : l'icône ouvre la fenêtre qui porte
+              tous les canaux (appel, WhatsApp, e-mail, adresse). */}
+            <button
+              type="button"
+              onClick={() => openDialog('navbar')}
+              aria-label="Nous joindre"
+              title="Nous joindre"
+              className="grid h-10 w-10 place-items-center rounded-full text-cream/75 transition-[background-color,color,transform] duration-200 hover:bg-cream/10 hover:text-cream active:scale-[0.94]"
+            >
+              <Phone size={17} strokeWidth={1.7} aria-hidden="true" />
+            </button>
+            <Button to="/devis" size="sm" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
+              Devis gratuit
+            </Button>
+          </div>
+
           <button
             type="button"
-            onClick={() => openDialog('navbar')}
-            aria-label="Nous joindre"
-            title="Nous joindre"
-            className="grid h-10 w-10 place-items-center rounded-full text-ink/70 transition-colors duration-fast hover:bg-ink/5 hover:text-ink"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+            className="grid h-11 w-11 place-items-center rounded-full transition-[background-color,transform] duration-200 hover:bg-cream/10 active:scale-[0.94] lg:hidden"
           >
-            <Phone size={18} strokeWidth={1.7} aria-hidden="true" />
+            <MenuIcon open={open} />
           </button>
-
-          <Button to="/devis" size="sm" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'navbar' })}>
-            Devis gratuit
-          </Button>
-        </nav>
-
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
-          className="grid h-11 w-11 place-items-center rounded-full transition-colors duration-fast hover:bg-ink/5 lg:hidden"
-        >
-          <MenuIcon open={open} />
-        </button>
-      </div>
-
-      {open && (
-        <div className="mx-auto w-full max-w-[1240px] px-2.5 lg:hidden">
-          <nav className="panel-in overflow-hidden rounded-xl bg-cream p-5 shadow-lift sm:p-6" aria-label="Navigation mobile">
-            <ul className="divide-y divide-ink/10">
-              {NAV.map((item, i) => (
-                <li key={item.to}>
-                  <NavLink
-                    to={item.to}
-                    end={item.to === '/'}
-                    style={{ animationDelay: `${i * 35}ms` }}
-                    className={({ isActive }) =>
-                      cn(
-                        'panel-in flex items-center justify-between gap-4 py-4 font-display text-[1.75rem] tracking-[-0.01em]',
-                        isActive ? 'text-ink' : 'text-ink/60'
-                      )
-                    }
-                  >
-                    {({ isActive }) => (
-                      <>
-                        {item.label}
-                        {isActive && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />}
-                      </>
-                    )}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-7 flex flex-col gap-3">
-              <Button to="/devis" onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
-                Devis gratuit
-              </Button>
-              <Button variant="outline" onClick={() => openDialog('menu')}>
-                Nous joindre
-              </Button>
-            </div>
-
-            <a
-              href={`tel:${BRAND.phones[0].tel}`}
-              onClick={() => track(EVENTS.PHONE_CLICK, { source: 'menu' })}
-              className="t-small mt-6 block tabular-nums text-ink/65"
-            >
-              {BRAND.phones[0].number}
-            </a>
-          </nav>
         </div>
-      )}
-    </header>
+      </motion.header>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            id="mobile-menu"
+            data-lenis-prevent
+            className="fixed inset-x-2.5 bottom-2.5 top-[78px] z-40 overflow-y-auto rounded-[28px] lg:hidden"
+            initial={{ opacity: 0, y: -12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.2, ease: EASE } }}
+            transition={{ duration: 0.4, ease: EASE }}
+            style={{ transformOrigin: 'top center' }}
+          >
+            <nav
+              aria-label="Navigation mobile"
+              className="glass-dark flex min-h-full flex-col rounded-[28px] bg-bark/80 p-6 text-cream"
+            >
+              <motion.ul
+                className="divide-y divide-cream/10"
+                initial="hidden"
+                animate="show"
+                variants={{ show: { transition: { staggerChildren: 0.045, delayChildren: 0.06 } } }}
+              >
+                {NAV.map((item) => (
+                  <motion.li
+                    key={item.to}
+                    variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}
+                    transition={{ duration: 0.5, ease: EASE }}
+                  >
+                    <NavLink
+                      to={item.to}
+                      end={item.to === '/'}
+                      className={({ isActive: active }) =>
+                        cn(
+                          'flex items-center justify-between gap-4 py-4 font-display text-[2rem] leading-tight tracking-[-0.015em]',
+                          active ? 'text-cream' : 'text-cream/60',
+                        )
+                      }
+                    >
+                      {({ isActive: active }) => (
+                        <>
+                          {item.label}
+                          {active && <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold-light" />}
+                        </>
+                      )}
+                    </NavLink>
+                  </motion.li>
+                ))}
+              </motion.ul>
+
+              <motion.div
+                className="mt-auto flex flex-col gap-3 pt-10"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: EASE, delay: 0.25 }}
+              >
+                <Button to="/devis" size="lg" arrow onClick={() => track(EVENTS.QUOTE_CTA, { source: 'menu' })}>
+                  Demander un devis gratuit
+                </Button>
+                <Button variant="outlineLight" size="lg" onClick={() => openDialog('menu')}>
+                  Nous joindre
+                </Button>
+                <a
+                  href={`tel:${BRAND.phones[0].tel}`}
+                  onClick={() => track(EVENTS.PHONE_CLICK, { source: 'menu' })}
+                  className="t-small mt-3 text-center tabular-nums text-cream/70"
+                >
+                  {BRAND.phones[0].name} · {BRAND.phones[0].number}
+                </a>
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

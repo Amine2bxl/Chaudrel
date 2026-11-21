@@ -39,7 +39,7 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
           >
             <span className="min-w-0">
               {f.tag && (
-                <span className={cn('t-label block pb-1', light ? 'text-gold-light' : 'text-gold')}>{f.tag}</span>
+                <span className={cn('t-label block pb-1', light ? 'text-gold-light' : 'text-gold-deep')}>{f.tag}</span>
               )}
               <span className="block font-display text-[1.2rem] leading-snug tracking-[-0.01em] sm:text-[1.3rem]">
                 {f.q}
@@ -53,7 +53,7 @@ export default function FaqAccordion({ items = [], tone = 'dark', className }) {
                 'mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-full border transition-all duration-300 ease-soft group-open:rotate-45',
                 light
                   ? 'border-cream/20 text-cream/70 group-open:border-gold-light group-open:text-gold-light'
-                  : 'border-ink/[0.14] text-ink/60 group-open:border-gold group-open:text-gold'
+                  : 'border-ink/[0.14] text-ink/70 group-open:border-gold group-open:text-gold-deep'
               )}
               aria-hidden="true"
             >

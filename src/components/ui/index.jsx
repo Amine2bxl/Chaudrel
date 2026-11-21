@@ -19,6 +19,7 @@ const TONES = {
   sand: 'bg-sand text-ink',
   // `on-dark` déclenche la compensation typographique du texte clair.
   bark: 'bg-bark text-cream on-dark',
+  night: 'bg-bark text-cream on-dark',
 };
 
 export function Section({ id, tone = 'cream', className, children, ...rest }) {
@@ -89,34 +90,29 @@ export function SectionHeading({ title, text, tone = 'dark', align = 'stack', cl
 }
 
 /* ---------- Boutons ----------
-   Règle de forme du site, tenue partout :
-     · commandes (boutons, chips, pastilles) → pilule
-     · médias et panneaux                    → 24 px
-     · champs de saisie                      → 18 px
-
-   Le crème est la couleur du site ; le graphite est celle des actions. Le brun
-   ne sert qu'à signaler : page active, focus, repères. Une action primaire en
-   brun ferait du brun la couleur dominante, ce qu'il n'est pas. */
+   Commandes en pilule, libellé en casse normale. L'action de la marque - le
+   devis - porte le bronze de la porte du logo, libellé en noir chaud (5,0:1).
+   Au clic, le bouton s'enfonce légèrement (scale 0.97) : la pression se
+   voit sans attendre la page suivante. */
 
 const VARIANTS = {
-  // Le devis est l'action de la marque : il porte le laiton.
-  solid: 'bg-gold-deep text-cream shadow-soft hover:bg-gold-hover hover:shadow-lift',
+  solid: 'bg-gold text-ink shadow-soft hover:bg-gold-hover hover:shadow-lift',
   solidLight: 'bg-cream text-ink shadow-soft hover:bg-shell hover:shadow-lift',
-  outline: 'border border-ink/15 bg-shell/70 text-ink hover:border-ink/30 hover:bg-shell hover:shadow-soft',
-  outlineLight: 'border border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/10',
+  outline: 'border border-ink/20 text-ink hover:border-ink/45 hover:bg-ink/[0.04]',
+  outlineLight: 'border border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/[0.08]',
 };
 
 const SIZES = {
-  sm: 'px-5 py-3 text-[11px]',
-  md: 'px-7 py-4 text-[11px]',
-  lg: 'px-9 py-[1.15rem] text-[12px]',
+  sm: 'h-10 px-5 text-[14px]',
+  md: 'h-12 px-6 text-[15px]',
+  lg: 'h-14 px-7 text-[15px]',
 };
 
-/* Pastille de flèche logée dans la pilule. Elle donne la direction et se
-   décale au survol. Décorative : le libellé dit déjà où l'on va. */
+/* Pastille de flèche logée dans la pilule : elle donne la direction et
+   glisse au survol. Décorative - le libellé dit déjà où l'on va. */
 const ARROW_TONE = {
-  solid: 'bg-cream/20 text-cream',
-  solidLight: 'bg-ink/10 text-ink',
+  solid: 'bg-ink/10 text-ink',
+  solidLight: 'bg-ink/[0.08] text-ink',
   outline: 'bg-ink/[0.07] text-ink',
   outlineLight: 'bg-cream/15 text-cream',
 };
@@ -126,13 +122,13 @@ function ArrowChip({ variant }) {
     <span
       aria-hidden="true"
       className={cn(
-        '-mr-3 ml-1 grid h-7 w-7 flex-none place-items-center rounded-full',
-        'transition-transform duration-300 ease-soft group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5',
+        '-mr-3 ml-1 grid h-8 w-8 flex-none place-items-center rounded-full',
+        'transition-transform duration-300 ease-soft group-hover/btn:translate-x-0.5',
         ARROW_TONE[variant]
       )}
     >
-      <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.6">
-        <path d="M1.5 9.5 9.5 1.5M3.5 1.5h6v6" strokeLinecap="round" strokeLinejoin="round" />
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <path d="M1.5 6h9M7 2.5 10.5 6 7 9.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </span>
   );
@@ -140,9 +136,9 @@ function ArrowChip({ variant }) {
 
 export function Button({ to, href, variant = 'solid', size = 'md', arrow = false, className, children, ...rest }) {
   const classes = cn(
-    'group/btn inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full font-semibold uppercase tracking-[0.14em]',
-    'transition-[background-color,box-shadow,transform,border-color] duration-300 ease-soft',
-    'active:translate-y-px',
+    'group/btn inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full font-medium tracking-[-0.005em]',
+    'transition-[background-color,box-shadow,transform,border-color] duration-200 ease-soft',
+    'active:scale-[0.97]',
     VARIANTS[variant],
     SIZES[size],
     className
@@ -197,7 +193,7 @@ export function TextLink({ to, href, className, children, tone = 'dark', ...rest
       strokeWidth="1.5"
       className="flex-none transition-transform duration-fast ease-soft group-hover:translate-x-0.5"
     >
-      <path d="M1.5 9.5 9.5 1.5M3.5 1.5h6v6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M1 5.5h9M6.5 2 10 5.5 6.5 9" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 
@@ -304,7 +300,7 @@ export function Disclosure({ title, defaultOpen = false, className, children }) 
           fill="none"
           stroke="currentColor"
           strokeWidth="1.6"
-          className={cn('flex-none text-ink/50 transition-transform duration-300 ease-soft', open && 'rotate-180')}
+          className={cn('flex-none text-ink/70 transition-transform duration-300 ease-soft', open && 'rotate-180')}
         >
           <path d="M2 5l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
