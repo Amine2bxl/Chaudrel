@@ -3,11 +3,22 @@
   "slug": "chaudrel",
   "domaine": "chaudrel.be",
   "email": "info@chaudrel.be",
-  "adresse": ["Rue Henri Stacquet 49-51", "1030 Schaerbeek"],
+  "adresse": [
+    "Rue Henri Stacquet 49-51",
+    "1030 Schaerbeek"
+  ],
   "tva": "BE0812283245",
   "contacts": [
-    { "nom": "Alberto", "role": "Maître d'œuvre", "tel": "+32 477 27 31 18" },
-    { "nom": "Matteo", "role": "Design & relation client", "tel": "+32 493 97 25 17" }
+    {
+      "nom": "Alberto",
+      "role": "Maître d'œuvre",
+      "tel": "+32 477 27 31 18"
+    },
+    {
+      "nom": "Matteo",
+      "role": "Design & relation client",
+      "tel": "+32 493 97 25 17"
+    }
   ],
   "couleurs": {
     "bronze": "#AE8A56",
@@ -19,9 +30,13 @@
     "encre": "#24221E",
     "bronzeClair": "#CDAE7E"
   },
-  "polices": { "titre": "Prata", "texte": "Albert Sans" },
+  "polices": {
+    "titre": "Prata",
+    "texte": "Albert Sans"
+  },
   "photoCouverture": "public/photos/facade-garages.webp",
   "avisGoogle": "",
+  "domaineVetements": "chaudrelrenovation.be",
   "charte": {
     "date": "novembre 2026",
     "devise": "La porte entrouverte.",

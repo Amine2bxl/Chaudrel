@@ -57,20 +57,35 @@ const page = (body, css = '', w = 1000, h = 1000) => `<!doctype html><html lang=
 <style>*{margin:0;padding:0;box-sizing:border-box}html,body{width:${w}px;height:${h}px;background:transparent}
 svg{display:block}.logo svg{width:100%;height:auto}${css}</style></head><body>${body}</body></html>`;
 
-/* ---------- T-shirt (silhouette vectorielle, face et dos) ---------- */
-const tee = (back, art) => `
+/* ---------- T-shirt : coupe droite, taille L, à l'échelle 1 unité = 1 mm ----------
+   Poitrine 560 mm, longueur 760 mm (col → ourlet). Les marquages se posent
+   donc à leur taille réelle : cœur 90 mm, dos 280 mm. Coton rendu par un
+   grain (feTurbulence) et des plis flous ; l'impression reçoit le même grain. */
+const tee = (back, art, id) => `
 <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="sh" cx="50%" cy="38%" r="62%"><stop offset="0" stop-color="#2a2826"/><stop offset=".7" stop-color="#171615"/><stop offset="1" stop-color="#0d0c0c"/></radialGradient>
-    <linearGradient id="sl" x1="0" x2="1"><stop offset="0" stop-color="#0f0e0e"/><stop offset="1" stop-color="#1d1c1b"/></linearGradient>
-    <linearGradient id="sr" x1="1" x2="0"><stop offset="0" stop-color="#0f0e0e"/><stop offset="1" stop-color="#1d1c1b"/></linearGradient>
+    <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#242220"/><stop offset=".55" stop-color="#1b1a19"/><stop offset="1" stop-color="#141313"/></linearGradient>
+    <radialGradient id="${id}v" cx="50%" cy="40%" r="70%"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></radialGradient>
+    <filter id="${id}s" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="${id}g"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0"/></filter>
+    <clipPath id="${id}c"><path id="${id}p" d="M410 112 C${back ? '440 128 560 128' : '432 166 568 166'} 590 112 L700 140 C760 158 800 190 830 240 L898 368 C880 384 846 398 810 404 L778 360 C772 520 772 700 784 876 C620 900 380 900 216 876 C228 700 228 520 222 360 L190 404 C154 398 120 384 102 368 L170 240 C200 190 240 158 300 140 Z"/></clipPath>
   </defs>
-  <path d="M330 110 L200 150 L40 330 L140 420 L220 350 L220 920 C400 942 600 942 780 920 L780 350 L860 420 L960 330 L800 150 L670 110 C${back ? '620 132 380 132' : '620 178 380 178'} 330 110 Z" fill="url(#sh)"/>
-  <path d="M200 150 L40 330 L140 420 L220 350 Z" fill="url(#sl)" opacity=".9"/>
-  <path d="M800 150 L960 330 L860 420 L780 350 Z" fill="url(#sr)" opacity=".9"/>
-  <path d="M330 110 C${back ? '380 132 620 132' : '380 178 620 178'} 670 110" fill="none" stroke="#2c2a28" stroke-width="16" stroke-linecap="round"/>
-  <path d="M232 380 C300 520 300 700 250 880 M768 380 C700 520 700 700 750 880" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="10"/>
-  ${art}
+  <ellipse cx="500" cy="905" rx="330" ry="22" fill="#000" opacity=".18" filter="url(#${id}s)"/>
+  <g clip-path="url(#${id}c)">
+    <rect width="1000" height="1000" fill="url(#${id}b)"/>
+    <g filter="url(#${id}s)" fill="none" stroke-linecap="round">
+      <path d="M300 420 C330 560 320 700 290 860" stroke="#000" stroke-opacity=".45" stroke-width="40"/>
+      <path d="M700 420 C670 560 680 700 710 860" stroke="#000" stroke-opacity=".45" stroke-width="40"/>
+      <path d="M420 230 C470 300 530 300 580 230" stroke="#fff" stroke-opacity=".05" stroke-width="60"/>
+      <path d="M190 300 L230 380 M810 300 L770 380" stroke="#000" stroke-opacity=".5" stroke-width="26"/>
+    </g>
+    ${art}
+    <rect width="1000" height="1000" filter="url(#${id}g)" opacity=".07"/>
+    <rect width="1000" height="1000" fill="url(#${id}v)"/>
+  </g>
+  <path d="M410 112 C${back ? '440 128 560 128' : '432 166 568 166'} 590 112" fill="none" stroke="#2e2c2a" stroke-width="18" stroke-linecap="round"/>
+  <path d="M222 360 L190 404 M778 360 L810 404" stroke="#0c0b0b" stroke-width="3" opacity=".6"/>
+  <path d="M216 876 C380 900 620 900 784 876" fill="none" stroke="#0c0b0b" stroke-width="3" opacity=".5"/>
 </svg>`;
 const place = (svg, x, y, w) => {
   const inner = svg.replace(/^[\s\S]*?<svg[^>]*viewBox="([^"]+)"[^>]*>/, (m, vb) => `<svg x="${x}" y="${y}" width="${w}" viewBox="${vb}" preserveAspectRatio="xMidYMin meet">`);
@@ -129,14 +144,14 @@ async function main() {
     'or-metallise': { mono: metal(LOGO.monoOr, 'gm'), full: metal(LOGO.fullOr, 'gf'), printMono: LOGO.monoOr, printFull: LOGO.fullOr, ink: C.or },
     'creme-bronze': { mono: LOGO.monoCremeBronze, full: LOGO.fullCremeBronze, printMono: LOGO.monoCremeBronze, printFull: LOGO.fullCremeBronze, ink: C.cremeLogo },
   };
-  const domain = M.domaine.toUpperCase();
+  const domain = (M.domaineVetements || M.domaine).toUpperCase();
   for (const [name, v] of Object.entries(variants)) {
-    const bg = `body{background:#E9E4DD;display:grid;place-items:center}.wrap{width:1000px;height:1000px}`;
+    const bg = `body{background:radial-gradient(80% 70% at 50% 40%,#EFEAE3,#D9D2C8);display:grid;place-items:center}.wrap{width:1000px;height:1000px}`;
     // Devant : monogramme ~9 cm sur le cœur (côté gauche du porteur, à droite à l'écran).
-    await png(`vetements/maquette-${name}-face.png`, page(`<div class="wrap">${tee(false, place(v.mono, 560, 250, 105))}</div>`, bg, 1000, 1000), 1000, 1000, false);
+    await png(`vetements/maquette-${name}-face.png`, page(`<div class="wrap">${tee(false, place(v.mono, 565, 270, 90), 'f')}</div>`, bg, 1000, 1000), 1000, 1000, false);
     // Dos : logo complet ~28 cm sous le col, le domaine en bas du dos.
-    const dos = place(v.full, 335, 210, 330) + `<text x="500" y="790" text-anchor="middle" font-family="${S}" font-weight="500" font-size="24" letter-spacing="9" fill="${v.ink}">${domain}</text>`;
-    await png(`vetements/maquette-${name}-dos.png`, page(`<div class="wrap">${tee(true, dos)}</div>`, bg, 1000, 1000), 1000, 1000, false);
+    const dos = place(v.full, 360, 205, 280) + `<text x="500" y="790" text-anchor="middle" font-family="${S}" font-weight="500" font-size="12" letter-spacing="3.8" fill="${v.ink}">${domain}</text>`;
+    await png(`vetements/maquette-${name}-dos.png`, page(`<div class="wrap">${tee(true, dos, 'd')}</div>`, bg, 1000, 1000), 1000, 1000, false);
     // Impression : cœur en SVG (logo seul) ; dos en PDF 280 × 400 mm (logo + domaine, police incluse).
     const sized = (svg, wmm) => svg.replace('<svg ', `<svg width="${wmm}mm" `);
     fs.writeFileSync(out(`vetements/marquage-coeur-${name}-90mm.svg`), sized(v.printMono, 90));
