@@ -61,3 +61,7 @@
 
 ## 2026-11-22 — Métiers épurés
 - Pages métier : barre `nav[aria-label="Nos métiers"]` ; sur mobile elle défile, un `useEffect` y centre le lien `aria-current="page"` (scrollLeft, pas scrollIntoView, pour ne pas déplacer la page).
+
+## 2026-11-22 — Intro unique, page métier, devis
+- Intro : drapeau posé dès le début de l'intro (StrictMode double-monte l'effet : on ne lit que `data-intro` dans l'effet, et le nettoyage ne compte comme « vue » qu'après 300 ms).
+- `PhoneIcon` (BrandIcons) n'accepte pas `size` : passer `width`/`height`.

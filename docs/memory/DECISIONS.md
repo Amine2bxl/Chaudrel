@@ -125,3 +125,8 @@
 ## D-022 — Métiers épurés (remplace la partie Services de D-020)
 - Date : 2026-11-22 · Statut : acceptée (retour client : « épure complètement », navigation simple et structurée, valeur comprise tout de suite)
 - Décision : « Votre maison, métier par métier » retiré (`ServicesHouse.jsx` supprimé) ; /services = grille de six cartes identiques (photo, icône, nom, phrase de valeur `excerpt`) ; chaque page métier a une barre des six métiers sous l'en-tête (métier en cours en bronze, centré sur mobile) et une seule carte : intro + devis à gauche, postes à droite ; la liste « Autres métiers » de la colonne est retirée. `Zigzag.jsx` supprimé (plus utilisé).
+
+## D-023 — Intro jouée seule et une seule fois ; page métier visuelle ; devis guidé
+- Date : 2026-11-22 · Statut : acceptée (retours client)
+- Décision : l'intro de la porte se joue toute seule (plus de défilement épinglé) à la première visite, puis plus jamais : `localStorage['chaudrel-intro']`, lu avant le premier rendu par `public/intro.js` (script externe, CSP `script-src 'self'`) qui pose `data-intro="seen"` sur `<html>` ; un geste (molette, toucher, touche) saute l'intro. Page métier : en-tête sans photo, grande photo claire + carte « valeur » (phrase, intro, devis), « Ce que nous prenons en charge » = maquette 3D du métier + postes cochés par groupe ; questions retirées. Devis : étapes numérotées cliquables, tuiles à icônes pour le type de travaux, formulaire sur carte de verre, colonne « Votre demande » qui se remplit en direct + garanties + fondateurs.
+- Conséquences : D-008 (« rien à l'arrêt ») tenu : animations jouées une fois puis annulées, l'état final est en CSS.

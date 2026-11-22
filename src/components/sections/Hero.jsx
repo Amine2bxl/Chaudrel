@@ -46,24 +46,25 @@ const LAYERS = {
 const STOPS = 32;
 const framesFor = (fn) => Array.from({ length: STOPS + 1 }, (_, i) => ({ offset: i / STOPS, ...fn(i / STOPS) }));
 
+/* L'intro ne se joue qu'une fois : public/intro.js pose data-intro="seen" sur
+   <html> avant le premier rendu quand elle a déjà été vue. */
+const INTRO_KEY = 'chaudrel-intro';
+const ZOOM_DELAY = 2400; // après l'ouverture de la porte (CSS, ~2,5 s)
+const ZOOM_MS = 2400;
+
 /**
  * Hero - la porte du logo s'ouvre sur une maison.
  *
- * Premier écran : le monogramme CR sur la nuit, la porte bronze, la promesse
- * et les trois issues (devis, appel, WhatsApp). Un seul écran de défilement
- * suffit à entrer : la porte s'efface et laisse voir la photo à travers son
- * contour, on avance vers elle jusqu'au plein cadre, puis une carte de verre
- * porte l'offre.
+ * Première visite : le monogramme CR sur la nuit, la promesse et les trois
+ * issues (devis, appel, WhatsApp) ; la porte s'entrouvre, puis la caméra la
+ * traverse toute seule jusqu'à la photo, et une carte de verre porte
+ * l'offre. Aucun défilement à faire ; un geste (molette, toucher, touche)
+ * passe directement à la fin. Visites suivantes et `prefers-reduced-motion` :
+ * la photo et la carte d'emblée (CSS, sans saut au chargement).
  *
  * Performance : la nuit est un aplat percé de la porte que l'on agrandit par
- * `transform` - jamais de `clip-path` ni de calcul de mise en page. Les
- * animations sont des Web Animations pilotées par la `ViewTimeline` native :
- * le navigateur les joue sur la carte graphique, sans JavaScript à chaque
- * image. Sans `ViewTimeline`, un écouteur passif ne travaille que pendant le
- * défilement. À l'arrêt, rien ne tourne.
- *
- * `prefers-reduced-motion` : pas d'épinglage, l'état final s'affiche
- * directement (CSS seul, aucun saut au chargement).
+ * `transform` ; les couches sont des Web Animations jouées par la carte
+ * graphique, une seule fois. À l'arrêt, rien ne tourne.
  *
  * La photo est une image d'ambiance : elle ne montre pas un chantier
  * Chaudrel et n'est jamais légendée comme tel.
@@ -78,48 +79,48 @@ export default function Hero() {
   };
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || !section.animate) return undefined;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-
-    const native = typeof window.ViewTimeline === 'function';
-    const timeline = native ? new window.ViewTimeline({ subject: section, axis: 'block' }) : null;
+    const root = document.documentElement;
+    const seen = () => {
+      root.dataset.intro = 'seen';
+    };
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (root.dataset.intro === 'seen' || reduce || !sectionRef.current?.animate) return seen();
+    // Vue une fois, même interrompue : la prochaine visite s'ouvre sur le site.
+    try {
+      localStorage.setItem(INTRO_KEY, '1');
+    } catch {
+      /* stockage bloqué : l'intro se rejouera, rien de cassé */
+    }
 
     const animations = [];
     for (const [name, fn] of Object.entries(LAYERS)) {
       const els = name === 'fade' ? [refs.current.fade, refs.current.fade2, refs.current.fade3] : [refs.current[name]];
-      const frames = framesFor(fn);
       for (const el of els) {
-        if (!el) continue;
-        const anim = native
-          ? el.animate(frames, { timeline, rangeStart: 'contain 0%', rangeEnd: 'contain 100%', fill: 'both' })
-          : el.animate(frames, { duration: 1000, fill: 'both' });
-        if (!native) anim.pause();
-        animations.push(anim);
+        if (el) animations.push(el.animate(framesFor(fn), { duration: ZOOM_MS, delay: ZOOM_DELAY, fill: 'both' }));
       }
     }
 
-    if (native) return () => animations.forEach((a) => a.cancel());
+    const skip = () => animations.forEach((a) => a.finish());
+    const gestures = ['wheel', 'touchmove', 'keydown'];
+    gestures.forEach((g) => window.addEventListener(g, skip, { passive: true, once: true }));
+    let alive = true;
+    const t0 = performance.now();
+    Promise.all(animations.map((a) => a.finished))
+      .then(() => {
+        if (!alive) return;
+        seen();
+        // L'état final est désormais tenu par le CSS : on libère les animations.
+        animations.forEach((a) => a.cancel());
+      })
+      .catch(() => {});
 
-    // Repli : on ne calcule que lorsque la page défile, une fois par image.
-    let frame = 0;
-    const sync = () => {
-      frame = 0;
-      const span = section.offsetHeight - window.innerHeight;
-      const p = span > 0 ? clamp01((window.scrollY - section.offsetTop) / span) : 1;
-      for (const a of animations) a.currentTime = p * 1000;
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(sync);
-    };
-    sync();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
     return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      alive = false;
+      gestures.forEach((g) => window.removeEventListener(g, skip));
       animations.forEach((a) => a.cancel());
+      // Quitter l'accueil en pleine intro compte comme vue (le double montage
+      // de StrictMode, lui, est immédiat et ne compte pas).
+      if (performance.now() - t0 > 300) seen();
     };
   }, []);
 

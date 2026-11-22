@@ -448,9 +448,6 @@ html {
    Un écran de défilement épinglé. Entrées au chargement en CSS
    (transform / opacity), progression pilotée par la ViewTimeline.
    ============================================================ */
-.door-hero {
-  height: 200svh;
-}
 .door-final {
   opacity: 0;
   transform: translateY(28px);
@@ -460,14 +457,14 @@ html {
 }
 .door-panel-in {
   transform-style: preserve-3d;
-  animation: door-swing 1.7s 1.15s both;
+  animation: door-swing 1.7s 0.85s both;
 }
 .door-light-in {
-  animation: door-light 1.2s ease-out 1.2s both;
+  animation: door-light 1.2s ease-out 0.9s both;
 }
 .door-shade {
   opacity: 0;
-  animation: door-shade 1.7s var(--ease-soft) 1.15s both;
+  animation: door-shade 1.7s var(--ease-soft) 0.85s both;
 }
 @keyframes door-shade {
   to {
@@ -478,7 +475,7 @@ html {
 .door-handle {
   transform-box: fill-box;
   transform-origin: 78.9% 50%;
-  animation: door-handle 0.8s var(--ease-soft) 0.85s both;
+  animation: door-handle 0.8s var(--ease-soft) 0.55s both;
 }
 @keyframes door-swing {
   0% {
@@ -536,29 +533,24 @@ html {
     transform: translateY(16px);
   }
 }
-/* Moins de mouvement : pas d'épinglage, la photo et la carte d'emblée. Le
+/* Intro déjà vue, ou moins de mouvement : la photo et la carte d'emblée. Le
    titre reste dans la page pour les lecteurs d'écran. */
-@media (prefers-reduced-motion: reduce) {
-  .door-hero {
-    height: auto;
-  }
-  .door-mono,
-  .door-glow,
-  .door-fade {
-    display: none;
-  }
-  .door-intro {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-  .door-final {
-    opacity: 1;
-    transform: none;
-  }
+:root[data-intro='seen'] .door-mono,
+:root[data-intro='seen'] .door-glow,
+:root[data-intro='seen'] .door-fade {
+  display: none;
+}
+:root[data-intro='seen'] .door-intro {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:root[data-intro='seen'] .door-final {
+  opacity: 1;
+  transform: none;
 }
 
 /* ============================================================

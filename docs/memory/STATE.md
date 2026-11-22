@@ -35,6 +35,7 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 - D-020 : CHAUDREL en Marcellus ; maquette 3D aussi sur Services (schéma 2D supprimé) ; mosaïque des chantiers ; zigzag à trois mises en page ; faits sur vrai verre.
 - D-021 : Réalisations = cartes symétriques photo | maquette 3D ; maquette toujours dans sa case 4/3, cadrage mesuré.
 - D-022 : métiers épurés : /services = 6 cartes identiques ; pages métier = barre des 6 métiers + une carte (intro, devis, postes) ; maison de Services et zigzag supprimés.
+- D-023 : intro de la porte automatique et unique (public/intro.js) ; page métier = photo claire + valeur + maquette 3D + postes ; devis à étapes, tuiles, récap en direct.
 
 ## Prochaines étapes
 1. Vérifier le site en production après le déploiement de `main`.
