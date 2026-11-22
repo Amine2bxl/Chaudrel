@@ -121,3 +121,7 @@
 - Date : 2026-11-22 · Statut : acceptée (retour client : « super symétrique, bien organisé », la 3D ne doit pas sortir des cases)
 - Décision : chaque chantier = une carte de verre à deux cases égales (vraie photo | maquette 3D), légende sous chaque case (chantier à gauche, travaux + lien à droite), même structure pour tous ; filtres centrés, compteur retiré. `House3D` rend sa propre case 4/3 (`overflow: clip`, échelle en `cqw`) ; cadrage de chaque caméra mesuré (≈ 6 % de marge, centré). Services garde le zigzag varié.
 - Conséquences : `Zigzag` ne sert plus qu'à Services.
+
+## D-022 — Métiers épurés (remplace la partie Services de D-020)
+- Date : 2026-11-22 · Statut : acceptée (retour client : « épure complètement », navigation simple et structurée, valeur comprise tout de suite)
+- Décision : « Votre maison, métier par métier » retiré (`ServicesHouse.jsx` supprimé) ; /services = grille de six cartes identiques (photo, icône, nom, phrase de valeur `excerpt`) ; chaque page métier a une barre des six métiers sous l'en-tête (métier en cours en bronze, centré sur mobile) et une seule carte : intro + devis à gauche, postes à droite ; la liste « Autres métiers » de la colonne est retirée. `Zigzag.jsx` supprimé (plus utilisé).

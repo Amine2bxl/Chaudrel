@@ -1,16 +1,17 @@
-import { Navigate, useParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import FaqAccordion from '@/components/sections/FaqAccordion';
 import CTASection from '@/components/sections/CTASection';
-import { Container, Panel, Section, SectionHeading } from '@/components/ui';
-import { GroupLabel, Row } from '@/components/layout/ContactList';
+import { Button, Container, Panel, Section, SectionHeading } from '@/components/ui';
+import { GroupLabel } from '@/components/layout/ContactList';
 import { HouseIcon, SERVICE_ICONS } from '@/components/ui/Icons';
-import { QuoteIcon } from '@/components/ui/BrandIcons';
 import { EVENTS, track } from '@/lib/analytics';
 import Reveal from '@/lib/reveal';
 import { SERVICES, getService } from '@/data/services';
 import { projectsForTags } from '@/data/projects';
+import { cn } from '@/lib/utils';
 
 /**
  * Anciens métiers de la V1 vers les métiers réels.
@@ -37,6 +38,14 @@ const LEGACY_SLUGS = {
 export default function Service() {
   const { slug } = useParams();
   const service = getService(slug);
+  const tabs = useRef(null);
+
+  // Sur mobile, la barre des métiers défile : on y amène le métier en cours.
+  useEffect(() => {
+    const ul = tabs.current;
+    const on = ul?.querySelector('[aria-current="page"]')?.parentElement;
+    if (on) ul.scrollLeft = on.offsetLeft - (ul.clientWidth - on.offsetWidth) / 2;
+  }, [slug]);
 
   if (!service) {
     const moved = LEGACY_SLUGS[slug];
@@ -44,70 +53,76 @@ export default function Service() {
   }
 
   const related = projectsForTags(service.projectTags || [], 3);
-  const others = SERVICES.filter((s) => s.slug !== service.slug);
 
   return (
     <>
-      <PageHero
-        title={service.title}
-        image={service.image}
-      />
+      <PageHero title={service.title} image={service.image} />
 
+      {/* Les six métiers, toujours visibles : on passe de l'un à l'autre en un geste. */}
+      <nav aria-label="Nos métiers" className="border-b border-ink/10">
+        <Container>
+          <ul ref={tabs} className="-mx-5 flex gap-2 overflow-x-auto px-5 py-4 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0">
+            {SERVICES.map((s) => {
+              const on = s.slug === service.slug;
+              const Icon = SERVICE_ICONS[s.slug] || HouseIcon;
+              return (
+                <li key={s.slug} className="flex-none">
+                  <Link
+                    to={`/services/${s.slug}`}
+                    aria-current={on ? 'page' : undefined}
+                    className={cn(
+                      't-small flex items-center gap-2 rounded-full border px-4 py-2 transition-colors duration-fast',
+                      on ? 'border-gold/60 bg-gold/[0.12] text-ink' : 'border-ink/10 text-ink/70 hover:border-ink/25 hover:text-ink'
+                    )}
+                  >
+                    <Icon size={16} className={on ? 'text-gold-light' : 'text-ink/50'} />
+                    {s.title}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </Container>
+      </nav>
+
+      {/* Le métier en une carte : ce qu'on y gagne et le devis à gauche, les postes à droite. */}
       <Section>
         <Container>
-          <div className="grid gap-6 lg:grid-cols-12 lg:items-start">
-            {/* Le métier, sur la carte de verre : la phrase d'entrée, puis les
-                postes groupés par nature. */}
-            <Reveal className="lg:col-span-8">
-              <Panel pad="p-6 sm:p-10">
+          <Reveal>
+            <Panel pad="p-6 sm:p-10" className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+              <div className="lg:col-span-6">
                 <p className="t-h3 measure text-ink">{service.intro}</p>
-                {service.groups?.length > 0 && (
-                  <div className="mt-9 space-y-7">
-                    {service.groups.map((g) => (
-                      <div key={g.title}>
-                        <GroupLabel>{g.title}</GroupLabel>
-                        <ul className="flex flex-wrap gap-2">
-                          {g.items.map((item) => (
-                            <li
-                              key={item}
-                              className="t-small rounded-full border border-ink/[0.09] bg-shell px-3.5 py-1.5 text-ink/80"
-                            >
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </Panel>
-            </Reveal>
-
-            {/* La suite : le devis, puis les autres métiers. */}
-            <Reveal delay={100} as="aside" className="lg:sticky lg:top-28 lg:col-span-4">
-              <Panel>
-                <div data-page-cta>
-                  <Row
-                    to="/devis"
-                    icon={QuoteIcon}
-                    label="Devis gratuit"
-                    onClick={() => track(EVENTS.QUOTE_CTA, { source: `service_${service.slug}_aside` })}
-                    primary
-                  />
+                <Button
+                  to="/devis"
+                  size="lg"
+                  arrow
+                  className="mt-8"
+                  onClick={() => track(EVENTS.QUOTE_CTA, { source: `service_${service.slug}` })}
+                >
+                  Demander un devis gratuit
+                </Button>
+              </div>
+              {service.groups?.length > 0 && (
+                <div className="lg:col-span-6">
+                  {service.groups.map((g) => (
+                    <div key={g.title} className="mt-7 first:mt-0">
+                      <GroupLabel>{g.title}</GroupLabel>
+                      <ul className="flex flex-wrap gap-2">
+                        {g.items.map((item) => (
+                          <li
+                            key={item}
+                            className="t-small rounded-full border border-ink/[0.09] bg-shell px-3.5 py-1.5 text-ink/80"
+                          >
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
-                <nav aria-label="Autres services" className="mt-8">
-                  <GroupLabel>Autres métiers</GroupLabel>
-                  <ul className="space-y-2">
-                    {others.map((s) => (
-                      <li key={s.slug}>
-                        <Row to={`/services/${s.slug}`} icon={SERVICE_ICONS[s.slug] || HouseIcon} label={s.title} compact />
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              </Panel>
-            </Reveal>
-          </div>
+              )}
+            </Panel>
+          </Reveal>
         </Container>
       </Section>
 

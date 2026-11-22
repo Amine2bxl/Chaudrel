@@ -58,3 +58,6 @@
 ## 2026-11-22 — Cadrage de la maquette
 - Une case `overflow: hidden` devient conteneur de défilement : la view-timeline des descendants se fige. Utiliser `overflow: clip`.
 - Cadrage des caméras : script Playwright (scratchpad `tune.cjs`) qui lit les `getBoundingClientRect` des faces 3D, ajuste x, y (centrage) et z (échelle perspective 80/(80-z)) jusqu'à 88 % de la case. Relancer après tout changement de géométrie.
+
+## 2026-11-22 — Métiers épurés
+- Pages métier : barre `nav[aria-label="Nos métiers"]` ; sur mobile elle défile, un `useEffect` y centre le lien `aria-current="page"` (scrollLeft, pas scrollIntoView, pour ne pas déplacer la page).
