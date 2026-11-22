@@ -54,3 +54,7 @@
 - `.rv-veil` (Reveal) impose `position: relative` (CSS hors couche, plus fort que les utilitaires Tailwind) : un `Reveal` ne peut pas être `absolute inset-0` ; lui donner `h-full`.
 - CSS hors couche (`.facts-glass`) l'emporte sur `.glass-light` (@layer components) : pratique pour surcharger un verre sans `!important`.
 - House3D : allumage = `::before` de la face (sous les fenêtres) et `::after` des enfants ; Réalisations = view-timeline `--h3` (rotation puis allumage), Services = `is-live` (transition de 0,9 s).
+
+## 2026-11-22 — Cadrage de la maquette
+- Une case `overflow: hidden` devient conteneur de défilement : la view-timeline des descendants se fige. Utiliser `overflow: clip`.
+- Cadrage des caméras : script Playwright (scratchpad `tune.cjs`) qui lit les `getBoundingClientRect` des faces 3D, ajuste x, y (centrage) et z (échelle perspective 80/(80-z)) jusqu'à 88 % de la case. Relancer après tout changement de géométrie.

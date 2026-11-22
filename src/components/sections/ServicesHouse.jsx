@@ -15,14 +15,15 @@ const ZONES = {
   facade: ['facade'],
   piscine: ['piscine'],
 };
-/* Métier → point de vue, toujours un peu penché, vu d'en haut : [rx, ry, x, y, z]. */
+/* Métier → point de vue, un peu penché, vu d'en haut : [rx, ry, x, y, z] (cadrage
+   mesuré pour remplir la case sans en sortir, comme CAMERAS dans House3D). */
 const VIEWS = {
-  'renovation-complete': [-32, -34],
-  'finitions-interieures': [-50, -24, 0, 0, 4],
-  'amenagement-exterieur': [-40, -42],
-  toiture: [-46, 32],
-  facade: [-26, -18],
-  piscine: [-38, 122],
+  'renovation-complete': [-32, -34, -0.1, -1.3, 6.3],
+  'finitions-interieures': [-50, -24, 0.2, -1.9, 7.3],
+  'amenagement-exterieur': [-40, -42, -0.4, -1.8, 5.2],
+  toiture: [-46, 32, 0, -2.2, 7.1],
+  facade: [-26, -18, 0.7, -0.7, 10.9],
+  piscine: [-38, 122, -0.2, -2.3, 7.2],
 };
 /**
  * La maison interactive : choisir un métier dans la liste (survol, clic ou
@@ -39,14 +40,12 @@ export default function ServicesHouse({ services = SERVICES }) {
         <SectionHeading title="Votre maison, métier par métier." />
         <Reveal className="mt-block">
           <Panel pad="p-6 sm:p-10" className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
-            <div className="flex justify-center lg:col-span-7">
-              <House3D
-                live
-                lit={new Set(ZONES[current.slug] ?? [])}
-                camera={VIEWS[current.slug] ?? VIEWS['renovation-complete']}
-                className="text-[11px] sm:text-[17px] lg:text-[20px]"
-              />
-            </div>
+            <House3D
+              live
+              lit={new Set(ZONES[current.slug] ?? [])}
+              camera={VIEWS[current.slug] ?? VIEWS['renovation-complete']}
+              className="lg:col-span-7"
+            />
 
             <div className="lg:col-span-5">
               <ul className="grid grid-cols-2 gap-2">

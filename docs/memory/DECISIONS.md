@@ -116,3 +116,8 @@
 - Date : 2026-11-22 · Statut : acceptée (retours client)
 - Décision : le nom CHAUDREL de la barre de navigation revient en Marcellus (police de l'ancien site, auto-hébergée via @fontsource) ; la maquette `House3D` remplace le schéma 2D aussi sur Services (vue penchée d'en haut, caméra qui glisse d'un métier à l'autre, intérieur en coupe de verre) et `HouseDiagram.jsx` est supprimé ; « Des chantiers, pas des promesses » devient une mosaïque sans vide (légende sur la photo) ; `Zigzag` alterne trois mises en page (split, duo avec seconde photo, panoramique) ; faits sous le hero sur une plaque de vrai verre avec lueurs bronze ; lueur bronze derrière les métiers de l'accueil ; porte du hero : panneau en creux et petite béquille ton sur ton.
 - Alternatives écartées : maquette qui suit le pointeur sur Services (la caméra bougerait sous la souris, boucle de survol).
+
+## D-021 — Réalisations symétrique, maquette 3D dans sa case
+- Date : 2026-11-22 · Statut : acceptée (retour client : « super symétrique, bien organisé », la 3D ne doit pas sortir des cases)
+- Décision : chaque chantier = une carte de verre à deux cases égales (vraie photo | maquette 3D), légende sous chaque case (chantier à gauche, travaux + lien à droite), même structure pour tous ; filtres centrés, compteur retiré. `House3D` rend sa propre case 4/3 (`overflow: clip`, échelle en `cqw`) ; cadrage de chaque caméra mesuré (≈ 6 % de marge, centré). Services garde le zigzag varié.
+- Conséquences : `Zigzag` ne sert plus qu'à Services.

@@ -49,12 +49,12 @@ const box = (p, cx, cz, w, d, y, h, s) => [
 const FACES = [
   // Le jardin : ombre portée, allée, chemin de la porte, piscine, à plat.
   {
-    w: 24, h: 20, at: [0, 0, -0.5], r: 'rotateX(90deg)', s: 0.03, k: 'ground',
+    w: 22, h: 18, at: [0, 0, -0.5], r: 'rotateX(90deg)', s: 0.03, k: 'ground',
     kids: [
-      { x: 4.5, y: 1.5, w: 19, h: 14.5, k: 'shadow' },
-      { p: 'abords', x: 16.4, y: 13.5, w: 4.2, h: 5.5, k: 'pave' },
-      { p: 'abords', x: 10.4, y: 14, w: 1.2, h: 5, k: 'pave' },
-      { p: 'piscine', x: 1.5, y: 2.5, w: 3.5, h: 7, k: 'pool' },
+      { x: 3.5, y: 0.5, w: 18.5, h: 14.5, k: 'shadow' },
+      { p: 'abords', x: 15.4, y: 12.5, w: 4.2, h: 5.5, k: 'pave' },
+      { p: 'abords', x: 9.4, y: 13, w: 1.2, h: 5, k: 'pave' },
+      { p: 'piscine', x: 0.5, y: 1.5, w: 3.5, h: 7, k: 'pool' },
     ],
   },
   // Intérieur : deux planchers, visibles seulement quand on le désigne.
@@ -90,16 +90,17 @@ const FACES = [
 
 /* Point de vue par partie : [rx, ry, x, y, z] - inclinaison (négatif = vu
    d'en haut), rotation autour de la maison (positif = côté gauche), puis
-   cadrage à l'écran (x, y) et rapprochement (z), en em. */
+   cadrage (x, y) et distance (z), en em. x, y, z sont mesurés pour que la
+   maquette remplisse sa case 4/3 à 88 % sans en sortir. */
 export const CAMERAS = {
-  facade: [-16, -30],
-  porte: [-6, 8, 1, 1.4, 11],
-  chassis: [-10, 58],
-  garage: [-20, -48],
-  toit: [-52, 150, 0, 0, -8],
-  volume: [-18, 165],
-  piscine: [-30, 118],
-  abords: [-38, -28],
+  facade: [-16, -30, 0.2, -0.3, 6.2],
+  porte: [-6, 8, -0.9, 0.7, 13.7],
+  chassis: [-10, 58, 1.3, 0, 8.8],
+  garage: [-20, -48, -0.7, -0.7, 6.2],
+  toit: [-52, 150, 0.5, -2.8, 3.7],
+  volume: [-18, 165, 1.2, -0.4, 11.2],
+  piscine: [-30, 118, -0.4, -1.8, 11.2],
+  abords: [-38, -28, 0.2, -1.5, 7.7],
 };
 
 /** La partie dont parle le chantier : celle de sa première ligne de travaux. */
@@ -112,43 +113,43 @@ export default function House3D({ works = [], lit: litProp, camera, live = false
   const [rx, ry, x = 0, y = 0, z = 0] = camera ?? CAMERAS[focusFor(works)];
   const on = (p) => p && lit.has(p) && 'is-lit';
 
+  // La case : la maquette s'y met à l'échelle (unités cqw) et n'en sort jamais.
   return (
-    <div
-      aria-hidden="true"
-      className={cn('h3-view', live ? 'is-live' : 'is-scroll', lit.has('interieur') && 'is-xray', className)}
-    >
-      <div
-        className="h3-scene"
-        style={{
-          '--rx': `${rx}deg`,
-          '--ry': `${ry}deg`,
-          '--cam': `${x}em, ${y}em, ${z}em`,
-          '--rx0': `${rx - 16}deg`,
-          '--ry0': `${ry + 75}deg`,
-        }}
-      >
-        {FACES.map((f, i) => (
-          <div
-            key={i}
-            className={cn('h3-face', f.k && `h3-${f.k}`, f.xr && 'h3-xr', on(f.p))}
-            style={{
-              width: `${f.w}em`,
-              height: `${f.h}em`,
-              margin: `${-f.h / 2}em 0 0 ${-f.w / 2}em`,
-              transform: `translate3d(${f.at[0]}em, ${f.at[1]}em, ${f.at[2]}em) ${f.r ?? ''}`,
-              clipPath: f.clip,
-              '--s': f.s,
-            }}
-          >
-            {f.kids?.map((c, j) => (
-              <span
-                key={j}
-                className={cn('h3-part', `h3-${c.k}`, on(c.p))}
-                style={{ left: `${c.x}em`, top: `${c.y}em`, width: `${c.w}em`, height: `${c.h}em` }}
-              />
-            ))}
-          </div>
-        ))}
+    <div aria-hidden="true" className={cn('h3-box', className)}>
+      <div className={cn('h3-view', live ? 'is-live' : 'is-scroll', lit.has('interieur') && 'is-xray')}>
+        <div
+          className="h3-scene"
+          style={{
+            '--rx': `${rx}deg`,
+            '--ry': `${ry}deg`,
+            '--cam': `${x}em, ${y}em, ${z}em`,
+            '--rx0': `${rx - 16}deg`,
+            '--ry0': `${ry + 75}deg`,
+          }}
+        >
+          {FACES.map((f, i) => (
+            <div
+              key={i}
+              className={cn('h3-face', f.k && `h3-${f.k}`, f.xr && 'h3-xr', on(f.p))}
+              style={{
+                width: `${f.w}em`,
+                height: `${f.h}em`,
+                margin: `${-f.h / 2}em 0 0 ${-f.w / 2}em`,
+                transform: `translate3d(${f.at[0]}em, ${f.at[1]}em, ${f.at[2]}em) ${f.r ?? ''}`,
+                clipPath: f.clip,
+                '--s': f.s,
+              }}
+            >
+              {f.kids?.map((c, j) => (
+                <span
+                  key={j}
+                  className={cn('h3-part', `h3-${c.k}`, on(c.p))}
+                  style={{ left: `${c.x}em`, top: `${c.y}em`, width: `${c.w}em`, height: `${c.h}em` }}
+                />
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

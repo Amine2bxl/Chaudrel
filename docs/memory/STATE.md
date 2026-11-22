@@ -33,6 +33,7 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 - D-018 (remplace D-017) : visuel de main conservé ; boutons à plat façon Revolut, texte blanc ; Services et Réalisations en zigzag ; faits en titres seuls ; Matteo numéro principal.
 - D-019 : maison 3D en CSS sur Réalisations (caméra par chantier au défilement) ; porte du logo qui s'entrouvre (poignée, gonds, lumière).
 - D-020 : CHAUDREL en Marcellus ; maquette 3D aussi sur Services (schéma 2D supprimé) ; mosaïque des chantiers ; zigzag à trois mises en page ; faits sur vrai verre.
+- D-021 : Réalisations = cartes symétriques photo | maquette 3D ; maquette toujours dans sa case 4/3, cadrage mesuré.
 
 ## Prochaines étapes
 1. Vérifier le site en production après le déploiement de `main`.
