@@ -21,6 +21,8 @@ export default {
         // Albert Sans pour l'interface et le texte, Prata pour les titres.
         sans: ['var(--font-ui)'],
         display: ['var(--font-display)'],
+        // Marcellus : le nom CHAUDREL seul, comme sur l'ancien site (choix client).
+        wordmark: ['var(--font-wordmark)'],
       },
       colors: {
         cream: rgb('cream'),

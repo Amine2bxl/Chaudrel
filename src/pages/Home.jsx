@@ -1,6 +1,7 @@
 import Hero from '@/components/sections/Hero';
 import FactsBand from '@/components/sections/FactsBand';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
+import ProjectsHouse from '@/components/sections/ProjectsHouse';
 import ServicesBoard from '@/components/sections/ServicesBoard';
 import ProcessStairs from '@/components/sections/ProcessStairs';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
@@ -41,6 +42,8 @@ export default function Home() {
         link={{ label: 'Toutes les réalisations', to: '/realisations' }}
       />
 
+      <ProjectsHouse />
+
       {compared && (
         <Section>
           <Container>
@@ -55,7 +58,12 @@ export default function Home() {
         </Section>
       )}
 
-      <Section>
+      <Section className="relative isolate">
+        {/* Une lueur bronze derrière les métiers, comme sur l'appel de fin de page. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(40%_50%_at_66%_60%,rgb(var(--c-gold-rgb)/0.22),transparent),radial-gradient(26%_40%_at_24%_58%,rgb(var(--c-gold-light-rgb)/0.1),transparent)]"
+        />
         <Container>
           <SectionHeading title="Une rénovation complète, ou un seul poste." />
           <ServicesBoard visual className="mt-block" />

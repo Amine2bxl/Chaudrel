@@ -40,3 +40,28 @@
 - Bug production : CSP `font-src https://fonts.gstatic.com` bloquait Prata / Albert Sans auto-hébergées depuis la passe 2 → `font-src 'self'` (vérifié en local avec la CSP appliquée).
 - Canva MCP : pas de vignette pour une transaction non enregistrée ; les formes insérées passent devant (faire `layer_element back`) ; `update_fill` recadre en mode couvrir (corriger avec `crop_media`). Pas de choix de police par l'API.
 - Coffret testé : bonne clé → page ; mauvaise clé / id inconnu → message d'erreur ; relancer garde le même QR.
+
+## 2026-11-21 — Schémas
+- `HouseDiagram` : maison au trait Chaudrel, parties allumées. Réalisations : `partsFor(works)` (règles vérifiées sur les 6 chantiers réels). Services : `ServicesHouse` (survol d'une partie ou choix d'un métier).
+- À propos : idées refusées par le client (deux rôles, carte d'identité, frise, carte) ; à reprendre avec lui.
+
+## 2026-11-22 — Maison 3D et porte du hero
+- `House3D` (src/components/sections) : repère en em, faces = `translate3d` + rotations, fenêtres/portes en enfants 2D (pas de conflit de profondeur). `rotateY` positif montre le côté gauche ; `rotateX` négatif = vu d'en haut. Caméras : [rx, ry, x, y, z].
+- Hero : la porte tourne dans un conteneur `perspective: 60cqw` (door-mono en `container-type: inline-size`) pour garder la même profondeur sur mobile. Les animations CSS d'entrée et WAAPI de défilement sont sur des éléments emboîtés distincts (sinon WAAPI masque la CSS).
+- Non vérifié : vrais téléphones et Safari ; en émulation iPhone headless, bords de la porte légèrement crénelés pendant la rotation.
+
+## 2026-11-22 — Passe 6
+- `.rv-veil` (Reveal) impose `position: relative` (CSS hors couche, plus fort que les utilitaires Tailwind) : un `Reveal` ne peut pas être `absolute inset-0` ; lui donner `h-full`.
+- CSS hors couche (`.facts-glass`) l'emporte sur `.glass-light` (@layer components) : pratique pour surcharger un verre sans `!important`.
+- House3D : allumage = `::before` de la face (sous les fenêtres) et `::after` des enfants ; Réalisations = view-timeline `--h3` (rotation puis allumage), Services = `is-live` (transition de 0,9 s).
+
+## 2026-11-22 — Cadrage de la maquette
+- Une case `overflow: hidden` devient conteneur de défilement : la view-timeline des descendants se fige. Utiliser `overflow: clip`.
+- Cadrage des caméras : script Playwright (scratchpad `tune.cjs`) qui lit les `getBoundingClientRect` des faces 3D, ajuste x, y (centrage) et z (échelle perspective 80/(80-z)) jusqu'à 88 % de la case. Relancer après tout changement de géométrie.
+
+## 2026-11-22 — Métiers épurés
+- Pages métier : barre `nav[aria-label="Nos métiers"]` ; sur mobile elle défile, un `useEffect` y centre le lien `aria-current="page"` (scrollLeft, pas scrollIntoView, pour ne pas déplacer la page).
+
+## 2026-11-22 — Intro unique, page métier, devis
+- Intro : drapeau posé dès le début de l'intro (StrictMode double-monte l'effet : on ne lit que `data-intro` dans l'effet, et le nettoyage ne compte comme « vue » qu'après 300 ms).
+- `PhoneIcon` (BrandIcons) n'accepte pas `size` : passer `width`/`height`.

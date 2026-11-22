@@ -142,6 +142,9 @@ export const PersonIcon = make(
 /** Repli / dépli (FAQ) - une croix qui pivote en moins. */
 export const PlusIcon = make(<path d="M12 5v14M5 12h14" />);
 
+/** Coché - un poste pris en charge. */
+export const CheckIcon = make(<path d="m5 12.5 4.5 4.5L19 7.5" />);
+
 /** Direction - aller vers. */
 export const ArrowIcon = make(<path d="M4 12h16M14 6l6 6-6 6" />);
 

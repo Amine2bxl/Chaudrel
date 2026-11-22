@@ -59,6 +59,12 @@ export default function ServicesBoard({ services = SERVICES, visual = false, cla
               )}
             />
           ))}
+          {/* Le nom du métier montré, posé en bas de la photo. */}
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-bark/85 via-bark/35 to-transparent p-7 pt-20">
+            <p key={shown} className="rise-in font-display text-[1.75rem] leading-tight text-white">
+              {services.find((s) => s.slug === shown)?.title}
+            </p>
+          </div>
         </div>
       </div>
       <div className="lg:col-span-7">{list}</div>

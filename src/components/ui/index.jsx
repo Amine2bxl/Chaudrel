@@ -73,10 +73,10 @@ export function SectionHeading({ title, tone = 'dark', className, children }) {
 
 const VARIANTS = {
   // Libellé en `bark` : foncé dans tous les contextes (5,6:1 sur le bronze).
-  solid: 'bg-gold text-bark shadow-soft hover:bg-gold-hover hover:shadow-lift',
+  solid: 'btn-solid',
   solidLight: 'bg-cream text-ink shadow-soft hover:bg-shell hover:shadow-lift',
-  outline: 'border border-ink/20 text-ink hover:border-ink/45 hover:bg-ink/[0.04]',
-  outlineLight: 'border border-cream/25 text-cream hover:border-cream/60 hover:bg-cream/[0.08]',
+  outline: 'btn-soft',
+  outlineLight: 'btn-soft',
 };
 
 const SIZES = {
@@ -88,10 +88,10 @@ const SIZES = {
 /* Pastille de flèche logée dans la pilule : elle donne la direction et
    glisse au survol. Décorative - le libellé dit déjà où l'on va. */
 const ARROW_TONE = {
-  solid: 'bg-bark/10 text-bark',
+  solid: 'bg-white/15 text-white',
   solidLight: 'bg-ink/[0.08] text-ink',
-  outline: 'bg-ink/[0.07] text-ink',
-  outlineLight: 'bg-cream/15 text-cream',
+  outline: 'bg-white/10 text-white',
+  outlineLight: 'bg-white/10 text-white',
 };
 
 function ArrowChip({ variant }) {

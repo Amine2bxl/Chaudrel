@@ -103,6 +103,7 @@
      en capitales, elle rappelle RÉNOVATION. */
   --font-ui: 'Albert Sans Variable', 'Albert Sans', system-ui, sans-serif;
   --font-display: 'Prata', Georgia, 'Times New Roman', serif;
+  --font-wordmark: 'Marcellus', Georgia, serif;
 }
 
 /* Sections profondes et encarts crème : les rôles reprennent leur sens

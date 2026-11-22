@@ -10,14 +10,14 @@
   "tva": "BE0812283245",
   "contacts": [
     {
-      "nom": "Alberto",
-      "role": "Maître d'œuvre",
-      "tel": "+32 477 27 31 18"
-    },
-    {
       "nom": "Matteo",
       "role": "Design & relation client",
       "tel": "+32 493 97 25 17"
+    },
+    {
+      "nom": "Alberto",
+      "role": "Maître d'œuvre",
+      "tel": "+32 477 27 31 18"
     }
   ],
   "couleurs": {

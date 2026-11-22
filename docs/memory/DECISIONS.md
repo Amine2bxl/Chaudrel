@@ -94,3 +94,48 @@
 - Décision : site, e-mail (info@chaudrelrenovation.be), QR, certificats, documents et vêtements passent sur chaudrelrenovation.be ; `vercel.json` redirige chaudrel.be et les www vers lui.
 - Contexte : aucun des deux domaines n'est encore relié au projet Vercel (production sur *.vercel.app).
 - Conséquences : avant la mise en production, relier le domaine à Vercel et créer la boîte e-mail, sinon les e-mails du site rebondissent.
+
+## D-017 — Vrai verre sur photo, boutons en verre à texte blanc
+- Date : 2026-11-21 · Statut : acceptée (demande client)
+- Décision : les sections clés (métiers, étapes, appel final) sont des `Scene` (photo voilée) où les panneaux `Panel glass` floutent réellement l'image ; les légendes des chantiers sont des plaques de verre sur les photos ; chaque page s'ouvre sur une photo. Boutons : `.btn-bronze` (verre bronze sombre, texte blanc) et `.btn-glass` (verre clair, texte crème). Faits sous le hero : titres seuls. Matteo = numéro principal (ordre de `BRAND.phones`).
+- Conséquences : le flou d'arrière-plan ne sert que là où une photo est derrière ; les autres panneaux gardent la carte sans flou.
+
+## D-018 — Retour au visuel de main, boutons à plat, zigzag (remplace D-017)
+- Date : 2026-11-21 · Statut : acceptée (retour client) · D-017 remplacée
+- Contexte : le client préfère le visuel de main au vrai verre sur photo ; il trouve les boutons « brillants ».
+- Décision : sections et pages reviennent à main ; boutons à plat façon Revolut (`.btn-solid` bronze sombre #8C6B3E texte blanc, `.btn-soft` voile blanc 10 % texte blanc) ; pages Services et Réalisations en zigzag (`Zigzag` : photo d'un côté, titre + texte de l'autre, en alternance). Gardés : faits en titres seuls, Matteo numéro principal.
+
+## D-019 — Maison 3D en CSS, porte du logo qui s'entrouvre
+- Date : 2026-11-22 · Statut : acceptée (demande client)
+- Contexte : le client veut une maison en 3D sur Réalisations, qui se tourne au défilement vers la partie dont parle chaque bloc, et une porte du logo qui se lit comme une porte qui s'ouvre.
+- Décision : `House3D` en CSS 3D (plans `preserve-3d`, aucune bibliothèque) ; caméra = première ligne des travaux (`focusFor`), animée par une view-timeline CSS (`--h3`), vue finale fixe sans prise en charge ou avec moins de mouvement. Hero : béquille crème qui s'abaisse, porte qui pivote de 38° sur ses gonds (bord gauche), lumière chaude dans l'embrasure ; au défilement elle finit de s'ouvrir puis s'efface.
+- Alternatives écartées : Three.js (≈150 ko, rendu JavaScript à chaque image, contraire à D-008) ; vidéo de maquette (lourde, pas de parties allumées).
+- Conséquences : Firefox voit la maison déjà tournée (pas de view-timeline) ; Services garde le schéma 2D.
+
+## D-020 — Passe 6 : police du nom, maquette 3D partout, mosaïque, zigzag à trois temps
+- Date : 2026-11-22 · Statut : acceptée (retours client)
+- Décision : le nom CHAUDREL de la barre de navigation revient en Marcellus (police de l'ancien site, auto-hébergée via @fontsource) ; la maquette `House3D` remplace le schéma 2D aussi sur Services (vue penchée d'en haut, caméra qui glisse d'un métier à l'autre, intérieur en coupe de verre) et `HouseDiagram.jsx` est supprimé ; « Des chantiers, pas des promesses » devient une mosaïque sans vide (légende sur la photo) ; `Zigzag` alterne trois mises en page (split, duo avec seconde photo, panoramique) ; faits sous le hero sur une plaque de vrai verre avec lueurs bronze ; lueur bronze derrière les métiers de l'accueil ; porte du hero : panneau en creux et petite béquille ton sur ton.
+- Alternatives écartées : maquette qui suit le pointeur sur Services (la caméra bougerait sous la souris, boucle de survol).
+
+## D-021 — Réalisations symétrique, maquette 3D dans sa case
+- Date : 2026-11-22 · Statut : acceptée (retour client : « super symétrique, bien organisé », la 3D ne doit pas sortir des cases)
+- Décision : chaque chantier = une carte de verre à deux cases égales (vraie photo | maquette 3D), légende sous chaque case (chantier à gauche, travaux + lien à droite), même structure pour tous ; filtres centrés, compteur retiré. `House3D` rend sa propre case 4/3 (`overflow: clip`, échelle en `cqw`) ; cadrage de chaque caméra mesuré (≈ 6 % de marge, centré). Services garde le zigzag varié.
+- Conséquences : `Zigzag` ne sert plus qu'à Services.
+
+## D-022 — Métiers épurés (remplace la partie Services de D-020)
+- Date : 2026-11-22 · Statut : acceptée (retour client : « épure complètement », navigation simple et structurée, valeur comprise tout de suite)
+- Décision : « Votre maison, métier par métier » retiré (`ServicesHouse.jsx` supprimé) ; /services = grille de six cartes identiques (photo, icône, nom, phrase de valeur `excerpt`) ; chaque page métier a une barre des six métiers sous l'en-tête (métier en cours en bronze, centré sur mobile) et une seule carte : intro + devis à gauche, postes à droite ; la liste « Autres métiers » de la colonne est retirée. `Zigzag.jsx` supprimé (plus utilisé).
+
+## D-023 — Intro jouée seule et une seule fois ; page métier visuelle ; devis guidé
+- Date : 2026-11-22 · Statut : acceptée (retours client)
+- Décision : l'intro de la porte se joue toute seule (plus de défilement épinglé) à la première visite, puis plus jamais : `localStorage['chaudrel-intro']`, lu avant le premier rendu par `public/intro.js` (script externe, CSP `script-src 'self'`) qui pose `data-intro="seen"` sur `<html>` ; un geste (molette, toucher, touche) saute l'intro. Page métier : en-tête sans photo, grande photo claire + carte « valeur » (phrase, intro, devis), « Ce que nous prenons en charge » = maquette 3D du métier + postes cochés par groupe ; questions retirées. Devis : étapes numérotées cliquables, tuiles à icônes pour le type de travaux, formulaire sur carte de verre, colonne « Votre demande » qui se remplit en direct + garanties + fondateurs.
+- Conséquences : D-008 (« rien à l'arrêt ») tenu : animations jouées une fois puis annulées, l'état final est en CSS.
+
+## D-024 — Intro une fois par chargement (remplace la partie « une seule fois » de D-023)
+- Date : 2026-11-22 · Statut : acceptée (retour client : l'intro avait disparu pour de bon)
+- Décision : l'intro se rejoue à chaque chargement de page (arrivée, F5, Cmd+R) ; pendant la navigation dans le site, revenir sur l'accueil l'affiche directement terminée (`data-intro="seen"` sur `<html>`, en mémoire seulement). `localStorage` et `public/intro.js` retirés ; `prefers-reduced-motion` passe par une media query CSS.
+
+## D-025 — Défilement de base, faits sur la photo, maquette sur l'accueil, photo + 3D dès l'arrivée
+- Date : 2026-11-22 · Statut : acceptée (retours client)
+- Décision : `history.scrollRestoration = 'manual'` (chaque chargement repart du haut, on défile soi-même) ; un geste pendant l'intro la termine sans faire défiler. La plaque des faits mord sur la photo du hero (lg, -mt-28, vrai flou) et n'apparaît qu'après l'intro. Accueil : section « Chaque chantier, sur la maquette. » (`ProjectsHouse` : maquette live + liste des chantiers + photo + liens chantier / métier). Pages métier et chantier : en-tête titre seul, puis photo | maquette côte à côte, format 16/10 (mobile) – 16/11 (lg), mesurées pour tenir dans le premier écran (1440×900, 1366×768, iPhone 13) ; puis carte valeur + postes cochés (métier) ou récit + travaux cochés + lien vers le métier (chantier) ; galerie en cases égales.
+- Détail technique : `.h3-box` lit `--h3-ratio` et `--h3-fit` (format et échelle de la case).

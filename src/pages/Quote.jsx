@@ -1,6 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import PageHero from '@/components/sections/PageHero';
-import { Button, Container, Section } from '@/components/ui';
+import { Button, Container, Panel, Section } from '@/components/ui';
+import { Chip, FounderRows } from '@/components/layout/ContactList';
+import {
+  CheckIcon,
+  FacadeIcon,
+  HouseIcon,
+  KeyIcon,
+  LandscapeIcon,
+  PersonIcon,
+  PlusIcon,
+  PoolIcon,
+  QuoteDocIcon,
+  RollerIcon,
+  RoofIcon,
+  WindowIcon,
+} from '@/components/ui/Icons';
+import { PhoneIcon } from '@/components/ui/BrandIcons';
 import Reveal from '@/lib/reveal';
 import { BRAND, whatsappUrl } from '@/data/site';
 import { PROVINCES } from '@/data/belgium';
@@ -18,6 +34,17 @@ const PROJECT_TYPES = [
   'Piscine',
   'Autre',
 ];
+/* Un symbole par type de travaux : les tuiles de la première question. */
+const PROJECT_ICONS = {
+  'Rénovation complète': HouseIcon,
+  'Finitions intérieures': RollerIcon,
+  'Aménagement extérieur': LandscapeIcon,
+  Toiture: RoofIcon,
+  Façade: FacadeIcon,
+  'Châssis et portes': WindowIcon,
+  Piscine: PoolIcon,
+  Autre: PlusIcon,
+};
 
 /* Le type de bien conditionne l'organisation du chantier bien plus que le
    budget : il remplace l'étape budget, qui allongeait le parcours sans
@@ -281,7 +308,6 @@ export default function Quote() {
     )}&body=${encodeURIComponent(lines)}`;
   }, [data]);
 
-  const progress = useMemo(() => step / STEPS.length, [step]);
 
   if (status === 'success') {
     return (
@@ -335,348 +361,340 @@ export default function Quote() {
       <PageHero title="Cinq questions, deux minutes." />
 
       <Section tone="cream" className="pb-16 pt-block">
-        <Container className="max-w-[46rem]">
-          {/* Progression */}
-          <div>
-            <div className="flex items-baseline justify-between">
-              <span className="t-label text-ink/65">
-                {String(step).padStart(2, '0')} - {STEPS[step - 1]}
-              </span>
-              <span className="t-label text-ink/65">
-                {step} / {STEPS.length}
-              </span>
-            </div>
-            <div
-              className="mt-4 h-1 w-full overflow-hidden rounded-full bg-ink/[0.09]"
-              role="progressbar"
-              aria-valuenow={step}
-              aria-valuemin={1}
-              aria-valuemax={STEPS.length}
-              aria-label="Progression du formulaire"
-            >
-              <div
-                className="h-full origin-left rounded-full bg-gold transition-transform duration-700 ease-soft"
-                style={{ transform: `scaleX(${progress})` }}
-              />
-            </div>
-          </div>
-
-          <form onSubmit={submit} noValidate className="mt-10">
-            <div className="absolute left-[-9999px]" aria-hidden="true">
-              <label htmlFor="company">Ne pas remplir</label>
-              <input
-                id="company"
-                tabIndex={-1}
-                autoComplete="off"
-                value={data.company}
-                onChange={(e) => set('company')(e.target.value)}
-              />
-            </div>
-
-            {step === 1 && (
-              <Fieldset legend="Votre projet, en bref.">
-                <ChoiceGroup
-                  label="Type de travaux"
-                  name="projectType"
-                  options={PROJECT_TYPES}
-                  value={data.projectType}
-                  onChange={set('projectType')}
-                  error={errors.projectType}
+        <Container className="grid gap-6 lg:grid-cols-12 lg:items-start">
+          <Panel pad="p-6 sm:p-10" className="lg:col-span-8">
+            <Stepper step={step} onGo={(n) => n < step && setStep(n)} />
+            <form onSubmit={submit} noValidate className="mt-10 sm:mt-12">
+              <div className="absolute left-[-9999px]" aria-hidden="true">
+                <label htmlFor="company">Ne pas remplir</label>
+                <input
+                  id="company"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={data.company}
+                  onChange={(e) => set('company')(e.target.value)}
                 />
-                <ChoiceGroup
-                  label="Type de bien"
-                  name="propertyType"
-                  options={PROPERTY_TYPES}
-                  value={data.propertyType}
-                  onChange={set('propertyType')}
-                  error={errors.propertyType}
-                />
-                <ChoiceGroup
-                  label="Surface approximative"
-                  name="surface"
-                  options={SURFACE_OPTIONS}
-                  value={data.surface}
-                  onChange={set('surface')}
-                  hint="Un ordre de grandeur suffit : il donne le cadre au devis."
-                  error={errors.surface}
-                />
-              </Fieldset>
-            )}
+              </div>
 
-            {step === 2 && (
-              <Fieldset legend="Décrivez votre projet." error={errors.description}>
-                <label htmlFor="description" className="t-small block text-ink/65">
-                  Pièces concernées, état actuel, ce que vous imaginez.
-                </label>
-                <textarea
-                  id="description"
-                  rows={5}
-                  value={data.description}
-                  onChange={(e) => set('description')(e.target.value)}
-                  aria-invalid={Boolean(errors.description)}
-                  placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
-                  className="field mt-4"
-                />
-
-                <ChoiceGroup
-                  label="Le logement sera-t-il occupé pendant les travaux ?"
-                  name="occupied"
-                  options={OCCUPIED_OPTIONS}
-                  value={data.occupied}
-                  onChange={set('occupied')}
-                  hint="Cela conditionne le planning : certains postes (peinture, poussière) sont plus simples logement vide."
-                  error={errors.occupied}
-                />
-
-                {/* Pièces jointes : photos, plan ou une courte vidéo. Elles
-                    partent dans le même e-mail que la demande. */}
-                <FileUpload files={data.files} onChange={set('files')} />
-              </Fieldset>
-            )}
-
-            {step === 3 && (
-              <Fieldset legend="Où se situe le projet ?" error={errors.province}>
-                <label htmlFor="province" className="t-label text-ink/70">
-                  Province
-                </label>
-                <select
-                  id="province"
-                  name="province"
-                  value={data.province}
-                  onChange={(e) => set('province')(e.target.value)}
-                  aria-invalid={Boolean(errors.province)}
-                  className="field mt-2"
-                >
-                  <option value="">Choisir une province…</option>
-                  {PROVINCE_NAMES.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
-
-                <div className="mt-8 grid gap-8 sm:grid-cols-[1fr_2fr]">
-                  <Field
-                    id="postalCode"
-                    label="Code postal"
-                    value={data.postalCode}
-                    onChange={set('postalCode')}
-                    error={errors.postalCode}
-                    autoComplete="postal-code"
-                    inputMode="numeric"
+              {step === 1 && (
+                <Fieldset legend="Votre projet, en bref.">
+                  <ChoiceGroup
+                    label="Type de travaux"
+                    name="projectType"
+                    options={PROJECT_TYPES}
+                    icons={PROJECT_ICONS}
+                    value={data.projectType}
+                    onChange={set('projectType')}
+                    error={errors.projectType}
                   />
-                  <Field
-                    id="commune"
-                    label="Commune"
-                    value={data.commune}
-                    onChange={set('commune')}
-                    hint="Facultatif - le code postal suffit parfois."
-                    autoComplete="address-level2"
+                  <ChoiceGroup
+                    label="Type de bien"
+                    name="propertyType"
+                    options={PROPERTY_TYPES}
+                    value={data.propertyType}
+                    onChange={set('propertyType')}
+                    error={errors.propertyType}
                   />
-                </div>
-                <p className="t-small mt-6 text-ink/65">{BRAND.zoneLong}.</p>
-              </Fieldset>
-            )}
+                  <ChoiceGroup
+                    label="Surface approximative"
+                    name="surface"
+                    options={SURFACE_OPTIONS}
+                    value={data.surface}
+                    onChange={set('surface')}
+                    hint="Un ordre de grandeur suffit : il donne le cadre au devis."
+                    error={errors.surface}
+                  />
+                </Fieldset>
+              )}
 
-            {step === 4 && (
-              <Fieldset legend="Quand, et avec quel budget ?">
-                <ChoiceGroup
-                  label="Échéance souhaitée"
-                  name="timeline"
-                  options={TIMELINE_OPTIONS}
-                  value={data.timeline}
-                  onChange={set('timeline')}
-                  error={errors.timeline}
-                />
-                <ChoiceGroup
-                  label="Budget prévisionnel"
-                  name="budget"
-                  options={BUDGET_OPTIONS}
-                  value={data.budget}
-                  onChange={set('budget')}
-                  hint="Une fourchette large suffit. Si vous hésitez, dites-le : la visite nous aidera à cadrer."
-                  error={errors.budget}
-                />
-                <ChoiceGroup
-                  label="Vous êtes ?"
-                  name="ownerStatus"
-                  options={OWNER_STATUS_OPTIONS}
-                  value={data.ownerStatus}
-                  onChange={set('ownerStatus')}
-                  hint="Si vous êtes locataire, certains travaux nécessitent l’accord du propriétaire."
-                  error={errors.ownerStatus}
-                />
-              </Fieldset>
-            )}
+              {step === 2 && (
+                <Fieldset legend="Décrivez votre projet." error={errors.description}>
+                  <label htmlFor="description" className="t-small block text-ink/65">
+                    Pièces concernées, état actuel, ce que vous imaginez.
+                  </label>
+                  <textarea
+                    id="description"
+                    rows={5}
+                    value={data.description}
+                    onChange={(e) => set('description')(e.target.value)}
+                    aria-invalid={Boolean(errors.description)}
+                    placeholder="Ex. : appartement de 90 m² à Ixelles, cuisine et salle de bain à refaire, disponible à partir de septembre."
+                    className="field mt-4"
+                  />
 
-            {step === 5 && (
-              <Fieldset legend="Comment vous joindre ?">
-                <div className="space-y-8">
-                  <div className="grid gap-8 sm:grid-cols-2">
+                  <ChoiceGroup
+                    label="Le logement sera-t-il occupé pendant les travaux ?"
+                    name="occupied"
+                    options={OCCUPIED_OPTIONS}
+                    value={data.occupied}
+                    onChange={set('occupied')}
+                    hint="Cela conditionne le planning : certains postes (peinture, poussière) sont plus simples logement vide."
+                    error={errors.occupied}
+                  />
+
+                  {/* Pièces jointes : photos, plan ou une courte vidéo. Elles
+                      partent dans le même e-mail que la demande. */}
+                  <FileUpload files={data.files} onChange={set('files')} />
+                </Fieldset>
+              )}
+
+              {step === 3 && (
+                <Fieldset legend="Où se situe le projet ?" error={errors.province}>
+                  <label htmlFor="province" className="t-label text-ink/70">
+                    Province
+                  </label>
+                  <select
+                    id="province"
+                    name="province"
+                    value={data.province}
+                    onChange={(e) => set('province')(e.target.value)}
+                    aria-invalid={Boolean(errors.province)}
+                    className="field mt-2"
+                  >
+                    <option value="">Choisir une province…</option>
+                    {PROVINCE_NAMES.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="mt-8 grid gap-8 sm:grid-cols-[1fr_2fr]">
                     <Field
-                      id="firstName"
-                      label="Prénom"
-                      value={data.firstName}
-                      onChange={set('firstName')}
-                      error={errors.firstName}
-                      autoComplete="given-name"
+                      id="postalCode"
+                      label="Code postal"
+                      value={data.postalCode}
+                      onChange={set('postalCode')}
+                      error={errors.postalCode}
+                      autoComplete="postal-code"
+                      inputMode="numeric"
                     />
                     <Field
-                      id="lastName"
-                      label="Nom"
-                      value={data.lastName}
-                      onChange={set('lastName')}
-                      error={errors.lastName}
-                      autoComplete="family-name"
+                      id="commune"
+                      label="Commune"
+                      value={data.commune}
+                      onChange={set('commune')}
+                      hint="Facultatif - le code postal suffit parfois."
+                      autoComplete="address-level2"
                     />
                   </div>
-                  <Field id="phone" label="Téléphone" type="tel" value={data.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" />
-                  <Field id="email" label="E-mail" type="email" value={data.email} onChange={set('email')} error={errors.email} autoComplete="email" />
-                </div>
+                  <p className="t-small mt-6 text-ink/65">{BRAND.zoneLong}.</p>
+                </Fieldset>
+              )}
 
-                <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-ink/65">
-                  <input
-                    type="checkbox"
-                    checked={data.consent}
-                    onChange={(e) => set('consent')(e.target.checked)}
-                    aria-invalid={Boolean(errors.consent)}
-                    className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-gold"
+              {step === 4 && (
+                <Fieldset legend="Quand, et avec quel budget ?">
+                  <ChoiceGroup
+                    label="Échéance souhaitée"
+                    name="timeline"
+                    options={TIMELINE_OPTIONS}
+                    value={data.timeline}
+                    onChange={set('timeline')}
+                    error={errors.timeline}
                   />
-                  <span>
-                    J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
-                    <a href="/legal/politique-mentions" className="link-line text-ink">
-                      Politique de confidentialité
-                    </a>
-                  </span>
-                </label>
-                {errors.consent && <FieldError>{errors.consent}</FieldError>}
-              </Fieldset>
-            )}
-
-            <div className="mt-12 flex flex-wrap items-center gap-4">
-              {step > 1 && (
-                <Button variant="outline" onClick={back} disabled={status === 'loading'}>
-                  Retour
-                </Button>
+                  <ChoiceGroup
+                    label="Budget prévisionnel"
+                    name="budget"
+                    options={BUDGET_OPTIONS}
+                    value={data.budget}
+                    onChange={set('budget')}
+                    hint="Une fourchette large suffit. Si vous hésitez, dites-le : la visite nous aidera à cadrer."
+                    error={errors.budget}
+                  />
+                  <ChoiceGroup
+                    label="Vous êtes ?"
+                    name="ownerStatus"
+                    options={OWNER_STATUS_OPTIONS}
+                    value={data.ownerStatus}
+                    onChange={set('ownerStatus')}
+                    hint="Si vous êtes locataire, certains travaux nécessitent l’accord du propriétaire."
+                    error={errors.ownerStatus}
+                  />
+                </Fieldset>
               )}
 
-              {step < STEPS.length ? (
-                <Button variant="solid" onClick={next}>
-                  Continuer
-                </Button>
-              ) : (
-                <Button type="submit" variant="solid" size="lg" disabled={status === 'loading'}>
-                  {status === 'loading' ? 'Envoi en cours…' : 'Envoyer ma demande'}
-                </Button>
+              {step === 5 && (
+                <Fieldset legend="Comment vous joindre ?">
+                  <div className="space-y-8">
+                    <div className="grid gap-8 sm:grid-cols-2">
+                      <Field
+                        id="firstName"
+                        label="Prénom"
+                        value={data.firstName}
+                        onChange={set('firstName')}
+                        error={errors.firstName}
+                        autoComplete="given-name"
+                      />
+                      <Field
+                        id="lastName"
+                        label="Nom"
+                        value={data.lastName}
+                        onChange={set('lastName')}
+                        error={errors.lastName}
+                        autoComplete="family-name"
+                      />
+                    </div>
+                    <Field id="phone" label="Téléphone" type="tel" value={data.phone} onChange={set('phone')} error={errors.phone} autoComplete="tel" />
+                    <Field id="email" label="E-mail" type="email" value={data.email} onChange={set('email')} error={errors.email} autoComplete="email" />
+                  </div>
+
+                  <label className="t-small mt-8 flex cursor-pointer items-start gap-3 text-ink/65">
+                    <input
+                      type="checkbox"
+                      checked={data.consent}
+                      onChange={(e) => set('consent')(e.target.checked)}
+                      aria-invalid={Boolean(errors.consent)}
+                      className="mt-1 h-4 w-4 flex-shrink-0 rounded-xs accent-gold"
+                    />
+                    <span>
+                      J’accepte que Chaudrel utilise ces informations pour me recontacter.{' '}
+                      <a href="/legal/politique-mentions" className="link-line text-ink">
+                        Politique de confidentialité
+                      </a>
+                    </span>
+                  </label>
+                  {errors.consent && <FieldError>{errors.consent}</FieldError>}
+                </Fieldset>
               )}
-            </div>
 
-            {/* Le brouillon se garde d'une visite à l'autre ; une façon de le
-                perdre volontairement reste nécessaire. */}
-            {hasDraft && (
-              <div className="mt-5 flex items-center justify-between gap-4">
-                <span className="t-small text-ink/70">Votre brouillon est conservé.</span>
-                <button
-                  type="button"
-                  onClick={clearDraft}
-                  className="link-line t-label inline-flex items-center gap-1.5 pb-0.5 text-ink/70 transition-colors duration-fast hover:text-ink"
-                >
-                  Tout effacer
-                </button>
-              </div>
-            )}
-
-            <p aria-live="polite" className="sr-only">
-              {status === 'loading' ? 'Envoi de votre demande en cours' : ''}
-            </p>
-
-            {status === 'error' && (
-              <div role="alert" className="mt-8 rounded-md bg-error/[0.07] px-5 py-4">
-                <p className="t-body text-ink">Votre demande n’a pas pu être envoyée automatiquement.</p>
-                {serverError && (
-                  <p className="t-small mt-1 text-ink/65">
-                    {unconfigured
-                      ? "Momentanément indisponible : le serveur d'e-mails n'est pas encore branché. Votre demande est remplie ci-dessous, envoyez-la d'un clic."
-                      : serverError}
-                  </p>
+              <div className="mt-12 flex flex-wrap items-center gap-4">
+                {step > 1 && (
+                  <Button variant="outline" onClick={back} disabled={status === 'loading'}>
+                    Retour
+                  </Button>
                 )}
 
-                <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
-                  <Button
-                    href={mailtoHref}
-                    variant="solid"
-                    onClick={() => track(EVENTS.EMAIL_CLICK, { source: 'quote_fallback' })}
-                  >
-                    Envoyer par e-mail
+                {step < STEPS.length ? (
+                  <Button variant="solid" onClick={next}>
+                    Continuer
                   </Button>
-                  <Button
-                    href={whatsappUrl(`Bonjour Chaudrel, voici ma demande : ${data.projectType} à ${data.postalCode}.`)}
-                    variant="outline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_fallback' })}
-                  >
-                    WhatsApp
+                ) : (
+                  <Button type="submit" variant="solid" size="lg" arrow disabled={status === 'loading'}>
+                    {status === 'loading' ? 'Envoi en cours…' : 'Envoyer ma demande'}
                   </Button>
-                  <Button
-                    href={`tel:${BRAND.phones[0].tel}`}
-                    variant="outline"
-                    onClick={() => track(EVENTS.PHONE_CLICK, { source: 'quote_fallback' })}
+                )}
+              </div>
+
+              {/* Le brouillon se garde d'une visite à l'autre ; une façon de le
+                  perdre volontairement reste nécessaire. */}
+              {hasDraft && (
+                <div className="mt-5 flex items-center justify-between gap-4">
+                  <span className="t-small text-ink/70">Votre brouillon est conservé.</span>
+                  <button
+                    type="button"
+                    onClick={clearDraft}
+                    className="link-line t-label inline-flex items-center gap-1.5 pb-0.5 text-ink/70 transition-colors duration-fast hover:text-ink"
                   >
-                    Nous appeler
-                  </Button>
+                    Tout effacer
+                  </button>
                 </div>
+              )}
 
-                {!unconfigured && (
-                  <p className="t-small mt-3 text-ink/65">
-                    Appelez-nous au{' '}
-                    <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
-                      {BRAND.phones[0].number}
-                    </a>{' '}
-                    ou écrivez sur{' '}
-                    <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-ink">
+              <p aria-live="polite" className="sr-only">
+                {status === 'loading' ? 'Envoi de votre demande en cours' : ''}
+              </p>
+
+              {status === 'error' && (
+                <div role="alert" className="mt-8 rounded-md bg-error/[0.07] px-5 py-4">
+                  <p className="t-body text-ink">Votre demande n’a pas pu être envoyée automatiquement.</p>
+                  {serverError && (
+                    <p className="t-small mt-1 text-ink/65">
+                      {unconfigured
+                        ? "Momentanément indisponible : le serveur d'e-mails n'est pas encore branché. Votre demande est remplie ci-dessous, envoyez-la d'un clic."
+                        : serverError}
+                    </p>
+                  )}
+
+                  <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
+                    <Button
+                      href={mailtoHref}
+                      variant="solid"
+                      onClick={() => track(EVENTS.EMAIL_CLICK, { source: 'quote_fallback' })}
+                    >
+                      Envoyer par e-mail
+                    </Button>
+                    <Button
+                      href={whatsappUrl(`Bonjour Chaudrel, voici ma demande : ${data.projectType} à ${data.postalCode}.`)}
+                      variant="outline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_fallback' })}
+                    >
                       WhatsApp
-                    </a>
-                    .
-                  </p>
-                )}
-              </div>
-            )}
-          </form>
+                    </Button>
+                    <Button
+                      href={`tel:${BRAND.phones[0].tel}`}
+                      variant="outline"
+                      onClick={() => track(EVENTS.PHONE_CLICK, { source: 'quote_fallback' })}
+                    >
+                      Nous appeler
+                    </Button>
+                  </div>
 
-          {/* Réassurance compacte : une ligne de traite après le formulaire, au
-              lieu de la colonne latérale qui doublonnait la page. */}
-          <div className="mt-14 border-t border-ink/12 pt-8">
-            <ul className="grid gap-x-10 gap-y-2.5 sm:grid-cols-2">
-              {[
-                `${BRAND.promises.quote}.`,
-                `${BRAND.promises.responseTime} à votre demande.`,
-                'Photos, plans et vidéo partent dans le même e-mail.',
-                'Vos données servent uniquement à répondre.',
-              ].map((t) => (
-                <li key={t} className="t-small flex items-start gap-2.5 text-ink/65">
-                  <span aria-hidden="true" className="mt-[7px] h-1 w-1 flex-none rounded-full bg-gold" />
-                  {t}
-                </li>
-              ))}
-            </ul>
+                  {!unconfigured && (
+                    <p className="t-small mt-3 text-ink/65">
+                      Appelez-nous au{' '}
+                      <a href={`tel:${BRAND.phones[0].tel}`} className="link-line text-ink">
+                        {BRAND.phones[0].number}
+                      </a>{' '}
+                      ou écrivez sur{' '}
+                      <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer" className="link-line text-ink">
+                        WhatsApp
+                      </a>
+                      .
+                    </p>
+                  )}
+                </div>
+              )}
+            </form>
+          </Panel>
 
-            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <span className="t-small text-ink/65">Vous préférez parler ?</span>
-              <a
-                href={whatsappUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => track(EVENTS.WHATSAPP_CLICK, { source: 'quote_footer' })}
-                className="link-line t-label inline-block pb-1 text-ink"
+          {/* À côté : la demande qui se construit, et pourquoi c'est sans risque. */}
+          <aside className="space-y-6 lg:sticky lg:top-28 lg:col-span-4">
+            <Panel pad="p-6 sm:p-7">
+              <p className="t-label text-gold-light">Votre demande</p>
+              <dl className="mt-4 divide-y divide-ink/10">
+                {[
+                  ['Projet', data.projectType],
+                  ['Bien', data.propertyType],
+                  ['Surface', data.surface],
+                  ['Lieu', [data.postalCode, data.commune || data.province].filter(Boolean).join(' ')],
+                  ['Échéance', data.timeline],
+                  ['Budget', data.budget],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex items-baseline justify-between gap-4 py-2.5">
+                    <dt className="t-small text-ink/60">{k}</dt>
+                    <dd className={cn('t-small text-right', v ? 'text-ink' : 'text-ink/35')}>{v || '-'}</dd>
+                  </div>
+                ))}
+              </dl>
+            </Panel>
+
+            <Panel pad="p-6 sm:p-7">
+              <ul className="space-y-3.5">
+                {[
+                  [QuoteDocIcon, `${BRAND.promises.quote}.`],
+                  [PhoneIcon, `${BRAND.promises.responseTime}.`],
+                  [PersonIcon, 'Un seul interlocuteur, du devis à la remise des clés.'],
+                  [KeyIcon, 'Vos données servent uniquement à vous répondre.'],
+                ].map(([Icon, t]) => (
+                  <li key={t} className="t-small flex items-start gap-3 text-ink/75">
+                    <Icon size={18} width={18} height={18} aria-hidden="true" className="mt-px flex-none text-gold-light" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <p className="t-label mt-8 text-ink/60">Vous préférez parler ?</p>
+              <FounderRows source="quote_aside" className="mt-3" />
+              <button
+                type="button"
+                onClick={() => openDialog('quote_aside')}
+                className="link-line t-label mt-5 inline-block pb-1 text-ink/80 hover:text-ink"
               >
-                WhatsApp
-              </a>
-              <button type="button" onClick={() => openDialog('quote_footer')} className="link-line t-label inline-block pb-1 text-ink">
                 Toutes nos coordonnées
               </button>
-            </div>
-          </div>
+            </Panel>
+          </aside>
         </Container>
       </Section>
     </>
@@ -863,12 +881,56 @@ function FileUpload({ files, onChange }) {
   );
 }
 
+/* ---------- Étapes ---------- */
+
+/** Les cinq étapes en un coup d'œil : faites (cochées, cliquables pour y
+    revenir), en cours (bronze), à venir. */
+function Stepper({ step, onGo }) {
+  return (
+    <ol className="flex items-start" aria-label={`Étape ${step} sur ${STEPS.length}`}>
+      {STEPS.map((label, i) => {
+        const n = i + 1;
+        const done = n < step;
+        const on = n === step;
+        const Dot = done ? 'button' : 'span';
+        return (
+          <li key={label} aria-current={on ? 'step' : undefined} className="relative flex flex-1 flex-col items-center text-center">
+            {i > 0 && (
+              <span
+                aria-hidden="true"
+                className={cn(
+                  'absolute left-[calc(-50%+24px)] right-[calc(50%+24px)] top-[17px] h-px transition-colors duration-500',
+                  n <= step ? 'bg-gold' : 'bg-ink/15'
+                )}
+              />
+            )}
+            <Dot
+              {...(done ? { type: 'button', onClick: () => onGo(n), 'aria-label': `Revenir à l'étape ${label}` } : {})}
+              className={cn(
+                'grid h-9 w-9 place-items-center rounded-full text-[13px] font-medium tabular-nums transition-colors duration-300',
+                done && 'bg-gold text-white hover:bg-gold-hover',
+                on && 'border-2 border-gold bg-gold/10 text-ink',
+                !done && !on && 'border border-ink/15 text-ink/50'
+              )}
+            >
+              {done ? <CheckIcon size={16} aria-hidden="true" /> : n}
+            </Dot>
+            <span className={cn('t-small mt-2.5 px-1 leading-tight', on ? 'block text-ink' : 'hidden text-ink/55 sm:block')}>
+              {label}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 /* ---------- Champs ---------- */
 
 function Fieldset({ legend, error, children }) {
   return (
     <Reveal as="fieldset" from="fade" className="border-0 p-0">
-      <legend className="t-h2 mb-8">{legend}</legend>
+      <legend className="mb-8 font-display text-[1.9rem] leading-tight text-ink sm:text-[2.3rem]">{legend}</legend>
       {children}
       {error && <FieldError>{error}</FieldError>}
     </Reveal>
@@ -883,11 +945,25 @@ function FieldError({ children }) {
   );
 }
 
-function Choice({ name, label, checked, onChange }) {
+function Choice({ name, label, checked, onChange, icon }) {
+  if (icon) {
+    return (
+      <label
+        className={cn(
+          'flex cursor-pointer flex-col items-start gap-3 rounded-[16px] border p-4 transition-[border-color,background-color] duration-300 ease-soft has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gold/50',
+          checked ? 'border-gold/70 bg-gold/[0.1]' : 'border-ink/[0.1] bg-shell hover:border-ink/25'
+        )}
+      >
+        <input type="radio" name={name} checked={checked} onChange={onChange} className="sr-only" />
+        <Chip icon={icon} accent compact />
+        <span className={cn('t-body leading-snug', checked ? 'text-ink' : 'text-ink/80')}>{label}</span>
+      </label>
+    );
+  }
   return (
     <label
       className={cn(
-        'flex cursor-pointer items-center gap-4 rounded-md border px-5 py-4 transition-all duration-300 ease-soft',
+        'flex cursor-pointer items-center gap-4 rounded-[14px] border px-5 py-4 transition-[border-color,background-color,color] duration-300 ease-soft has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-gold/50',
         checked
           ? 'border-gold bg-gold/[0.06] text-ink shadow-soft'
           : 'border-ink/[0.12] bg-shell text-ink/70 hover:border-ink/25 hover:text-ink'
@@ -908,13 +984,13 @@ function Choice({ name, label, checked, onChange }) {
   );
 }
 
-function ChoiceGroup({ label, name, options, value, onChange, error, hint }) {
+function ChoiceGroup({ label, name, options, value, onChange, error, hint, icons }) {
   return (
-    <div className={cn(label && 'mt-10')}>
+    <div className={cn(label && 'mt-10 first:mt-0')}>
       {label && <span className="t-label text-ink/70">{label}</span>}
-      <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+      <div className={cn('mt-4 grid gap-2.5', icons ? 'grid-cols-2 sm:grid-cols-4' : 'sm:grid-cols-2')}>
         {options.map((t) => (
-          <Choice key={t} name={name} label={t} checked={value === t} onChange={() => onChange(t)} />
+          <Choice key={t} name={name} label={t} icon={icons?.[t]} checked={value === t} onChange={() => onChange(t)} />
         ))}
       </div>
       {hint && <p className="t-small mt-3 text-ink/70">{hint}</p>}

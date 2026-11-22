@@ -13,6 +13,8 @@ const DOOR_D = `M${DOOR_POINTS.map((p) => p.join(' ')).join(' L')} Z`;
 /* Centre de la porte, en fraction du monogramme : c'est là qu'on entre. */
 const ORIGIN_X = ((DOOR_POINTS.reduce((s, p) => s + p[0], 0) / 4 - VX) / VW) * 100;
 const ORIGIN_Y = ((DOOR_POINTS.reduce((s, p) => s + p[1], 0) / 4 - VY) / VH) * 100;
+/* Les gonds : le bord gauche de la porte. */
+const HINGE = `${((DOOR_POINTS[0][0] - VX) / VW) * 100}% 50%`;
 /* La nuit autour de la porte : un grand aplat percé de la porte, assez large
    pour couvrir l'écran à l'échelle 1 sur n'importe quelle largeur. */
 const M = 2400;
@@ -31,7 +33,9 @@ const zoom = (p) => 1 + Math.pow(range(p, 0, 0.82), 2.4) * (ZOOM - 1);
 const LAYERS = {
   door: (p) => ({ transform: `scale(${zoom(p)})` }),
   letters: (p) => ({ opacity: 1 - range(p, 0.08, 0.3) }),
-  panel: (p) => ({ opacity: 1 - range(p, 0.03, 0.2) }),
+  /* La porte finit de s'ouvrir, puis s'efface ; la lumière ensuite. */
+  panel: (p) => ({ transform: `rotateY(${44 * range(p, 0, 0.16)}deg)`, opacity: 1 - range(p, 0.1, 0.24) }),
+  light: (p) => ({ opacity: 1 - range(p, 0.12, 0.3) }),
   mask: (p) => ({ opacity: 1 - range(p, 0.55, 0.86) }),
   glow: (p) => ({ opacity: 1 - range(p, 0, 0.35) }),
   photo: (p) => ({ transform: `scale(${1.14 - 0.14 * range(p, 0.25, 0.8)})` }),
@@ -42,24 +46,24 @@ const LAYERS = {
 const STOPS = 32;
 const framesFor = (fn) => Array.from({ length: STOPS + 1 }, (_, i) => ({ offset: i / STOPS, ...fn(i / STOPS) }));
 
+/* L'intro se joue une fois par chargement de page : une fois vue, `data-intro`
+   reste posé sur <html> tant qu'on navigue dans le site ; F5 le remet à zéro. */
+const ZOOM_DELAY = 2400; // après l'ouverture de la porte (CSS, ~2,5 s)
+const ZOOM_MS = 2400;
+
 /**
  * Hero - la porte du logo s'ouvre sur une maison.
  *
- * Premier écran : le monogramme CR sur la nuit, la porte bronze, la promesse
- * et les trois issues (devis, appel, WhatsApp). Un seul écran de défilement
- * suffit à entrer : la porte s'efface et laisse voir la photo à travers son
- * contour, on avance vers elle jusqu'au plein cadre, puis une carte de verre
- * porte l'offre.
+ * À chaque chargement (arrivée sur le site, F5) : le monogramme CR sur la
+ * nuit, la promesse et les trois issues (devis, appel, WhatsApp) ; la porte
+ * s'entrouvre, puis la caméra la traverse toute seule jusqu'à la photo, et
+ * une carte de verre porte l'offre. Aucun défilement à faire ; un geste
+ * (molette, toucher, touche) passe directement à la fin. Retour sur l'accueil
+ * en naviguant, et `prefers-reduced-motion` : la photo et la carte d'emblée.
  *
  * Performance : la nuit est un aplat percé de la porte que l'on agrandit par
- * `transform` - jamais de `clip-path` ni de calcul de mise en page. Les
- * animations sont des Web Animations pilotées par la `ViewTimeline` native :
- * le navigateur les joue sur la carte graphique, sans JavaScript à chaque
- * image. Sans `ViewTimeline`, un écouteur passif ne travaille que pendant le
- * défilement. À l'arrêt, rien ne tourne.
- *
- * `prefers-reduced-motion` : pas d'épinglage, l'état final s'affiche
- * directement (CSS seul, aucun saut au chargement).
+ * `transform` ; les couches sont des Web Animations jouées par la carte
+ * graphique, une seule fois. À l'arrêt, rien ne tourne.
  *
  * La photo est une image d'ambiance : elle ne montre pas un chantier
  * Chaudrel et n'est jamais légendée comme tel.
@@ -74,48 +78,48 @@ export default function Hero() {
   };
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || !section.animate) return undefined;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-
-    const native = typeof window.ViewTimeline === 'function';
-    const timeline = native ? new window.ViewTimeline({ subject: section, axis: 'block' }) : null;
+    const root = document.documentElement;
+    const seen = () => {
+      root.dataset.intro = 'seen';
+    };
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (root.dataset.intro === 'seen' || reduce || !sectionRef.current?.animate) return seen();
 
     const animations = [];
     for (const [name, fn] of Object.entries(LAYERS)) {
       const els = name === 'fade' ? [refs.current.fade, refs.current.fade2, refs.current.fade3] : [refs.current[name]];
-      const frames = framesFor(fn);
       for (const el of els) {
-        if (!el) continue;
-        const anim = native
-          ? el.animate(frames, { timeline, rangeStart: 'contain 0%', rangeEnd: 'contain 100%', fill: 'both' })
-          : el.animate(frames, { duration: 1000, fill: 'both' });
-        if (!native) anim.pause();
-        animations.push(anim);
+        if (el) animations.push(el.animate(framesFor(fn), { duration: ZOOM_MS, delay: ZOOM_DELAY, fill: 'both' }));
       }
     }
 
-    if (native) return () => animations.forEach((a) => a.cancel());
+    // Un geste pendant l'intro la termine sans faire défiler la page : on
+    // arrive sur l'accueil, et c'est le geste suivant qui descend.
+    const skip = (e) => {
+      if (e.type !== 'keydown') e.preventDefault();
+      animations.forEach((a) => a.finish());
+      gestures.forEach((g) => window.removeEventListener(g, skip));
+    };
+    const gestures = ['wheel', 'touchmove', 'keydown'];
+    gestures.forEach((g) => window.addEventListener(g, skip, { passive: false }));
+    let alive = true;
+    const t0 = performance.now();
+    Promise.all(animations.map((a) => a.finished))
+      .then(() => {
+        if (!alive) return;
+        seen();
+        // L'état final est désormais tenu par le CSS : on libère les animations.
+        animations.forEach((a) => a.cancel());
+      })
+      .catch(() => {});
 
-    // Repli : on ne calcule que lorsque la page défile, une fois par image.
-    let frame = 0;
-    const sync = () => {
-      frame = 0;
-      const span = section.offsetHeight - window.innerHeight;
-      const p = span > 0 ? clamp01((window.scrollY - section.offsetTop) / span) : 1;
-      for (const a of animations) a.currentTime = p * 1000;
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(sync);
-    };
-    sync();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
     return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      alive = false;
+      gestures.forEach((g) => window.removeEventListener(g, skip));
       animations.forEach((a) => a.cancel());
+      // Quitter l'accueil en pleine intro compte comme vue (le double montage
+      // de StrictMode, lui, est immédiat et ne compte pas).
+      if (performance.now() - t0 > 300) seen();
     };
   }, []);
 
@@ -141,7 +145,7 @@ export default function Hero() {
         <div
           ref={bind('door')}
           aria-hidden="true"
-          className="door-mono relative z-[1] aspect-[476/372] w-[min(72vw,360px,58svh)] sm:w-[min(50vw,460px,60svh)] lg:w-[min(38vw,540px,62vh)]"
+          className="door-mono relative z-[1] aspect-[476/372] [container-type:inline-size] w-[min(72vw,360px,58svh)] sm:w-[min(50vw,460px,60svh)] lg:w-[min(38vw,540px,62vh)]"
           style={{ transformOrigin: `${ORIGIN_X}% ${ORIGIN_Y}%` }}
         >
           <svg
@@ -156,13 +160,43 @@ export default function Hero() {
               <path d={LETTERS_PATH} fillRule="evenodd" className="fill-cream" />
             </svg>
           </div>
-          <div className="door-panel-in absolute inset-0" style={{ transformOrigin: `${((600 - VX) / VW) * 100}% 50%` }}>
-            <svg ref={bind('panel')} viewBox={MONO_VIEWBOX} className="door-panel absolute inset-0 h-full w-full">
+          {/* La lumière de la maison, dans l'embrasure : on la voit quand la porte s'entrouvre. */}
+          <div className="door-light-in absolute inset-0">
+            <svg ref={bind('light')} viewBox={MONO_VIEWBOX} className="absolute inset-0 h-full w-full">
               <defs>
-                <BronzeGradient id={gid} />
+                <linearGradient id={`${gid}-light`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="#F7E4BC" />
+                  <stop offset="1" stopColor="#D6A964" />
+                </linearGradient>
               </defs>
-              <path d={DOOR_D} fill={`url(#${gid})`} />
+              <path d={DOOR_D} fill={`url(#${gid}-light)`} />
             </svg>
+          </div>
+          {/* La porte sur ses gonds : elle s'entrouvre vers l'intérieur, poignée d'abord. */}
+          <div className="door-letters-in absolute inset-0" style={{ perspective: '60cqw', perspectiveOrigin: HINGE }}>
+            <div className="door-panel-in absolute inset-0" style={{ transformOrigin: HINGE }}>
+              <svg
+                ref={bind('panel')}
+                viewBox={MONO_VIEWBOX}
+                className="door-panel absolute inset-0 h-full w-full"
+                style={{ transformOrigin: HINGE }}
+              >
+                <defs>
+                  <BronzeGradient id={gid} />
+                </defs>
+                <path d={DOOR_D} fill={`url(#${gid})`} />
+                {/* En tournant, la porte quitte la lumière : elle s'assombrit un peu. */}
+                <path d={DOOR_D} className="door-shade fill-bark" />
+                {/* Un panneau en creux et une petite béquille ton sur ton : une porte, sans rien ajouter au logo. */}
+                <path d="M607 544 L660 514 L660 656.6 L607 638.4 Z" className="fill-none stroke-bark/25" strokeWidth="0.8" />
+                <g transform="rotate(-6 659 585.3)">
+                  <g className="door-handle fill-bark/60">
+                    <rect x="650" y="584" width="10" height="2.6" rx="1.3" />
+                    <circle cx="659" cy="585.3" r="2.4" />
+                  </g>
+                </g>
+              </svg>
+            </div>
           </div>
         </div>
 
@@ -251,7 +285,7 @@ export default function Hero() {
           ref={bind('final')}
           data-page-cta
           {...glow}
-          className="door-final glass-dark absolute inset-x-4 bottom-4 z-[4] rounded-[28px] p-6 sm:inset-x-auto sm:bottom-10 sm:left-8 sm:w-[34rem] sm:p-9 lg:bottom-14 lg:left-12"
+          className="door-final glass-dark absolute inset-x-4 bottom-4 z-[4] rounded-[28px] p-6 sm:inset-x-auto sm:bottom-10 sm:left-8 sm:w-[34rem] sm:p-9 lg:bottom-40 lg:left-12"
         >
           <h2 className="t-h2">Bienvenue chez vous.</h2>
           <p className="t-lead mt-4 text-cream/85">
