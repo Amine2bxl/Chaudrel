@@ -44,3 +44,8 @@
 ## 2026-11-21 — Schémas
 - `HouseDiagram` : maison au trait Chaudrel, parties allumées. Réalisations : `partsFor(works)` (règles vérifiées sur les 6 chantiers réels). Services : `ServicesHouse` (survol d'une partie ou choix d'un métier).
 - À propos : idées refusées par le client (deux rôles, carte d'identité, frise, carte) ; à reprendre avec lui.
+
+## 2026-11-22 — Maison 3D et porte du hero
+- `House3D` (src/components/sections) : repère en em, faces = `translate3d` + rotations, fenêtres/portes en enfants 2D (pas de conflit de profondeur). `rotateY` positif montre le côté gauche ; `rotateX` négatif = vu d'en haut. Caméras : [rx, ry, x, y, z].
+- Hero : la porte tourne dans un conteneur `perspective: 60cqw` (door-mono en `container-type: inline-size`) pour garder la même profondeur sur mobile. Les animations CSS d'entrée et WAAPI de défilement sont sur des éléments emboîtés distincts (sinon WAAPI masque la CSS).
+- Non vérifié : vrais téléphones et Safari ; en émulation iPhone headless, bords de la porte légèrement crénelés pendant la rotation.

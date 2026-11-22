@@ -104,3 +104,10 @@
 - Date : 2026-11-21 · Statut : acceptée (retour client) · D-017 remplacée
 - Contexte : le client préfère le visuel de main au vrai verre sur photo ; il trouve les boutons « brillants ».
 - Décision : sections et pages reviennent à main ; boutons à plat façon Revolut (`.btn-solid` bronze sombre #8C6B3E texte blanc, `.btn-soft` voile blanc 10 % texte blanc) ; pages Services et Réalisations en zigzag (`Zigzag` : photo d'un côté, titre + texte de l'autre, en alternance). Gardés : faits en titres seuls, Matteo numéro principal.
+
+## D-019 — Maison 3D en CSS, porte du logo qui s'entrouvre
+- Date : 2026-11-22 · Statut : acceptée (demande client)
+- Contexte : le client veut une maison en 3D sur Réalisations, qui se tourne au défilement vers la partie dont parle chaque bloc, et une porte du logo qui se lit comme une porte qui s'ouvre.
+- Décision : `House3D` en CSS 3D (plans `preserve-3d`, aucune bibliothèque) ; caméra = première ligne des travaux (`focusFor`), animée par une view-timeline CSS (`--h3`), vue finale fixe sans prise en charge ou avec moins de mouvement. Hero : béquille crème qui s'abaisse, porte qui pivote de 38° sur ses gonds (bord gauche), lumière chaude dans l'embrasure ; au défilement elle finit de s'ouvrir puis s'efface.
+- Alternatives écartées : Three.js (≈150 ko, rendu JavaScript à chaque image, contraire à D-008) ; vidéo de maquette (lourde, pas de parties allumées).
+- Conséquences : Firefox voit la maison déjà tournée (pas de view-timeline) ; Services garde le schéma 2D.

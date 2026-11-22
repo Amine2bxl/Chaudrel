@@ -31,6 +31,7 @@ Refonte complète du site Chaudrel (nouvelle DA tirée du nouveau logo, verre an
 - D-015 : page de remerciement privée = statique chiffrée, clé dans le fragment du QR ; rien de personnel dans le dépôt public.
 - D-016 : domaine principal = chaudrelrenovation.be (choix client) ; chaudrel.be et www redirigent vers lui.
 - D-018 (remplace D-017) : visuel de main conservé ; boutons à plat façon Revolut, texte blanc ; Services et Réalisations en zigzag ; faits en titres seuls ; Matteo numéro principal.
+- D-019 : maison 3D en CSS sur Réalisations (caméra par chantier au défilement) ; porte du logo qui s'entrouvre (poignée, gonds, lumière).
 
 ## Prochaines étapes
 1. Vérifier le site en production après le déploiement de `main`.

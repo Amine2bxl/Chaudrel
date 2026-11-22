@@ -13,6 +13,8 @@ const DOOR_D = `M${DOOR_POINTS.map((p) => p.join(' ')).join(' L')} Z`;
 /* Centre de la porte, en fraction du monogramme : c'est là qu'on entre. */
 const ORIGIN_X = ((DOOR_POINTS.reduce((s, p) => s + p[0], 0) / 4 - VX) / VW) * 100;
 const ORIGIN_Y = ((DOOR_POINTS.reduce((s, p) => s + p[1], 0) / 4 - VY) / VH) * 100;
+/* Les gonds : le bord gauche de la porte. */
+const HINGE = `${((DOOR_POINTS[0][0] - VX) / VW) * 100}% 50%`;
 /* La nuit autour de la porte : un grand aplat percé de la porte, assez large
    pour couvrir l'écran à l'échelle 1 sur n'importe quelle largeur. */
 const M = 2400;
@@ -31,7 +33,9 @@ const zoom = (p) => 1 + Math.pow(range(p, 0, 0.82), 2.4) * (ZOOM - 1);
 const LAYERS = {
   door: (p) => ({ transform: `scale(${zoom(p)})` }),
   letters: (p) => ({ opacity: 1 - range(p, 0.08, 0.3) }),
-  panel: (p) => ({ opacity: 1 - range(p, 0.03, 0.2) }),
+  /* La porte finit de s'ouvrir, puis s'efface ; la lumière ensuite. */
+  panel: (p) => ({ transform: `rotateY(${44 * range(p, 0, 0.16)}deg)`, opacity: 1 - range(p, 0.1, 0.24) }),
+  light: (p) => ({ opacity: 1 - range(p, 0.12, 0.3) }),
   mask: (p) => ({ opacity: 1 - range(p, 0.55, 0.86) }),
   glow: (p) => ({ opacity: 1 - range(p, 0, 0.35) }),
   photo: (p) => ({ transform: `scale(${1.14 - 0.14 * range(p, 0.25, 0.8)})` }),
@@ -141,7 +145,7 @@ export default function Hero() {
         <div
           ref={bind('door')}
           aria-hidden="true"
-          className="door-mono relative z-[1] aspect-[476/372] w-[min(72vw,360px,58svh)] sm:w-[min(50vw,460px,60svh)] lg:w-[min(38vw,540px,62vh)]"
+          className="door-mono relative z-[1] aspect-[476/372] [container-type:inline-size] w-[min(72vw,360px,58svh)] sm:w-[min(50vw,460px,60svh)] lg:w-[min(38vw,540px,62vh)]"
           style={{ transformOrigin: `${ORIGIN_X}% ${ORIGIN_Y}%` }}
         >
           <svg
@@ -156,13 +160,42 @@ export default function Hero() {
               <path d={LETTERS_PATH} fillRule="evenodd" className="fill-cream" />
             </svg>
           </div>
-          <div className="door-panel-in absolute inset-0" style={{ transformOrigin: `${((600 - VX) / VW) * 100}% 50%` }}>
-            <svg ref={bind('panel')} viewBox={MONO_VIEWBOX} className="door-panel absolute inset-0 h-full w-full">
+          {/* La lumière de la maison, dans l'embrasure : on la voit quand la porte s'entrouvre. */}
+          <div className="door-light-in absolute inset-0">
+            <svg ref={bind('light')} viewBox={MONO_VIEWBOX} className="absolute inset-0 h-full w-full">
               <defs>
-                <BronzeGradient id={gid} />
+                <linearGradient id={`${gid}-light`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="#F7E4BC" />
+                  <stop offset="1" stopColor="#D6A964" />
+                </linearGradient>
               </defs>
-              <path d={DOOR_D} fill={`url(#${gid})`} />
+              <path d={DOOR_D} fill={`url(#${gid}-light)`} />
             </svg>
+          </div>
+          {/* La porte sur ses gonds : elle s'entrouvre vers l'intérieur, poignée d'abord. */}
+          <div className="door-letters-in absolute inset-0" style={{ perspective: '60cqw', perspectiveOrigin: HINGE }}>
+            <div className="door-panel-in absolute inset-0" style={{ transformOrigin: HINGE }}>
+              <svg
+                ref={bind('panel')}
+                viewBox={MONO_VIEWBOX}
+                className="door-panel absolute inset-0 h-full w-full"
+                style={{ transformOrigin: HINGE }}
+              >
+                <defs>
+                  <BronzeGradient id={gid} />
+                </defs>
+                <path d={DOOR_D} fill={`url(#${gid})`} />
+                {/* En tournant, la porte quitte la lumière : elle s'assombrit un peu. */}
+                <path d={DOOR_D} className="door-shade fill-bark" />
+                {/* Béquille crème sur sa rosace, près du bord libre, dans la perspective de la porte. */}
+                <g transform="rotate(-6 659 585.2)">
+                  <g className="door-handle">
+                    <rect x="644" y="583" width="16" height="4.4" rx="2.2" className="fill-cream" />
+                    <circle cx="659" cy="585.2" r="3.6" className="fill-cream" />
+                  </g>
+                </g>
+              </svg>
+            </div>
           </div>
         </div>
 
