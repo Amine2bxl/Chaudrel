@@ -43,6 +43,20 @@ const LOGO = {
   monoNoir: read(`logo/${M.slug}-monogram-noir.svg`),
   icon: read(`logo/${M.slug}-app-icon.svg`),
 };
+/* Sur fond sombre : le logo crème posé sur la nuit du site, marge comprise,
+   prêt à envoyer tel quel (le crème seul disparaît sur un fond blanc). */
+const onDark = (svg, pad = 0.12, square = false) => {
+  let [x, y, w, h] = svg.match(/viewBox="([^"]+)"/)[1].trim().split(/\s+/).map(Number);
+  const m = Math.max(w, h) * pad;
+  [x, y, w, h] = [x - m, y - m, w + 2 * m, h + 2 * m];
+  if (square) [x, y, w, h] = [x - (Math.max(w, h) - w) / 2, y - (Math.max(w, h) - h) / 2, Math.max(w, h), Math.max(w, h)];
+  return svg
+    .replace(/viewBox="[^"]+"/, `viewBox="${x} ${y} ${w} ${h}"`)
+    .replace('</defs>', `</defs>\n<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${C.page}"/>`);
+};
+LOGO.fullSombre = onDark(LOGO.fullCream);
+LOGO.monoSombre = onDark(LOGO.monoCream, 0.2, true);
+
 /* Version « or métallisé » pour les maquettes : dégradé qui imite le reflet du métal. */
 const metal = (svg, id) =>
   svg
@@ -112,12 +126,15 @@ async function main() {
   };
 
   /* 1. Logos en PNG transparent et en PDF vectoriel ---------------------- */
+  fs.writeFileSync(out(`logo/${M.slug}-logo-sombre.svg`), LOGO.fullSombre);
+  fs.writeFileSync(out(`logo/${M.slug}-monogram-sombre.svg`), LOGO.monoSombre);
   const logos = [
     [`${M.slug}-logo`, LOGO.full],
     [`${M.slug}-logo-cream`, LOGO.fullCream],
     [`${M.slug}-logo-or`, LOGO.fullOr],
     [`${M.slug}-logo-creme-bronze`, LOGO.fullCremeBronze],
     [`${M.slug}-logo-noir`, LOGO.fullNoir],
+    [`${M.slug}-logo-sombre`, LOGO.fullSombre],
   ];
   for (const [name, svg] of logos) {
     await png(`logo/png/${name}-2400.png`, page(`<div class="logo">${svg}</div>`, '', 2400, 1500), 2400, 1500);
@@ -136,6 +153,7 @@ async function main() {
   for (const [name, svg] of monos) {
     await png(`logo/png/${name}-1200.png`, page(`<div class="logo">${svg}</div>`, '', 1200, 938), 1200, 938);
   }
+  await png(`logo/png/${M.slug}-monogram-sombre-1200.png`, page(`<div class="logo">${LOGO.monoSombre}</div>`, '', 1200, 1200), 1200, 1200);
   await png(`logo/png/${M.slug}-app-icon-1024.png`, page(`<div class="logo">${LOGO.icon}</div>`, '', 1024, 1024), 1024, 1024);
 
   /* 2. Vêtements : petit logo devant (cœur), grand logo au dos et le nom de
