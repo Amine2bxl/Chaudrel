@@ -533,8 +533,8 @@ html {
     transform: translateY(16px);
   }
 }
-/* Intro déjà vue, ou moins de mouvement : la photo et la carte d'emblée. Le
-   titre reste dans la page pour les lecteurs d'écran. */
+/* Intro déjà vue pendant cette navigation : la photo et la carte d'emblée.
+   Le titre reste dans la page pour les lecteurs d'écran. */
 :root[data-intro='seen'] .door-mono,
 :root[data-intro='seen'] .door-glow,
 :root[data-intro='seen'] .door-fade {
@@ -551,6 +551,26 @@ html {
 :root[data-intro='seen'] .door-final {
   opacity: 1;
   transform: none;
+}
+/* Moins de mouvement : pareil, dès le premier rendu. */
+@media (prefers-reduced-motion: reduce) {
+  .door-mono,
+  .door-glow,
+  .door-fade {
+    display: none;
+  }
+  .door-intro {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .door-final {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ============================================================

@@ -130,3 +130,7 @@
 - Date : 2026-11-22 · Statut : acceptée (retours client)
 - Décision : l'intro de la porte se joue toute seule (plus de défilement épinglé) à la première visite, puis plus jamais : `localStorage['chaudrel-intro']`, lu avant le premier rendu par `public/intro.js` (script externe, CSP `script-src 'self'`) qui pose `data-intro="seen"` sur `<html>` ; un geste (molette, toucher, touche) saute l'intro. Page métier : en-tête sans photo, grande photo claire + carte « valeur » (phrase, intro, devis), « Ce que nous prenons en charge » = maquette 3D du métier + postes cochés par groupe ; questions retirées. Devis : étapes numérotées cliquables, tuiles à icônes pour le type de travaux, formulaire sur carte de verre, colonne « Votre demande » qui se remplit en direct + garanties + fondateurs.
 - Conséquences : D-008 (« rien à l'arrêt ») tenu : animations jouées une fois puis annulées, l'état final est en CSS.
+
+## D-024 — Intro une fois par chargement (remplace la partie « une seule fois » de D-023)
+- Date : 2026-11-22 · Statut : acceptée (retour client : l'intro avait disparu pour de bon)
+- Décision : l'intro se rejoue à chaque chargement de page (arrivée, F5, Cmd+R) ; pendant la navigation dans le site, revenir sur l'accueil l'affiche directement terminée (`data-intro="seen"` sur `<html>`, en mémoire seulement). `localStorage` et `public/intro.js` retirés ; `prefers-reduced-motion` passe par une media query CSS.

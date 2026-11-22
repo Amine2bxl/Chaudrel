@@ -46,21 +46,20 @@ const LAYERS = {
 const STOPS = 32;
 const framesFor = (fn) => Array.from({ length: STOPS + 1 }, (_, i) => ({ offset: i / STOPS, ...fn(i / STOPS) }));
 
-/* L'intro ne se joue qu'une fois : public/intro.js pose data-intro="seen" sur
-   <html> avant le premier rendu quand elle a déjà été vue. */
-const INTRO_KEY = 'chaudrel-intro';
+/* L'intro se joue une fois par chargement de page : une fois vue, `data-intro`
+   reste posé sur <html> tant qu'on navigue dans le site ; F5 le remet à zéro. */
 const ZOOM_DELAY = 2400; // après l'ouverture de la porte (CSS, ~2,5 s)
 const ZOOM_MS = 2400;
 
 /**
  * Hero - la porte du logo s'ouvre sur une maison.
  *
- * Première visite : le monogramme CR sur la nuit, la promesse et les trois
- * issues (devis, appel, WhatsApp) ; la porte s'entrouvre, puis la caméra la
- * traverse toute seule jusqu'à la photo, et une carte de verre porte
- * l'offre. Aucun défilement à faire ; un geste (molette, toucher, touche)
- * passe directement à la fin. Visites suivantes et `prefers-reduced-motion` :
- * la photo et la carte d'emblée (CSS, sans saut au chargement).
+ * À chaque chargement (arrivée sur le site, F5) : le monogramme CR sur la
+ * nuit, la promesse et les trois issues (devis, appel, WhatsApp) ; la porte
+ * s'entrouvre, puis la caméra la traverse toute seule jusqu'à la photo, et
+ * une carte de verre porte l'offre. Aucun défilement à faire ; un geste
+ * (molette, toucher, touche) passe directement à la fin. Retour sur l'accueil
+ * en naviguant, et `prefers-reduced-motion` : la photo et la carte d'emblée.
  *
  * Performance : la nuit est un aplat percé de la porte que l'on agrandit par
  * `transform` ; les couches sont des Web Animations jouées par la carte
@@ -85,12 +84,6 @@ export default function Hero() {
     };
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (root.dataset.intro === 'seen' || reduce || !sectionRef.current?.animate) return seen();
-    // Vue une fois, même interrompue : la prochaine visite s'ouvre sur le site.
-    try {
-      localStorage.setItem(INTRO_KEY, '1');
-    } catch {
-      /* stockage bloqué : l'intro se rejouera, rien de cassé */
-    }
 
     const animations = [];
     for (const [name, fn] of Object.entries(LAYERS)) {
