@@ -49,3 +49,8 @@
 - `House3D` (src/components/sections) : repère en em, faces = `translate3d` + rotations, fenêtres/portes en enfants 2D (pas de conflit de profondeur). `rotateY` positif montre le côté gauche ; `rotateX` négatif = vu d'en haut. Caméras : [rx, ry, x, y, z].
 - Hero : la porte tourne dans un conteneur `perspective: 60cqw` (door-mono en `container-type: inline-size`) pour garder la même profondeur sur mobile. Les animations CSS d'entrée et WAAPI de défilement sont sur des éléments emboîtés distincts (sinon WAAPI masque la CSS).
 - Non vérifié : vrais téléphones et Safari ; en émulation iPhone headless, bords de la porte légèrement crénelés pendant la rotation.
+
+## 2026-11-22 — Passe 6
+- `.rv-veil` (Reveal) impose `position: relative` (CSS hors couche, plus fort que les utilitaires Tailwind) : un `Reveal` ne peut pas être `absolute inset-0` ; lui donner `h-full`.
+- CSS hors couche (`.facts-glass`) l'emporte sur `.glass-light` (@layer components) : pratique pour surcharger un verre sans `!important`.
+- House3D : allumage = `::before` de la face (sous les fenêtres) et `::after` des enfants ; Réalisations = view-timeline `--h3` (rotation puis allumage), Services = `is-live` (transition de 0,9 s).

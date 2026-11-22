@@ -187,11 +187,12 @@ export default function Hero() {
                 <path d={DOOR_D} fill={`url(#${gid})`} />
                 {/* En tournant, la porte quitte la lumière : elle s'assombrit un peu. */}
                 <path d={DOOR_D} className="door-shade fill-bark" />
-                {/* Béquille crème sur sa rosace, près du bord libre, dans la perspective de la porte. */}
-                <g transform="rotate(-6 659 585.2)">
-                  <g className="door-handle">
-                    <rect x="644" y="583" width="16" height="4.4" rx="2.2" className="fill-cream" />
-                    <circle cx="659" cy="585.2" r="3.6" className="fill-cream" />
+                {/* Un panneau en creux et une petite béquille ton sur ton : une porte, sans rien ajouter au logo. */}
+                <path d="M607 544 L660 514 L660 656.6 L607 638.4 Z" className="fill-none stroke-bark/25" strokeWidth="0.8" />
+                <g transform="rotate(-6 659 585.3)">
+                  <g className="door-handle fill-bark/60">
+                    <rect x="650" y="584" width="10" height="2.6" rx="1.3" />
+                    <circle cx="659" cy="585.3" r="2.4" />
                   </g>
                 </g>
               </svg>

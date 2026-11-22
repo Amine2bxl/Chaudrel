@@ -477,7 +477,7 @@ html {
 /* La béquille s'abaisse autour de sa rosace, puis la porte se décolle. */
 .door-handle {
   transform-box: fill-box;
-  transform-origin: 80.6% 50%;
+  transform-origin: 78.9% 50%;
   animation: door-handle 0.8s var(--ease-soft) 0.85s both;
 }
 @keyframes door-swing {
@@ -505,7 +505,7 @@ html {
   }
   35%,
   60% {
-    transform: rotate(-24deg);
+    transform: rotate(-20deg);
   }
 }
 .door-word {
@@ -719,10 +719,11 @@ details[open] .faq-a {
 }
 
 /* ============================================================
-   MAISON 3D (House3D, /realisations)
-   Maquette en CSS 3D. La caméra (rotation de la scène) suit la
-   view-timeline du bloc : jouée par la carte graphique, rien à l'arrêt.
-   Sans prise en charge ou avec moins de mouvement : vue finale fixe.
+   MAISON 3D (House3D : /realisations, /services)
+   Maquette en CSS 3D. Réalisations : la caméra et l'allumage suivent la
+   view-timeline du bloc (carte graphique, rien à l'arrêt). Services : la
+   caméra glisse d'un métier à l'autre. Sans prise en charge ou avec moins
+   de mouvement : vue finale fixe.
    ============================================================ */
 .h3-view {
   position: relative;
@@ -737,62 +738,138 @@ details[open] .faq-a {
   transform-style: preserve-3d;
   transform: translate3d(var(--cam)) rotateX(var(--rx)) rotateY(var(--ry)) translateY(3em);
 }
+.h3-view.is-live .h3-scene {
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
 .h3-face {
   position: absolute;
   left: 50%;
   top: 50%;
   backface-visibility: hidden;
-  /* Ombrage fixe par orientation (--s) : la lumière ne bouge pas, la maison si. */
+  /* Ombrage fixe par orientation (--s), plus clair en haut, socle sombre. */
+  background:
+    linear-gradient(to top, rgb(0 0 0 / 0.2) 0 0.32em, transparent 0.32em),
+    linear-gradient(rgb(var(--c-ink-rgb) / calc(var(--s) + 0.04)), rgb(var(--c-ink-rgb) / var(--s))),
+    rgb(var(--c-cream-rgb));
+  box-shadow: inset 0 0 0 1px rgb(var(--c-ink-rgb) / 0.22);
+  transition: opacity 0.5s var(--ease-soft);
+}
+/* Tuiles : des rangs parallèles à la gouttière. */
+.h3-roof {
+  background:
+    repeating-linear-gradient(to right, transparent 0 0.5em, rgb(0 0 0 / 0.22) 0.5em 0.56em),
+    linear-gradient(rgb(var(--c-ink-rgb) / var(--s)), rgb(var(--c-ink-rgb) / var(--s))),
+    rgb(var(--c-cream-rgb));
+}
+.h3-flat {
   background:
     linear-gradient(rgb(var(--c-ink-rgb) / var(--s)), rgb(var(--c-ink-rgb) / var(--s))),
     rgb(var(--c-cream-rgb));
-  box-shadow: inset 0 0 0 1px rgb(var(--c-ink-rgb) / 0.26);
 }
 .h3-ground {
   border-radius: 1.2em;
-  box-shadow: inset 0 0 0 1px rgb(var(--c-ink-rgb) / 0.12);
-}
-.h3-face.is-lit {
   background:
-    linear-gradient(rgb(var(--c-gold-rgb) / calc(var(--s) * 1.6 + 0.3)), rgb(var(--c-gold-rgb) / calc(var(--s) * 1.6 + 0.3))),
+    radial-gradient(70% 70% at 50% 45%, rgb(var(--c-ink-rgb) / 0.06), transparent),
     rgb(var(--c-cream-rgb));
-  box-shadow: inset 0 0 0 1px rgb(var(--c-gold-light-rgb) / 0.85);
+  box-shadow: inset 0 0 0 1px rgb(var(--c-ink-rgb) / 0.1);
+}
+.h3-inner {
+  opacity: 0;
+}
+.h3-inner.is-lit,
+.is-xray .h3-inner {
+  opacity: 1;
+}
+/* Intérieur désigné : les murs et le toit de la maison deviennent du verre. */
+.is-xray .h3-xr {
+  opacity: 0.18;
+}
+/* Allumage : un voile bronze sous les fenêtres, puis le bord qui s'éclaire. */
+.h3-face::before,
+.h3-part::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(rgb(var(--c-gold-light-rgb) / 0.5), rgb(var(--c-gold-rgb) / 0.42));
+  box-shadow: inset 0 0 0 1px rgb(var(--c-gold-light-rgb) / 0.9);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-soft);
+}
+.h3-face.is-lit::before,
+.h3-part.is-lit::after {
+  opacity: 1;
 }
 /* Fenêtres, porte, allée, piscine : à plat sur leur face. */
 .h3-part {
   position: absolute;
-  background: rgb(var(--c-bark-rgb));
-  box-shadow: inset 0 0 0 1px rgb(var(--c-ink-rgb) / 0.3);
 }
-.h3-ground .h3-part {
-  background: rgb(var(--c-ink-rgb) / 0.08);
+.h3-win,
+.h3-bay {
+  background:
+    linear-gradient(rgb(var(--c-ink-rgb) / 0.3), rgb(var(--c-ink-rgb) / 0.3)) 50% 0 / 0.08em 100% no-repeat,
+    linear-gradient(rgb(var(--c-ink-rgb) / 0.3), rgb(var(--c-ink-rgb) / 0.3)) 0 50% / 100% 0.08em no-repeat,
+    linear-gradient(135deg, rgb(var(--c-ink-rgb) / 0.16) 0 28%, transparent 28% 52%, rgb(var(--c-ink-rgb) / 0.07) 52% 60%, transparent 60%),
+    rgb(var(--c-bark-rgb));
+  box-shadow: inset 0 0 0 0.12em rgb(var(--c-ink-rgb) / 0.3);
+}
+.h3-bay {
+  background:
+    repeating-linear-gradient(to right, transparent 0 1.18em, rgb(var(--c-ink-rgb) / 0.3) 1.18em 1.26em),
+    linear-gradient(135deg, rgb(var(--c-ink-rgb) / 0.16) 0 28%, transparent 28% 52%, rgb(var(--c-ink-rgb) / 0.07) 52% 60%, transparent 60%),
+    rgb(var(--c-bark-rgb));
+}
+/* Fenêtre allumée : la lumière de la maison derrière le vitrage. */
+.h3-win::after,
+.h3-bay::after {
+  background: linear-gradient(rgb(247 228 188 / 0.85), rgb(214 169 100 / 0.75));
+  mix-blend-mode: screen;
 }
 .h3-door {
-  background: rgb(var(--c-gold-rgb) / 0.45);
+  background:
+    radial-gradient(circle at 82% 52%, rgb(var(--c-bark-rgb)) 0 0.09em, transparent 0.1em),
+    linear-gradient(135deg, #b8945f, #9c7946);
+  box-shadow: inset 0 0 0 0.1em rgb(0 0 0 / 0.25);
 }
 .h3-slats {
   background: repeating-linear-gradient(
     to bottom,
     rgb(var(--c-ink-rgb) / 0.1) 0 0.62em,
-    rgb(var(--c-ink-rgb) / 0.32) 0.62em 0.7em
+    rgb(var(--c-ink-rgb) / 0.3) 0.62em 0.7em
   );
+  box-shadow: inset 0 0 0 0.1em rgb(var(--c-ink-rgb) / 0.25);
 }
-.h3-ground .h3-pool {
+.h3-shadow {
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.5), transparent);
+}
+.h3-pave {
+  background: repeating-linear-gradient(45deg, rgb(var(--c-ink-rgb) / 0.08) 0 0.4em, rgb(var(--c-ink-rgb) / 0.05) 0.4em 0.8em);
+  box-shadow: inset 0 0 0 1px rgb(var(--c-ink-rgb) / 0.16);
+}
+.h3-pool {
   border-radius: 0.3em;
-  background: rgb(var(--c-ink-rgb) / 0.16);
-}
-.h3-part.is-lit,
-.h3-ground .h3-part.is-lit {
-  background: rgb(var(--c-gold-light-rgb) / 0.7);
-  box-shadow: inset 0 0 0 1px rgb(var(--c-gold-light-rgb));
+  background: linear-gradient(160deg, rgb(var(--c-ink-rgb) / 0.22), rgb(var(--c-ink-rgb) / 0.08));
+  box-shadow: inset 0 0 0 0.2em rgb(var(--c-ink-rgb) / 0.2);
 }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .h3-scene {
+    .h3-view.is-scroll .h3-scene {
       animation: h3-orbit linear both;
       animation-timeline: --h3;
       animation-range: entry 0% cover 55%;
     }
+    /* Arrivée sur la bonne vue, puis les parties concernées s'allument. */
+    .h3-view.is-scroll .is-lit::before,
+    .h3-view.is-scroll .is-lit::after {
+      animation: h3-lit linear both;
+      animation-timeline: --h3;
+      animation-range: cover 38% cover 58%;
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .h3-view.is-live .h3-scene {
+    transition: none;
   }
 }
 @keyframes h3-orbit {
@@ -800,4 +877,31 @@ details[open] .faq-a {
     transform: translate3d(0, 0, 0) rotateX(var(--rx0)) rotateY(var(--ry0)) translateY(3em);
     animation-timing-function: cubic-bezier(0.45, 0, 0.25, 1);
   }
+}
+@keyframes h3-lit {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   FAITS (FactsBand) : plaque de vrai verre sur deux lueurs bronze.
+   ============================================================ */
+.facts-glow {
+  position: absolute;
+  inset: -2.5rem 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(30% 70% at 22% 55%, rgb(var(--c-gold-rgb) / 0.26), transparent 70%),
+    radial-gradient(26% 60% at 78% 45%, rgb(var(--c-gold-light-rgb) / 0.14), transparent 70%);
+}
+.facts-glass {
+  background: linear-gradient(180deg, rgb(var(--c-ink-rgb) / 0.08), rgb(var(--c-ink-rgb) / 0.025));
+  border-color: rgb(var(--c-ink-rgb) / 0.12);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  backdrop-filter: blur(22px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--c-ink-rgb) / 0.16),
+    0 30px 70px -36px rgb(0 0 0 / 0.7);
 }

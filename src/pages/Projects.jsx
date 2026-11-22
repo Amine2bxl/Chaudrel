@@ -67,13 +67,14 @@ export default function Projects() {
             key: p.slug,
             to: `/realisations/${p.slug}`,
             image: { src: p.cover.src, w: p.cover.w, h: p.cover.h },
+            image2: p.images.find((im) => im.src !== p.cover.src),
             title: p.title,
             meta: [p.type, p.location].filter(Boolean).join(' · '),
             text: p.summary,
             extra: (
-              <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-4">
-                <House3D works={p.works} className="flex-none text-[8px] sm:text-[9px]" />
-                <ul aria-label="Travaux réalisés" className="flex min-w-[12rem] flex-1 flex-wrap gap-1.5">
+              <div className="mt-6">
+                <House3D works={p.works} className="-ml-[2em] text-[10px] sm:text-[11px] lg:text-[12px]" />
+                <ul aria-label="Travaux réalisés" className="mt-2 flex flex-wrap gap-1.5">
                   {p.works.map((w) => (
                     <li key={w} className="t-small rounded-full border border-ink/[0.09] bg-shell px-3 py-1 text-ink/80">
                       {w}

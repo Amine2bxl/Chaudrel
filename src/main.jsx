@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
 import '@fontsource/prata/latin-400.css';
+import '@fontsource/marcellus/latin-400.css';
 import '@fontsource-variable/albert-sans';
 import './index.css';
 import '@/lib/pwa';

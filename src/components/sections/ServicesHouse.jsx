@@ -1,34 +1,33 @@
 import { useState } from 'react';
 import { Container, Panel, SectionHeading, TextLink } from '@/components/ui';
 import Reveal from '@/lib/reveal';
-import HouseDiagram from '@/components/sections/HouseDiagram';
+import House3D from '@/components/sections/House3D';
 import { SERVICES } from '@/data/services';
 import { HouseIcon, SERVICE_ICONS } from '@/components/ui/Icons';
 import { cn } from '@/lib/utils';
 
 /* Métier → parties de la maison qu'il touche. */
 const ZONES = {
-  'renovation-complete': ['toit', 'facade', 'interieur', 'chassis', 'porte', 'volume', 'garage', 'abords'],
+  'renovation-complete': ['toit', 'facade', 'chassis', 'porte', 'volume', 'garage', 'abords'],
   'finitions-interieures': ['interieur'],
   'amenagement-exterieur': ['abords', 'garage'],
   toiture: ['toit'],
   facade: ['facade'],
   piscine: ['piscine'],
 };
-/* Partie survolée → métier montré. */
-const PART_SERVICE = {
-  toit: 'toiture',
-  facade: 'facade',
-  interieur: 'finitions-interieures',
-  abords: 'amenagement-exterieur',
-  garage: 'amenagement-exterieur',
-  piscine: 'piscine',
+/* Métier → point de vue, toujours un peu penché, vu d'en haut : [rx, ry, x, y, z]. */
+const VIEWS = {
+  'renovation-complete': [-32, -34],
+  'finitions-interieures': [-50, -24, 0, 0, 4],
+  'amenagement-exterieur': [-40, -42],
+  toiture: [-46, 32],
+  facade: [-26, -18],
+  piscine: [-38, 122],
 };
-
 /**
- * La maison interactive : survoler une partie de la maison, ou choisir un
- * métier dans la liste, allume les parties qu'il touche et montre le métier.
- * La liste porte l'interaction au clavier ; le dessin reste une illustration.
+ * La maison interactive : choisir un métier dans la liste (survol, clic ou
+ * clavier) allume les parties qu'il touche et tourne la maquette vers elles.
+ * La maquette ne réagit pas au pointeur : elle bougerait sous la souris.
  */
 export default function ServicesHouse({ services = SERVICES }) {
   const [slug, setSlug] = useState(services[0]?.slug);
@@ -40,11 +39,14 @@ export default function ServicesHouse({ services = SERVICES }) {
         <SectionHeading title="Votre maison, métier par métier." />
         <Reveal className="mt-block">
           <Panel pad="p-6 sm:p-10" className="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
-            <HouseDiagram
-              lit={new Set(ZONES[current.slug] ?? [])}
-              onHover={(part) => part && PART_SERVICE[part] && setSlug(PART_SERVICE[part])}
-              className="mx-auto max-w-[34rem] lg:col-span-7"
-            />
+            <div className="flex justify-center lg:col-span-7">
+              <House3D
+                live
+                lit={new Set(ZONES[current.slug] ?? [])}
+                camera={VIEWS[current.slug] ?? VIEWS['renovation-complete']}
+                className="text-[11px] sm:text-[17px] lg:text-[20px]"
+              />
+            </div>
 
             <div className="lg:col-span-5">
               <ul className="grid grid-cols-2 gap-2">

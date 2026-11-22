@@ -72,8 +72,8 @@ export function Logo({ tone = 'ink', className, size = 'md' }) {
       <Monogram tone={tone} className={size === 'lg' ? 'h-11 w-auto' : 'h-[30px] w-auto'} />
       <span
         className={cn(
-          'font-medium uppercase leading-none tracking-[0.26em]',
-          size === 'lg' ? 'text-[18px]' : 'text-[14px] sm:text-[15px]',
+          'font-wordmark uppercase leading-none tracking-[0.2em]',
+          size === 'lg' ? 'text-[20px]' : 'text-[16px] sm:text-[17px]',
           tone === 'cream' ? 'text-cream' : 'text-ink',
         )}
       >

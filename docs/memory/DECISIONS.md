@@ -111,3 +111,8 @@
 - Décision : `House3D` en CSS 3D (plans `preserve-3d`, aucune bibliothèque) ; caméra = première ligne des travaux (`focusFor`), animée par une view-timeline CSS (`--h3`), vue finale fixe sans prise en charge ou avec moins de mouvement. Hero : béquille crème qui s'abaisse, porte qui pivote de 38° sur ses gonds (bord gauche), lumière chaude dans l'embrasure ; au défilement elle finit de s'ouvrir puis s'efface.
 - Alternatives écartées : Three.js (≈150 ko, rendu JavaScript à chaque image, contraire à D-008) ; vidéo de maquette (lourde, pas de parties allumées).
 - Conséquences : Firefox voit la maison déjà tournée (pas de view-timeline) ; Services garde le schéma 2D.
+
+## D-020 — Passe 6 : police du nom, maquette 3D partout, mosaïque, zigzag à trois temps
+- Date : 2026-11-22 · Statut : acceptée (retours client)
+- Décision : le nom CHAUDREL de la barre de navigation revient en Marcellus (police de l'ancien site, auto-hébergée via @fontsource) ; la maquette `House3D` remplace le schéma 2D aussi sur Services (vue penchée d'en haut, caméra qui glisse d'un métier à l'autre, intérieur en coupe de verre) et `HouseDiagram.jsx` est supprimé ; « Des chantiers, pas des promesses » devient une mosaïque sans vide (légende sur la photo) ; `Zigzag` alterne trois mises en page (split, duo avec seconde photo, panoramique) ; faits sous le hero sur une plaque de vrai verre avec lueurs bronze ; lueur bronze derrière les métiers de l'accueil ; porte du hero : panneau en creux et petite béquille ton sur ton.
+- Alternatives écartées : maquette qui suit le pointeur sur Services (la caméra bougerait sous la souris, boucle de survol).
