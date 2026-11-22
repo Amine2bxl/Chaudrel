@@ -56,6 +56,8 @@ const onDark = (svg, pad = 0.12, square = false) => {
 };
 LOGO.fullSombre = onDark(LOGO.fullCream);
 LOGO.monoSombre = onDark(LOGO.monoCream, 0.2, true);
+// Carré, mêmes marges que le fichier d'origine du client (logo ≈ 76 % de la largeur).
+LOGO.fullSombreCarre = onDark(LOGO.fullCream, 0.094, true);
 
 /* Version « or métallisé » pour les maquettes : dégradé qui imite le reflet du métal. */
 const metal = (svg, id) =>
@@ -128,6 +130,7 @@ async function main() {
   /* 1. Logos en PNG transparent et en PDF vectoriel ---------------------- */
   fs.writeFileSync(out(`logo/${M.slug}-logo-sombre.svg`), LOGO.fullSombre);
   fs.writeFileSync(out(`logo/${M.slug}-monogram-sombre.svg`), LOGO.monoSombre);
+  fs.writeFileSync(out(`logo/${M.slug}-logo-sombre-carre.svg`), LOGO.fullSombreCarre);
   const logos = [
     [`${M.slug}-logo`, LOGO.full],
     [`${M.slug}-logo-cream`, LOGO.fullCream],
@@ -153,6 +156,7 @@ async function main() {
   for (const [name, svg] of monos) {
     await png(`logo/png/${name}-1200.png`, page(`<div class="logo">${svg}</div>`, '', 1200, 938), 1200, 938);
   }
+  await png(`logo/png/${M.slug}-logo-sombre-carre-2400.png`, page(`<div class="logo">${LOGO.fullSombreCarre}</div>`, '', 2400, 2400), 2400, 2400);
   await png(`logo/png/${M.slug}-monogram-sombre-1200.png`, page(`<div class="logo">${LOGO.monoSombre}</div>`, '', 1200, 1200), 1200, 1200);
   await png(`logo/png/${M.slug}-app-icon-1024.png`, page(`<div class="logo">${LOGO.icon}</div>`, '', 1024, 1024), 1024, 1024);
 
