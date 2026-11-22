@@ -93,9 +93,15 @@ export default function Hero() {
       }
     }
 
-    const skip = () => animations.forEach((a) => a.finish());
+    // Un geste pendant l'intro la termine sans faire défiler la page : on
+    // arrive sur l'accueil, et c'est le geste suivant qui descend.
+    const skip = (e) => {
+      if (e.type !== 'keydown') e.preventDefault();
+      animations.forEach((a) => a.finish());
+      gestures.forEach((g) => window.removeEventListener(g, skip));
+    };
     const gestures = ['wheel', 'touchmove', 'keydown'];
-    gestures.forEach((g) => window.addEventListener(g, skip, { passive: true, once: true }));
+    gestures.forEach((g) => window.addEventListener(g, skip, { passive: false }));
     let alive = true;
     const t0 = performance.now();
     Promise.all(animations.map((a) => a.finished))
@@ -279,7 +285,7 @@ export default function Hero() {
           ref={bind('final')}
           data-page-cta
           {...glow}
-          className="door-final glass-dark absolute inset-x-4 bottom-4 z-[4] rounded-[28px] p-6 sm:inset-x-auto sm:bottom-10 sm:left-8 sm:w-[34rem] sm:p-9 lg:bottom-14 lg:left-12"
+          className="door-final glass-dark absolute inset-x-4 bottom-4 z-[4] rounded-[28px] p-6 sm:inset-x-auto sm:bottom-10 sm:left-8 sm:w-[34rem] sm:p-9 lg:bottom-40 lg:left-12"
         >
           <h2 className="t-h2">Bienvenue chez vous.</h2>
           <p className="t-lead mt-4 text-cream/85">

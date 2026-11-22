@@ -23,7 +23,7 @@ export default function FactsBand() {
   ];
 
   return (
-    <section aria-label="Chaudrel en quatre faits" className="relative isolate pt-section">
+    <section aria-label="Chaudrel en quatre faits" className="facts-band relative isolate z-10 pt-section lg:-mt-28 lg:pt-0">
       <Container className="relative">
         <div aria-hidden="true" className="facts-glow" />
         <Reveal>

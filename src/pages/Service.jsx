@@ -3,7 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
 import CTASection from '@/components/sections/CTASection';
-import { Button, Container, Panel, Section, SectionHeading } from '@/components/ui';
+import { Button, Container, Panel, Section } from '@/components/ui';
 import { Chip } from '@/components/layout/ContactList';
 import House3D from '@/components/sections/House3D';
 import { CheckIcon, HouseIcon, SERVICE_ICONS } from '@/components/ui/Icons';
@@ -82,7 +82,7 @@ export default function Service() {
       {/* Les six métiers, toujours visibles : on passe de l'un à l'autre en un geste. */}
       <nav aria-label="Nos métiers" className="border-b border-ink/10">
         <Container>
-          <ul ref={tabs} className="-mx-5 flex gap-2 overflow-x-auto px-5 py-4 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0">
+          <ul ref={tabs} className="-mx-5 flex gap-2 overflow-x-auto px-5 py-3 sm:py-4 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:justify-center sm:overflow-visible sm:px-0">
             {SERVICES.map((s) => {
               const on = s.slug === service.slug;
               const Icon = SERVICE_ICONS[s.slug] || HouseIcon;
@@ -106,77 +106,76 @@ export default function Service() {
         </Container>
       </nav>
 
-      {/* La photo du métier, claire et en grand ; à côté, ce qu'on y gagne en une phrase. */}
-      <Section className="pb-0 md:pb-0 lg:pb-0">
-        <Container className="grid gap-5 lg:grid-cols-12 lg:items-stretch">
-          <Reveal from="veil" className="overflow-hidden rounded-[28px] bg-sand lg:col-span-7">
-            <img
-              {...imageAttrs(service.image, '(min-width: 1024px) 56vw, 100vw')}
-              alt=""
-              width="1200"
-              height="900"
-              fetchpriority="high"
-              decoding="async"
-              className="aspect-[4/3] h-full w-full object-cover"
-            />
-          </Reveal>
-          <Reveal delay={100} className="lg:col-span-5">
-            <Panel pad="p-7 sm:p-10" className="flex h-full flex-col">
-              <Chip icon={SERVICE_ICONS[service.slug] || HouseIcon} accent />
-              <p className="mt-6 font-display text-[1.9rem] leading-[1.15] text-ink sm:text-[2.25rem]">{service.excerpt}</p>
-              <p className="t-body mt-5 text-ink/75">{service.intro}</p>
-              <div className="mt-auto pt-8">
-                <Button
-                  to="/devis"
-                  size="lg"
-                  arrow
-                  onClick={() => track(EVENTS.QUOTE_CTA, { source: `service_${service.slug}` })}
-                >
-                  Demander un devis gratuit
-                </Button>
-                <p className="t-small mt-4 text-ink/60">
-                  {BRAND.promises.quote} · {BRAND.promises.responseTime}
-                </p>
-              </div>
-            </Panel>
-          </Reveal>
-        </Container>
-      </Section>
-
-      {/* Ce que le métier couvre : la maquette montre où, la liste dit quoi. */}
-      <Section>
+      {/* Dès l'arrivée, côte à côte et entiers à l'écran : la vraie photo du
+          métier et la maquette qui montre où il intervient. */}
+      <section className="pt-3 sm:pt-6 lg:pt-8">
         <Container>
-          <SectionHeading title="Ce que nous prenons en charge." />
-          <div className="mt-block grid gap-5 lg:grid-cols-12">
-            <Reveal className="self-start lg:sticky lg:top-28 lg:col-span-6">
+          <Reveal>
+            <Panel pad="p-3 sm:p-4" className="grid gap-3 sm:gap-4 lg:grid-cols-2">
+              <div className="aspect-[16/10] overflow-hidden rounded-[20px] bg-sand lg:aspect-[16/11]">
+                <img
+                  {...imageAttrs(service.image, '(min-width: 1024px) 46vw, 100vw')}
+                  alt=""
+                  width="1200"
+                  height="900"
+                  fetchpriority="high"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+              </div>
               <House3D
                 lit={new Set(SERVICE_PARTS[service.slug] ?? [])}
                 camera={SERVICE_VIEWS[service.slug] ?? SERVICE_VIEWS['renovation-complete']}
-                className="w-full"
+                className="[--h3-fit:40] [--h3-ratio:16/10] lg:[--h3-fit:37] lg:[--h3-ratio:16/11]"
               />
-            </Reveal>
-            <div className="grid content-start gap-5 lg:col-span-6">
-              {service.groups?.map((g, i) => (
-                <Reveal key={g.title} delay={i * 80}>
-                  <Panel pad="p-6 sm:p-8">
-                    <div className="flex items-baseline justify-between gap-4">
-                      <h3 className="font-display text-[1.5rem] leading-tight text-ink">{g.title}</h3>
-                      <span className="t-label flex-none tabular-nums text-gold-light">
-                        {g.items.length} {g.items.length > 1 ? 'postes' : 'poste'}
-                      </span>
-                    </div>
-                    <ul className="mt-5 grid gap-x-6 gap-y-3 sm:grid-cols-2">
-                      {g.items.map((item) => (
-                        <li key={item} className="t-body flex items-start gap-3 text-ink/80">
-                          <CheckIcon size={18} className="mt-[3px] flex-none text-gold-light" aria-hidden="true" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </Panel>
-                </Reveal>
-              ))}
-            </div>
+            </Panel>
+          </Reveal>
+        </Container>
+      </section>
+
+      {/* Ce qu'on y gagne et le devis à gauche ; ce que le métier couvre, poste par poste, à droite. */}
+      <Section className="pt-6 md:pt-6 lg:pt-8">
+        <Container className="grid gap-5 lg:grid-cols-12 lg:items-start">
+          <Reveal className="lg:sticky lg:top-28 lg:col-span-5">
+            <Panel pad="p-7 sm:p-10">
+              <Chip icon={SERVICE_ICONS[service.slug] || HouseIcon} accent />
+              <p className="mt-6 font-display text-[1.9rem] leading-[1.15] text-ink sm:text-[2.25rem]">{service.excerpt}</p>
+              <p className="t-body mt-5 text-ink/75">{service.intro}</p>
+              <Button
+                to="/devis"
+                size="lg"
+                arrow
+                className="mt-8"
+                onClick={() => track(EVENTS.QUOTE_CTA, { source: `service_${service.slug}` })}
+              >
+                Demander un devis gratuit
+              </Button>
+              <p className="t-small mt-4 text-ink/60">
+                {BRAND.promises.quote} · {BRAND.promises.responseTime}
+              </p>
+            </Panel>
+          </Reveal>
+          <div className="grid content-start gap-5 lg:col-span-7">
+            {service.groups?.map((g, i) => (
+              <Reveal key={g.title} delay={i * 80}>
+                <Panel pad="p-6 sm:p-8">
+                  <div className="flex items-baseline justify-between gap-4">
+                    <h2 className="font-display text-[1.5rem] leading-tight text-ink">{g.title}</h2>
+                    <span className="t-label flex-none tabular-nums text-gold-light">
+                      {g.items.length} {g.items.length > 1 ? 'postes' : 'poste'}
+                    </span>
+                  </div>
+                  <ul className="mt-5 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+                    {g.items.map((item) => (
+                      <li key={item} className="t-body flex items-start gap-3 text-ink/80">
+                        <CheckIcon size={18} className="mt-[3px] flex-none text-gold-light" aria-hidden="true" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </Panel>
+              </Reveal>
+            ))}
           </div>
         </Container>
       </Section>

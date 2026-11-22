@@ -53,7 +53,7 @@ export default function PageHero({ title, image }) {
         </>
       )}
 
-      <Container className={cn('pb-9 pt-[6.5rem] lg:pb-12 lg:pt-32', hasImage && 'lg:pb-14 lg:pt-36')}>
+      <Container className={cn('pb-7 pt-24 lg:pb-12 lg:pt-32', hasImage && 'lg:pb-14 lg:pt-36')}>
         <h1 className="rise-in t-h2 max-w-[22ch] text-balance text-cream">{title}</h1>
       </Container>
     </header>

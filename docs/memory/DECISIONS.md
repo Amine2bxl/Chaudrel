@@ -134,3 +134,8 @@
 ## D-024 — Intro une fois par chargement (remplace la partie « une seule fois » de D-023)
 - Date : 2026-11-22 · Statut : acceptée (retour client : l'intro avait disparu pour de bon)
 - Décision : l'intro se rejoue à chaque chargement de page (arrivée, F5, Cmd+R) ; pendant la navigation dans le site, revenir sur l'accueil l'affiche directement terminée (`data-intro="seen"` sur `<html>`, en mémoire seulement). `localStorage` et `public/intro.js` retirés ; `prefers-reduced-motion` passe par une media query CSS.
+
+## D-025 — Défilement de base, faits sur la photo, maquette sur l'accueil, photo + 3D dès l'arrivée
+- Date : 2026-11-22 · Statut : acceptée (retours client)
+- Décision : `history.scrollRestoration = 'manual'` (chaque chargement repart du haut, on défile soi-même) ; un geste pendant l'intro la termine sans faire défiler. La plaque des faits mord sur la photo du hero (lg, -mt-28, vrai flou) et n'apparaît qu'après l'intro. Accueil : section « Chaque chantier, sur la maquette. » (`ProjectsHouse` : maquette live + liste des chantiers + photo + liens chantier / métier). Pages métier et chantier : en-tête titre seul, puis photo | maquette côte à côte, format 16/10 (mobile) – 16/11 (lg), mesurées pour tenir dans le premier écran (1440×900, 1366×768, iPhone 13) ; puis carte valeur + postes cochés (métier) ou récit + travaux cochés + lien vers le métier (chantier) ; galerie en cases égales.
+- Détail technique : `.h3-box` lit `--h3-ratio` et `--h3-fit` (format et échelle de la case).

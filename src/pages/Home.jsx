@@ -1,6 +1,7 @@
 import Hero from '@/components/sections/Hero';
 import FactsBand from '@/components/sections/FactsBand';
 import ProjectCarousel from '@/components/sections/ProjectCarousel';
+import ProjectsHouse from '@/components/sections/ProjectsHouse';
 import ServicesBoard from '@/components/sections/ServicesBoard';
 import ProcessStairs from '@/components/sections/ProcessStairs';
 import BelgiumCoverage from '@/components/sections/BelgiumCoverage';
@@ -40,6 +41,8 @@ export default function Home() {
         title="Des chantiers, pas des promesses."
         link={{ label: 'Toutes les réalisations', to: '/realisations' }}
       />
+
+      <ProjectsHouse />
 
       {compared && (
         <Section>
